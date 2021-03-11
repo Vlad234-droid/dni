@@ -1,61 +1,47 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
+import styled from 'styled-components';
 
-import { TypeRenderPostContainer } from '../../config/types';
-import { actions } from '../../store/silce';
-import { selectors } from '../../store/selectors';
-import PostCreator from '../PostCreator';
-import PostPublished from '../PostPublished';
-import PostArchived from '../PostArchived';
+import { useHandler } from '../../store/handlers';
+import {
+  postFormSelector,
+  postItemsSelector,
+  postFormPublishersSelector,
+} from '../../store/selectors';
+import PostForm from '../PostForm';
+import PostList from '../PostList';
 
-const PostContainer: TypeRenderPostContainer = () => {
-  const item = useSelector(selectors.getPost);
-  const handler = actions;
+const PostWrapper = styled.div`
+  padding: 8px;
+  font-family: ${({ theme }) => theme.fontFamily.text};
+`;
 
-  let View;
+const postContainerTestId = 'post-container-test-id';
 
-  switch (item.status) {
-    case 'published':
-      View = (
-        <PostPublished
-          item={item}
-          onArchive={handler.onPostArchive}
-          onCopyLink={handler.onPostCopyLink}
-          onLikeChoice={handler.onPostLikeChoice}
-          onFileDelete={handler.onPostFileDelete}
-          onEdit={handler.onPostEdit}
-          onDelete={handler.onPostDelete}
-        />
-      );
-      break;
+const PostContainer = () => {
+  const item = useSelector(postFormSelector);
 
-    case 'archived':
-      View = <PostArchived item={item} onDelete={handler.onPostDelete} />;
-      break;
+  const {
+    postCreatorHandler,
+    postReaderHandler,
+    postUpdaterHandler,
+  } = useHandler();
 
-    default:
-      View = (
-        <PostCreator
-          item={item}
-          onClick={handler.onPostCreatorClick}
-          onFileDrag={handler.onPostFileDrag}
-          onFileDrop={handler.onPostFileDrop}
-          onFileChange={handler.onPostFileChange}
-          onPDFChange={handler.onPostFilePDFChange}
-          onPhotoChange={handler.onPostFilePhotoChange}
-          onFileDelete={handler.onPostFileDelete}
-          onPublisherChange={handler.onPostPublisherChange}
-          onCustomSelectToggle={handler.onPostCustomSelectToggle}
-          onDescriptionChange={handler.onPostDescriptionChange}
-          onDescriptionFocus={handler.onPostDescriptionFocus}
-          onDescriptionBlur={handler.onPostDescriptionBlur}
-          onSubmitClick={handler.onPostPublish}
-          fileUploadInfo={`PNG, JPG, GIF or PDF, each file less than 20 mb`}
-        />
-      );
-  }
-
-  return View;
+  return (
+    <PostWrapper data-testid={postContainerTestId}>
+      <PostForm
+        item={item}
+        handler={postCreatorHandler}
+        publishersSelector={postFormPublishersSelector}
+      />
+      <PostList
+        readerHandler={postReaderHandler}
+        updaterHandler={postUpdaterHandler}
+        itemsSelector={postItemsSelector}
+        publishersSelector={postFormPublishersSelector}
+      />
+    </PostWrapper>
+  );
 };
 
 export default PostContainer;

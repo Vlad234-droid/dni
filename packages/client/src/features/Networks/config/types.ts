@@ -1,5 +1,16 @@
-export default interface Network {
-  id: number;
+interface FormData {
+  image?: File;
   title: string;
-  description: string;
+  email: string;
+  manager: string;
+  description?: string;
+  partnership?: string;
 }
+
+export default interface Network extends FormData {
+  id: number;
+}
+
+type Names = keyof FormData;
+
+export type { FormData, Names };

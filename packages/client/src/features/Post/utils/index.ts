@@ -1,26 +1,52 @@
-import { TypeDrawProgress, TypeCutString } from '../config/types';
+import { DragEvent } from 'react';
+import { Attachment } from '../config/types';
 
-const drawProgress: TypeDrawProgress = ({
-  progress,
-  colorFrom,
-  colorTo,
-  colorMain,
-}) => {
-  const backgroundString = `
-    linear-gradient(90deg, 
-    rgba(${colorFrom}, ${progress / 100 - 0.1}) ${progress}%,
-    rgba(${colorTo}) ${progress}%), ${colorMain}
-  `;
+interface GetFileProps {
+  attachments: Attachment[];
+  name: string;
+}
 
-  return backgroundString;
+const getAttachment = ({ attachments, name }: GetFileProps) => {
+  return attachments.find((element) => element.name === name);
 };
 
-const cutString: TypeCutString = ({ value, maxLength }) => {
-  if (value.length > maxLength) {
-    return `${value.slice(0, maxLength)}..`;
+interface GetFileFormatProps {
+  name: string;
+}
+
+const getFileFormat = ({ name }: GetFileFormatProps) => {
+  return name.slice(name.lastIndexOf('.') + 1);
+};
+
+interface CutFileNameProps {
+  name: string;
+  format: string;
+  maxLength: number;
+  dots?: string;
+}
+
+const cutFileName = ({
+  name,
+  maxLength,
+  format,
+  dots = '..',
+}: CutFileNameProps) => {
+  if (name.length > maxLength) {
+    return `
+      ${name.slice(0, maxLength - format.length - dots.length)}
+      ${dots}
+      ${format}
+    `;
   }
 
-  return value;
+  return name;
 };
 
-export { drawProgress, cutString };
+const resetMouseEvent = (event: DragEvent) => {
+  event.preventDefault();
+  event.stopPropagation();
+};
+
+export { getAttachment, cutFileName, resetMouseEvent, getFileFormat };
+
+export { buildFileReader } from './buildFileReader';

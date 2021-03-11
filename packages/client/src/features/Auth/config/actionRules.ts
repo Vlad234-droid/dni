@@ -12,8 +12,6 @@ const actionRules: Record<UserRole, Rule> = {
     static: [
       ...buildActions(Page.EVENTS, [Action.LIST, Action.CREATE]),
       buildAction(Page.ABOUT, Action.VISIT),
-      buildAction(Page.DASHBOARD, Action.VISIT),
-      buildAction(Page.PROFILE, Action.GET_SELF),
     ],
     dynamic: {
       [buildAction(Page.EVENTS, Action.EDIT)]: ({
@@ -33,14 +31,6 @@ const actionRules: Record<UserRole, Rule> = {
         Action.EDIT,
         Action.DELETE,
       ]),
-      ...buildActions(Page.USERS, [
-        Action.LIST,
-        Action.CREATE,
-        Action.EDIT,
-        Action.DELETE,
-        Action.GET,
-      ]),
-      buildAction(Page.DASHBOARD, Action.VISIT),
       buildAction(Page.ABOUT, Action.VISIT),
     ],
   },
@@ -52,7 +42,6 @@ const actionRules: Record<UserRole, Rule> = {
         Action.EDIT,
         Action.DELETE,
       ]),
-      buildAction(Page.DASHBOARD, Action.VISIT),
       buildAction(Page.ABOUT, Action.VISIT),
     ],
   },

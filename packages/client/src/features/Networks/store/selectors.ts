@@ -3,8 +3,7 @@ import { createSelector } from '@reduxjs/toolkit';
 import { RootState } from 'store/rootReducer';
 import { getEntitySelectors } from 'utils/storeHelper';
 
-import Network from '../config/Network';
-import { EntityAdapter } from './types';
+import { EntityAdapter, Network } from './types';
 
 const networksSelectors = EntityAdapter.getSelectors(
   (state: RootState) => state.networks,

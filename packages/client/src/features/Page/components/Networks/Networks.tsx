@@ -1,13 +1,56 @@
 import React, { FC } from 'react';
+import Button from '@beans/button';
+import Icon from '@beans/icon';
+import { Link } from 'react-router-dom';
 
-import { Page } from 'features/Page';
+import { Page, PAGE_PREFIX } from 'features/Page';
+import BasePage, { PageHeader, PageWrapper } from '../BasePage';
+import Heading from 'features/Heading';
+import { useMedia } from 'context/InterfaceContext';
+import ButtonFilter from 'features/ButtonFilter';
+import NetworkCarusel from 'features/NetworkCarusel';
+import NetworkList from 'features/NetworkList';
 
-import BasePage from '../BasePage';
+import { filters } from './data';
 
-const Networks: FC = () => (
-  <div data-testid={Page.NETWORKS}>
-    <BasePage renderCenter={() => <div data-testid='networks'>Networks</div>} />
-  </div>
-);
+const TEST_ID = 'container-networks';
+
+const Networks: FC = () => {
+  const { isMobile } = useMedia();
+
+  return (
+    <div data-testid={`${PAGE_PREFIX}${Page.NETWORKS}`}>
+      <BasePage
+        renderMain={() => (
+          <div data-testid={TEST_ID}>
+            <PageHeader
+              renderLeft={() => <Heading>Networks</Heading>}
+              renderRight={() => (
+                <Link to={`/${Page.ADD_NETWORKS}`}>
+                  <Button variant='primary'>
+                    <Icon graphic='add' />
+                    {!isMobile && 'Create Network'}
+                  </Button>
+                </Link>
+              )}
+              renderCenter={() => (
+                <ButtonFilter
+                  filters={filters}
+                  onChange={() => console.log('test')}
+                />
+              )}
+            />
+            <PageWrapper>
+              <NetworkCarusel />
+              <NetworkList />
+            </PageWrapper>
+          </div>
+        )}
+      />
+    </div>
+  );
+};
+
+export { TEST_ID };
 
 export default Networks;

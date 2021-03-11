@@ -7,6 +7,6 @@ module.exports = {
   },
   rules: {
     'react/prop-types': 'off',
-    "@typescript-eslint/ban-ts-comment": "off"
+    '@typescript-eslint/ban-ts-comment': 'off'
   },
 };

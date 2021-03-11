@@ -1,1 +1,1 @@
-export { default, stylesMenuItem } from './MenuDesktop';
+export { default } from './MenuDesktop';

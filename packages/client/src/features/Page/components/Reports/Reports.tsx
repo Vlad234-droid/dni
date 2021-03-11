@@ -1,12 +1,14 @@
 import React, { FC } from 'react';
 
-import { Page } from 'features/Page';
+import { Page, PAGE_PREFIX } from 'features/Page';
 
 import BasePage from '../BasePage';
 
 const Reports: FC = () => (
-  <div data-testid={Page.REPORTS}>
-    <BasePage renderCenter={() => <div data-testid='reports'>Reports</div>} />
+  <div data-testid={`${PAGE_PREFIX}${Page.REPORTS}`}>
+    <BasePage
+      renderMain={() => <div data-testid='container_reports'>Reports</div>}
+    />
   </div>
 );
 

@@ -1,93 +1,61 @@
-import React from 'react';
-import styled from 'styled-components';
+import React, { FC } from 'react';
 
-import { TypeRenderPostPublished } from '../../config/types';
+import { Post } from '../../config/types';
+import { PostReaderHandler } from '../../store/handlers';
+import { PostPublishedAttachments } from '../PostAttachments';
 import PostControls from '../PostControls';
-import { PostFilesView } from '../PostAttachments';
 import {
-  color,
-  stylesPost,
-  stylesWrapperAvatar,
-  stylesTextMidDarkBaseBold,
-  stylesTextMinBaseInfoTextNormal,
-  stylesTextMinDarkBaseNormal,
-} from '../../styled';
+  PostPublisherAvatar,
+  PostPublisherAvatarBox,
+  PostPublisherName,
+  PostPublisher,
+  PostPublisDate,
+  PostHead,
+  PostTitle,
+  PostDescription,
+  PostContent,
+  PostPublishedWrapper,
+} from './styled';
 
-const StylesPublisherAvatar = styled.div`
-  ${stylesWrapperAvatar};
-  margin-right: 12px;
-`;
-
-const StyledPublisherName = styled.div`
-  ${stylesTextMidDarkBaseBold}
-`;
-
-const StyledPublisherData = styled.div`
-  display: flex;
-  align-items: center;
-  padding-right: 24px;
-`;
-
-const StyledPublishDate = styled.div`
-  ${stylesTextMinBaseInfoTextNormal}
-`;
-
-const StyledPostTitle = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-`;
-
-const StyledPostDescription = styled.div`
-  ${stylesTextMinDarkBaseNormal}
-`;
-
-const StyledPostContent = styled.div`
-  padding-top: 16px;
-`;
-
-const StyledPostPublished = styled.div`
-  ${stylesPost}
-  border: 1px solid ${color.innerPostBorder2};
-  background-color: ${color.whitePrimary};
-`;
+interface PostPublishedProps {
+  item: Post;
+  handler: PostReaderHandler['published'];
+}
 
 const postPublishedTestId = 'post-published-test-id';
 
-const PostPublished: TypeRenderPostPublished = ({
-  item,
-  onEdit,
-  onDelete,
-  onArchive,
-  onCopyLink,
-  onLikeChoice,
-}) => {
+const PostPublished: FC<PostPublishedProps> = ({ handler, item }) => {
+  const {
+    id,
+    title,
+    description,
+    emotions,
+    createdBy,
+    createdAt,
+    updatedAt,
+    attachments,
+  } = item;
+
   return (
-    <StyledPostPublished data-testid={postPublishedTestId}>
-      <StyledPostTitle>
-        <StyledPublisherData>
-          <StylesPublisherAvatar>
-            <img src={item.createdBy?.avatarSrc} alt='user-avatar' />
-          </StylesPublisherAvatar>
-          <StyledPublisherName>{item.createdBy?.name}</StyledPublisherName>
-        </StyledPublisherData>
-        <StyledPublishDate>{item.createdAt}</StyledPublishDate>
-      </StyledPostTitle>
-      <StyledPostContent>
-        {item.attachments.length > 0 && (
-          <PostFilesView files={item.attachments} />
+    <PostPublishedWrapper data-testid={postPublishedTestId}>
+      <PostHead>
+        <PostPublisher>
+          <PostPublisherAvatarBox>
+            <PostPublisherAvatar src={createdBy.avatarSrc} />
+          </PostPublisherAvatarBox>
+          <PostPublisherName>{createdBy.name}</PostPublisherName>
+        </PostPublisher>
+        <PostPublisDate>{updatedAt || createdAt}</PostPublisDate>
+      </PostHead>
+      <PostContent>
+        {attachments.length > 0 && (
+          <PostPublishedAttachments attachments={attachments} />
         )}
-        <StyledPostDescription>{item.description}</StyledPostDescription>
-        <PostControls
-          item={item}
-          onEdit={onEdit}
-          onDelete={onDelete}
-          onArchive={onArchive}
-          onCopyLink={onCopyLink}
-          onLikeChoice={onLikeChoice}
-        />
-      </StyledPostContent>
-    </StyledPostPublished>
+        {title && <PostTitle>{title}</PostTitle>}
+        <PostDescription>{description}</PostDescription>
+        <PostControls id={id} handler={handler} emotions={emotions} />
+      </PostContent>
+    </PostPublishedWrapper>
   );
 };
 

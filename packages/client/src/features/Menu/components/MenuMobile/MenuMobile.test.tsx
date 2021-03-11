@@ -6,10 +6,10 @@ import { Router } from 'react-router-dom';
 import { renderWithTheme, screen } from 'utils/testUtils';
 import { itemsMobile } from '../../config/items';
 import MenuMobile, {
-  menuMobileTestId,
-  menuButtonMoreTestId,
+  MOBILE_MENU_TEST_ID,
+  MOBILE_MORE_TEST_ID,
 } from './MenuMobile';
-import { menuItemTestString } from '../MenuItem';
+import { MENU_TEST_ID_PREFIX } from '../MenuItem';
 
 describe('Menu feature', () => {
   const history = createMemoryHistory();
@@ -24,7 +24,7 @@ describe('Menu feature', () => {
   describe('MenuMobile', () => {
     it('should render correctly', () => {
       renderWithRouter();
-      const result = screen.getByTestId(menuMobileTestId);
+      const result = screen.getByTestId(MOBILE_MENU_TEST_ID);
 
       expect(result).toBeInTheDocument();
     });
@@ -33,7 +33,7 @@ describe('Menu feature', () => {
       renderWithRouter();
 
       itemsMobile.visible.forEach(({ name }) => {
-        const result = screen.getByTestId(`${menuItemTestString}${name}`);
+        const result = screen.getByTestId(`${MENU_TEST_ID_PREFIX}${name}`);
 
         expect(result).toBeInTheDocument();
       });
@@ -41,12 +41,12 @@ describe('Menu feature', () => {
 
     it('should show available hidden items on menu open', () => {
       renderWithRouter();
-      const buttonMore = screen.getByTestId(menuButtonMoreTestId);
+      const buttonMore = screen.getByTestId(MOBILE_MORE_TEST_ID);
 
       userEvent.click(buttonMore);
 
       itemsMobile.hidden.forEach(({ name }) => {
-        const result = screen.getByTestId(`${menuItemTestString}${name}`);
+        const result = screen.getByTestId(`${MENU_TEST_ID_PREFIX}${name}`);
 
         expect(result).toBeInTheDocument();
       });
@@ -54,13 +54,13 @@ describe('Menu feature', () => {
 
     it('should hide available hidden items on menu close', () => {
       renderWithRouter();
-      const buttonMore = screen.getByTestId(menuButtonMoreTestId);
+      const buttonMore = screen.getByTestId(MOBILE_MORE_TEST_ID);
 
       userEvent.click(buttonMore);
       userEvent.click(buttonMore);
 
       itemsMobile.hidden.forEach(({ name }) => {
-        const result = screen.queryByTestId(`${menuItemTestString}${name}`);
+        const result = screen.queryByTestId(`${MENU_TEST_ID_PREFIX}${name}`);
 
         expect(result).not.toBeInTheDocument();
       });

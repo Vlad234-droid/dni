@@ -1,0 +1,10 @@
+{
+  "name": "@dni-connectors/confirmit-api",
+  "version": "1.0.0",
+  "main": "src/index.ts",
+  "dependencies": {
+    "@dni-connectors/common": "1.0.0",
+    "@energon-connectors/core": "^0.7.6",
+    "@energon/rest-api-consumer": "^0.6.1"
+  }
+}

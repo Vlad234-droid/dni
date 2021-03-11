@@ -1,1 +1,1 @@
-export { PostEmotions, PostEmotionsBig } from './PostEmotions';
+export { default } from './PostEmotions';

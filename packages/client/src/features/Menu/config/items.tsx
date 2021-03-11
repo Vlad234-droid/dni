@@ -1,13 +1,6 @@
 import { Page } from 'features/Page';
-import {
-  TypeItemsArray,
-  TypeItemsObject,
-  TypeItemsUpdateArray,
-  TypeItemsVisibleArray,
-  TypeItemsMobileObject,
-  TypeIconsSrcObject,
-} from './types';
-import { excludeHiddenItems } from '../utils';
+import { MenuItem, MenuUpdatesItem, VisiblePages, IconSrc } from './types';
+import { configureMenuItems } from '../utils';
 
 import imageUpdate0 from '../assets/image-update-0.png';
 import imageUpdate1 from '../assets/image-update-1.png';
@@ -17,14 +10,15 @@ import imageUpdate4 from '../assets/image-update-4.png';
 
 import iconEvents from '../assets/icon-events.svg';
 import iconEventsInv from '../assets/icon-events-inv.svg';
-import iconMore from '../assets/icon-more.svg';
-import iconMoreInv from '../assets/icon-more-inv.svg';
 import iconNetworks from '../assets/icon-networks.svg';
 import iconNetworksInv from '../assets/icon-networks-inv.svg';
 import iconNewsFeed from '../assets/icon-news-feed.svg';
 import iconNewsFeedInv from '../assets/icon-news-feed-inv.svg';
 
-const iconsSrc: TypeIconsSrcObject = {
+const iconsSrc: Pick<
+  Record<Page, IconSrc>,
+  Page.EVENTS | Page.NETWORKS | Page.NEWS_FEED
+> = {
   [Page.EVENTS]: {
     default: iconEvents,
     active: iconEventsInv,
@@ -37,13 +31,9 @@ const iconsSrc: TypeIconsSrcObject = {
     default: iconNewsFeed,
     active: iconNewsFeedInv,
   },
-  buttonMore: {
-    default: iconMore,
-    active: iconMoreInv,
-  },
 };
 
-const items: TypeItemsObject = {
+const menuItems: Record<VisiblePages, MenuItem> = {
   [Page.NEWS_FEED]: {
     name: 'News feed',
     page: Page.NEWS_FEED,
@@ -59,25 +49,9 @@ const items: TypeItemsObject = {
     page: Page.NETWORKS,
     iconSrc: iconsSrc[Page.NETWORKS],
   },
-  [Page.DASHBOARD]: {
-    name: 'Dashboard',
-    page: Page.DASHBOARD,
-  },
-  [Page.PROFILE]: {
-    name: 'Profile',
-    page: Page.PROFILE,
-  },
   [Page.REPORTS]: {
     name: 'Reports',
     page: Page.REPORTS,
-  },
-  [Page.SURVEYS]: {
-    name: 'Surveys',
-    page: Page.SURVEYS,
-  },
-  [Page.USERS]: {
-    name: 'Users',
-    page: Page.USERS,
   },
   [Page.ABOUT]: {
     name: 'About',
@@ -85,7 +59,7 @@ const items: TypeItemsObject = {
   },
 };
 
-const itemsUpdates: TypeItemsUpdateArray = [
+const itemsUpdates: MenuUpdatesItem[] = [
   {
     imageSrc: imageUpdate0,
     name: 'BAME at Tesco',
@@ -118,34 +92,9 @@ const itemsUpdates: TypeItemsUpdateArray = [
   },
 ];
 
-const itemsDesktop: TypeItemsArray = Object.values(items);
-const itemsHidden: TypeItemsObject = { ...items };
-const itemsVisible: TypeItemsVisibleArray = [
-  Page.NEWS_FEED,
-  Page.EVENTS,
-  Page.NETWORKS,
-];
+const itemsDesktop = Object.values(menuItems);
+const itemsVisible = [Page.NEWS_FEED, Page.EVENTS, Page.NETWORKS];
 
-const itemsMobile: TypeItemsMobileObject = {
-  visible: excludeHiddenItems({
-    items,
-    itemsHidden,
-    itemsVisible,
-  }),
-  hidden: Object.values(itemsHidden),
-};
+const itemsMobile = configureMenuItems(menuItems, itemsVisible);
 
-const itemButtonMore = {
-  name: 'More',
-  iconSrc: iconsSrc.buttonMore,
-};
-
-export {
-  items,
-  itemsHidden,
-  itemsVisible,
-  itemsDesktop,
-  itemsMobile,
-  itemButtonMore,
-  itemsUpdates,
-};
+export { menuItems, itemsVisible, itemsDesktop, itemsMobile, itemsUpdates };

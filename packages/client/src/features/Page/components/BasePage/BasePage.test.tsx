@@ -1,30 +1,35 @@
 import React from 'react';
+import { Route, Router } from 'react-router-dom';
+import { createMemoryHistory } from 'history';
 
 import { renderWithTheme } from 'utils/testUtils';
 
 import BasePage from './BasePage';
 
 describe('#BasePage', () => {
-  const renderCenter = () => <div data-testid='mocked-center' />;
-  const renderRight = () => <div data-testid='mocked-right' />;
-
+  const renderMain = () => <div data-testid='mocked-center' />;
+  const history = createMemoryHistory();
   it('should render all base layout components', () => {
     const { getByTestId } = renderWithTheme(
-      <BasePage renderCenter={renderCenter} />,
+      <Router history={history}>
+        <Route path={'/'}>
+          <BasePage renderMain={renderMain} />,
+        </Route>
+      </Router>,
     );
 
     expect(getByTestId('header')).toBeInTheDocument();
-    expect(getByTestId('footer')).toBeInTheDocument();
-    expect(getByTestId('menu-desktop-test-id')).toBeInTheDocument();
-    expect(getByTestId('menu-updates-test-id')).toBeInTheDocument();
   });
 
   it('should render components received from props', () => {
     const { getByTestId } = renderWithTheme(
-      <BasePage renderCenter={renderCenter} renderRight={renderRight} />,
+      <Router history={history}>
+        <Route path={'/'}>
+          <BasePage renderMain={renderMain} />,
+        </Route>
+      </Router>,
     );
 
     expect(getByTestId('mocked-center')).toBeInTheDocument();
-    expect(getByTestId('mocked-right')).toBeInTheDocument();
   });
 });

@@ -2,12 +2,14 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "typeRoots": [
-      "./node_modules/@types",
       "./src/types",
+      "./node_modules/@types",
       "../../node_modules/@types"
     ],
     "baseUrl": "./src",
     "jsx": "react-jsx"
   },
-  "include": ["./src/**/*"]
+  "include": [
+    "./src/**/*"
+  ]
 }

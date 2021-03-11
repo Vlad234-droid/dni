@@ -28,6 +28,8 @@ openId
     app.use('/', healthCheck);
     // app.use(openIdMiddleware);
     app.use(openIdCookieParser);
+    app.use(express.json());
+    app.use(express.urlencoded({extended: false}));
     app.use('/api', api);
     app.use(clientStaticFolder);
     app.use(publicStaticFolder);

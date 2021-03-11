@@ -1,7 +1,7 @@
 import { AxiosInstance } from 'axios';
 
 type Config = {
-  [key: string]: string;
+  [key: string]: string | number | undefined;
 };
 
 export default (httpClient: AxiosInstance) => ({
@@ -10,7 +10,8 @@ export default (httpClient: AxiosInstance) => ({
     signOut: <T>() => httpClient.post<T>('/auth/logout'),
   },
   networks: {
-    list: <T>() => httpClient.get<T>('/networks'),
-    one: <T>(id: number) => httpClient.get<T>(`/networks/${id}`),
+    fetchAll: <T>() => httpClient.get<T>('/networks'),
+    fetchOne: <T>(id: number) => httpClient.get<T>(`/networks/${id}`),
+    one: <T>(data: Config) => httpClient.post<T>(`/networks`, data),
   },
 });

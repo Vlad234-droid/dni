@@ -6,7 +6,7 @@ import { Router, Route, Switch } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 
 import { renderWithTheme } from 'utils/testUtils';
-import MenuItem, { menuItemTestString } from './MenuItem';
+import MenuItem, { MENU_TEST_ID_PREFIX } from './MenuItem';
 
 describe('Menu feature', () => {
   const menuItem = {
@@ -38,7 +38,7 @@ describe('Menu feature', () => {
       </Router>,
     );
 
-  const menuItemTestId = `${menuItemTestString}${menuItem.name}`;
+  const menuItemTestId = `${MENU_TEST_ID_PREFIX}${menuItem.name}`;
 
   describe('MenuItem', () => {
     it('should render correctly', () => {
@@ -57,16 +57,6 @@ describe('Menu feature', () => {
       const result = history.location.pathname;
 
       expect(result).toEqual(expected);
-    });
-
-    it('should be triggered as active on location changed', () => {
-      renderWithRouter();
-      const menuItemLink = screen.getByTestId(menuItemTestId);
-      userEvent.click(menuItemLink);
-
-      const result = menuItemLink.lastElementChild;
-
-      expect(result).toHaveStyle(`color: green;`);
     });
   });
 });

@@ -1,0 +1,10 @@
+{
+  "name": "@dni-connectors/colleague-cms-api",
+  "version": "1.0.0",
+  "main": "src/index.ts",
+  "dependencies": {
+    "@energon-connectors/core": "^0.7.6",
+    "@energon/rest-api-consumer": "^0.6.1",
+    "@energon/rest-api-definition": "^0.4.1"
+  }
+}

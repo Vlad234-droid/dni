@@ -1,6 +1,6 @@
 import React, { FC, ReactElement } from 'react';
 import merge from 'lodash.merge';
-import { render, RenderOptions } from '@testing-library/react';
+import { render, cleanup, RenderOptions } from '@testing-library/react';
 import { defaultTheme, ThemeProvider } from '@beans/theme';
 import { Provider } from 'react-redux';
 
@@ -28,6 +28,8 @@ const renderWithProviders = (ui: ReactElement, options?: RenderOptions) =>
 const renderWithTheme = (ui: ReactElement, options?: RenderOptions) =>
   render(ui, { ...options, wrapper: WithThemeProvider });
 
+const cleanupAfterEach = () => afterEach(cleanup);
+
 export * from '@testing-library/react';
 
-export { renderWithProviders, renderWithTheme };
+export { renderWithProviders, renderWithTheme, cleanupAfterEach };

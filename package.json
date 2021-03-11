@@ -8,7 +8,7 @@
     "yarn": "1.22.x"
   },
   "workspaces": [
-    "packages/*"
+    "packages/**/*"
   ],
   "scripts": {
     "bootstrap": "yarn install --frozen-lockfile && lerna bootstrap",
@@ -17,18 +17,25 @@
     "clean:all": "lerna run --parallel clean:all && rimraf node_modules",
     "lint": "prettier --write --config ./prettier.config.js './packages/*/src/**/*.{ts,tsx}'",
     "on-pre-push": "commitlint --from=$(git merge-base master $(git rev-parse --abbrev-ref HEAD)) --to=HEAD",
-    "run:dev": "lerna run --parallel run:dev",
+    "run:dev": "lerna run --parallel run:dev --scope @dni/client --scope @dni/server",
     "run:prod": "BUILD_ENV_PARAM=production lerna run --parallel run:prod",
+    "run:local:dev": "lerna run --parallel run:dev --scope @dni/client --scope @dni/mock-server",
     "ws:server": "yarn workspace @dni/server",
+    "ws:mock-server": "yarn workspace @dni/mock-server",
     "ws:client": "yarn workspace @dni/client",
+    "ws:connector:colleague": "yarn workspace @dni-connectors/colleague-api",
+    "ws:connector:colleague-cms": "yarn workspace @dni-connectors/colleague-cms-api",
+    "ws:connector:common": "yarn workspace @dni-connectors/common",
+    "ws:connector:confirmit": "yarn workspace @dni-connectors/confirmit-api",
     "client": "lerna run --scope @dni/client",
     "server": "lerna run --scope @dni/server",
     "run:dev:server": "yarn server run:dev --stream",
     "run:dev:client": "yarn client run:dev --stream",
-    "docker:build:prod": "sh ./build-docker.sh dni-prod production",
+    "docker:build:prod": "sh ./scripts/build-docker.sh dni-prod production",
     "docker:run:prod": "docker run --publish 9000:9000 dni-prod",
     "test": "lerna run test --stream",
-    "test:coverage": "lerna run test:coverage --stream"
+    "test:coverage": "lerna run test:coverage --stream",
+    "npmrc:create": "bash ./scripts/create-npmrc.sh"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.12.11",
@@ -73,5 +80,9 @@
     "commitizen": {
       "path": "cz-conventional-changelog"
     }
+  },
+  "volta": {
+    "node": "14.15.4",
+    "yarn": "1.22.10"
   }
 }

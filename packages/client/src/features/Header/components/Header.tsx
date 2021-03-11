@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import Link from '@beans/link';
-// @ts-ignore
 import { TescoLogo } from '@beans/branding';
 
 const Header: React.FC = () => {
@@ -33,6 +32,9 @@ export default Header;
 const Wrapper = styled.div.attrs({
   'data-testid': 'header',
 })`
+  max-width: 1244px;
+  width: 100%;
+  margin: auto;
   height: 100%;
   display: flex;
   justify-content: space-between;

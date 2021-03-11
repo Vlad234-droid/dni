@@ -1,1 +1,1 @@
-export { default, menuItemTestString } from './MenuItem';
+export { default, MENU_TEST_ID_PREFIX } from './MenuItem';

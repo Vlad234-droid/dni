@@ -1,14 +1,15 @@
 import iconAddFile from '../assets/icon-add-file.svg';
 import iconAddPhoto from '../assets/icon-add-photo.svg';
-import iconBook from '../assets/icon-book.svg';
-import iconCopy from '../assets/icon-copy.svg';
 import iconArchive from '../assets/icon-archive.svg';
-import iconUnArchive from '../assets/icon-unarchive.svg';
+import iconUnarchive from '../assets/icon-unarchive.svg';
+import iconCopy from '../assets/icon-copy.svg';
+import iconDelete from '../assets/icon-delete.svg';
 import iconEdit from '../assets/icon-edit.svg';
 import iconLike from '../assets/icon-like.svg';
+import iconLikePressed from '../assets/icon-like-pressed.svg';
 import iconFileError from '../assets/icon-file-error.svg';
+import iconFileLoad from '../assets/icon-file-load.svg';
 import iconFilePDF from '../assets/icon-file-pdf.svg';
-import iconFilePhoto from '../assets/icon-file-photo.svg';
 import iconFilePlus from '../assets/icon-file-plus.svg';
 import iconSelectArrow from '../assets/icon-select-arrow.svg';
 import iconEmojiHeart from '../assets/icon-emoji-heart.png';
@@ -16,6 +17,7 @@ import iconEmojiLaugh from '../assets/icon-emoji-laugh.png';
 import iconEmojiLike from '../assets/icon-emoji-like.png';
 import iconEmojiSmile from '../assets/icon-emoji-smile.png';
 import iconEmojiSurprise from '../assets/icon-emoji-surprise.png';
+import backgroundDropZone from '../assets/background-drop-zone.jpg';
 
 import imageAvatar from '../assets/image-avatar.png';
 import imagePhoto1 from '../assets/image-photo-1.png';
@@ -23,16 +25,17 @@ import imagePhoto2 from '../assets/image-photo-2.png';
 
 const iconsSrc: Record<string, string> = {
   addFile: iconAddFile,
-  addPhoto: iconAddPhoto,
-  book: iconBook,
-  copy: iconCopy,
+  addImage: iconAddPhoto,
   archive: iconArchive,
-  unarchive: iconUnArchive,
+  unarchive: iconUnarchive,
+  copy: iconCopy,
+  delete: iconDelete,
   edit: iconEdit,
   like: iconLike,
+  likePressed: iconLikePressed,
   fileError: iconFileError,
   filePDF: iconFilePDF,
-  filePhoto: iconFilePhoto,
+  fileLoad: iconFileLoad,
   filePlus: iconFilePlus,
   selectArrow: iconSelectArrow,
   emojiHeart: iconEmojiHeart,
@@ -46,34 +49,7 @@ const imagesSrc: Record<string, string> = {
   avatar: imageAvatar,
   photo1: imagePhoto1,
   photo2: imagePhoto2,
+  dropZone: backgroundDropZone,
 };
 
-const emotionsList = [
-  {
-    image: iconsSrc.emojiLike,
-    name: 'like',
-    count: 1,
-  },
-  {
-    image: iconsSrc.emojiHeart,
-    name: 'heart',
-    count: 1,
-  },
-  {
-    image: iconsSrc.emojiSmile,
-    name: 'smile',
-    count: 1,
-  },
-  {
-    image: iconsSrc.emojiLaugh,
-    name: 'laugh',
-    count: 1,
-  },
-  {
-    image: iconsSrc.emojiSurprise,
-    name: 'surprise',
-    count: 1,
-  },
-];
-
-export { iconsSrc, imagesSrc, emotionsList };
+export { iconsSrc, imagesSrc };

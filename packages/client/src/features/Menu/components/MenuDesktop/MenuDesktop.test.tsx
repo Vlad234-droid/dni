@@ -1,12 +1,11 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
 import { createMemoryHistory } from 'history';
 import { Router } from 'react-router-dom';
 
-import { renderWithTheme } from 'utils/testUtils';
+import { renderWithTheme, screen } from 'utils/testUtils';
 import { itemsDesktop } from '../../config/items';
-import MenuDesktop, { menuDesktopTestId } from './MenuDesktop';
-import { menuItemTestString } from '../MenuItem';
+import MenuDesktop, { MENU_DESKTOP_TEST_ID } from './MenuDesktop';
+import { MENU_TEST_ID_PREFIX } from '../MenuItem';
 
 describe('Menu feature', () => {
   const history = createMemoryHistory();
@@ -21,7 +20,7 @@ describe('Menu feature', () => {
   describe('MenuDesktop', () => {
     it('should render correctly', () => {
       renderWithRouter();
-      const result = screen.getByTestId(menuDesktopTestId);
+      const result = screen.getByTestId(MENU_DESKTOP_TEST_ID);
 
       expect(result).toBeInTheDocument();
     });
@@ -30,7 +29,7 @@ describe('Menu feature', () => {
       renderWithRouter();
 
       itemsDesktop.forEach(({ name }) => {
-        const result = screen.getByTestId(`${menuItemTestString}${name}`);
+        const result = screen.getByTestId(`${MENU_TEST_ID_PREFIX}${name}`);
 
         expect(result).toBeInTheDocument();
       });

@@ -10,6 +10,7 @@ type FormField<T> = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   Element: FC<any>;
   name: T;
+  options?: Array<string>;
 } & TestProps &
   HTMLProps<HTMLInputElement | HTMLSelectElement>;
 

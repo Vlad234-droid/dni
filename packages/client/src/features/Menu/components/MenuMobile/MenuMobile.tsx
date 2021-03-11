@@ -1,22 +1,18 @@
-import React, { useState } from 'react';
-import styled, { css } from 'styled-components';
+import React, { useState, FC } from 'react';
+import styled from 'styled-components';
+import Icon from '@beans/icon';
+import Button from '@beans/button';
 
 import MenuItem from '../MenuItem';
-import { stylesMenuItem as stylesMenuItemDesktop } from '../MenuDesktop';
-import {
-  TypeRenderMenuMobile,
-  InterfaceStylesItemsVisible,
-  InterfaceStylesButtonMore,
-} from '../../config/types';
-import { itemsMobile, itemButtonMore } from '../../config/items';
-import { countFlexBasis, attachActiveStyle } from '../../utils';
+import { itemsMobile } from '../../config/items';
 
-const StyledWrapperIcon = styled.div`
+const IconBlock = styled.div`
   width: 24px;
   height: 24px;
-  flex-shrink: 0;
+  margin: auto;
   overflow: hidden;
   position: relative;
+
   & > img {
     width: 100%;
     height: 100%;
@@ -33,136 +29,83 @@ const StyledIconActive = styled.img`
   opacity: 0;
 `;
 
-const stylesMenuItemDefault = css`
-  color: ${({ theme }) => theme.colors.active};
-  background-color: ${({ theme }) => theme.colors.white};
-`;
-
-const stylesMenuItemActive = css`
-  color: ${({ theme }) => theme.colors.white};
-  background-color: ${({ theme }) => theme.colors.primary};
-
-  ${StyledIconDefault} {
-    opacity: 0;
-  }
-  ${StyledIconActive} {
-    opacity: 1;
-  }
-`;
-
-const stylesMenuItem = css`
-  ${stylesMenuItemDefault}
-
-  display: flex;
-  min-height: 53px;
-  align-items: center;
-  flex-grow: 1;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 8px 8px 4px;
-  box-sizing: border-box;
-  position: relative;
-  font-size: 12px;
-  line-height: 14px;
-  white-space: nowrap;
-  border-left: 1px solid ${({ theme }) => theme.colors.lines.base};
-
-  &:hover {
-    ${stylesMenuItemActive}
-  }
-`;
-
-const stylesMenuItemOpened = `
-  ${stylesMenuItemDesktop}
-  max-width: 218px;
-`;
-
-const StyledNav = styled.nav`
+const MobileNavigation = styled.nav`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 `;
 
-const StyledItemsHidden = styled.div`
+const HiddenItems = styled.div`
   overflow: hidden;
+  position: fixed;
+  bottom: 60px;
+  background: ${({ theme }) => theme.colors.white};
+  width: calc(75%);
+  z-index: 999;
 `;
 
-const StyledButtonMore = styled.div<InterfaceStylesButtonMore>`
-  ${stylesMenuItem};
-  cursor: pointer;
-  ${attachActiveStyle}
-`;
-
-const StyledItemsVisible = styled.div<InterfaceStylesItemsVisible>`
+const VisibleItems = styled.div<{ amount: number }>`
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   justify-content: space-between;
+
   & > * {
-    flex-basis: ${countFlexBasis}%;
+    flex: 0 0 ${({ amount }) => 100 / (amount + 1)}%;
   }
 `;
 
-const menuMobileTestId = 'menu-mobile-test-id';
-const menuButtonMoreTestId = 'menu-button-more-test-id';
+const MenuBlock = styled.div`
+  padding: 8px 4px 0;
+  text-align: center;
+`;
 
-const MenuMobile: TypeRenderMenuMobile = () => {
+export const MOBILE_MENU_TEST_ID = 'menu_menu-mobile';
+export const MOBILE_MORE_TEST_ID = 'menu_menu-more';
+
+const MenuMobile: FC = () => {
   const [isOpened, setOpened] = useState(false);
 
-  const onButtonMoreClick = () => {
+  const handleMoreClick = () => {
     setOpened(!isOpened);
   };
 
   return (
-    <StyledNav data-testid={menuMobileTestId}>
+    <MobileNavigation data-testid={MOBILE_MENU_TEST_ID}>
       {isOpened && (
-        <StyledItemsHidden>
+        <HiddenItems>
           {itemsMobile.hidden.map(({ name, page }) => (
-            <MenuItem
-              key={name}
-              name={name}
-              page={page}
-              styles={stylesMenuItemOpened}
-              stylesActive={stylesMenuItemActive}
-            >
+            <MenuItem key={name} name={name} page={page}>
               <div>{name}</div>
             </MenuItem>
           ))}
-        </StyledItemsHidden>
+        </HiddenItems>
       )}
-      <StyledItemsVisible amount={itemsMobile.visible.length}>
+      <VisibleItems amount={itemsMobile.visible.length}>
         {itemsMobile.visible.map(({ name, page, iconSrc }) => (
-          <MenuItem
-            key={name}
-            name={name}
-            page={page}
-            styles={stylesMenuItem}
-            stylesActive={stylesMenuItemActive}
-          >
-            <StyledWrapperIcon>
-              <StyledIconDefault src={iconSrc?.default} alt='alt' />
-              <StyledIconActive src={iconSrc?.active} alt='alt' />
-            </StyledWrapperIcon>
-            <div>{name}</div>
+          <MenuItem key={name} name={name} page={page}>
+            <MenuBlock>
+              <IconBlock>
+                <StyledIconDefault src={iconSrc?.default} alt='alt' />
+                <StyledIconActive src={iconSrc?.active} alt='alt' />
+              </IconBlock>
+              <div>{name}</div>
+            </MenuBlock>
           </MenuItem>
         ))}
-        <StyledButtonMore
-          onClick={onButtonMoreClick}
-          stylesActive={isOpened ? stylesMenuItemActive : undefined}
-          data-testid={menuButtonMoreTestId}
-        >
-          <StyledWrapperIcon>
-            <StyledIconDefault
-              src={itemButtonMore.iconSrc?.default}
-              alt='alt'
-            />
-            <StyledIconActive src={itemButtonMore.iconSrc?.active} alt='alt' />
-          </StyledWrapperIcon>
-          <div>{itemButtonMore.name}</div>
-        </StyledButtonMore>
-      </StyledItemsVisible>
-    </StyledNav>
+        <div>
+          <MenuBlock>
+            <Button
+              inverse
+              onClick={handleMoreClick}
+              data-testid={MOBILE_MORE_TEST_ID}
+            >
+              <Icon graphic={'actions'} size={'xl'} />
+            </Button>
+          </MenuBlock>
+        </div>
+      </VisibleItems>
+    </MobileNavigation>
   );
 };
 
 export default MenuMobile;
-export { menuMobileTestId, menuButtonMoreTestId };

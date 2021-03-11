@@ -1,116 +1,85 @@
-import React, { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React, { FC } from 'react';
 import styled from 'styled-components';
 
+import { Emotion } from '../../config/types';
 import { iconsSrc } from '../../config/media';
-import { selectors } from '../../store/selectors';
-import { color, stylesWrapperIconControl } from '../../styled';
-import { TypeRenderPostControls } from '../../config/types';
-import { PostEmotions, PostEmotionsBig } from '../PostEmotions';
+import { PostReaderHandler } from '../../store/handlers';
+import PostEmotions from '../PostEmotions';
 
-const StyledWrapperIconControl = styled.div`
-  ${stylesWrapperIconControl}
+const PostControlIcon = styled.div<{
+  iconSrc: string;
+}>`
+  width: 40px;
+  height: 40px;
   cursor: pointer;
-  background-color: ${color.darkBaseBackground};
+  overflow: hidden;
+  border-radius: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-image: url(${({ iconSrc }) => iconSrc});
+  background-color: ${({ theme }) => theme.colors.tost};
 `;
 
-const stylesPostControls = `
+const PostControlsLeft = styled.div`
   display: flex;
   flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-`;
-
-const StyledPostControls = styled.div`
-  ${stylesPostControls}
-  padding-top: 24px;
-`;
-
-const StyledPostControlsLeft = styled.div`
-  ${stylesPostControls}
+  align-items: flex-end;
   & > * {
+    margin-top: 24px;
     margin-right: 8px;
   }
 `;
 
-const StyledPostControlsRight = styled.div`
-  ${stylesPostControls}
+const PostControlsRight = styled.div`
+  display: flex;
   & > * {
-    margin-left: 16px;
+    margin-top: 24px;
+    margin-left: 12px;
+    &: first-child {
+      margin-left: 0;
+    }
   }
 `;
 
-const StyledEmotionsContols = styled.div`
-  position: relative;
+const PostControlsWrapper = styled.div`
   display: flex;
-  align-items: center;
+  align-items: flex-end;
+  justify-content: space-between;
+  flex-wrap: wrap;
 `;
+
+interface PostControlsProps {
+  id: number;
+  emotions: Emotion[];
+  handler: PostReaderHandler['published'];
+}
 
 const postControlsTestId = 'post-controls-test-id';
 
-const PostControls: TypeRenderPostControls = ({
-  item,
-  onEdit,
-  onDelete,
-  onArchive,
-  onCopyLink,
-  onLikeChoice,
-}) => {
-  const dispatch = useDispatch();
-  const emotions = useSelector(selectors.getPostEmotions);
-  const [isEmojisOpened, setEmojisOpened] = useState(false);
-
-  const onLikeClick = () => {
-    setEmojisOpened(!isEmojisOpened);
-  };
-
+const PostControls: FC<PostControlsProps> = ({ emotions, handler, id }) => {
   return (
-    <StyledPostControls data-testid={postControlsTestId}>
-      <StyledPostControlsLeft>
-        <StyledWrapperIconControl
-          onClick={() => {
-            dispatch(onArchive(item));
+    <PostControlsWrapper data-testid={postControlsTestId}>
+      <PostControlsLeft>
+        <PostControlIcon iconSrc={iconsSrc.copy} />
+        <PostEmotions
+          emotions={emotions}
+          onEmotionClick={({ variant }) => {
+            handler.onPostLike({ id, variant });
           }}
-        >
-          <img src={iconsSrc.book} />
-        </StyledWrapperIconControl>
-        <StyledWrapperIconControl
-          onClick={() => {
-            dispatch(onCopyLink(item));
-          }}
-        >
-          <img src={iconsSrc.copy} />
-        </StyledWrapperIconControl>
-        <StyledEmotionsContols>
-          <StyledWrapperIconControl onClick={onLikeClick}>
-            <img src={iconsSrc.like} />
-          </StyledWrapperIconControl>
-          {isEmojisOpened && (
-            <PostEmotionsBig
-              onLikeClick={onLikeClick}
-              onLikeChoice={onLikeChoice}
-            />
-          )}
-          {emotions.length > 0 && <PostEmotions emotions={emotions} />}
-        </StyledEmotionsContols>
-      </StyledPostControlsLeft>
-      <StyledPostControlsRight>
-        <StyledWrapperIconControl
-          onClick={() => {
-            dispatch(onEdit(item));
-          }}
-        >
-          <img src={iconsSrc.edit} />
-        </StyledWrapperIconControl>
-        <StyledWrapperIconControl
-          onClick={() => {
-            dispatch(onArchive(item));
-          }}
-        >
-          <img src={iconsSrc.archive} />
-        </StyledWrapperIconControl>
-      </StyledPostControlsRight>
-    </StyledPostControls>
+          onPostUnlike={() => handler.onPostUnlike({ id })}
+        />
+      </PostControlsLeft>
+      <PostControlsRight>
+        <PostControlIcon
+          iconSrc={iconsSrc.edit}
+          onClick={() => handler.onPostEdit({ id })}
+        />
+        <PostControlIcon
+          iconSrc={iconsSrc.archive}
+          onClick={() => handler.onPostArchive({ id })}
+        />
+      </PostControlsRight>
+    </PostControlsWrapper>
   );
 };
 

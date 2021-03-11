@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { headingXL } from 'styles';
+import { headingXL, headingSM } from 'styles';
 
 export const Wrapper = styled.div.attrs({
   'data-testid': 'info-panel',
@@ -26,4 +26,11 @@ export const Title = styled.h2`
   color: ${({ theme }) => theme.colors.tescoBlue};
   margin-bottom: 24px;
   ${headingXL}
+`;
+
+export const Description = styled.p`
+  color: ${({ theme }) => theme.colors.tescoBlue};
+  margin-bottom: 24px;
+  ${headingSM}
+  line-height: 28px;
 `;

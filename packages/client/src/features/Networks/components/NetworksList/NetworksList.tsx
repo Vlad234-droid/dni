@@ -4,9 +4,6 @@ import { useSelector } from 'react-redux';
 
 import { RootState } from 'store/rootReducer';
 import useDispatch from 'hooks/useDispatch';
-import useFetch from 'hooks/useFetch';
-
-import Network from '../../config/Network';
 import NetworksItem from '../NetworksItem';
 
 import {
@@ -22,14 +19,10 @@ const DEFAULT_ID = 1;
 const Networks: FC = () => {
   const dispatch = useDispatch();
 
-  // etities
+  // entities
   const list = useSelector(listSelector);
   const defaultNetwork = useSelector((store: RootState) =>
     byIdSelector(store, DEFAULT_ID),
-  );
-  // fetch example
-  const [{ isLoading, response }, doFetch] = useFetch<ListResponse, Network[]>(
-    [],
   );
 
   const getById = useCallback(() => {
@@ -39,14 +32,6 @@ const Networks: FC = () => {
   // load general list
   useEffect(() => {
     dispatch(getList());
-  }, []);
-
-  // load general list by fetch
-  useEffect(() => {
-    doFetch(
-      (api) => api.networks.list(),
-      (res) => res.data,
-    );
   }, []);
 
   // load default network

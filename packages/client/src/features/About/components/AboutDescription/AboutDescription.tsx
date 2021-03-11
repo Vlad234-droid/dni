@@ -24,7 +24,7 @@ const AboutDescription: FC<Props> = ({ onClick, isOpen }) => (
       and reflect the diversity of the communities we serve.
     </Content>
     <Button onClick={onClick} inverse variant='primary'>
-      Read more
+      {isOpen ? 'Read less' : 'Read more'}
       <Icon graphic={isOpen ? 'contract' : 'expand'} size='xx' />
     </Button>
   </Wrapper>

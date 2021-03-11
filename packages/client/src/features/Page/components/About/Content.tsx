@@ -4,8 +4,9 @@ import styled from 'styled-components';
 import About from 'features/About';
 import { InfoPanel } from 'features/InfoPanel';
 import NetworksPreview from 'features/NetworksPreview';
-import Carousel from 'features/Carousel';
 import { textXX } from 'styles';
+import MainCarousel, { CarouselContent } from 'features/MainCarousel';
+import networks from './networks';
 
 const InfoPanelReducer = styled.div`
   margin: 60px 0;
@@ -33,7 +34,11 @@ const Content: FC = () => (
       </InfoPanelReducer>
       <NetworksPreview />
     </Reducer>
-    <Carousel />
+    <MainCarousel id='networks-preview-carousel'>
+      {networks.map(({ id, ...network }) => (
+        <CarouselContent key={id} {...network} />
+      ))}
+    </MainCarousel>
     <Footer>© Tesco.com 2020 All Rights Reserved</Footer>
   </>
 );

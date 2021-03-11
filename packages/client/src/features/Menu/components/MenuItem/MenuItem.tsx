@@ -1,57 +1,24 @@
-import React from 'react';
-import { Link, useHistory } from 'react-router-dom';
-import styled from 'styled-components';
+import React, { FC } from 'react';
+import { MenuLink } from './styled';
 
-import {
-  InterfaceStylesMenuItem,
-  TypeRenderMenuItem,
-} from '../../config/types';
-import { attachStyle, attachActiveStyleIfMatch } from '../../utils';
+export const MENU_TEST_ID_PREFIX = 'menu-item-test-id-';
 
-const StyledRouterLink = styled(Link)`
-  text-decoration: none;
-  color: ${({ theme }) => theme.colors.primary};
-  &:first-child > * {
-    border: 0;
-  }
-`;
-
-const StyledMenuItem = styled.div<InterfaceStylesMenuItem>`
-  ${attachStyle}
-  ${attachActiveStyleIfMatch}
-`;
-
-const menuItemTestString = 'menu-item-test-id-';
-
-const MenuItem: TypeRenderMenuItem = ({
+const MenuItem: FC<{ name: string; page: string }> = ({
   name,
   page,
   children,
-  styles,
-  stylesActive,
 }) => {
-  const to = '/' + page;
-  const {
-    location: { pathname },
-  } = useHistory();
-
   return (
-    <StyledRouterLink
-      to={to}
+    <MenuLink
+      exact={true}
+      activeClassName={'active-link'}
+      data-testid={`${MENU_TEST_ID_PREFIX}${name}`}
+      to={`/${page}`}
       title={name}
-      data-testid={`${menuItemTestString}${name}`}
     >
-      <StyledMenuItem
-        to={to}
-        path={pathname}
-        styles={styles}
-        stylesActive={stylesActive}
-      >
-        {children}
-      </StyledMenuItem>
-    </StyledRouterLink>
+      {children}
+    </MenuLink>
   );
 };
 
 export default MenuItem;
-export { menuItemTestString };
