@@ -36,6 +36,7 @@
     "@beans/icon": "^18.2.2",
     "@beans/input": "^18.2.3",
     "@beans/link": "^18.2.2",
+    "@beans/multiselect-dropdown": "^18.2.4",
     "@beans/responsive-image": "^18.2.3",
     "@beans/selectors": "^18.2.2",
     "@beans/textarea": "^18.2.2",
@@ -56,7 +57,10 @@
     "lodash.isplainobject": "^4.0.6",
     "lodash.isstring": "^4.0.1",
     "lodash.merge": "^4.6.2",
+<<<<<<< HEAD
     "lodash.omit": "^4.5.0",
+=======
+>>>>>>> feat(client): TESCO-533 Add Multiselect field
     "lodash.padstart": "^4.6.1",
     "lodash.pick": "^4.4.0",
     "luxon": "^1.26.0",

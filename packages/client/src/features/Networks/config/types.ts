@@ -4,7 +4,7 @@ interface FormData {
   email: string;
   manager: string;
   description?: string;
-  partnership?: string;
+  partnership?: Array<string | undefined>;
 }
 
 export default interface Network extends FormData {

@@ -4,6 +4,10 @@ import styled from 'styled-components';
 import Label from '../Label';
 import Error from '../Error';
 
+type TestProps = {
+  testId?: string;
+};
+
 export type Props = {
   label?: string;
   error?: string;
@@ -16,11 +20,14 @@ export type Registrable = {
   register: (name?: string) => void | RefObject<any>;
 };
 
-type DivProps = HTMLProps<HTMLDivElement>;
-
-const FieldWrapper: FC<Props> = ({ children, label, error }) => {
+const FieldWrapper: FC<Props & TestProps> = ({
+  children,
+  label,
+  error,
+  testId,
+}) => {
   return (
-    <Wrapper>
+    <Wrapper testId={testId}>
       {label && <Label>{label}</Label>}
       {children}
       {error && <Error>{error}</Error>}
@@ -28,7 +35,10 @@ const FieldWrapper: FC<Props> = ({ children, label, error }) => {
   );
 };
 
-const Wrapper = styled.div<DivProps>`
+const Wrapper = styled.div.attrs<TestProps>(({ testId }) => ({
+  'data-testid': testId,
+}))<TestProps>`
+  margin-top: 5px;
   display: flex;
   flex-direction: column;
   position: relative;

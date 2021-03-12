@@ -7,4 +7,5 @@ export { default as Select } from './components/Select';
 export { default as DatePicker } from './components/DatePicker';
 export { default as TimeInput } from './components/TimeInput';
 export { default as DateTimePicker } from './components/DateTimePicker';
+export { default as Multiselect } from './components/Multiselect';
 export { default as BackLink } from './components/BackLink';

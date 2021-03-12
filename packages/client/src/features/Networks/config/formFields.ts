@@ -1,5 +1,5 @@
 import { FormField } from 'features/GenericForm';
-import { TextArea, TextInput, FileInput, Select } from 'features/Common';
+import { TextArea, TextInput, FileInput, Multiselect } from 'features/Common';
 import { Names } from './types';
 
 const formFields: Array<FormField<Names>> = [
@@ -42,13 +42,17 @@ const formFields: Array<FormField<Names>> = [
     required: true,
   },
   {
-    Element: Select,
+    Element: Multiselect,
     name: 'partnership',
     placeholder: 'Choose Partner',
     testID: 'partnership',
     label: 'Network Partnership',
     required: true,
-    options: ['Choose Partner', 'test1@tesco.com', 'test2@tesco.com'],
+    options: [
+      { id: 'test1@tesco.com', labelText: 'test1@tesco.com', selected: true },
+      { id: 'test2@tesco.com', labelText: 'test2@tesco.com', selected: false },
+      { id: 'test3@tesco.com', labelText: 'test3@tesco.com', selected: false },
+    ],
   },
 ];
 

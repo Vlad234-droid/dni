@@ -1327,6 +1327,39 @@
     "@beans/selectors" "^18.0.0"
     "@beans/typography" "^18.0.0"
 
+"@beans/checkbox-with-label@^18.0.0":
+  version "18.2.4"
+  resolved "https://nexus.ourtesco.com/repository/online-web-group/@beans/checkbox-with-label/-/checkbox-with-label-18.2.4.tgz#3cd55e7fe58e26fc27e5c2711a300cc06f56f100"
+  integrity sha512-bse3QTjq1yqFa81vZvGR/6uT8sr6xQXfuc9NVC1cOd9heEN1DGRNCsxgqXqGi1AyszvBvfaVLbSFbDbCQsTkhg==
+  dependencies:
+    "@beans/checkbox" "^18.0.0"
+    "@beans/foundation" "^18.0.0"
+    "@beans/helpers" "^18.0.0"
+    "@beans/label" "^18.0.0"
+    "@beans/selectors" "^18.0.0"
+    "@beans/typography" "^18.0.0"
+
+"@beans/checkbox@^18.0.0":
+  version "18.2.4"
+  resolved "https://nexus.ourtesco.com/repository/online-web-group/@beans/checkbox/-/checkbox-18.2.4.tgz#44e46b766bf33327037de2fca1a018dc5c946c33"
+  integrity sha512-MroTlkr2xxAadvSGQuagZ/oMBwUQ+o9GardzNrvhFw33NROLziazjumfvbDvzJICfAGEIJzCh4NIAEJGrZvL+A==
+  dependencies:
+    "@beans/foundation" "^18.0.0"
+    "@beans/helpers" "^18.0.0"
+    "@beans/icon" "^18.0.0"
+    "@beans/selectors" "^18.0.0"
+
+"@beans/chips@^18.0.0":
+  version "18.2.4"
+  resolved "https://nexus.ourtesco.com/repository/online-web-group/@beans/chips/-/chips-18.2.4.tgz#03147ac832f1533a4a23e1556501854206422a35"
+  integrity sha512-Lz37r8W2a5zzKi/7h+IH05YZmFXxlp3I9011aACOlCFQaef6FMltPuNwV1AGhtUgXxgWIswC9jUQceU/n+6BUw==
+  dependencies:
+    "@beans/foundation" "^18.0.0"
+    "@beans/helpers" "^18.0.0"
+    "@beans/icon" "^18.0.0"
+    "@beans/link" "^18.0.0"
+    "@beans/selectors" "^18.0.0"
+
 "@beans/constants@^18.0.0", "@beans/constants@^18.2.1":
   version "18.2.1"
   resolved "https://nexus.ourtesco.com/repository/online-web-group/@beans/constants/-/constants-18.2.1.tgz#5272d16637e04e60145c420ca8febd75bdc79806"
@@ -1499,6 +1532,31 @@
     "@beans/icon" "^18.0.0"
     "@beans/selectors" "^18.0.0"
     "@beans/theme" "^18.0.0"
+
+"@beans/menu@^18.0.0":
+  version "18.2.4"
+  resolved "https://nexus.ourtesco.com/repository/online-web-group/@beans/menu/-/menu-18.2.4.tgz#59954ac18a99134a58bed9beab4d0851cdffdfc7"
+  integrity sha512-uaQQ0C2s4SWCOVsR8ZLYVZvePbhNI9/DUjJ4ShJb7iGPGMSZQJEunpRrN5Cbqu8HXct3Gw9AumhdSO5ltYFomg==
+  dependencies:
+    "@beans/button" "^18.0.0"
+    "@beans/foundation" "^18.0.0"
+    "@beans/helpers" "^18.0.0"
+    "@beans/icon" "^18.0.0"
+    "@beans/link" "^18.0.0"
+    "@beans/selectors" "^18.0.0"
+
+"@beans/multiselect-dropdown@^18.2.4":
+  version "18.2.4"
+  resolved "https://nexus.ourtesco.com/repository/online-web-group/@beans/multiselect-dropdown/-/multiselect-dropdown-18.2.4.tgz#144a2b387b9db75670daffceda942c8e0d6983ac"
+  integrity sha512-HhY108xtc5NTVD3KnhyiwfFuYJroppvISdlpItzvf35uo3I3P9Tla5hpgmiId1S9D7oFLVLhRTwbK7Kf09PBxQ==
+  dependencies:
+    "@beans/checkbox-with-label" "^18.0.0"
+    "@beans/chips" "^18.0.0"
+    "@beans/foundation" "^18.0.0"
+    "@beans/helpers" "^18.0.0"
+    "@beans/icon" "^18.0.0"
+    "@beans/menu" "^18.0.0"
+    "@beans/selectors" "^18.0.0"
 
 "@beans/responsive-image@^18.2.3":
   version "18.2.3"
