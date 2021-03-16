@@ -1,10 +1,5 @@
 import { KeyboardEvent } from 'react';
-import { DateObjectUnits } from 'luxon';
-import {
-  ALLOWED_DATE_CHARACTERS,
-  ALLOWED_KEY_CODES,
-  KEY_CODES,
-} from '@beans/date-input';
+import { DateObjectUnits, DateTime } from 'luxon';
 import { isAnyDateFragmentEmpty } from '@beans/helpers';
 import padStart from 'lodash.padstart';
 import findIndex from 'lodash.findindex';
@@ -12,7 +7,6 @@ import findIndex from 'lodash.findindex';
 import {
   START_TIME_OPTION,
   END_TIME_OPTION,
-  DEFAULT_MINUTES,
   HOUR_KEY,
   MINUTE_KEY,
   TIME_SEPARATOR,
@@ -20,14 +14,21 @@ import {
   TIME_ARIA_LABEL,
   TIME_INPUT_MAX_LIMITS,
 } from '../config/dateTime';
-import { Time, TimePart, ValidTime } from '../config/types';
+import { Time, TimePart, ValidTime, Date } from '../config/types';
 
-export const getAvailableTimeOptions = () => {
-  let start = START_TIME_OPTION;
+export const getAvailableTimeOptions = (
+  startTime = START_TIME_OPTION,
+  endTime = END_TIME_OPTION,
+  minutes = 0,
+) => {
+  let start = startTime;
   const options = [];
 
-  while (start <= END_TIME_OPTION) {
-    options.push({ hh: start.toString(), mm: DEFAULT_MINUTES });
+  while (start <= endTime) {
+    options.push({
+      hh: start.toString(),
+      mm: getStringWithLeadingZero(minutes.toString()),
+    });
     start++;
   }
 
@@ -56,54 +57,35 @@ export const getTimeObject = (dateTime?: DateObjectUnits) => {
 export const getStringWithLeadingZero = (string: string) =>
   string && string.length < 2 ? padStart(string, 2, '0') : string;
 
-export const timeFormatOrder = (
-  timeFormat: TimePart | typeof TIME_FORMAT,
+export const getTimeWithLeadingZero = (time: Time) => ({
+  hh: getStringWithLeadingZero(time.hh),
+  mm: getStringWithLeadingZero(time.mm),
+});
+
+export const getTimeFragments = (
+  timeFormat = TIME_FORMAT,
   timeSeparator = TIME_SEPARATOR,
 ) => timeFormat.split(timeSeparator) as TimePart[];
 
-export const isTimeOptionActive = (current: Time, selected: Time) =>
-  current[HOUR_KEY] === selected[HOUR_KEY] &&
-  current[MINUTE_KEY] === selected[MINUTE_KEY];
+export const isTimeOptionActive = (selected: Time, option: Time) =>
+  selected[HOUR_KEY] === option[HOUR_KEY] &&
+  selected[MINUTE_KEY] === option[MINUTE_KEY];
 
-export const getTimeValue = (time: Time, timeFormat: string = TIME_FORMAT) => {
-  if (isAnyDateFragmentEmpty(time, timeFormat)) return '';
+export const getTimeValue = (time: Time) => {
+  // isAnyDateFragmentEmpty internally uses separator '-'
+  if (isAnyDateFragmentEmpty(time, TIME_FORMAT)) return '';
 
   const { hh, mm } = time;
 
-  return timeFormat
-    .replace(HOUR_KEY, hh || '')
-    .replace(MINUTE_KEY, padStart(mm, 2, '0'));
-};
-
-export const isKeyForbidden = (key: number) => {
-  const keyChar = String.fromCharCode(key);
-
-  return (
-    ALLOWED_DATE_CHARACTERS.test(keyChar) && ALLOWED_KEY_CODES.includes(key)
+  return TIME_FORMAT.replace(HOUR_KEY, hh).replace(
+    MINUTE_KEY,
+    padStart(mm, 2, '0'),
   );
-};
-
-export const shouldFocusOnPrevInput = (
-  key: number,
-  element: HTMLInputElement,
-) => {
-  const selectionStart = element.selectionStart;
-
-  return key === KEY_CODES.leftArrow && selectionStart === 0;
-};
-
-export const shouldFocusOnNextInput = (
-  key: number,
-  element: HTMLInputElement,
-) => {
-  const selectionStart = element.selectionStart;
-  const value = element.value;
-
-  return key === KEY_CODES.rightArrow && selectionStart === value.length;
 };
 
 export const getKey = (event: KeyboardEvent) => {
   const { charCode, which } = event;
+
   return !charCode ? which : charCode;
 };
 
@@ -115,17 +97,23 @@ export const isLastTimeFragment = (
 export const getAriaLabel = (time: Time) =>
   `${TIME_ARIA_LABEL}: ${getTimeValue(time)}`;
 
-export const isFragmentFilled = (
-  index: number,
-  value: Time,
-  fragments: Array<string>,
-  fragmentType: TimePart,
-) =>
-  index < fragments.length - 1 &&
+export const isFragmentFilled = (value: Time, fragmentType: TimePart) =>
   value[fragmentType].length === fragmentType.length;
+
+export const areFragmentsFilled = (value: Time) =>
+  isFragmentFilled(value, HOUR_KEY) && isFragmentFilled(value, MINUTE_KEY);
 
 export const getIndexOfTimeOption = (options: Array<Time>, time: Time) =>
   findIndex(options, { [HOUR_KEY]: time[HOUR_KEY] });
+
+export const isTypedValueValid = (value?: string | number) => {
+  if (!value) return true;
+
+  return !isNaN(value as number);
+};
+
+export const isTimeFragmentValid = (type: TimePart, value: string | number) =>
+  isTypedValueValid(value) && !(value > TIME_INPUT_MAX_LIMITS[type]);
 
 export const getTimeValidationObject = (time: Time) =>
   (Object.keys(time) as TimePart[]).reduce(
@@ -136,18 +124,14 @@ export const getTimeValidationObject = (time: Time) =>
     {} as ValidTime,
   );
 
-export const isTimeFragmentValid = (type: TimePart, value: string | number) => {
-  if (!value) return true;
+export const getAriaDescribedBy = (id: string, error: boolean) =>
+  (error && `${id}-error`) || undefined;
 
-  return !(
-    isNaN(value as number) ||
-    !value ||
-    value > TIME_INPUT_MAX_LIMITS[type]
-  );
-};
-
-export const isTypedValueInvalid = (value?: string | number) => {
-  if (!value) return false;
-
-  return isNaN(value as number) || !value;
-};
+export const getDateTimeFromObject = (date: Date, time: Time) =>
+  DateTime.fromObject({
+    month: Number(date.mm),
+    day: Number(date.dd),
+    year: Number(date.yyyy),
+    hour: Number(time.hh),
+    minute: Number(time.mm),
+  });

@@ -7,10 +7,9 @@ import TimeInput from '../TimeInput';
 import TimeDropdown from '../TimeDropdown';
 import { getAvailableTimeOptions } from '../../utils';
 import { DateTimeProps, Time, TimeValid } from '../../config/types';
-import { TIME_ERROR_MESSAGE } from '../../config/dateTime';
 
 export const CalendarContainer = styled.div`
-  margin-top: 4px;
+  position: relative;
 `;
 
 interface Props extends DateTimeProps {
@@ -19,6 +18,7 @@ interface Props extends DateTimeProps {
   onDropdownToggle: (value: boolean) => void;
   isTimeValid: boolean;
   onTimeChange: ({ valid, value }: { valid: TimeValid; value: Time }) => void;
+  errorMessage: string;
 }
 
 const TimePicker: FC<Props> = ({
@@ -31,16 +31,18 @@ const TimePicker: FC<Props> = ({
   onTimeChange,
   isTimeValid,
   time,
+  errorMessage,
 }) => {
   const [timeOptions] = useState(getAvailableTimeOptions());
 
-  const memoizedRenderCalendar = useMemo(
+  const memoizedRenderDropdown = useMemo(
     () => () => (
       <TimeDropdown
         selectedTime={time}
         onSelect={handleSelect}
         onEnter={handleDropdownClose}
         options={timeOptions}
+        id={id}
       />
     ),
     [id, time],
@@ -48,23 +50,25 @@ const TimePicker: FC<Props> = ({
 
   const memoizedRenderFormGroup = useMemo(
     () => () => (
-      <FormGroup
-        id={id}
-        labelText={labelText}
-        required={required}
-        error={!isTimeValid}
-        name={name}
-        errorMessage={TIME_ERROR_MESSAGE}
-      >
-        <TimeInput
-          onTimeInputChange={handleInputChange}
-          id={`${id}-time-input`}
+      <div data-testid={`${id}-input-group`}>
+        <FormGroup
+          id={id}
+          labelText={labelText}
+          required={required}
           error={!isTimeValid}
-          time={time}
-          onIconClick={handleIconClick(isDropdownOpen)}
-          name={`${name}-time-input`}
-        />
-      </FormGroup>
+          name={name}
+          errorMessage={errorMessage}
+        >
+          <TimeInput
+            onTimeInputChange={handleInputChange}
+            id={`${id}-input`}
+            error={!isTimeValid}
+            time={time}
+            onIconClick={handleIconClick(isDropdownOpen)}
+            name={`${name}-input`}
+          />
+        </FormGroup>
+      </div>
     ),
     [id, labelText, required, time, isTimeValid, isDropdownOpen],
   );
@@ -92,8 +96,8 @@ const TimePicker: FC<Props> = ({
     <SingleDatePicker
       id={id}
       name={name}
-      open={isTimeValid && isDropdownOpen}
-      renderCalendar={memoizedRenderCalendar}
+      open={isDropdownOpen}
+      renderCalendar={memoizedRenderDropdown}
       renderFormGroup={memoizedRenderFormGroup}
       required={required}
       CalendarContainer={CalendarContainer}

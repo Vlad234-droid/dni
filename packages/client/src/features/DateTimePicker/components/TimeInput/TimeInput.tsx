@@ -17,21 +17,18 @@ import Input from '@beans/input';
 import Icon from '@beans/icon';
 
 import {
-  timeFormatOrder,
-  isKeyForbidden,
-  shouldFocusOnPrevInput,
-  shouldFocusOnNextInput,
+  getTimeFragments,
   getKey,
   isLastTimeFragment,
   getAriaLabel,
   isFragmentFilled,
   getTimeValidationObject,
-  isTypedValueInvalid,
+  isTypedValueValid,
   getStringWithLeadingZero,
+  getAriaDescribedBy,
 } from '../../utils';
 import { Time, TimePart } from '../../config/types';
 import {
-  TIME_FORMAT,
   TIME_FRAGMENT_NAMES,
   TIME_FRAGMENTS_PLACEHOLDER as PLACEHOLDER,
   VISIBLE_TIME_SEPARATOR,
@@ -42,6 +39,8 @@ import {
   IconWrapper,
   fragmentStyles,
 } from './styled';
+import { KEY_CODES } from '@beans/date-input';
+import TimeDropdown from '../TimeDropdown';
 
 type Props = {
   time: Time;
@@ -70,20 +69,6 @@ const TimeInput: FC<Props> = ({
   const [isInputInFocus, setInputInFocus] = useState(false);
   const [timeSelected, setTimeSelected] = useState(time);
 
-  const memoizedFragments = useMemo(() => timeFormatOrder(TIME_FORMAT), []);
-  const memoizedAriaLabel = useMemo(() => getAriaLabel(time), [time]);
-  const memoizedRenderSeparator = useMemo(
-    () => (index: number) =>
-      !isLastTimeFragment(index, memoizedFragments) && (
-        <DateSeparator>{VISIBLE_TIME_SEPARATOR}</DateSeparator>
-      ),
-    [],
-  );
-  const memoizedRenderInput = useMemo(
-    () => (props: ComponentProps<typeof Input>) => <Input {...props} />,
-    [],
-  );
-
   useEffect(() => {
     setTimeSelected(time);
   }, [time]);
@@ -98,7 +83,7 @@ const TimeInput: FC<Props> = ({
       const value = element.value;
 
       // stop here if user is typing something other than numbers
-      if (isTypedValueInvalid(value)) return;
+      if (!isTypedValueValid(value)) return;
 
       const updatedTimeValue = { ...timeSelected, [fragmentType]: value };
       const validationResult = getTimeValidationObject(updatedTimeValue);
@@ -110,12 +95,8 @@ const TimeInput: FC<Props> = ({
       });
 
       if (
-        isFragmentFilled(
-          index,
-          updatedTimeValue,
-          memoizedFragments,
-          fragmentType,
-        )
+        !isLastTimeFragment(index, memoizedFragments) &&
+        isFragmentFilled(updatedTimeValue, fragmentType)
       ) {
         focusOnNextInput(index);
       }
@@ -125,6 +106,7 @@ const TimeInput: FC<Props> = ({
 
   // if focusOnNextInput is called, than handleOnBlur gets old value of timeSelected
   // that is why it relies on actual value
+  // TODO: in test when focusing on another input Blur is not called - find a solution
   const handleOnBlur = useCallback(
     (fragmentType: string) => (event: FocusEvent<HTMLElement>) => {
       event.preventDefault();
@@ -136,9 +118,16 @@ const TimeInput: FC<Props> = ({
 
       // if values is shorter than expected, add leading zero
       if (value.length < 2) {
-        setTimeSelected({
+        const updatedTimeValue = {
           ...timeSelected,
           [fragmentType]: getStringWithLeadingZero(value),
+        };
+
+        setTimeSelected(updatedTimeValue);
+
+        onTimeInputChange({
+          valid: getTimeValidationObject(updatedTimeValue),
+          time: updatedTimeValue,
         });
       }
     },
@@ -192,33 +181,42 @@ const TimeInput: FC<Props> = ({
     (index) => (event: KeyboardEvent<HTMLElement>) => {
       const key = getKey(event);
 
-      if (isKeyForbidden(key)) {
+      if (key === KEY_CODES.leftArrow) {
         event.preventDefault();
-        return;
-      }
-
-      const element = event.target as HTMLInputElement;
-
-      if (shouldFocusOnPrevInput(key, element)) {
         focusOnPrevInput(index);
-      } else if (shouldFocusOnNextInput(key, element)) {
+      } else if (key === KEY_CODES.rightArrow) {
+        event.preventDefault();
         focusOnNextInput(index);
       }
     },
     [],
   );
 
-  const getAriaDescribedBy = useCallback(
-    () => (error && `${id}-error`) || undefined,
-    [error],
+  const memoizedAriaDescribedBy = useMemo(() => getAriaDescribedBy(id, error), [
+    error,
+  ]);
+  const memoizedFragments = useMemo(() => getTimeFragments(), []);
+  const memoizedAriaLabel = useMemo(() => getAriaLabel(time), [time]);
+  const memoizedRenderInput = useMemo(
+    () => (props: ComponentProps<typeof Input>) => <Input {...props} />,
+    [],
   );
-
+  const memoizedRenderSeparator = useMemo(
+    () => (index: number) =>
+      !isLastTimeFragment(index, memoizedFragments) && (
+        <DateSeparator data-testid={`${id}-separator`}>
+          {VISIBLE_TIME_SEPARATOR}
+        </DateSeparator>
+      ),
+    [],
+  );
   const memoizedInputFragments = useMemo(
     () =>
       memoizedFragments.map((fragmentType, index) => (
         <Fragment key={PLACEHOLDER[fragmentType]}>
           {memoizedRenderInput({
-            'aria-describedby': getAriaDescribedBy(),
+            'data-testid': `${id}-input-${fragmentType}`,
+            'aria-describedby': memoizedAriaDescribedBy,
             'aria-invalid': error,
             'aria-label': TIME_FRAGMENT_NAMES[fragmentType],
             placeholder: PLACEHOLDER[fragmentType],
@@ -249,7 +247,11 @@ const TimeInput: FC<Props> = ({
     >
       {memoizedInputFragments}
       <IconWrapper onClick={handleIconClick}>
-        <Icon graphic='openingHours' size='sm' />
+        <Icon
+          data-testid={`${id}-input-icon`}
+          graphic='openingHours'
+          size='sm'
+        />
       </IconWrapper>
     </SingleContainer>
   );

@@ -4,6 +4,8 @@ import {
   END_DATE,
 } from '@beans/date-input';
 
+import { Type } from './types';
+
 export const TIME_ARIA_LABEL = 'Time';
 
 export const START_TIME_OPTION = 9;
@@ -15,8 +17,6 @@ export const VISIBLE_TIME_SEPARATOR = ':';
 
 export const HOUR_KEY = 'hh';
 export const MINUTE_KEY = 'mm';
-
-export const DEFAULT_MINUTES = '00';
 
 export const START_TIME = 'startTime';
 export const END_TIME = 'endTime';
@@ -44,25 +44,25 @@ export const TIME_LABELS = {
   [END_TIME]: 'End Time',
 };
 
-export const TYPE_START = 'start';
-export const TYPE_END = 'end';
+// export const TYPE_START = 'start';
+// export const TYPE_END = 'end';
 
 export const TIME_LABEL_BY_TYPE = {
-  [TYPE_START]: TIME_LABELS[START_TIME],
-  [TYPE_END]: TIME_LABELS[END_TIME],
+  [Type.TYPE_START]: TIME_LABELS[START_TIME],
+  [Type.TYPE_END]: TIME_LABELS[END_TIME],
 };
 
 export const DATE_LABEL_BY_TYPE = {
-  [TYPE_START]: DATE_LABELS[START_DATE],
-  [TYPE_END]: DATE_LABELS[END_DATE],
+  [Type.TYPE_START]: DATE_LABELS[START_DATE],
+  [Type.TYPE_END]: DATE_LABELS[END_DATE],
 };
 
 export const TIME_NAME_BY_TYPE = {
-  [TYPE_START]: START_TIME,
-  [TYPE_END]: END_TIME,
+  [Type.TYPE_START]: START_TIME,
+  [Type.TYPE_END]: END_TIME,
 };
 
 export const DATE_NAME_BY_TYPE = {
-  [TYPE_START]: START_DATE,
-  [TYPE_END]: END_DATE,
+  [Type.TYPE_START]: START_DATE,
+  [Type.TYPE_END]: END_DATE,
 };

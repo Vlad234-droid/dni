@@ -1,6 +1,6 @@
 import React, {
   FC,
-  ChangeEvent,
+  MouseEvent,
   KeyboardEvent,
   useCallback,
   useRef,
@@ -14,7 +14,12 @@ import {
   VISIBLE_TIME_SEPARATOR,
 } from '../../config/dateTime';
 import { Time } from '../../config/types';
-import { isTimeOptionActive, getIndexOfTimeOption } from '../../utils';
+import {
+  isTimeOptionActive,
+  getIndexOfTimeOption,
+  getKey,
+  getTimeWithLeadingZero,
+} from '../../utils';
 import { Wrapper, Item } from './styled';
 
 type Props = {
@@ -22,6 +27,7 @@ type Props = {
   onSelect: (option: Time) => void;
   onEnter: () => void;
   selectedTime: Time;
+  id: string;
 };
 
 const TimeDropdown: FC<Props> = ({
@@ -29,8 +35,8 @@ const TimeDropdown: FC<Props> = ({
   onSelect,
   selectedTime,
   onEnter,
+  id,
 }) => {
-  const optionRefs = useRef(new Map());
   const wrapperRef = useRef<HTMLDivElement>(null);
 
   const memoizedIsOptionActive = useCallback(
@@ -40,58 +46,37 @@ const TimeDropdown: FC<Props> = ({
 
   useEffect(() => {
     focusOnWrapper();
-    focusOnOption(selectedTime);
   }, []);
 
   const focusOnWrapper = useCallback(() => {
     wrapperRef.current && wrapperRef.current.focus();
   }, []);
 
-  const focusOnOption = useCallback(
-    (option: Time) => {
-      const { hh } = option;
-      const optionRefRef = optionRefs.current.get(hh);
-
-      if (!optionRefRef) return;
-
-      optionRefRef.focus();
-    },
-    [selectedTime],
-  );
-
-  const handleTimeSelect = useCallback((event, option: Time) => {
+  const handleTimeSelect = useCallback((event: MouseEvent, option: Time) => {
     event.preventDefault();
     event.stopPropagation();
 
-    focusOnOption(option);
-    onSelect(option);
+    onSelect(getTimeWithLeadingZero(option));
   }, []);
-
-  const getOptionRef = useCallback(
-    (hh: string) => (element: HTMLElement) => {
-      optionRefs.current.set(hh, element);
-    },
-    [],
-  );
 
   const handleKeyboardNavigation = useCallback(
     (event: KeyboardEvent<HTMLElement>) => {
-      const { keyCode } = event;
+      const key = getKey(event);
       let newOption;
 
-      switch (keyCode) {
+      switch (key) {
         case UP_ARROW:
           event.preventDefault();
 
           newOption = options[getIndexOfTimeOption(options, selectedTime) - 1];
-          newOption && onSelect(newOption);
+          newOption && onSelect(getTimeWithLeadingZero(newOption));
           break;
 
         case DOWN_ARROW:
           event.preventDefault();
 
           newOption = options[getIndexOfTimeOption(options, selectedTime) + 1];
-          newOption && onSelect(newOption);
+          newOption && onSelect(getTimeWithLeadingZero(newOption));
           break;
 
         case ENTER:
@@ -105,16 +90,20 @@ const TimeDropdown: FC<Props> = ({
   );
 
   return (
-    <Wrapper ref={wrapperRef} tabIndex={0} onKeyDown={handleKeyboardNavigation}>
+    <Wrapper
+      data-testid={`${id}-dropdown`}
+      ref={wrapperRef}
+      tabIndex={0}
+      onKeyDown={handleKeyboardNavigation}
+    >
       {options.map((option) => (
-        //@ts-ignore:
         <Item
-          onClick={(event: ChangeEvent<HTMLElement>) =>
-            handleTimeSelect(event, option)
-          }
-          ref={getOptionRef(option[HOUR_KEY])}
+          data-testid={`${id}-dropdown-item-${option[HOUR_KEY]}`}
           active={memoizedIsOptionActive(option)}
           key={option[HOUR_KEY]}
+          onClick={(event: MouseEvent<HTMLElement>) =>
+            handleTimeSelect(event, option)
+          }
         >
           <span>{option[HOUR_KEY]}</span>
           <span>{VISIBLE_TIME_SEPARATOR}</span>

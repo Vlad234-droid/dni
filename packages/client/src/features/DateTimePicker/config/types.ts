@@ -9,6 +9,11 @@ export type Time = {
   mm: string;
 };
 
+export enum Type {
+  TYPE_START = 'start',
+  TYPE_END = 'end',
+}
+
 export type DateTime = Date | Time;
 
 export type TimePart = keyof Time;
@@ -28,7 +33,7 @@ export type DateValid = {
 
 export interface RenderProps {
   isOpen: boolean;
-  setIsOpen: (value: boolean) => void;
+  handleOpen: (value: boolean) => void;
   isValid: boolean;
 }
 

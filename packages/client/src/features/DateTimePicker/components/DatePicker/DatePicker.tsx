@@ -6,7 +6,6 @@ import { SINGLE_INPUT } from '@beans/date-input';
 import SingleCalendar from '@beans/calendar';
 
 import { DateTimeProps, Date, DateValid } from '../../config/types';
-import { DATE_ERROR_MESSAGE } from '../../config/dateTime';
 
 export const CalendarStyles = css`
   width: 328px;
@@ -20,6 +19,7 @@ interface Props extends DateTimeProps {
   onCalendarToggle: (value: boolean) => void;
   isDateValid: boolean;
   onDateChange: ({ valid, value }: { valid: DateValid; value: Date }) => void;
+  errorMessage: string;
 }
 
 // TODO: style calendar date items
@@ -33,33 +33,38 @@ const DatePicker: FC<Props> = ({
   onDateChange,
   isDateValid,
   date,
+  errorMessage,
 }) => {
   const memoizedRenderCalendar = useMemo(
     () => () => (
-      <SingleCalendar
-        date={date}
-        id={`${id}-calendar`}
-        onCalendarDateChange={handleCalendarDateChange}
-        styles={[CalendarStyles]}
-        defaultFocus={true}
-      />
+      <div data-testid={`${id}-single-calendar`}>
+        <SingleCalendar
+          date={date}
+          id={`${id}-calendar`}
+          onCalendarDateChange={handleCalendarDateChange}
+          styles={[CalendarStyles]}
+          defaultFocus={true}
+        />
+      </div>
     ),
     [id, date],
   );
 
   const memoizedRenderFormGroup = useMemo(
     () => () => (
-      <DateInputGroup
-        id={`${id}-date-input`}
-        labelText={labelText}
-        variant={SINGLE_INPUT}
-        onDateInputChange={handleInputChange}
-        error={!isDateValid}
-        onFocus={handleOnFocus}
-        date={date}
-        required={required}
-        errorMessage={DATE_ERROR_MESSAGE}
-      />
+      <div data-testid={`${id}-input-group`}>
+        <DateInputGroup
+          id={`${id}-date-input`}
+          labelText={labelText}
+          variant={SINGLE_INPUT}
+          onDateInputChange={handleInputChange}
+          error={!isDateValid}
+          onFocus={handleOnFocus}
+          date={date}
+          required={required}
+          errorMessage={errorMessage}
+        />
+      </div>
     ),
     [id, labelText, required, date, isDateValid],
   );

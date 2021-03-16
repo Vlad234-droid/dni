@@ -2,6 +2,7 @@ import React, { FC, useCallback } from 'react';
 import Button from '@beans/button';
 import Icon from '@beans/icon';
 import { Link } from 'react-router-dom';
+import { DateTime } from 'luxon';
 
 import { Page, PAGE_PREFIX } from 'features/Page';
 import BasePage, { PageHeader, PageWrapper } from '../BasePage';
@@ -11,6 +12,7 @@ import ButtonFilter from 'features/ButtonFilter';
 import EventCarusel from 'features/EventCarusel';
 import EventTable from 'features/EventTable';
 import EventList from 'features/EventList';
+import RangeDateTimePicker from 'features/RangeDateTimePicker';
 
 import { filters } from './data';
 
@@ -18,6 +20,23 @@ const TEST_ID = 'container-events';
 
 const Events: FC = () => {
   const { isMobile } = useMedia();
+
+  const props = {
+    start: DateTime.fromObject({
+      month: 12,
+      day: 5,
+      year: 2020,
+      hour: 12,
+      minute: 10,
+    }),
+    end: DateTime.fromObject({
+      month: 12,
+      day: 5,
+      year: 2020,
+      hour: 12,
+      minute: 15,
+    }),
+  };
 
   const renderMain = useCallback(
     () => (
@@ -40,6 +59,7 @@ const Events: FC = () => {
           )}
         />
         <PageWrapper>
+          <RangeDateTimePicker start={props.start} end={props.end} />
           <EventCarusel />
           <EventList />
           <EventTable />

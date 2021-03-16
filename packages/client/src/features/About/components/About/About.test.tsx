@@ -15,17 +15,19 @@ jest.mock('@beans/icon', () => {
   };
 });
 
-describe('#About', () => {
-  it('should render initially icon-expand', () => {
-    const { getByTestId } = renderWithTheme(<About />);
+describe('<About />', () => {
+  describe('#render', () => {
+    it('should render initially icon-expand', () => {
+      const { getByTestId } = renderWithTheme(<About />);
 
-    expect(getByTestId('icon-expand')).toBeInTheDocument();
-  });
+      expect(getByTestId('icon-expand')).toBeInTheDocument();
+    });
 
-  it('should render icon-contract when button is clicked', () => {
-    const { getByTestId, getByRole } = renderWithTheme(<About />);
-    userEvent.click(getByRole('button'));
+    it('should render icon-contract when button is clicked', () => {
+      const { getByTestId, getByRole } = renderWithTheme(<About />);
+      userEvent.click(getByRole('button'));
 
-    expect(getByTestId('icon-contract')).toBeInTheDocument();
+      expect(getByTestId('icon-contract')).toBeInTheDocument();
+    });
   });
 });
