@@ -1,4 +1,4 @@
-import React, { FC, HTMLProps, RefObject } from 'react';
+import React, { FC, RefObject } from 'react';
 import styled from 'styled-components';
 
 import Label from '../Label';

@@ -1,6 +1,7 @@
 import React, { FC, HTMLProps, useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
-//@ts-ignore
+
+// @ts-ignore
 import MultiSelectDropdown, {
   CheckboxOption,
 } from '@beans/multiselect-dropdown';

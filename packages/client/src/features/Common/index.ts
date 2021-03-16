@@ -9,3 +9,4 @@ export { default as TimeInput } from './components/TimeInput';
 export { default as DateTimePicker } from './components/DateTimePicker';
 export { default as Multiselect } from './components/Multiselect';
 export { default as BackLink } from './components/BackLink';
+export { default as ButtonGroup } from './components/ButtonGroup';

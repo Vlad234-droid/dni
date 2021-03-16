@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { RefObject } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { AnyObjectSchema } from 'yup';
@@ -11,7 +11,8 @@ type Props<T, N> = {
   formFields: Array<FormField<N>>;
   schema: AnyObjectSchema;
   onSubmit: Handler<T>;
-  renderButtons?: () => JSX.Element;
+  refDom?: RefObject<any>;
+  renderButtons?: () => JSX.Element | null;
   renderContent?: () => JSX.Element | null;
 };
 
@@ -24,6 +25,7 @@ function GenericForm<T, N>({
   onSubmit,
   renderButtons = defaultRenderButtons,
   renderContent = defaultRenderContent,
+  refDom,
 }: Props<T, N>) {
   const methods = useForm({
     resolver: yupResolver(schema),
@@ -34,17 +36,18 @@ function GenericForm<T, N>({
     reset();
     onSubmit(data);
   };
+
   return (
-    <form onSubmit={handleSubmit(submit)}>
-      {formFields.map(({ Element, testID, ...props }, idx) => (
-        <FieldWrapper key={idx}>
-          <Element
-            {...props}
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            error={errors[props.name!] && errors[props.name!].message}
-            id={testID}
-            {...rest}
-          />
+      <form onSubmit={handleSubmit(submit)} ref={refDom}>
+        {formFields.map(({ Element, testID, ...props }, idx) => (
+          <FieldWrapper key={idx}>
+            <Element
+              {...props}
+             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+              error={errors[props.name!] && errors[props.name!].message}
+             id={testID}
+             {...rest}
+           />
         </FieldWrapper>
       ))}
       {renderContent && renderContent()}

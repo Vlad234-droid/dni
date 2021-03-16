@@ -2,6 +2,30 @@ import { FormField } from 'features/GenericForm';
 import { TextArea, TextInput, FileInput, Multiselect } from 'features/Common';
 import { Names } from './types';
 
+export type Partner = {
+  id: number;
+  name: string;
+  link?: string;
+  avatar: string;
+};
+export const partners: Array<Partner> = [
+  { id: 1, name: 'Diabetes UK', link: 'http://websitename.com/', avatar: '' },
+  {
+    id: 2,
+    name: 'Children of the World',
+    link: 'http://childrenoftheworld.com/',
+    avatar: '',
+  },
+  {
+    id: 3,
+    name: 'British Heart Foundation',
+    link: 'http://Britishheartfoundation.org/',
+    avatar: '',
+  },
+  { id: 4, name: 'Green Peace', link: 'http://greenpeace.com/', avatar: '' },
+  { id: 5, name: 'One Drop', link: 'https://www.onedrop.org/', avatar: '' },
+];
+
 const formFields: Array<FormField<Names>> = [
   {
     Element: FileInput,
@@ -48,11 +72,12 @@ const formFields: Array<FormField<Names>> = [
     testID: 'partnership',
     label: 'Network Partnership',
     required: true,
-    options: [
-      { id: 'test1@tesco.com', labelText: 'test1@tesco.com', selected: true },
-      { id: 'test2@tesco.com', labelText: 'test2@tesco.com', selected: false },
-      { id: 'test3@tesco.com', labelText: 'test3@tesco.com', selected: false },
-    ],
+    // hardcode options now
+    options: partners.map(({ id, name, link }) => ({
+      id,
+      labelText: `${name} ${link}`.trim(),
+      selected: false,
+    })),
   },
 ];
 

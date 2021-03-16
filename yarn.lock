@@ -1264,6 +1264,18 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
+"@beans/accordion@^18.3.0":
+  version "18.3.0"
+  resolved "https://nexus.ourtesco.com/repository/online-web-group/@beans/accordion/-/accordion-18.3.0.tgz#ad46b56bf55114dafc81e79625c4820a0b118e55"
+  integrity sha512-NrEHrN+xZr4x+tJEfiEdxDctr01ruIsSH0N3TvNGz7UGIpzSA/GPaPZ5cufoJ3gz3xbvRkcUCbNiDKoO+MC8wA==
+  dependencies:
+    "@beans/button" "^18.0.0"
+    "@beans/foundation" "^18.0.0"
+    "@beans/helpers" "^18.0.0"
+    "@beans/icon" "^18.0.0"
+    "@beans/link" "^18.0.0"
+    "@beans/selectors" "^18.0.0"
+
 "@beans/base-tile@^18.2.3":
   version "18.2.3"
   resolved "https://nexus.ourtesco.com/repository/online-web-group/@beans/base-tile/-/base-tile-18.2.3.tgz#8dd3d2dc0937ac9971904160bec51efc800029d5"

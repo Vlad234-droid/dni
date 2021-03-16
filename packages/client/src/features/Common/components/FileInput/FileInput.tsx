@@ -2,11 +2,9 @@ import React, { FC, HTMLProps, useRef, useEffect, ChangeEvent } from 'react';
 import Button from '@beans/button';
 import Icon from '@beans/icon';
 
-import Wrapper, { Props as WrapperProps, Registrable } from '../FieldWrapper';
+import Wrapper, { Props as WrapperProps } from '../FieldWrapper';
 
-type Props = HTMLProps<HTMLInputElement> &
-  WrapperProps &
-  Registrable & { name: string };
+type Props = HTMLProps<HTMLInputElement> & WrapperProps & { name: string };
 
 const FileInput: FC<Props> = ({
   label,
@@ -35,11 +33,7 @@ const FileInput: FC<Props> = ({
     <Wrapper {...{ error }}>
       <div>
         <label htmlFor={name} ref={labelEl}>
-          <Button
-            variant='secondary'
-            domRef={register}
-            onClick={handleClickInput}
-          >
+          <Button variant='secondary' onClick={handleClickInput}>
             <Icon graphic='add' inverse={true} />
             {label}
           </Button>

@@ -17,6 +17,7 @@
     "build-storybook": "build-storybook -s public"
   },
   "dependencies": {
+    "@beans/accordion": "^18.3.0",
     "@beans/base-tile": "^18.2.3",
     "@beans/branding": "^18.2.2",
     "@beans/button": "^18.2.2",
@@ -57,10 +58,7 @@
     "lodash.isplainobject": "^4.0.6",
     "lodash.isstring": "^4.0.1",
     "lodash.merge": "^4.6.2",
-<<<<<<< HEAD
     "lodash.omit": "^4.5.0",
-=======
->>>>>>> feat(client): TESCO-533 Add Multiselect field
     "lodash.padstart": "^4.6.1",
     "lodash.pick": "^4.4.0",
     "luxon": "^1.26.0",

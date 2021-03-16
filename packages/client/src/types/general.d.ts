@@ -1,4 +1,5 @@
 declare type Nullable<T> = T | null;
+declare module '@beans/multiselect-dropdown';
 declare module '@beans/date-picker';
 declare module '@beans/date-input-group';
 declare module '@beans/date-input';
