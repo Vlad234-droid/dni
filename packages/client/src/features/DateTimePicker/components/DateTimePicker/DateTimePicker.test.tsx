@@ -1,19 +1,12 @@
 import React from 'react';
 import { DateTime } from 'luxon';
 
-import {
-  renderWithTheme,
-  cleanupAfterEach,
-  fireEvent,
-  screen,
-} from 'utils/testUtils';
+import { renderWithTheme, fireEvent, screen } from 'utils/testUtils';
 
 import DateTimePicker from './DateTimePicker';
 import { Type } from '../../config/types';
 
 describe('<DateTimePicker />', () => {
-  cleanupAfterEach();
-
   const props = {
     onChange: jest.fn(),
     isRangeValid: true,

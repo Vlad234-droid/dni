@@ -1,12 +1,8 @@
 import { DateTime as LuxonDateTime } from 'luxon';
 
-import { cleanupAfterEach } from 'utils/testUtils';
-
 import { isEndValueValid } from './index';
 
 describe('#RangeDateTimePicker utils', () => {
-  cleanupAfterEach();
-
   describe('isEndValueValid', () => {
     const start = LuxonDateTime.fromObject({
       month: 12,

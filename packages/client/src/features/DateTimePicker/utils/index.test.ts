@@ -1,5 +1,3 @@
-import { cleanupAfterEach } from 'utils/testUtils';
-
 import {
   getAvailableTimeOptions,
   getDateObject,
@@ -21,8 +19,6 @@ import {
 } from './index';
 
 describe('#DateTimePicker utils', () => {
-  cleanupAfterEach();
-
   describe('getAvailableTimeOptions', () => {
     it('should return an array of correct time options', () => {
       const expected = [

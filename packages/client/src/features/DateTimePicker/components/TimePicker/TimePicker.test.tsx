@@ -1,17 +1,10 @@
 import React from 'react';
 
-import {
-  renderWithTheme,
-  cleanupAfterEach,
-  fireEvent,
-  screen,
-} from 'utils/testUtils';
+import { renderWithTheme, fireEvent, screen } from 'utils/testUtils';
 
 import TimePicker from './TimePicker';
 
 describe('<TimePicker/>', () => {
-  cleanupAfterEach();
-
   const props = {
     id: 'mocked_id',
     name: 'mocked_time_picker_name',

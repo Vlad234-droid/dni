@@ -1,19 +1,11 @@
 import React from 'react';
 import { DateTime } from 'luxon';
 
-import {
-  renderWithTheme,
-  cleanupAfterEach,
-  fireEvent,
-  screen,
-  within,
-} from 'utils/testUtils';
+import { renderWithTheme, fireEvent, screen, within } from 'utils/testUtils';
 
 import RangeDateTimePicker from './RangeDateTimePicker';
 
 describe('<RangeDateTimePicker />', () => {
-  cleanupAfterEach();
-
   describe('#render', () => {
     const props = {
       start: DateTime.fromObject({

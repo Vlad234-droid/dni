@@ -1,12 +1,10 @@
 import React from 'react';
 
-import { renderWithTheme, cleanupAfterEach } from 'utils/testUtils';
+import { renderWithTheme } from 'utils/testUtils';
 
 import Picker from '../Picker';
 
 describe('<Picker/>', () => {
-  cleanupAfterEach();
-
   const props = {
     dateTime: {
       hh: '',

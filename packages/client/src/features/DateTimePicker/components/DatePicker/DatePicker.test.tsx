@@ -1,19 +1,12 @@
 import React from 'react';
 import { DateTime } from 'luxon';
 
-import {
-  renderWithTheme,
-  cleanupAfterEach,
-  fireEvent,
-  screen,
-} from 'utils/testUtils';
+import { renderWithTheme, fireEvent, screen } from 'utils/testUtils';
 
 import DatePicker from './DatePicker';
 import { getStringWithLeadingZero } from '../../utils';
 
 describe('<DatePicker />', () => {
-  cleanupAfterEach();
-
   const props = {
     id: 'mocked_id',
     name: 'mocked_date_picker_name',

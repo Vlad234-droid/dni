@@ -2,7 +2,6 @@ import React from 'react';
 
 import {
   renderWithTheme,
-  cleanupAfterEach,
   fireEvent,
   screen,
   createEvent,
@@ -11,8 +10,6 @@ import {
 import TimeDropdown from './TimeDropdown';
 
 describe('<TimeDropdown />', () => {
-  cleanupAfterEach();
-
   const props = {
     options: [
       { hh: '9', mm: '00' },
