@@ -1,5 +1,6 @@
 import React, { FC, HTMLProps } from 'react';
 import Dropdown, { Option } from '@beans/dropdown';
+import FormGroup from '@beans/form-group';
 
 import Wrapper, { Props as WrapperProps, Registrable } from '../FieldWrapper';
 
@@ -13,7 +14,7 @@ type Props = HTMLProps<HTMLScriptElement> &
 
 const Select: FC<Props> = ({ label, error, register, options }) => {
   return (
-    <Wrapper {...{ label, error }}>
+    <FormGroup labelText={label} errorMessage={error} error={Boolean(error)}>
       <Dropdown domRef={register}>
         {options.map((value, idx) => (
           <Option value={value} key={idx}>
@@ -21,7 +22,7 @@ const Select: FC<Props> = ({ label, error, register, options }) => {
           </Option>
         ))}
       </Dropdown>
-    </Wrapper>
+    </FormGroup>
   );
 };
 

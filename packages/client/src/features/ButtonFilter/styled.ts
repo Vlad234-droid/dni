@@ -5,7 +5,7 @@ import { textXS } from 'styles';
 
 const Wrapper = styled.div`
   padding: 4px 4px;
-  overflow-x: scroll;
+  overflow-x: auto;
   white-space: nowrap;
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */

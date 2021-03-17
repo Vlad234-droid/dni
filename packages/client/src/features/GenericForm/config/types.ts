@@ -11,6 +11,8 @@ type FormField<T> = {
   Element: FC<any>;
   name: T;
   options?: Array<string>;
+  labels?: Array<string>;
+  require?: boolean;
 } & TestProps &
   HTMLProps<HTMLInputElement | HTMLSelectElement>;
 

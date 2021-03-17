@@ -7,7 +7,7 @@ const formFields: Array<FormField<Names>> = [
     Element: FileInput,
     name: 'image',
     testID: 'image',
-    label: 'Image (optional)',
+    label: 'Image',
   },
   {
     Element: TextInput,
@@ -15,6 +15,7 @@ const formFields: Array<FormField<Names>> = [
     placeholder: 'Name of network',
     testID: 'title',
     label: 'Name of network',
+    required: true,
   },
   {
     Element: TextInput,
@@ -22,6 +23,7 @@ const formFields: Array<FormField<Names>> = [
     placeholder: 'BruceDickinson@tesco.com',
     testID: 'manager',
     label: 'Content Manager of Network',
+    required: true,
   },
   {
     Element: TextInput,
@@ -29,13 +31,15 @@ const formFields: Array<FormField<Names>> = [
     placeholder: 'email',
     testID: 'email',
     label: 'Contact email',
+    required: true,
   },
   {
     Element: TextArea,
     name: 'description',
     placeholder: 'A few word about this network',
     testID: 'message',
-    label: 'Description (optional)',
+    label: 'Description',
+    required: true,
   },
   {
     Element: Select,
@@ -43,7 +47,7 @@ const formFields: Array<FormField<Names>> = [
     placeholder: 'Choose Partner',
     testID: 'partnership',
     label: 'Network Partnership',
-    // hardcode options now
+    required: true,
     options: ['Choose Partner', 'test1@tesco.com', 'test2@tesco.com'],
   },
 ];

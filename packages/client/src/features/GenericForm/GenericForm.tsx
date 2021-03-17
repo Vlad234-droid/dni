@@ -1,8 +1,9 @@
 import React from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { AnyObjectSchema } from 'yup';
 import Button from '@beans/button';
+import { FieldWrapper } from 'features/Common/styled';
 
 import type { FormField, Handler } from './config/types';
 
@@ -27,28 +28,28 @@ function GenericForm<T, N>({
   const methods = useForm({
     resolver: yupResolver(schema),
   });
-  const { register, handleSubmit, errors, reset } = methods;
+  const { handleSubmit, errors, reset, ...rest } = methods;
+
   const submit: Handler<T> = (data) => {
     reset();
     onSubmit(data);
   };
   return (
-    <FormProvider {...methods}>
-      <form onSubmit={handleSubmit(submit)}>
-        {formFields.map(({ Element, testID, ...props }, idx) => (
+    <form onSubmit={handleSubmit(submit)}>
+      {formFields.map(({ Element, testID, ...props }, idx) => (
+        <FieldWrapper key={idx}>
           <Element
             {...props}
-            key={idx}
-            register={register}
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             error={errors[props.name!] && errors[props.name!].message}
             id={testID}
+            {...rest}
           />
-        ))}
-        {renderContent()}
-        {renderButtons()}
-      </form>
-    </FormProvider>
+        </FieldWrapper>
+      ))}
+      {renderContent && renderContent()}
+      {renderButtons && renderButtons()}
+    </form>
   );
 }
 

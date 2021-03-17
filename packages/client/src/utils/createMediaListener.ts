@@ -1,37 +1,40 @@
 import { isBrowser } from './browser';
 
-type Media = Record<string, string>;
-type QueryList = Record<string, MediaQueryList>;
-// TODO should specify type
-type MediaState = Record<string, boolean>;
+type Media<T extends string | number | symbol> = Record<T, string>;
+type QueryList<T extends string | number | symbol> = Record<T, MediaQueryList>;
+type MediaState<T extends string | number | symbol> = Record<T, boolean>;
 type Listener = (this: MediaQueryList, ev: MediaQueryListEvent) => void;
-type TransientListener = (arg: MediaState) => void;
+type TransientListener<T extends string | number | symbol> = (
+  arg: MediaState<T>,
+) => void;
 
-interface CreateMediaListener {
-  getState: () => MediaState;
-  listen: (listener: TransientListener) => void;
+interface CreateMediaListener<K extends string | number | symbol> {
+  getState: () => MediaState<K>;
+  listen: (listener: TransientListener<K>) => void;
   dispose: () => void;
 }
 
-const createMediaListener = (media: Media) => {
-  let transientListener: TransientListener | null = null;
+const createMediaListener = <O extends object, K extends keyof O>(
+  media: Media<K>,
+) => {
+  let transientListener: TransientListener<K> | null = null;
 
-  const mediaKeys = Object.keys(media);
+  const mediaKeys = Object.keys(media) as Array<K>;
 
-  const queryLists: QueryList = mediaKeys.reduce(
-    (queries, key) => ({
+  const queryLists = mediaKeys.reduce(
+    (queries: QueryList<K>, key) => ({
       ...queries,
       [key]: window.matchMedia(media[key]),
     }),
-    {},
+    {} as QueryList<K>,
   );
 
-  const mediaState: MediaState = mediaKeys.reduce(
-    (state, key) => ({
+  const mediaState = mediaKeys.reduce(
+    (state: MediaState<K>, key) => ({
       ...state,
       [key]: queryLists[key].matches,
     }),
-    {},
+    {} as MediaState<K>,
   );
 
   const notify = () => {
@@ -40,21 +43,22 @@ const createMediaListener = (media: Media) => {
     }
   };
 
-  const mutateMediaState = (key: string, val: boolean) => {
+  // @ts-ignore
+  const mutateMediaState = (key: K, val) => {
     mediaState[key] = val;
     notify();
   };
 
-  const listeners: Record<string, Listener> = mediaKeys.reduce(
+  const listeners: Record<K, Listener> = mediaKeys.reduce(
     (acc, key) => ({
       ...acc,
       [key]: (event: { matches: boolean }) =>
         mutateMediaState(key, event.matches),
     }),
-    {},
+    {} as Record<K, Listener>,
   );
 
-  const listen = (listener: TransientListener) => {
+  const listen = (listener: TransientListener<K>) => {
     transientListener = listener;
     mediaKeys.forEach((key) => {
       queryLists[key].addEventListener('change', listeners[key]);
@@ -73,13 +77,16 @@ const createMediaListener = (media: Media) => {
   return { listen, dispose, getState };
 };
 
-export default (media: Media): CreateMediaListener => {
+export default <O extends object, K extends keyof O>(
+  media: Media<K>,
+): CreateMediaListener<K> => {
   if (!isBrowser || process.env.NODE_ENV === 'test') {
     return {
-      getState: () => ({}),
+      getState: () => ({} as MediaState<K>),
       listen: () => undefined,
       dispose: () => undefined,
     };
   }
+  // @ts-ignore
   return createMediaListener(media);
 };

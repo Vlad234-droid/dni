@@ -11,7 +11,9 @@ export type Props = {
 
 export type Registrable = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  register: RefObject<any>;
+  unregister: (name: string) => void;
+  setValue: <T extends object>(name: string, data: any, config?: T) => void;
+  register: (name?: string) => void | RefObject<any>;
 };
 
 type DivProps = HTMLProps<HTMLDivElement>;
@@ -27,11 +29,9 @@ const FieldWrapper: FC<Props> = ({ children, label, error }) => {
 };
 
 const Wrapper = styled.div<DivProps>`
-  margin-top: 5px;
   display: flex;
   flex-direction: column;
   position: relative;
-  padding-bottom: 20px;
 `;
 
 export default FieldWrapper;
