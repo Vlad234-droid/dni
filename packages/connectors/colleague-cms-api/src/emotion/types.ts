@@ -1,7 +1,17 @@
-import { File } from '../built-in';
+import { Emoji } from '../emoji';
+import { User } from '../user';
+import { BaseType } from '../types';
 
-export type Emotion = {
-  id: number;
+type Emotion = {
   count: number;
-  image: File;
+  emoji: Emoji;
+  createdBy: User;
+} & BaseType;
+
+type EmotionApiParams = {
+  id: string;
 };
+
+type EmotionBody = Omit<Emotion, 'id'>;
+
+export type { Emotion, EmotionApiParams, EmotionBody };

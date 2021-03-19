@@ -1,15 +1,11 @@
 import { DateString } from '../built-in';
 import { Network } from '../network';
 import { User } from '../user';
-
-type EventApiParams = {
-  id: string;
-};
+import { BaseApiParams, BaseType } from '../types';
 
 type Status = 'accepted' | 'declined';
 
 type Event = {
-  id: number;
   title: string;
   network: Network;
   maxParticipantsCount: number;
@@ -19,17 +15,18 @@ type Event = {
   description: string;
   slug: string;
   createdBy: User;
-  createAt: DateString;
-  updateAt: DateString;
-};
+} & BaseType;
 
 type EventUser = {
-  id: number;
   event: Event;
   user: User;
   status: Status;
-  createAt: DateString;
-  updateAt: DateString;
-};
+} & BaseType;
 
-export type { EventApiParams, Event, EventUser };
+type EventApiParams = {
+  id: string;
+} & BaseApiParams;
+
+type EventBody = Omit<Network, 'id'>;
+
+export type { EventApiParams, Event, EventUser, EventBody };

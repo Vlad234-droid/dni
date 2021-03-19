@@ -8,6 +8,6 @@ const COLLEAGUE_CMS_API_URLS: ApiUrlConfig = {
   PROD: 'https://ourtesco.com/colleague-cms',
 };
 
-const TENANT_KEY = 'DNI';
+const TENANT_KEY = 'DniTesco';
 
 export { COLLEAGUE_CMS_API_URLS, TENANT_KEY };

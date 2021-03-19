@@ -1,30 +1,78 @@
 import { defineAPI } from '@energon/rest-api-definition';
 
-import { Post, PostApiParams } from './types';
-import { buildApiConsumer } from '../utils';
-import { ColleagueCmsApiContext } from '../types';
-
-type HandlerInput = {
-  params: PostApiParams;
-};
+import { Post, PostApiParams, PostBody } from './types';
+import { buildApiConsumer, buildParams } from '../utils';
+import { ColleagueCmsApiContext, ApiInput } from '../types';
 
 export const cmsPostsApiDef = defineAPI((endpoint) => ({
   getPost: endpoint
     .get('/posts/:id')
-    .params<PostApiParams>()
+    .params<Pick<PostApiParams, 'id'>>()
     .response<Post>()
     .build(),
-  // TODO: add another methods
+
+  getPosts: endpoint
+    .get('/posts')
+    .params<PostApiParams>()
+    .response<Post[]>()
+    .build(),
+
+  getPostsCount: endpoint
+    .get('/posts/count')
+    .params<PostApiParams>()
+    .response<number>()
+    .build(),
+
+  postPost: endpoint
+    .post('/posts')
+    .params<PostApiParams>()
+    .body<PostBody>()
+    .response<Post>()
+    .build(),
+
+  putPost: endpoint
+    .put('/posts/:id')
+    .params<Pick<PostApiParams, 'id'>>()
+    .body<PostBody>()
+    .response<Post>()
+    .build(),
+
+  deletePost: endpoint
+    .delete('/posts/:id')
+    .params<Pick<PostApiParams, 'id'>>()
+    .response<Post>()
+    .build(),
 }));
 
 export const cmsPostsApiConnector = (ctx: ColleagueCmsApiContext) => {
   const apiConsumer = buildApiConsumer(ctx, cmsPostsApiDef);
 
   return {
-    getPost: async ({ params }: HandlerInput) =>
-      apiConsumer.getPost({
-        params,
-      }),
+    getPost: async ({ params, tenantkey }: ApiInput<PostApiParams>) =>
+      apiConsumer.getPost(buildParams(params, tenantkey)),
+
+    getPosts: ({ params, tenantkey }: ApiInput<PostApiParams>) =>
+      apiConsumer.getPosts(buildParams(params, tenantkey)),
+
+    getPostsCount: ({ params, tenantkey }: ApiInput<PostApiParams>) =>
+      apiConsumer.getPostsCount(buildParams(params, tenantkey)),
+
+    postPost: async ({
+      params,
+      body,
+      tenantkey,
+    }: ApiInput<PostApiParams, PostBody>) =>
+      apiConsumer.postPost(buildParams(params, tenantkey, body!)),
+
+    putPost: async ({
+      params,
+      body,
+      tenantkey,
+    }: ApiInput<PostApiParams, PostBody>) =>
+      apiConsumer.putPost(buildParams(params, tenantkey, body!)),
+
+    deletePost: ({ params, tenantkey }: ApiInput<Pick<PostApiParams, 'id'>>) =>
+      apiConsumer.deletePost(buildParams(params, tenantkey)),
   };
 };
 

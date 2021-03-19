@@ -22,6 +22,10 @@ Check that Yarn is installed by running: `yarn --version`
 
 Check that NodeJS is installed by running: `node --version`
 
+- Volta JS - https://volta.sh
+
+Check that Volta is installed by running: `volta --version`
+
 ### 2. Install dependencies
 
 All projects are managed by Lerna with Yarn Workspaces. Before
@@ -99,18 +103,18 @@ mocked data store.
 
 ### Add dependency to package
 
-- Run `ws:server add [-D] [PACKAGE]` to add dependency to package `server`
-- Run `ws:client add [-D] [PACKAGE]` to add dependency to package `client`
-- Run `ws:mock-server add [-D] [PACKAGE]` to add dependency to package `mock-server`
+- Run `yarn ws:server add [-D] [PACKAGE]` to add dependency to package `server`
+- Run `yarn ws:client add [-D] [PACKAGE]` to add dependency to package `client`
+- Run `yarn ws:mock-server add [-D] [PACKAGE]` to add dependency to package `mock-server`
 
-- Run `ws:connector:colleague add [-D] [PACKAGE]` to add dependency to package `colleague-api`
-- Run `ws:connector:colleague-cms add [-D] [PACKAGE]` to add dependency to package `colleague-cms-api`
-- Run `ws:connector:confirmit add [-D] [PACKAGE]` to add dependency to package `confirmit-api`
-- Run `ws:connector:common add [-D] [PACKAGE]` to add dependency to package `common`
+- Run `yarn ws:connector:colleague add [-D] [PACKAGE]` to add dependency to package `colleague-api`
+- Run `yarn ws:connector:colleague-cms add [-D] [PACKAGE]` to add dependency to package `colleague-cms-api`
+- Run `yarn ws:connector:confirmit add [-D] [PACKAGE]` to add dependency to package `confirmit-api`
+- Run `yarn ws:connector:common add [-D] [PACKAGE]` to add dependency to package `common`
 
 ## Docker
 
 Your TPX (in lower case) and password
 
-- Run `docker:build:prod '<TPX>:<password>'` to build image
-- Run `docker:run:prod` to run docker image
+- Run `yarn docker:build:prod '<TPX>:<password>'` to build image
+- Run `yarn docker:run:prod` to run docker image

@@ -1,19 +1,15 @@
-import { File, DateString } from '../built-in';
+import { File } from '../built-in';
 import { Emotion } from '../emotion';
 import { Network } from '../network';
 import { Event } from '../event';
 import { User } from '../user';
-
-type PostApiParams = {
-  id: string;
-};
+import { BaseApiParams, BaseType } from '../types';
 
 type Status = 'archived' | 'published';
 
 type Post = {
-  id: number;
   title: string;
-  attachments: File[];
+  attachments?: File[];
   description: string;
   postAs: Poster;
   sharedToken: string;
@@ -21,9 +17,7 @@ type Post = {
   status: Status;
   emotions: Emotion[];
   createdBy: User;
-  createAt: DateString;
-  updateAt: DateString;
-};
+} & BaseType;
 
 type Poster = PostAsUser | PostAsNetwork | PostAsEvent | null;
 
@@ -42,11 +36,18 @@ type PostAsEvent = {
   event: Event;
 };
 
+type PostApiParams = {
+  id: string;
+} & BaseApiParams;
+
+type PostBody = Omit<Post, 'id'>;
+
 export type {
-  PostApiParams,
   Post,
   Poster,
   PostAsUser,
   PostAsNetwork,
   PostAsEvent,
+  PostApiParams,
+  PostBody,
 };
