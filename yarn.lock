@@ -1884,7 +1884,16 @@
   resolved "https://registry.yarnpkg.com/@emotion/weak-memoize/-/weak-memoize-0.2.5.tgz#8eed982e2ee6f7f4e44c253e12962980791efd46"
   integrity sha512-6U71C2Wp7r5XtFtQzYrW5iKFT67OixrSxjI4MptCHzdSVlgabczzqLe0ZSgnub/5Kp4hSbpDB1tMytZY9pwxxA==
 
-"@energon-connectors/core@^0.7.6":
+"@energon-connectors/contact-api@^0.3.6":
+  version "0.3.6"
+  resolved "https://nexus.ourtesco.com/repository/colleague-ui-private/@energon-connectors/contact-api/-/contact-api-0.3.6.tgz#04b251c095494dc0a1e13d8dc8d39a0d820b8d54"
+  integrity sha512-aN1wzq5SG5wBKCdpw7qpJxlA23SQ1+xkuC22oOGSwVtJXePv5f71ycPU7EaaXYc/W8XdI+SJsUolc7OYVldbyg==
+  dependencies:
+    "@energon-connectors/core" "0.7.6"
+    "@energon/rest-api-consumer" "0.6.1"
+    "@energon/rest-api-definition" "0.4.1"
+
+"@energon-connectors/core@0.7.6", "@energon-connectors/core@^0.7.6":
   version "0.7.6"
   resolved "https://nexus.ourtesco.com/repository/colleague-ui-private/@energon-connectors/core/-/core-0.7.6.tgz#77d773bf39a2977f0c55db46c9fea1267eed222b"
   integrity sha512-uFS9d+6tXDJ46Nzsnn0e0WnLfjAO8MR3kLRqVh4ONs+jdl2Ss3yKVY30LPAp39aNyVXis3shjftwul9Nry1+PA==
@@ -1929,7 +1938,7 @@
     "@energon/splunk-logger-core" "0.3.0"
     crypto-js "4.0.0"
 
-"@energon/fetch-client@0.10.1":
+"@energon/fetch-client@0.10.1", "@energon/fetch-client@^0.10.1":
   version "0.10.1"
   resolved "https://nexus.ourtesco.com/repository/colleague-ui-private/@energon/fetch-client/-/fetch-client-0.10.1.tgz#071509392c696074deb215492b385638b408a7bc"
   integrity sha512-yftXZJBIUeO7XSCmBkkZt4ZtZPkU0o9oNTRuXRGw503ivZyyqJeLYfkxyhyeoi/4QMYRTzJUv+ZMkwQH3nJtpg==
@@ -2048,7 +2057,7 @@
   resolved "https://nexus.ourtesco.com/repository/colleague-ui-private/@energon/splunk-logger-core/-/splunk-logger-core-0.3.0.tgz#9af98e858c79cb542ba3b82403d0f0000ee59f8b"
   integrity sha512-QVkNodfFYJs9vV+c0v9vaiyNCro/lEuaGkwjeNTBtOlDDaZfdChZAh3y6g+7OV7rFxOWl+TviwUDrEAi9/+KNA==
 
-"@energon/splunk-logger@0.25.6":
+"@energon/splunk-logger@0.25.6", "@energon/splunk-logger@^0.25.6":
   version "0.25.6"
   resolved "https://nexus.ourtesco.com/repository/colleague-ui-private/@energon/splunk-logger/-/splunk-logger-0.25.6.tgz#2e5a9ed06b2914245b2989bda17c9d991a324128"
   integrity sha512-+9/V9+5l7zOPgH1n0ornpGs2DUjM+Cp2o9rsCBKt0oP2OZydgqM19iqb5eiJ59rIvOZg5y3oTuEEUDnxPqBQow==
@@ -4232,6 +4241,13 @@
   version "0.0.39"
   resolved "https://registry.yarnpkg.com/@types/estree/-/estree-0.0.39.tgz#e177e699ee1b8c22d23174caaa7422644389509f"
   integrity sha512-EYNwp3bU+98cpU4lAWYYL7Zz+2gryWH1qbdDTidVd6hkiR6weksdbMadyXKXNPEkQFhXM+hVO9ZygomHXp+AIw==
+
+"@types/express-fileupload@^1.1.6":
+  version "1.1.6"
+  resolved "https://registry.yarnpkg.com/@types/express-fileupload/-/express-fileupload-1.1.6.tgz#fdc3b1d6f54fe4522867f8550f0acf24bcbf5c45"
+  integrity sha512-8z92PCVgvWvG1TpxucRU9oRz3hZc5cUz+CkeDe4XwVmg2DJDdd/7QASMsJzIo+9Pbfp7LfTEWSeEFUJZBohv9g==
+  dependencies:
+    "@types/express" "*"
 
 "@types/express-jwt@0.0.42":
   version "0.0.42"
@@ -6495,6 +6511,13 @@ builtins@^1.0.3:
   resolved "https://registry.yarnpkg.com/builtins/-/builtins-1.0.3.tgz#cb94faeb61c8696451db36534e1422f94f0aee88"
   integrity sha1-y5T662HIaWRR2zZTThQi+U8K7og=
 
+busboy@^0.3.1:
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/busboy/-/busboy-0.3.1.tgz#170899274c5bf38aae27d5c62b71268cd585fd1b"
+  integrity sha512-y7tTxhGKXcyBxRKAni+awqx8uqaJKrSFSNFSeRG5CsWNdmy2BIK+6VGWEW7TZnIO/533mtMEA4rOevQV815YJw==
+  dependencies:
+    dicer "0.3.0"
+
 byline@^5.0.0:
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/byline/-/byline-5.0.0.tgz#741c5216468eadc457b03410118ad77de8c1ddb1"
@@ -8273,6 +8296,13 @@ dezalgo@^1.0.0:
     asap "^2.0.0"
     wrappy "1"
 
+dicer@0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/dicer/-/dicer-0.3.0.tgz#eacd98b3bfbf92e8ab5c2fdb71aaac44bb06b872"
+  integrity sha512-MdceRRWqltEG2dZqO769g27N/3PXfcKl04VhYnBlo2YhH7zPi88VebsjTKclaOyiuMaGU72hTfw3VkUitGcVCA==
+  dependencies:
+    streamsearch "0.1.2"
+
 diff-sequences@^26.6.2:
   version "26.6.2"
   resolved "https://registry.yarnpkg.com/diff-sequences/-/diff-sequences-26.6.2.tgz#48ba99157de1923412eed41db6b6d4aa9ca7c0b1"
@@ -9201,6 +9231,13 @@ expect@^26.6.0, expect@^26.6.2:
     jest-matcher-utils "^26.6.2"
     jest-message-util "^26.6.2"
     jest-regex-util "^26.0.0"
+
+express-fileupload@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/express-fileupload/-/express-fileupload-1.2.1.tgz#73ac798bd14247d510adb1e439af2420c8367ded"
+  integrity sha512-fWPNAkBj+Azt9Itmcz/Reqdg3LeBfaXptDEev2JM8bCC0yDptglCnlizhf0YZauyU5X/g6v7v4Xxqhg8tmEfEA==
+  dependencies:
+    busboy "^0.3.1"
 
 express@^4.17.0, express@^4.17.1:
   version "4.17.1"
@@ -17876,6 +17913,11 @@ stream-shift@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/stream-shift/-/stream-shift-1.0.1.tgz#d7088281559ab2778424279b0877da3c392d5a3d"
   integrity sha512-AiisoFqQ0vbGcZgQPY1cdP2I76glaVA/RauYR4G4thNFgkTqr90yXTo4LYX60Jl+sIlPNHHdGSwo01AvbKUSVQ==
+
+streamsearch@0.1.2:
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/streamsearch/-/streamsearch-0.1.2.tgz#808b9d0e56fc273d809ba57338e929919a1a9f1a"
+  integrity sha1-gIudDlb8Jz2Am6VzOOkpkZoanxo=
 
 strict-uri-encode@^1.0.0:
   version "1.1.0"

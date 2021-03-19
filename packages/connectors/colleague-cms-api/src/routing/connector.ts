@@ -2,7 +2,6 @@ import { ConnectorContext } from '@energon-connectors/core';
 import { defineAPI } from '@energon/rest-api-definition';
 
 import { buildApiConsumer } from '../utils';
-import { TENANT_KEY } from '../config';
 import { CmsRoutingResponse } from './types';
 
 export const cmsRoutingApiDef = defineAPI((endpoint) => ({
@@ -17,10 +16,10 @@ export const cmsRoutingApiConnector = (ctx: ConnectorContext) => {
   const apiConsumer = buildApiConsumer(ctx, cmsRoutingApiDef);
 
   return {
-    getRoutingConfig: async () => {
+    getRoutingConfig: async (tenantkey: string) => {
       return apiConsumer.getRoutingConfig({
         params: { slug: '1', type: 'rfr' },
-        fetchOpts: { headers: { tenantkey: TENANT_KEY } },
+        fetchOpts: { headers: { tenantkey } },
       });
     },
   };

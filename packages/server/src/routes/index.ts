@@ -1,15 +1,15 @@
-import express, {Request, Response} from 'express';
+import express, { Request, Response } from 'express';
+
 import {
-    getNetworksByColleagueId,
-    addNetworkToColleague,
-    deleteNetworkFromColleague
+  getNetworksByColleagueId,
+  addNetworkToColleague,
+  deleteNetworkFromColleague,
 } from '../controllers/colleague.controller';
 import {
-    getNetworksByPartnerId,
-    addNetworkToPartner,
-    deleteNetworkFromPartner
+  getNetworksByPartnerId,
+  addNetworkToPartner,
+  deleteNetworkFromPartner,
 } from '../controllers/partner.controller';
-
 
 // controllers
 const healthCheck = express.Router();
@@ -25,4 +25,4 @@ api.get('/partner-networks/:partnerId', getNetworksByPartnerId);
 api.post('/partner-networks', addNetworkToPartner);
 api.delete('/partner-networks', deleteNetworkFromPartner);
 
-export {healthCheck, api};
+export { healthCheck, api };

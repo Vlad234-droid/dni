@@ -1,30 +1,81 @@
 import { defineAPI } from '@energon/rest-api-definition';
 
-import { Event, EventApiParams } from './types';
-import { buildApiConsumer } from '../utils';
-import { ColleagueCmsApiContext } from '../types';
-
-type HandlerInput = {
-  params: EventApiParams;
-};
+import { Event, EventApiParams, EventBody } from './types';
+import { buildApiConsumer, buildParams } from '../utils';
+import { ColleagueCmsApiContext, ApiInput } from '../types';
 
 export const cmsEventsApiDef = defineAPI((endpoint) => ({
   getEvent: endpoint
     .get('/events/:id')
-    .params<EventApiParams>()
+    .params<Pick<EventApiParams, 'id'>>()
     .response<Event>()
     .build(),
-  // TODO: add another methods
+
+  getEvents: endpoint
+    .get('/events')
+    .params<EventApiParams>()
+    .response<Event[]>()
+    .build(),
+
+  getEventsCount: endpoint
+    .get('/events/count')
+    .params<EventApiParams>()
+    .response<number>()
+    .build(),
+
+  postEvent: endpoint
+    .post('/events')
+    .params<EventApiParams>()
+    .body<EventBody>()
+    .response<Event>()
+    .build(),
+
+  putEvent: endpoint
+    .put('/events/:id')
+    .params<Pick<EventApiParams, 'id'>>()
+    .body<EventBody>()
+    .response<Event>()
+    .build(),
+
+  deleteEvent: endpoint
+    .delete('/events/:id')
+    .params<Pick<EventApiParams, 'id'>>()
+    .response<Event>()
+    .build(),
 }));
 
 export const cmsEventsApiConnector = (ctx: ColleagueCmsApiContext) => {
   const apiConsumer = buildApiConsumer(ctx, cmsEventsApiDef);
 
   return {
-    getEvent: async ({ params }: HandlerInput) =>
-      apiConsumer.getEvent({
-        params,
-      }),
+    getEvent: async ({ params, tenantkey }: ApiInput<EventApiParams>) =>
+      apiConsumer.getEvent(buildParams(params, tenantkey)),
+
+    getEvents: ({ params, tenantkey }: ApiInput<EventApiParams>) =>
+      apiConsumer.getEvents(buildParams(params, tenantkey)),
+
+    getEventsCount: ({ params, tenantkey }: ApiInput<EventApiParams>) =>
+      apiConsumer.getEventsCount(buildParams(params, tenantkey)),
+
+    postEvent: async ({
+      params,
+      body,
+      tenantkey,
+    }: ApiInput<EventApiParams, EventBody>) =>
+      apiConsumer.postEvent(buildParams(params, tenantkey, body!)),
+
+    putEvent: async ({
+      params,
+      body,
+      tenantkey,
+    }: ApiInput<EventApiParams, EventBody>) =>
+      apiConsumer.putEvent(buildParams(params, tenantkey, body!)),
+
+    deleteEvent: ({
+      params,
+      tenantkey,
+    }: ApiInput<Pick<EventApiParams, 'id'>>) =>
+      apiConsumer.deleteEvent(buildParams(params, tenantkey)),
   };
 };
 

@@ -1,0 +1,620 @@
+{
+  "info": {
+    "_postman_id": "524ce2c6-d514-4630-882a-dfe8adb411cf",
+    "name": "DNI",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "POST",
+      "item": [
+        {
+          "name": "/posts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/posts?_sort=created_at:desc",
+              "host": ["{{HOST}}"],
+              "path": ["posts"],
+              "query": [
+                {
+                  "key": "_sort",
+                  "value": "created_at:desc"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/posts/:id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/posts/2",
+              "host": ["{{HOST}}"],
+              "path": ["posts", "2"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/posts/count",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/posts/count",
+              "host": ["{{HOST}}"],
+              "path": ["posts", "count"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/posts",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"Test\",\n    \"description\": \"Test\",\n    \"sharedToken\": \"Test\",\n    \"status\": \"published\",\n    \"slug\": \"test1\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{HOST}}/posts",
+              "host": ["{{HOST}}"],
+              "path": ["posts"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/posts/:id",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"Test111\",\n    \"description\": \"Test111\",\n    \"sharedToken\": \"Test\",\n    \"status\": \"published\",\n    \"slug\": \"test\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{HOST}}/posts/3",
+              "host": ["{{HOST}}"],
+              "path": ["posts", "3"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/posts/:id",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/posts/4",
+              "host": ["{{HOST}}"],
+              "path": ["posts", "4"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "ORGANIZATION",
+      "item": [
+        {
+          "name": "/organizations",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/organizations?title_contains=tes&_limit=5&_sort=created_at:asc",
+              "host": ["{{HOST}}"],
+              "path": ["organizations"],
+              "query": [
+                {
+                  "key": "title_contains",
+                  "value": "tes"
+                },
+                {
+                  "key": "_limit",
+                  "value": "5"
+                },
+                {
+                  "key": "_sort",
+                  "value": "created_at:asc"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/organizations/:id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/organizations/4",
+              "host": ["{{HOST}}"],
+              "path": ["organizations", "4"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/organizations/count",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/organizations/count",
+              "host": ["{{HOST}}"],
+              "path": ["organizations", "count"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/organizations",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"title\": \"test\", \"link\": \"http:test.com\" }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{HOST}}/organizations",
+              "host": ["{{HOST}}"],
+              "path": ["organizations"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "http://localhost:1337/organizations",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "data",
+                  "value": "{ \"title\": \"test\", \"link\": \"http:test.com\" }",
+                  "type": "text"
+                },
+                {
+                  "key": "files.image",
+                  "type": "file",
+                  "src": "/Users/akryvtsov/Downloads/entities.drawio — templates 2021-02-16 12-52-19.png"
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:1337/organizations",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "1337",
+              "path": ["organizations"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/organizations/:id",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \"title\": \"test1111\", \"link\": \"http:test1111.com\" }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{HOST}}/organizations/4",
+              "host": ["{{HOST}}"],
+              "path": ["organizations", "4"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/organizations/:id",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/organizations/4",
+              "host": ["{{HOST}}"],
+              "path": ["organizations", "4"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "NETWORK",
+      "item": [
+        {
+          "name": "/networks",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/networks",
+              "host": ["{{HOST}}"],
+              "path": ["networks"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/networks/:id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/networks/1",
+              "host": ["{{HOST}}"],
+              "path": ["networks", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/networks",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/networks/count",
+              "host": ["{{HOST}}"],
+              "path": ["networks", "count"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/networks/:id",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/networks/1",
+              "host": ["{{HOST}}"],
+              "path": ["networks", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/networks",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"Test\",\n    \"description\": \"Test\",\n    \"status\": \"published\",\n    \"managerEmail\": \"test1@test.com\",\n    \"isPublished\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{HOST}}//networks",
+              "host": ["{{HOST}}"],
+              "path": ["", "networks"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/networks/:id",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"test1\",\n    \"parent\": 2,\n    \"organizations\": [2, 3]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{HOST}}/networks/1",
+              "host": ["{{HOST}}"],
+              "path": ["networks", "1"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "EVENT",
+      "item": [
+        {
+          "name": "/events",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/events",
+              "host": ["{{HOST}}"],
+              "path": ["events"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/events/:id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/events/1",
+              "host": ["{{HOST}}"],
+              "path": ["events", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "events/count",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/events/count",
+              "host": ["{{HOST}}"],
+              "path": ["events", "count"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/events/:id",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/events/1",
+              "host": ["{{HOST}}"],
+              "path": ["events", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/events",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"title\": \"Test\",\n    \"description\": \"Test\",\n    \"maxParticipants\": 100,\n    \"startedAt\": \"2020-11-01 22:12:10\",\n    \"finishedAt\": \"2020-11-01 22:12:10\",\n    \"surveyLink\": \"http://test.com\",\n    \"slug\": \"test1\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{HOST}}/events",
+              "host": ["{{HOST}}"],
+              "path": ["events"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/events/:id",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"network\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{HOST}}/events/1",
+              "host": ["{{HOST}}"],
+              "path": ["events", "1"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "EMOJIS",
+      "item": [
+        {
+          "name": "/emojis",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/emojis",
+              "host": ["{{HOST}}"],
+              "path": ["emojis"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/emojis/:id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/emojis/1",
+              "host": ["{{HOST}}"],
+              "path": ["emojis", "1"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "EMOTIONS",
+      "item": [
+        {
+          "name": "/emotions",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"count\": 1,\n    \"post\": 2,\n    \"emoji\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{HOST}}/emotions",
+              "host": ["{{HOST}}"],
+              "path": ["emotions"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/emotions/:id",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/emotions/1",
+              "host": ["{{HOST}}"],
+              "path": ["emotions", "1"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/emotions/:id",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"count\": 3\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{HOST}}/emotions/2",
+              "host": ["{{HOST}}"],
+              "path": ["emotions", "2"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "https://api-ppe.tesco.com/identity/v4/issue-token/token",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/vnd.tesco.identity.tokenresponse+json",
+            "type": "text"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          },
+          {
+            "key": "Authorization",
+            "value": "Basic MTgxNzM5YmMtOTM3ZC00MzhmLWExNWEtYWE2MzA5NWY4MjA1OjgwMTc4N2ViLWY2YjQtNDgwMS05M2M1LWE3YmQ2OTYxMTFhNg==",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"grant_type\": \"client_credentials\",\n  \"scope\": \"internal public\",\n  \"confidence_level\": 12\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "https://api-ppe.tesco.com/identity/v4/issue-token/token",
+          "protocol": "https",
+          "host": ["api-ppe", "tesco", "com"],
+          "path": ["identity", "v4", "issue-token", "token"]
+        }
+      },
+      "response": []
+    }
+  ],
+  "auth": {
+    "type": "bearer"
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [""]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [""]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "HOST",
+      "value": "http://localhost:9001/api"
+    }
+  ]
+}

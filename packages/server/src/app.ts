@@ -1,5 +1,6 @@
 import express from 'express';
 import http from 'http';
+import expressFileupload from 'express-fileupload';
 
 import { envAccessor, ConfigAccessor } from './services';
 import { healthCheck, api } from './routes';
@@ -9,7 +10,9 @@ import {
   clientStaticFile,
   errorHandler,
   openIdConfig,
+  apiMiddleware,
 } from './middlewares';
+import { buildContext } from './context';
 
 // validate if all required process env variables exist
 envAccessor.validate();
@@ -20,6 +23,8 @@ const app = express();
 const server = http.createServer(app);
 const PORT = config.port;
 
+const context = buildContext(config);
+
 const { openId, openIdCookieParser } = openIdConfig(config);
 
 openId
@@ -27,10 +32,13 @@ openId
     // middlewares
     app.use('/', healthCheck);
     // app.use(openIdMiddleware);
+    app.use(expressFileupload());
     app.use(openIdCookieParser);
     app.use(express.json());
-    app.use(express.urlencoded({extended: false}));
+    app.use(express.urlencoded({ extended: true }));
+    app.use(apiMiddleware(context, api));
     app.use('/api', api);
+    app.use('/api/*', (_, res) => res.sendStatus(404));
     app.use(clientStaticFolder);
     app.use(publicStaticFolder);
     app.use(clientStaticFile);

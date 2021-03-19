@@ -5,7 +5,7 @@ import {
 } from '@energon/onelogin';
 import cookieParser from 'cookie-parser';
 
-import { ProcessConfig } from 'services';
+import { ProcessConfig } from 'services/config-accessor';
 import { accessTokenJtiExtractor } from '../utils';
 
 export const openIdConfig = ({
