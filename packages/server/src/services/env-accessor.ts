@@ -17,6 +17,10 @@ type ProcessEnv = {
   IDENTITY_CLIENT_ID: string;
   IDENTITY_USER_SCOPED_TOKEN_COOKIE_SECRET: string;
   IDENTITY_USER_SCOPED_TOKEN_COOKIE_NAME: string;
+  // mock
+  MOCK_SERVER_URL: string;
+  // confirmit
+  CONFIRMIT_PASSWORD: string;
 };
 
 class EnvAccessor {
@@ -69,6 +73,8 @@ class EnvAccessor {
       IDENTITY_CLIENT_ID,
       IDENTITY_USER_SCOPED_TOKEN_COOKIE_SECRET,
       IDENTITY_USER_SCOPED_TOKEN_COOKIE_NAME,
+      MOCK_SERVER_URL,
+      CONFIRMIT_PASSWORD,
     } = process.env as ProcessEnv;
 
     this.data = {
@@ -86,6 +92,8 @@ class EnvAccessor {
       IDENTITY_CLIENT_ID,
       IDENTITY_USER_SCOPED_TOKEN_COOKIE_SECRET,
       IDENTITY_USER_SCOPED_TOKEN_COOKIE_NAME,
+      MOCK_SERVER_URL,
+      CONFIRMIT_PASSWORD,
     };
   }
 }

@@ -22,6 +22,10 @@ type ProcessConfig = {
   identityUserScopedTokenCookieSecret: string;
   // default
   groupsWithAccess: string[];
+  // mock
+  mockServerUrl: string;
+  // confirmit
+  confirmitPassword: string;
 };
 
 class ConfigAccessor {
@@ -44,6 +48,8 @@ class ConfigAccessor {
       IDENTITY_CLIENT_ID: identityClientId,
       IDENTITY_USER_SCOPED_TOKEN_COOKIE_SECRET: identityUserScopedTokenCookieSecret,
       IDENTITY_USER_SCOPED_TOKEN_COOKIE_NAME: identityUserScopedTokenCookieName,
+      MOCK_SERVER_URL: mockServerUrl,
+      CONFIRMIT_PASSWORD: confirmitPassword,
     } = processEnv;
 
     this.data = {
@@ -63,6 +69,8 @@ class ConfigAccessor {
       identityClientId,
       identityUserScopedTokenCookieSecret,
       identityUserScopedTokenCookieName,
+      mockServerUrl,
+      confirmitPassword,
     };
   }
 

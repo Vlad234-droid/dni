@@ -19,4 +19,15 @@ const buildApiConsumer = <T extends ApiDefinition>(
   return createApiConsumer(apiDef, client);
 };
 
-export { buildApiConsumer };
+const buildParams = <T, U = unknown>(
+  params: T,
+  tenantkey: string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  body: U = undefined as any,
+) => ({
+  params,
+  fetchOpts: { headers: { tenantkey } },
+  body,
+});
+
+export { buildApiConsumer, buildParams };
