@@ -1,4 +1,4 @@
-import { DateString, File } from '../built-in';
+import { DateString } from '../built-in';
 import { Network } from '../network';
 import { User } from '../user';
 import { BaseApiParams, BaseType } from '../types';
@@ -15,7 +15,6 @@ type Event = {
   description: string;
   slug: string;
   createdBy: User;
-  image: File | null;
 } & BaseType;
 
 type EventUser = {

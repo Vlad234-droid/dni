@@ -1,11 +1,12 @@
 import { File } from '../built-in';
-import { BaseApiParams, BaseType } from '../types';
+import { BaseApiParams } from '../types';
 
 type Organization = {
+  id: number;
   title: string;
   link: string;
   image: File | null;
-} & BaseType;
+};
 
 type OrganizationBody = Omit<Organization, 'id'>;
 

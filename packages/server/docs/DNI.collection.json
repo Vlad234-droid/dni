@@ -60,7 +60,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"title\": \"Test\",\n    \"description\": \"Test\",\n    \"sharedToken\": \"Test\",\n    \"status\": \"published\",\n    \"slug\": \"test3\"\n}",
+              "raw": "{\n    \"title\": \"Test\",\n    \"description\": \"Test\",\n    \"sharedToken\": \"Test\",\n    \"status\": \"published\",\n    \"slug\": \"test1\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -546,75 +546,6 @@
               "raw": "{{HOST}}/emotions/2",
               "host": ["{{HOST}}"],
               "path": ["emotions", "2"]
-            }
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "UPLOAD",
-      "item": [
-        {
-          "name": "/upload",
-          "request": {
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "formdata",
-              "formdata": [
-                {
-                  "key": "refId",
-                  "value": "6",
-                  "type": "text"
-                },
-                {
-                  "key": "ref",
-                  "value": "Emoji",
-                  "type": "text"
-                },
-                {
-                  "key": "field",
-                  "value": "image",
-                  "type": "text"
-                },
-                {
-                  "key": "files",
-                  "type": "file",
-                  "src": "/Users/akryvtsov/Downloads/images.jpeg"
-                }
-              ]
-            },
-            "url": {
-              "raw": "{{HOST}}/upload",
-              "host": ["{{HOST}}"],
-              "path": ["upload"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "/upload/files/:id",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{HOST}}/upload/files/1",
-              "host": ["{{HOST}}"],
-              "path": ["upload", "files", "1"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "/upload/files",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{HOST}}/upload/files",
-              "host": ["{{HOST}}"],
-              "path": ["upload", "files"]
             }
           },
           "response": []

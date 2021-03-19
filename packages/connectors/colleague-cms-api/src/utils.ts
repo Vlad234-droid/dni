@@ -2,27 +2,21 @@ import { fetchClient, resolveBaseUrl } from '@energon-connectors/core';
 import { createApiConsumer } from '@energon/rest-api-consumer';
 import { ApiDefinition } from '@energon/rest-api-definition';
 
-import { DNI_CMS_API_URLS } from './config';
-import { DniCmsApiContext } from './types';
+import { COLLEAGUE_CMS_API_URLS } from './config';
+import { ColleagueCmsApiContext } from './types';
 
 const buildApiConsumer = <T extends ApiDefinition>(
-  ctx: DniCmsApiContext,
+  ctx: ColleagueCmsApiContext,
   apiDef: T,
 ) => {
-  const client = buildClient(ctx);
-  return createApiConsumer(apiDef, client);
-};
-
-const buildClient = (ctx: DniCmsApiContext) => {
   const baseUrl =
-    process.env.COLLEAGUE_CMS_URL || resolveBaseUrl(DNI_CMS_API_URLS, ctx);
+    process.env.COLLEAGUE_CMS_URL ||
+    resolveBaseUrl(COLLEAGUE_CMS_API_URLS, ctx);
   const headers = {
     Auth: () => `Bearer ${ctx.identityClientToken()}`,
   };
-
   const client = fetchClient(baseUrl, headers, ctx);
-
-  return client;
+  return createApiConsumer(apiDef, client);
 };
 
 const buildParams = <T, U = unknown>(
@@ -36,4 +30,4 @@ const buildParams = <T, U = unknown>(
   body,
 });
 
-export { buildApiConsumer, buildParams, buildClient };
+export { buildApiConsumer, buildParams };

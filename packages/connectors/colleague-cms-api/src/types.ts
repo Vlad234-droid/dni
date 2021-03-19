@@ -1,12 +1,12 @@
 import { ConnectorContext } from '@energon-connectors/core';
 import { DateString } from './built-in';
 
-type DniCmsApiContext = Pick<
+type ColleagueCmsApiContext = Pick<
   ConnectorContext,
   'identityClientToken' | 'apiEnv' | 'markApiCall'
 >;
 
-type DniCmsApiHeaders = {
+type ColleagueCmsApiHeaders = {
   Authorization: () => string;
 };
 
@@ -36,8 +36,8 @@ type BaseType = {
 
 export type {
   BaseType,
-  DniCmsApiContext,
-  DniCmsApiHeaders,
+  ColleagueCmsApiContext,
+  ColleagueCmsApiHeaders,
   ApiInput,
   BaseApiParams,
 };
