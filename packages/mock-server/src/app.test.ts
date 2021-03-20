@@ -30,7 +30,7 @@ describe('Server run', () => {
   describe('Api routes', () => {
     it('GET post by id', (done) => {
       request(server)
-        .get(`${COLLEAGUE_CMS_API_LOCAL}/posts/1`)
+        .get(`${COLLEAGUE_CMS_API_LOCAL}/posts`)
         .set('Accept', 'application/json')
         .expect('Content-Type', /application\/json/)
         .expect(200, done);

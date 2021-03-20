@@ -1,9 +1,10 @@
 import Ajv from 'ajv';
 
-import { post, poster } from './generator';
+import { generatePost, poster } from './generator';
 
 describe('Post generator', () => {
   const ajv = new Ajv();
+  const post = generatePost();
 
   it.only('should post schema be valid', () => {
     const schema = {
@@ -19,18 +20,17 @@ describe('Post generator', () => {
         status: { type: 'string' },
         emotions: { type: 'array' },
         createdBy: { type: 'object' },
-        createAt: { type: 'string' },
-        updateAt: { type: 'string' },
+        created_at: { type: 'string' },
+        updated_at: { type: 'string' },
       },
       required: [
         'id',
         'title',
-        'description',
         'postAs',
         'sharedToken',
         'createdBy',
-        'createAt',
-        'updateAt',
+        'created_at',
+        'updated_at',
       ],
     };
 

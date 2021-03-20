@@ -1,10 +1,23 @@
 import faker from 'faker';
-import { Emotion } from '@dni-connectors/colleague-cms-api';
+import { Emotion, User } from '@dni-connectors/colleague-cms-api';
 
-import { file } from '../built-in';
+import { generateArray } from 'utils';
+import { generateEmoji } from '../emoji';
+import { generateBase } from '../base';
+import { colleague } from '../../colleague';
 
-export const emotion: Emotion = {
-  id: faker.random.number(),
-  count: faker.random.number(3),
-  image: file,
+const generateEmotion = () => {
+  const emotion: Emotion = {
+    ...generateBase(),
+    count: faker.random.number(20),
+    createdBy: colleague as User,
+    emoji: generateEmoji(),
+  };
+
+  return emotion;
 };
+
+const generateEmotions = (length: number) =>
+  generateArray(length).map(() => generateEmotion());
+
+export { generateEmotion, generateEmotions };
