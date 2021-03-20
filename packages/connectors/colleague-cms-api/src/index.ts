@@ -1,4 +1,9 @@
-export type { ColleagueCmsApiContext, ColleagueCmsApiHeaders } from './types';
+export type {
+  ColleagueCmsApiContext,
+  ColleagueCmsApiHeaders,
+  BaseType,
+  BaseApiParams,
+} from './types';
 export { COLLEAGUE_CMS_API_URLS, TENANT_KEY } from './config';
 
 export * from './built-in';

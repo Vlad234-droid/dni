@@ -1,6 +1,5 @@
 import express from 'express';
 import http from 'http';
-import bodyParser from 'body-parser';
 
 import config from './config';
 import { healthCheck, api } from './controllers';
@@ -10,8 +9,8 @@ const server = http.createServer(app);
 const PORT = config.port;
 
 app.disable('x-powered-by');
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use('/', healthCheck);
 app.use('/', api);
 

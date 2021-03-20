@@ -1,6 +1,6 @@
 import Ajv from 'ajv';
 
-import { emotion } from './generator';
+import { generateEmotion } from './generator';
 
 describe('Emotion generator', () => {
   const ajv = new Ajv();
@@ -11,12 +11,11 @@ describe('Emotion generator', () => {
       properties: {
         id: { type: 'number' },
         count: { type: 'number' },
-        image: { type: 'object' },
       },
-      required: ['id', 'count', 'image'],
+      required: ['id', 'count'],
     };
 
-    const valid = ajv.validate(schema, emotion);
+    const valid = ajv.validate(schema, generateEmotion());
     expect(valid).toBeTruthy();
   });
 });
