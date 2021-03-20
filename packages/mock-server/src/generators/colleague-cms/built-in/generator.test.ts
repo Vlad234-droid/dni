@@ -1,6 +1,6 @@
 import Ajv from 'ajv';
 
-import { file } from './generator';
+import { generateFile } from './generator';
 
 describe('Build-in generator', () => {
   const ajv = new Ajv();
@@ -36,7 +36,7 @@ describe('Build-in generator', () => {
       ],
     };
 
-    const valid = ajv.validate(schema, file);
+    const valid = ajv.validate(schema, generateFile());
     expect(valid).toBeTruthy();
   });
 });

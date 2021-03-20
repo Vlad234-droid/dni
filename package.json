@@ -19,7 +19,7 @@
     "on-pre-push": "commitlint --from=$(git merge-base master $(git rev-parse --abbrev-ref HEAD)) --to=HEAD",
     "run:dev": "lerna run --parallel run:dev --scope @dni/client --scope @dni/server",
     "run:prod": "BUILD_ENV_PARAM=production lerna run --parallel run:prod",
-    "run:local:dev": "lerna run --parallel run:dev --scope @dni/client --scope @dni/mock-server",
+    "run:local:dev": "lerna run --parallel run:dev --scope @dni/server --scope @dni/client --scope @dni/mock-server",
     "ws:server": "yarn workspace @dni/server",
     "ws:mock-server": "yarn workspace @dni/mock-server",
     "ws:client": "yarn workspace @dni/client",

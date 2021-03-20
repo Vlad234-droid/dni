@@ -1,0 +1,424 @@
+{
+  "info": {
+    "_postman_id": "4128ee70-f68b-498c-8202-dffbfd5d58d6",
+    "name": "DNI-MOCK",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "POST",
+      "item": [
+        {
+          "name": "/colleague-cms/posts",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/colleague-cms/posts",
+              "host": ["{{HOST}}"],
+              "path": ["colleague-cms", "posts"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/colleague-cms/posts/count",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/colleague-cms/posts/count",
+              "host": ["{{HOST}}"],
+              "path": ["colleague-cms", "posts", "count"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/colleague-cms/posts/:id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/colleague-cms/posts/12883",
+              "host": ["{{HOST}}"],
+              "path": ["colleague-cms", "posts", "12883"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/colleague-cms/posts",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/colleague-cms/posts",
+              "host": ["{{HOST}}"],
+              "path": ["colleague-cms", "posts"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/colleague-cms/posts/54431",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/colleague-cms/posts/12883",
+              "host": ["{{HOST}}"],
+              "path": ["colleague-cms", "posts", "12883"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/colleague-cms/posts/12883",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/colleague-cms/posts/5286",
+              "host": ["{{HOST}}"],
+              "path": ["colleague-cms", "posts", "5286"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "EMOJIS",
+      "item": [
+        {
+          "name": "/colleague-cms/emojis",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/colleague-cms/emojis",
+              "host": ["{{HOST}}"],
+              "path": ["colleague-cms", "emojis"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/colleague-cms/emojis/:id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/colleague-cms/emojis/1731",
+              "host": ["{{HOST}}"],
+              "path": ["colleague-cms", "emojis", "1731"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "ORGANIZATION",
+      "item": [
+        {
+          "name": "/colleague-cms/organizations",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/colleague-cms/organizations",
+              "host": ["{{HOST}}"],
+              "path": ["colleague-cms", "organizations"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/colleague-cms/organizations/:id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/colleague-cms/organizations/5902",
+              "host": ["{{HOST}}"],
+              "path": ["colleague-cms", "organizations", "5902"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/colleague-cms/organizations/:id",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/colleague-cms/organizations/5902",
+              "host": ["{{HOST}}"],
+              "path": ["colleague-cms", "organizations", "5902"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/colleague-cms/organizations",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/colleague-cms/organizations",
+              "host": ["{{HOST}}"],
+              "path": ["colleague-cms", "organizations"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/colleague-cms/organizations/:id",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/colleague-cms/organizations/5902",
+              "host": ["{{HOST}}"],
+              "path": ["colleague-cms", "organizations", "5902"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "EVENT",
+      "item": [
+        {
+          "name": "/colleague-cms/events",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/colleague-cms/events",
+              "host": ["{{HOST}}"],
+              "path": ["colleague-cms", "events"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/colleague-cms/events/:id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/colleague-cms/events/5619",
+              "host": ["{{HOST}}"],
+              "path": ["colleague-cms", "events", "5619"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/colleague-cms/events/:id",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/colleague-cms/events/5619",
+              "host": ["{{HOST}}"],
+              "path": ["colleague-cms", "events", "5619"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/colleague-cms/events/:id",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/colleague-cms/events/5619",
+              "host": ["{{HOST}}"],
+              "path": ["colleague-cms", "events", "5619"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/colleague-cms/events",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "/colleague-cms/events",
+              "path": ["colleague-cms", "events"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/colleague-cms/events/count",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/colleague-cms/events/count",
+              "host": ["{{HOST}}"],
+              "path": ["colleague-cms", "events", "count"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "NETWORK",
+      "item": [
+        {
+          "name": "/colleague-cms/networks",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/colleague-cms/networks",
+              "host": ["{{HOST}}"],
+              "path": ["colleague-cms", "networks"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/colleague-cms/networks/:id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/colleague-cms/networks/2601",
+              "host": ["{{HOST}}"],
+              "path": ["colleague-cms", "networks", "2601"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/colleague-cms/networks/count",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/colleague-cms/networks/count",
+              "host": ["{{HOST}}"],
+              "path": ["colleague-cms", "networks", "count"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/colleague-cms/networks/:id",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/colleague-cms/networks/2601",
+              "host": ["{{HOST}}"],
+              "path": ["colleague-cms", "networks", "2601"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/colleague-cms/networks/:id",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/colleague-cms/networks/2601",
+              "host": ["{{HOST}}"],
+              "path": ["colleague-cms", "networks", "2601"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/colleague-cms/networks",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/colleague-cms/networks",
+              "host": ["{{HOST}}"],
+              "path": ["colleague-cms", "networks"]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "EMOTIONS",
+      "item": [
+        {
+          "name": "/colleague-cms/emotions",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/colleague-cms/emotions",
+              "host": ["{{HOST}}"],
+              "path": ["colleague-cms", "emotions"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/colleague-cms/emotions/:id",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/colleague-cms/emotions/94355",
+              "host": ["{{HOST}}"],
+              "path": ["colleague-cms", "emotions", "94355"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/colleague-cms/emotions/:id",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/colleague-cms/emotions/94355",
+              "host": ["{{HOST}}"],
+              "path": ["colleague-cms", "emotions", "94355"]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [""]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [""]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "HOST",
+      "value": "http://localhost:8000"
+    }
+  ]
+}

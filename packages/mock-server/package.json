@@ -15,6 +15,7 @@
   "dependencies": {
     "@dni-connectors/colleague-api": "1.0.0",
     "@energon-connectors/core": "^0.7.6",
+    "@energon/fetch-client": "^0.10.1",
     "@energon/rest-api-provider": "^0.3.7",
     "ajv": "^7.1.1",
     "body-parser": "^1.19.0",
