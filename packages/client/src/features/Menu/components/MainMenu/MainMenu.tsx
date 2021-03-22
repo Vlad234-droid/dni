@@ -1,17 +1,17 @@
 import React, { FC } from 'react';
-import styled from 'styled-components';
 
+import NetworkUpdates from 'features/NetworkUpdates';
 import { useMedia } from 'context/InterfaceContext';
+
 import MenuDesktop from '../MenuDesktop';
-import NetworkUpdates from '../NetworkUpdates';
 import MenuMobile from '../MenuMobile';
 
 const MainMenu: FC = () => {
-  const { isMobile } = useMedia();
+  const { isDesktop } = useMedia();
 
   return (
-    <Wrapper>
-      {isMobile ? (
+    <>
+      {!isDesktop ? (
         <MenuMobile />
       ) : (
         <>
@@ -19,16 +19,8 @@ const MainMenu: FC = () => {
           <NetworkUpdates />
         </>
       )}
-    </Wrapper>
+    </>
   );
 };
 
 export default MainMenu;
-
-const Wrapper = styled.div`
-  padding: 45px 0 20px;
-
-  @media (max-width: 504px) {
-    padding: 0;
-  }
-`;

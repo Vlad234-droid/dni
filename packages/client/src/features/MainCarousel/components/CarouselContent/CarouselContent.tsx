@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
-import Button from '@beans/button';
 import Icon from '@beans/icon';
+import Button from '@beans/button';
 
 import {
   Wrapper,
@@ -13,7 +13,7 @@ import {
 } from './styled';
 
 type Props = {
-  isChanched?: boolean;
+  isChanged?: boolean;
   title: string;
   subTitle: string;
   subDescription: string;

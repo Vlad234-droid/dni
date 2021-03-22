@@ -2,7 +2,9 @@ import React, { FC } from 'react';
 
 import { Page, PAGE_PREFIX } from 'features/Page';
 import { BackLink } from 'features/Common';
-import BasePage, { PageHeader, PageWrapper } from '../BasePage';
+import BasePage from '../BasePage';
+import PageHeader from '../PageHeader';
+import PageWrapper from '../PageWrapper';
 import { CreateNetwork } from 'features/Networks';
 
 const Networks: FC = () => {

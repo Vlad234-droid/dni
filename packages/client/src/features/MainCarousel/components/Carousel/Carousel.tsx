@@ -22,12 +22,14 @@ type Props = {
   id: string;
   rotationInterval?: number;
   autoPlay?: boolean;
+  hideControls?: boolean;
 };
 
 const Carousel: FC<Props> = ({
   id,
   rotationInterval = 5000,
   autoPlay = true,
+  hideControls = false,
   children,
 }) => (
   <Wrapper data-testid={TEST_ID}>
@@ -36,6 +38,7 @@ const Carousel: FC<Props> = ({
         id,
         rotationInterval,
         autoPlay,
+        hideControls,
       }}
     >
       {children}

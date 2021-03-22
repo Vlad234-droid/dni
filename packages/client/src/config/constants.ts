@@ -1,6 +1,9 @@
 export enum ViewportSize {
   PHONE = 320,
-  SUB_PHONE = 504,
+  LARGE_PHONE = 504,
   TABLET = 756,
+  LARGE_TABLET = 768,
+  SMALL_DESKTOP = 1025,
   DESKTOP = 1260,
+  LARGE_DESKTOP = 1920,
 }

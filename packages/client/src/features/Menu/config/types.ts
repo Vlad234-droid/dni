@@ -10,18 +10,7 @@ export type IconSrc = {
   active: string;
 };
 
-export interface MenuItem {
-  name: string;
-  page: Page;
-  iconSrc?: IconSrc;
-}
-
-export type MenuUpdatesItem = {
-  name: string;
-  page: string;
-  count: number;
-  imageSrc: string;
-};
+export type MenuItem = string;
 
 export type VisiblePages = Exclude<Page, Page.ADD_NETWORKS | Page.NOT_FOUND>;
 

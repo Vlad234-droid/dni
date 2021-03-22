@@ -40,7 +40,6 @@ import {
   fragmentStyles,
 } from './styled';
 import { KEY_CODES } from '@beans/date-input';
-import TimeDropdown from '../TimeDropdown';
 
 type Props = {
   time: Time;

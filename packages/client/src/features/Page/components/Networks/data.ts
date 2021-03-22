@@ -26,7 +26,6 @@ const networks = [
       src: networkImage1,
     },
     participants: 42,
-    members: 122,
   },
   {
     id: 2,
@@ -41,7 +40,6 @@ const networks = [
       src: networkImage2,
     },
     participants: 20,
-    members: 203,
   },
   {
     id: 3,
@@ -56,7 +54,6 @@ const networks = [
       src: networkImage3,
     },
     participants: 30,
-    members: 231,
   },
   {
     id: 4,
@@ -68,7 +65,6 @@ const networks = [
       src: networkImage1,
     },
     participants: 42,
-    members: 122,
   },
 ];
 

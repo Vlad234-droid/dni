@@ -14,7 +14,6 @@ export default [
       src: networkImage1,
     },
     participants: 42,
-    members: 122,
   },
   {
     id: 2,
@@ -29,7 +28,6 @@ export default [
       src: networkImage2,
     },
     participants: 20,
-    members: 203,
   },
   {
     id: 3,
@@ -44,7 +42,6 @@ export default [
       src: networkImage3,
     },
     participants: 30,
-    members: 231,
   },
   {
     id: 4,
@@ -56,7 +53,6 @@ export default [
       src: networkImage1,
     },
     participants: 42,
-    members: 122,
   },
   {
     id: 5,
@@ -71,7 +67,6 @@ export default [
       src: networkImage4,
     },
     participants: 20,
-    members: 203,
   },
   {
     id: 6,
@@ -86,7 +81,6 @@ export default [
       src: networkImage3,
     },
     participants: 30,
-    members: 231,
   },
   {
     id: 7,
@@ -98,6 +92,5 @@ export default [
       src: networkImage1,
     },
     participants: 42,
-    members: 122,
   },
 ];

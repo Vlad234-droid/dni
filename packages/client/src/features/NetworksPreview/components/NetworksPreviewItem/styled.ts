@@ -1,22 +1,33 @@
 import styled from 'styled-components';
 
+import Media from 'styles/media';
 import { textXS } from 'styles';
 
-// TODO: apply mask for image
 export const Wrapper = styled.div`
-  flex-grow: 1;
-  flex-basis: 300px;
-  ${textXS}
+  ${textXS};
+  margin-bottom: 32px;
 
   &:not(:last-child) {
-    margin-right: 6px;
+    ${Media.tablet`
+      margin-right: 6px;
+  `}
   }
+
+  ${Media.tablet`
+    margin-bottom: 0;
+    flex-grow: 1;
+    flex-basis: 300px;
+  `}
 `;
 
 export const ImageWrapper = styled.div`
-  margin-bottom: 25px;
-  height: 73px;
   width: 100%;
+  margin-bottom: 16px;
+
+  ${Media.tablet`
+    margin-bottom: 25px;
+    height: 73px;
+  `}
 `;
 
 export const Image = styled.img`
@@ -25,8 +36,12 @@ export const Image = styled.img`
 `;
 
 export const Title = styled.h3`
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   color: ${({ theme }) => theme.colors.tescoBlue};
+
+  ${Media.tablet`
+    margin-bottom: 10px;
+  `}
 `;
 
 export const Description = styled.div`

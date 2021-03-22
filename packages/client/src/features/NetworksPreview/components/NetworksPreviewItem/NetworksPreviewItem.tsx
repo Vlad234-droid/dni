@@ -1,4 +1,7 @@
 import React, { FC } from 'react';
+import Icon from '@beans/icon';
+
+import { useMedia } from 'context/InterfaceContext';
 
 import { Wrapper, ImageWrapper, Image, Title, Description } from './styled';
 
@@ -15,14 +18,22 @@ type Props = {
 
 const NetworksPreviewItem: FC<Props> = ({
   network: { imageSrc, title, description },
-}) => (
-  <Wrapper>
-    <ImageWrapper>
-      <Image src={imageSrc} />
-    </ImageWrapper>
-    <Title>{title}</Title>
-    <Description>{description}</Description>
-  </Wrapper>
-);
+}) => {
+  const { isMobile } = useMedia();
+
+  return (
+    <Wrapper>
+      <ImageWrapper>
+        {isMobile ? (
+          <Icon graphic='leaf' size='sm' stroke='#fff' fill='#0054A4' />
+        ) : (
+          <Image src={imageSrc} />
+        )}
+      </ImageWrapper>
+      <Title>{title}</Title>
+      <Description>{description}</Description>
+    </Wrapper>
+  );
+};
 
 export default NetworksPreviewItem;

@@ -3,15 +3,11 @@ import { WindowResize } from '@beans/helpers';
 import Icon from '@beans/icon';
 import ResponsiveImage from '@beans/responsive-image';
 import { TitleWithEllipsis } from '@beans/title-link';
+import { HORIZONTAL, VERTICAL } from '@beans/constants';
+import BaseTile from '@beans/base-tile';
 
 import Description from '../Description';
-import {
-  BaseTile,
-  DescriptionContainer,
-  TileText,
-  TileMeta,
-  ActionContainer,
-} from './styled';
+import { DescriptionContainer, TileText } from './styled';
 
 type Props = {
   title: string;
@@ -19,11 +15,15 @@ type Props = {
   descriptionHeight?: number;
   link: string;
   renderAction: () => JSX.Element;
-  renderMeta: () => JSX.Element;
+  renderMeta: () => JSX.Element | undefined;
   participants: number;
   image: {
     alt: string;
     src: string;
+  };
+  orientation: {
+    aboveTablet: typeof HORIZONTAL | typeof VERTICAL;
+    belowTablet: typeof HORIZONTAL | typeof VERTICAL;
   };
 };
 
@@ -36,10 +36,12 @@ const Tile: FC<Props> = ({
   link,
   renderAction,
   renderMeta,
+  orientation,
 }) => {
   return (
     <BaseTile
       href={link}
+      orientation={orientation}
       responsiveImage={
         <ResponsiveImage
           alt={image.alt}
@@ -60,12 +62,12 @@ const Tile: FC<Props> = ({
           </WindowResize>
         </DescriptionContainer>
       )}
-      <TileMeta>{renderMeta()}</TileMeta>
+      {renderMeta && renderMeta()}
       <TileText>
         <Icon graphic='account' size={'sm'} />
         {participants} participants
       </TileText>
-      <ActionContainer>{renderAction()}</ActionContainer>
+      {renderAction()}
     </BaseTile>
   );
 };

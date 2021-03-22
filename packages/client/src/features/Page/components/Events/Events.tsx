@@ -5,11 +5,13 @@ import { Link } from 'react-router-dom';
 import { DateTime } from 'luxon';
 
 import { Page, PAGE_PREFIX } from 'features/Page';
-import BasePage, { PageHeader, PageWrapper } from '../BasePage';
+import BasePage from '../BasePage';
+import PageHeader from '../PageHeader';
+import PageWrapper from '../PageWrapper';
 import Heading from 'features/Heading';
 import { useMedia } from 'context/InterfaceContext';
 import ButtonFilter from 'features/ButtonFilter';
-import EventCarusel from 'features/EventCarusel';
+import EventCarusel from 'features/EventCarousel';
 import EventTable from 'features/EventTable';
 import EventList from 'features/EventList';
 import RangeDateTimePicker from 'features/RangeDateTimePicker';

@@ -4,7 +4,7 @@ import { createMemoryHistory } from 'history';
 import { Router } from 'react-router-dom';
 
 import { renderWithTheme, screen } from 'utils/testUtils';
-import { itemsMobile } from '../../config/items';
+import { menuItemsMobile } from '../../config/items';
 import MenuMobile, {
   MOBILE_MENU_TEST_ID,
   MOBILE_MORE_TEST_ID,
@@ -32,7 +32,7 @@ describe('Menu feature', () => {
     it('should contain available visible items', () => {
       renderWithRouter();
 
-      itemsMobile.visible.forEach(({ name }) => {
+      Object.values(menuItemsMobile.visible).forEach((name) => {
         const result = screen.getByTestId(`${MENU_TEST_ID_PREFIX}${name}`);
 
         expect(result).toBeInTheDocument();
@@ -45,7 +45,7 @@ describe('Menu feature', () => {
 
       userEvent.click(buttonMore);
 
-      itemsMobile.hidden.forEach(({ name }) => {
+      Object.values(menuItemsMobile.hidden).forEach((name) => {
         const result = screen.getByTestId(`${MENU_TEST_ID_PREFIX}${name}`);
 
         expect(result).toBeInTheDocument();
@@ -59,7 +59,7 @@ describe('Menu feature', () => {
       userEvent.click(buttonMore);
       userEvent.click(buttonMore);
 
-      itemsMobile.hidden.forEach(({ name }) => {
+      Object.values(menuItemsMobile.hidden).forEach((name) => {
         const result = screen.queryByTestId(`${MENU_TEST_ID_PREFIX}${name}`);
 
         expect(result).not.toBeInTheDocument();

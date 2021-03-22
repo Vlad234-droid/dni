@@ -30,9 +30,3 @@ export const headingXL = css`
   font-size: ${({ theme }) => theme.fontSize.xl};
   line-height: ${({ theme }) => theme.lineHeight.heading.xl};
 `;
-
-// 44px
-export const headingXXXXL = css`
-  font-size: ${({ theme }) => theme.fontSize.xxxxl};
-  line-height: ${({ theme }) => theme.lineHeight.heading.md};
-`;

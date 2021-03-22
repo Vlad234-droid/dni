@@ -1,3 +1,5 @@
+import graphics from './graphics';
+
 export default {
   colors: {
     background: {
@@ -15,5 +17,8 @@ export default {
   },
   fontSize: {
     xxxxl: '44px',
+  },
+  icons: {
+    graphics,
   },
 };

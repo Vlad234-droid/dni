@@ -8,9 +8,9 @@ const media = createMediaListener({
     ViewportSize.TABLET - 1
   }px)`,
   isTablet: `(min-width: ${ViewportSize.TABLET}px) and (max-width: ${
-    ViewportSize.DESKTOP - 1
+    ViewportSize.SMALL_DESKTOP - 1
   }px)`,
-  isDesktop: `(min-width: ${ViewportSize.DESKTOP}px)`,
+  isDesktop: `(min-width: ${ViewportSize.SMALL_DESKTOP}px)`,
 });
 
 type Media = {
@@ -33,7 +33,7 @@ const useMedia = () => {
         return;
       case true:
       case isDesktop:
-        setViewport(ViewportSize.DESKTOP);
+        setViewport(ViewportSize.SMALL_DESKTOP);
         return;
       default:
         setViewport(ViewportSize.PHONE);

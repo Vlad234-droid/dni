@@ -1,5 +1,6 @@
 import { HTMLProps } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
+
 import Media from 'styles/media';
 
 type Props = HTMLProps<HTMLDivElement>;
@@ -11,15 +12,23 @@ export const Wrapper = styled.div<Props>`
   grid-template-areas: 'header' 'main' 'left';
   height: 100vh;
 
-  ${Media.tablet`
-    grid-template-columns: minmax(15px, 1fr) 240px minmax(auto, 1004px) minmax(
+  ${Media.small_desktop`
+    grid-template-columns: minmax(15px, 1fr) 240px minmax(auto, 1066px) minmax(
       15px,
       1fr
     );
     grid-template-rows: 53px 1fr;
     grid-template-areas: 'header header header header' '. left main main';
-  `} {
-  }
+  `}
+
+  ${Media.large_desktop`
+    grid-template-columns: minmax(15px, 1fr) 240px minmax(auto, 1232px) minmax(
+      15px,
+      1fr
+    );
+    grid-template-rows: 53px 1fr;
+    grid-template-areas: 'header header header header' '. left main main';
+  `}
 `;
 
 export const HeaderContainer = styled.div.attrs({
@@ -27,10 +36,15 @@ export const HeaderContainer = styled.div.attrs({
 })<Props>`
   position: relative;
   z-index: 2;
-  box-shadow: 0 0 10px var(--line-color);
   grid-area: header;
-  border-bottom: 1px solid ${({ theme }) => theme.colors.lines.base};
-  padding: 0 15px;
+  box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.15);
+
+  ${({ theme }) => css`
+    ${Media.large_tablet`
+        box-shadow: none;
+        border-bottom: 1px solid ${theme.colors.lines.base};
+    `}
+  `}
 `;
 
 export const LeftContainer = styled.div.attrs({
@@ -45,9 +59,20 @@ export const MainContainer = styled.div.attrs({
 })`
   grid-area: main;
   overflow-y: auto;
-  border-left: 1px solid ${({ theme }) => theme.colors.lines.base};
+
+  ${({ theme }) => css`
+    ${Media.large_tablet`
+        border-left: 1px solid ${theme.colors.lines.base};
+    `}
+  `}
 `;
 
 export const Content = styled.div`
-  max-width: 1004px;
+  ${Media.large_tablet`
+     max-width: 1066px;
+  `}
+
+  ${Media.large_desktop`
+     max-width: 1232px;
+  `}
 `;

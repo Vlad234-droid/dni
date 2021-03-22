@@ -1,1 +1,1 @@
-export { default } from './NetworkList';
+export { default } from './components';

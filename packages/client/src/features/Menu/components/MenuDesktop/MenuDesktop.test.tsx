@@ -3,9 +3,10 @@ import { createMemoryHistory } from 'history';
 import { Router } from 'react-router-dom';
 
 import { renderWithTheme, screen } from 'utils/testUtils';
-import { itemsDesktop } from '../../config/items';
-import MenuDesktop, { MENU_DESKTOP_TEST_ID } from './MenuDesktop';
+
+import { menuItems } from '../../config/items';
 import { MENU_TEST_ID_PREFIX } from '../MenuItem';
+import MenuDesktop, { MENU_DESKTOP_TEST_ID } from './MenuDesktop';
 
 describe('Menu feature', () => {
   const history = createMemoryHistory();
@@ -28,7 +29,7 @@ describe('Menu feature', () => {
     it('should contain available items', () => {
       renderWithRouter();
 
-      itemsDesktop.forEach(({ name }) => {
+      Object.values(menuItems).forEach((name) => {
         const result = screen.getByTestId(`${MENU_TEST_ID_PREFIX}${name}`);
 
         expect(result).toBeInTheDocument();

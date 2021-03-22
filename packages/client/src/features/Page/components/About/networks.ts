@@ -1,5 +1,5 @@
-import networkImage1 from './assets/networkImage1.png';
-import networkImage2 from './assets/networkImage2.png';
+import networkImage1 from '../../../NetworksPreview/assets/networkImage1.png';
+import networkImage2 from '../../../NetworksPreview/assets/networkImage2.png';
 
 export default [
   {

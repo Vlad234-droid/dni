@@ -3,7 +3,7 @@ import { MenuLink } from './styled';
 
 export const MENU_TEST_ID_PREFIX = 'menu-item-test-id-';
 
-const MenuItem: FC<{ name: string; page: string }> = ({
+const MenuItem: FC<{ name?: string; page: string }> = ({
   name,
   page,
   children,

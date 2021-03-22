@@ -24,7 +24,7 @@ const stylesMenuItem = css`
   }
 
   ${({ theme }) => css`
-    ${Media.tablet`
+    ${Media.small_desktop`
         &:first-child {
           border: 0;
         }
