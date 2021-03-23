@@ -2,7 +2,7 @@ import { defineAPI } from '@energon/rest-api-definition';
 
 import { Network, NetworkApiParams, NetworkBody } from './types';
 import { buildApiConsumer, buildParams } from '../utils';
-import { ColleagueCmsApiContext, ApiInput } from '../types';
+import { DniCmsApiContext, ApiInput } from '../types';
 
 export const cmsNetworksApiDef = defineAPI((endpoint) => ({
   getNetwork: endpoint
@@ -44,7 +44,7 @@ export const cmsNetworksApiDef = defineAPI((endpoint) => ({
     .build(),
 }));
 
-export const cmsNetworksApiConnector = (ctx: ColleagueCmsApiContext) => {
+export const cmsNetworksApiConnector = (ctx: DniCmsApiContext) => {
   const apiConsumer = buildApiConsumer(ctx, cmsNetworksApiDef);
 
   return {

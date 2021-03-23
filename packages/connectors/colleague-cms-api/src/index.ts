@@ -1,10 +1,10 @@
 export type {
-  ColleagueCmsApiContext,
-  ColleagueCmsApiHeaders,
+  DniCmsApiContext,
+  DniCmsApiHeaders,
   BaseType,
   BaseApiParams,
 } from './types';
-export { COLLEAGUE_CMS_API_URLS, TENANT_KEY } from './config';
+export { DNI_CMS_API_URLS, TENANT_KEY } from './config';
 
 export * from './built-in';
 export * from './emoji';
@@ -16,3 +16,4 @@ export * from './question';
 export * from './routing';
 export * from './user';
 export * from './network';
+export * from './upload';

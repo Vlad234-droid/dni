@@ -2,7 +2,7 @@ import { defineAPI } from '@energon/rest-api-definition';
 
 import { Emotion, EmotionApiParams, EmotionBody } from './types';
 import { buildApiConsumer, buildParams } from '../utils';
-import { ColleagueCmsApiContext, ApiInput } from '../types';
+import { DniCmsApiContext, ApiInput } from '../types';
 
 export const cmsEmotionsApiDef = defineAPI((endpoint) => ({
   postEmotion: endpoint
@@ -26,7 +26,7 @@ export const cmsEmotionsApiDef = defineAPI((endpoint) => ({
     .build(),
 }));
 
-export const cmsEmotionsApiConnector = (ctx: ColleagueCmsApiContext) => {
+export const cmsEmotionsApiConnector = (ctx: DniCmsApiContext) => {
   const apiConsumer = buildApiConsumer(ctx, cmsEmotionsApiDef);
 
   return {
