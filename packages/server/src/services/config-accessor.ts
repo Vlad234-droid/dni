@@ -6,6 +6,7 @@ type ProcessConfig = {
   environment: string;
   port: string;
   applicationPath: string;
+  uploadSize: number;
   // client
   clientId: string;
   clientSecret: string;

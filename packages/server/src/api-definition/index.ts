@@ -8,6 +8,7 @@ import {
   cmsNetworksApiDef,
   cmsOrganizationsApiDef,
   cmsEmotionsApiDef,
+  cmsUploadApiDef,
 } from '@dni-connectors/colleague-cms-api';
 
 export const apiDefinition = defineAPI(() => ({
@@ -18,5 +19,6 @@ export const apiDefinition = defineAPI(() => ({
   ...cmsNetworksApiDef,
   ...cmsOrganizationsApiDef,
   ...cmsEmotionsApiDef,
+  ...cmsUploadApiDef,
   // TODO: define others API endpoints
 }));

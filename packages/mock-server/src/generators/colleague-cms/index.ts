@@ -5,3 +5,4 @@ export * from './organization';
 export * from './network';
 export * from './event';
 export * from './emotion';
+export * from './upload';

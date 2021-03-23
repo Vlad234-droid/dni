@@ -397,6 +397,50 @@
           "response": []
         }
       ]
+    },
+    {
+      "name": "UPLOAD",
+      "item": [
+        {
+          "name": "/colleague-cms/upload",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/colleague-cms/upload",
+              "host": ["{{HOST}}"],
+              "path": ["colleague-cms", "upload"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/colleague-cms/upload/files",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/colleague-cms/upload/files",
+              "host": ["{{HOST}}"],
+              "path": ["colleague-cms", "upload", "files"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/colleague-cms/upload/files/:id",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/colleague-cms/upload/files/9704",
+              "host": ["{{HOST}}"],
+              "path": ["colleague-cms", "upload", "files", "9704"]
+            }
+          },
+          "response": []
+        }
+      ]
     }
   ],
   "event": [

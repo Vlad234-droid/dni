@@ -8,6 +8,7 @@ import {
   cmsNetworksApiConnector,
   cmsOrganizationsApiConnector,
   cmsEmotionsApiConnector,
+  cmsUploadApiConnector,
   TENANT_KEY as tenantkey,
 } from '@dni-connectors/colleague-cms-api';
 
@@ -230,6 +231,35 @@ const api = (requestCtx: ContextProvider<any>) =>
     deleteOrganization: ({ params }, ctx) => {
       return cmsOrganizationsApiConnector(ctx)
         .deleteOrganization({ params, tenantkey })
+        .then(unsafelyUnpackResponseData);
+    },
+
+    // Upload
+    getFile: ({ params }, ctx) => {
+      return cmsUploadApiConnector(ctx)
+        .getFile({ params, tenantkey })
+        .then(unsafelyUnpackResponseData);
+    },
+    getFiles: ({ params }, ctx) => {
+      return cmsUploadApiConnector(ctx)
+        .getFiles({
+          params,
+          tenantkey,
+        })
+        .then(unsafelyUnpackResponseData);
+    },
+    postFiles: ({ params, body }, ctx) => {
+      return cmsUploadApiConnector(ctx)
+        .postFiles({
+          params,
+          tenantkey,
+          body,
+        })
+        .then(unsafelyUnpackResponseData);
+    },
+    deleteFile: ({ params }, ctx) => {
+      return cmsUploadApiConnector(ctx)
+        .deleteFile({ params, tenantkey })
         .then(unsafelyUnpackResponseData);
     },
   });

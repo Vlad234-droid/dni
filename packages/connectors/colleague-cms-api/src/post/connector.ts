@@ -2,7 +2,7 @@ import { defineAPI } from '@energon/rest-api-definition';
 
 import { Post, PostApiParams, PostBody } from './types';
 import { buildApiConsumer, buildParams } from '../utils';
-import { ColleagueCmsApiContext, ApiInput } from '../types';
+import { DniCmsApiContext, ApiInput } from '../types';
 
 export const cmsPostsApiDef = defineAPI((endpoint) => ({
   getPost: endpoint
@@ -44,7 +44,7 @@ export const cmsPostsApiDef = defineAPI((endpoint) => ({
     .build(),
 }));
 
-export const cmsPostsApiConnector = (ctx: ColleagueCmsApiContext) => {
+export const cmsPostsApiConnector = (ctx: DniCmsApiContext) => {
   const apiConsumer = buildApiConsumer(ctx, cmsPostsApiDef);
 
   return {

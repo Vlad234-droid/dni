@@ -1,5 +1,6 @@
 export const defaultConfig = {
   port: 8000,
+  uploadSize: 50, // MB
   groupsWithAccess: [
     // TODO: groups will be described here
     'GG-XX-GlobalDev-Dni Admin',
