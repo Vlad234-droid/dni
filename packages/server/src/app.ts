@@ -1,6 +1,6 @@
 import express from 'express';
 import http from 'http';
-import expressFileupload from 'express-fileupload';
+import multer from 'multer';
 
 import { envAccessor, ConfigAccessor } from './services';
 import { healthCheck, api } from './routes';
@@ -11,6 +11,7 @@ import {
   errorHandler,
   openIdConfig,
   apiMiddleware,
+  formData,
 } from './middlewares';
 import { buildContext } from './context';
 
@@ -18,6 +19,8 @@ import { buildContext } from './context';
 envAccessor.validate();
 
 const config = ConfigAccessor.getInstance(envAccessor.getData()).getData();
+
+const upload = multer({ limits: { fieldSize: config.uploadSize } });
 
 const app = express();
 const server = http.createServer(app);
@@ -32,11 +35,11 @@ openId
     // middlewares
     app.use('/', healthCheck);
     // app.use(openIdMiddleware);
-    app.use(expressFileupload());
     app.use(openIdCookieParser);
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
     app.use(apiMiddleware(context, api));
+    app.use('/api/upload', upload.any(), formData);
     app.use('/api', api);
     app.use('/api/*', (_, res) => res.sendStatus(404));
     app.use(clientStaticFolder);

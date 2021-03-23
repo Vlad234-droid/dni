@@ -2,7 +2,7 @@ import { defineAPI } from '@energon/rest-api-definition';
 
 import { Emoji, EmojiApiParams } from './types';
 import { buildApiConsumer, buildParams } from '../utils';
-import { ColleagueCmsApiContext, ApiInput } from '../types';
+import { DniCmsApiContext, ApiInput } from '../types';
 
 export const cmsEmojisApiDef = defineAPI((endpoint) => ({
   getEmoji: endpoint
@@ -18,7 +18,7 @@ export const cmsEmojisApiDef = defineAPI((endpoint) => ({
     .build(),
 }));
 
-export const cmsEmojisApiConnector = (ctx: ColleagueCmsApiContext) => {
+export const cmsEmojisApiConnector = (ctx: DniCmsApiContext) => {
   const apiConsumer = buildApiConsumer(ctx, cmsEmojisApiDef);
 
   return {

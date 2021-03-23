@@ -2,7 +2,7 @@ import { defineAPI } from '@energon/rest-api-definition';
 
 import { Organization, OrganizationApiParams, OrganizationBody } from './types';
 import { buildApiConsumer, buildParams } from '../utils';
-import { ColleagueCmsApiContext, ApiInput } from '../types';
+import { DniCmsApiContext, ApiInput } from '../types';
 
 export const cmsOrganizationsApiDef = defineAPI((endpoint) => ({
   getOrganization: endpoint
@@ -38,7 +38,7 @@ export const cmsOrganizationsApiDef = defineAPI((endpoint) => ({
     .build(),
 }));
 
-export const cmsOrganizationsApiConnector = (ctx: ColleagueCmsApiContext) => {
+export const cmsOrganizationsApiConnector = (ctx: DniCmsApiContext) => {
   const apiConsumer = buildApiConsumer(ctx, cmsOrganizationsApiDef);
 
   return {
