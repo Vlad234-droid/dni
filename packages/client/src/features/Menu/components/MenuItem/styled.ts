@@ -20,7 +20,7 @@ const stylesMenuItem = css`
   line-height: 20px;
 
   &:hover {
-    ${stylesMenuItemActive}
+    background-color: ${({ theme }) => theme.colors.background.dark};
   }
 
   ${({ theme }) => css`
@@ -40,5 +40,9 @@ export const MenuLink = styled(NavLink)`
 
   &.${(props) => props.activeClassName} {
     ${stylesMenuItemActive};
+
+    & .beans-icon__svg {
+      stroke: ${({ theme }) => theme.colors.white};
+    }
   }
 `;

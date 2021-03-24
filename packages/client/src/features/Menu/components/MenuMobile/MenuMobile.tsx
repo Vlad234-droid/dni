@@ -1,18 +1,14 @@
-import React, { useState, FC } from 'react';
-import Icon from '@beans/icon';
-import Button from '@beans/button';
+import React, { useState, useMemo, FC } from 'react';
+import { useLocation } from 'react-router-dom';
 
 import MenuItem from '../MenuItem';
-import {
-  menuItemsMobile,
-  iconsSrc,
-  itemsVisible,
-  PageWithIcon,
-} from '../../config/items';
+import MoreButton from '../MoreButton';
+import MoreMenuMobile from '../MoreMenuMobile';
+import { menuItemsMobile, iconsSrc, itemsVisible } from '../../config/items';
+import { PageWithIcon } from '../../config/types';
 import {
   Navigation,
-  HiddenItems,
-  VisibleItems,
+  ItemsList,
   Item,
   IconWrapper,
   IconDefault,
@@ -24,6 +20,7 @@ export const MOBILE_MORE_TEST_ID = 'menu-more-button';
 
 const MenuMobile: FC = () => {
   const [isOpened, setOpened] = useState(false);
+  const location = useLocation();
 
   const handleMoreClick = () => {
     setOpened(!isOpened);
@@ -31,45 +28,33 @@ const MenuMobile: FC = () => {
 
   return (
     <Navigation data-testid={MOBILE_MENU_TEST_ID}>
-      {isOpened && (
-        <HiddenItems>
-          {Object.entries(menuItemsMobile.hidden).map(([page, name]) => (
+      {isOpened && <MoreMenuMobile />}
+      <ItemsList amount={itemsVisible.length}>
+        {Object.entries(menuItemsMobile.visible).map(([page, name]) => {
+          return (
             <MenuItem key={name} name={name} page={page}>
-              <div>{name}</div>
+              <Item>
+                <IconWrapper>
+                  <IconDefault
+                    src={iconsSrc[page as PageWithIcon]?.default}
+                    alt='alt'
+                  />
+                  <IconActive
+                    src={iconsSrc[page as PageWithIcon]?.active}
+                    alt='alt'
+                  />
+                </IconWrapper>
+                <div>{name}</div>
+              </Item>
             </MenuItem>
-          ))}
-        </HiddenItems>
-      )}
-      <VisibleItems amount={itemsVisible.length}>
-        {Object.entries(menuItemsMobile.visible).map(([page, name]) => (
-          <MenuItem key={name} name={name} page={page}>
-            <Item>
-              <IconWrapper>
-                <IconDefault
-                  src={iconsSrc[page as PageWithIcon]?.default}
-                  alt='alt'
-                />
-                <IconActive
-                  src={iconsSrc[page as PageWithIcon]?.active}
-                  alt='alt'
-                />
-              </IconWrapper>
-              <div>{name}</div>
-            </Item>
-          </MenuItem>
-        ))}
-        <div>
-          <Item>
-            <Button
-              inverse
-              onClick={handleMoreClick}
-              data-testid={MOBILE_MORE_TEST_ID}
-            >
-              <Icon graphic={'actions'} size={'xl'} />
-            </Button>
-          </Item>
-        </div>
-      </VisibleItems>
+          );
+        })}
+        <MoreButton
+          onClick={handleMoreClick}
+          isOpened={isOpened}
+          pathname={location.pathname}
+        />
+      </ItemsList>
     </Navigation>
   );
 };

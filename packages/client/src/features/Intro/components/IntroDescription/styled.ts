@@ -25,7 +25,7 @@ export const Content = styled.div<{ isOpen: boolean }>`
   -webkit-box-orient: vertical;
   overflow: ${({ isOpen }) => (isOpen ? 'visible' : 'hidden')};
   margin-bottom: 24px;
-  ${textXS}
+  ${textXS};
 
   ${({ isOpen }) => css`
     ${Media.tablet`

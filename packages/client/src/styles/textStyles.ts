@@ -29,7 +29,7 @@ export const textBoldXX = css`
 // 16px
 export const textBoldXS = css`
   font-weight: ${({ theme }) => theme.fontWeight.heading};
-  ${textXS}
+  ${textXS};
 `;
 
 // 20px

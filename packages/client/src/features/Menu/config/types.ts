@@ -26,4 +26,6 @@ interface AttachStyle {
   styles: FlattenInterpolation<ThemeProps<any>> | SimpleInterpolation;
 }
 
-export type { AttachStyle, StylesItemsVisible, StylesButtonMore };
+type PageWithIcon = Page.EVENTS | Page.NETWORKS | Page.NEWS_FEED;
+
+export type { AttachStyle, StylesItemsVisible, StylesButtonMore, PageWithIcon };
