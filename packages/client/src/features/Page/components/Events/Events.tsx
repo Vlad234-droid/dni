@@ -10,7 +10,7 @@ import PageWrapper from '../PageWrapper';
 import Heading from 'features/Heading';
 import { useMedia } from 'context/InterfaceContext';
 import ButtonFilter from 'features/ButtonFilter';
-import EventCarusel from 'features/EventCarousel';
+import EventCarousel from 'features/EventCarousel';
 import EventTable from 'features/EventTable';
 import EventList from 'features/EventList';
 
@@ -42,7 +42,7 @@ const Events: FC = () => {
           )}
         />
         <PageWrapper>
-          <EventCarusel />
+          <EventCarousel />
           <EventList />
           <EventTable />
         </PageWrapper>
