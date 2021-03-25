@@ -6,6 +6,7 @@ import * as Yup from 'yup';
 import Icon from '@beans/icon';
 import Button from '@beans/button';
 import { Row, Column } from '@beans/grid';
+import { FieldWrapper } from 'features/Common/styled';
 
 import { TextInput, FileInput } from 'features/Common';
 
@@ -55,37 +56,41 @@ const CreatePartner = ({ partner, onCancel }: Props) => {
 
   return (
     <form onSubmit={handleSubmit(submit)}>
-      <Row>
-        <Column>
-          <TextInput
-            placeholder={'Official Name'}
-            label={'Partners name'}
-            defaultValue={partner?.name}
-            name={'name'}
-            error={errors['name']! && errors['name'].message}
-            // @ts-ignore
-            register={register}
-          />
-        </Column>
-        <Column>
-          <TextInput
-            placeholder={'Website or social network'}
-            label={'Link to Partner (optional)'}
-            defaultValue={partner?.link}
-            name={'link'}
-            error={errors['link']! && errors['link'].message}
-            // @ts-ignore
-            register={register}
-          />
-        </Column>
-      </Row>
-      <FileInput
-        name={'logo'}
-        label={'Partner’s logo (optional)'}
-        register={register}
-        setValue={setValue}
-        unregister={unregister}
-      />
+      <FieldWrapper>
+        <Row>
+          <Column>
+            <TextInput
+              placeholder={'Official Name'}
+              label={'Partners name'}
+              defaultValue={partner?.name}
+              name={'name'}
+              error={errors['name']! && errors['name'].message}
+              // @ts-ignore
+              register={register}
+            />
+          </Column>
+          <Column>
+            <TextInput
+              placeholder={'Website or social network'}
+              label={'Link to Partner (optional)'}
+              defaultValue={partner?.link}
+              name={'link'}
+              error={errors['link']! && errors['link'].message}
+              // @ts-ignore
+              register={register}
+            />
+          </Column>
+        </Row>
+      </FieldWrapper>
+      <FieldWrapper>
+        <FileInput
+          name={'logo'}
+          label={'Partner’s logo (optional)'}
+          register={register}
+          setValue={setValue}
+          unregister={unregister}
+        />
+      </FieldWrapper>
       <ActionContainer>
         <div>
           {typeof partner !== 'undefined' ? (

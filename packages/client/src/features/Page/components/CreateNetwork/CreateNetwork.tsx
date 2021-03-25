@@ -6,6 +6,7 @@ import BasePage from '../BasePage';
 import PageHeader from '../PageHeader';
 import PageWrapper from '../PageWrapper';
 import { CreateNetwork } from 'features/Networks';
+import Heading from '../../../Heading';
 
 const Networks: FC = () => {
   return (
@@ -14,7 +15,8 @@ const Networks: FC = () => {
         renderMain={() => (
           <>
             <PageHeader
-              renderLeft={() => <BackLink to={`/${Page.NETWORKS}`} />}
+              renderLeft={() => <Heading>Create Network</Heading>}
+              renderCenter={() => <BackLink to={`/${Page.NETWORKS}`} />}
             />
             <PageWrapper>
               <CreateNetwork />
