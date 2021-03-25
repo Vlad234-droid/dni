@@ -12,6 +12,7 @@ export const Wrapper = styled.div.attrs({
   display: flex;
   justify-content: space-between;
   padding: 0 16px;
+  position: relative;
 
   ${Media.desktop`
     max-width:  1366px;
