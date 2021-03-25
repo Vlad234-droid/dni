@@ -23,7 +23,7 @@ type BuildPath = (
   sufix?: string,
 ) => string;
 
-type BuildRoute = (page: Page, exact?: boolean) => Partial<Route>;
+type BuildRoute = (page: Page, exact?: boolean) => Route;
 
 export type { Route, BuildPath, BuildRoute };
 

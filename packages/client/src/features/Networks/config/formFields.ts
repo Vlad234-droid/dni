@@ -1,13 +1,37 @@
 import { FormField } from 'features/GenericForm';
-import { TextArea, TextInput, FileInput, Select } from 'features/Common';
+import { TextArea, TextInput, FileInput, Multiselect } from 'features/Common';
 import { Names } from './types';
+
+export type Partner = {
+  id: number;
+  name: string;
+  link?: string;
+  avatar: string;
+};
+export const partners: Array<Partner> = [
+  { id: 1, name: 'Diabetes UK', link: 'http://websitename.com/', avatar: '' },
+  {
+    id: 2,
+    name: 'Children of the World',
+    link: 'http://childrenoftheworld.com/',
+    avatar: '',
+  },
+  {
+    id: 3,
+    name: 'British Heart Foundation',
+    link: 'http://Britishheartfoundation.org/',
+    avatar: '',
+  },
+  { id: 4, name: 'Green Peace', link: 'http://greenpeace.com/', avatar: '' },
+  { id: 5, name: 'One Drop', link: 'https://www.onedrop.org/', avatar: '' },
+];
 
 const formFields: Array<FormField<Names>> = [
   {
     Element: FileInput,
     name: 'image',
     testID: 'image',
-    label: 'Image (optional)',
+    label: 'Image',
   },
   {
     Element: TextInput,
@@ -15,6 +39,7 @@ const formFields: Array<FormField<Names>> = [
     placeholder: 'Name of network',
     testID: 'title',
     label: 'Name of network',
+    required: true,
   },
   {
     Element: TextInput,
@@ -22,6 +47,7 @@ const formFields: Array<FormField<Names>> = [
     placeholder: 'BruceDickinson@tesco.com',
     testID: 'manager',
     label: 'Content Manager of Network',
+    required: true,
   },
   {
     Element: TextInput,
@@ -29,22 +55,29 @@ const formFields: Array<FormField<Names>> = [
     placeholder: 'email',
     testID: 'email',
     label: 'Contact email',
+    required: true,
   },
   {
     Element: TextArea,
     name: 'description',
     placeholder: 'A few word about this network',
     testID: 'message',
-    label: 'Description (optional)',
+    label: 'Description',
+    required: true,
   },
   {
-    Element: Select,
+    Element: Multiselect,
     name: 'partnership',
     placeholder: 'Choose Partner',
     testID: 'partnership',
     label: 'Network Partnership',
+    required: true,
     // hardcode options now
-    options: ['Choose Partner', 'test1@tesco.com', 'test2@tesco.com'],
+    options: partners.map(({ id, name, link }) => ({
+      id,
+      labelText: `${name} ${link}`.trim(),
+      selected: false,
+    })),
   },
 ];
 

@@ -1264,6 +1264,18 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
+"@beans/accordion@^18.3.0":
+  version "18.3.0"
+  resolved "https://nexus.ourtesco.com/repository/online-web-group/@beans/accordion/-/accordion-18.3.0.tgz#ad46b56bf55114dafc81e79625c4820a0b118e55"
+  integrity sha512-NrEHrN+xZr4x+tJEfiEdxDctr01ruIsSH0N3TvNGz7UGIpzSA/GPaPZ5cufoJ3gz3xbvRkcUCbNiDKoO+MC8wA==
+  dependencies:
+    "@beans/button" "^18.0.0"
+    "@beans/foundation" "^18.0.0"
+    "@beans/helpers" "^18.0.0"
+    "@beans/icon" "^18.0.0"
+    "@beans/link" "^18.0.0"
+    "@beans/selectors" "^18.0.0"
+
 "@beans/base-tile@^18.2.3":
   version "18.2.3"
   resolved "https://nexus.ourtesco.com/repository/online-web-group/@beans/base-tile/-/base-tile-18.2.3.tgz#8dd3d2dc0937ac9971904160bec51efc800029d5"
@@ -1326,6 +1338,39 @@
     "@beans/link" "^18.0.0"
     "@beans/selectors" "^18.0.0"
     "@beans/typography" "^18.0.0"
+
+"@beans/checkbox-with-label@^18.0.0":
+  version "18.2.4"
+  resolved "https://nexus.ourtesco.com/repository/online-web-group/@beans/checkbox-with-label/-/checkbox-with-label-18.2.4.tgz#3cd55e7fe58e26fc27e5c2711a300cc06f56f100"
+  integrity sha512-bse3QTjq1yqFa81vZvGR/6uT8sr6xQXfuc9NVC1cOd9heEN1DGRNCsxgqXqGi1AyszvBvfaVLbSFbDbCQsTkhg==
+  dependencies:
+    "@beans/checkbox" "^18.0.0"
+    "@beans/foundation" "^18.0.0"
+    "@beans/helpers" "^18.0.0"
+    "@beans/label" "^18.0.0"
+    "@beans/selectors" "^18.0.0"
+    "@beans/typography" "^18.0.0"
+
+"@beans/checkbox@^18.0.0":
+  version "18.2.4"
+  resolved "https://nexus.ourtesco.com/repository/online-web-group/@beans/checkbox/-/checkbox-18.2.4.tgz#44e46b766bf33327037de2fca1a018dc5c946c33"
+  integrity sha512-MroTlkr2xxAadvSGQuagZ/oMBwUQ+o9GardzNrvhFw33NROLziazjumfvbDvzJICfAGEIJzCh4NIAEJGrZvL+A==
+  dependencies:
+    "@beans/foundation" "^18.0.0"
+    "@beans/helpers" "^18.0.0"
+    "@beans/icon" "^18.0.0"
+    "@beans/selectors" "^18.0.0"
+
+"@beans/chips@^18.0.0":
+  version "18.2.4"
+  resolved "https://nexus.ourtesco.com/repository/online-web-group/@beans/chips/-/chips-18.2.4.tgz#03147ac832f1533a4a23e1556501854206422a35"
+  integrity sha512-Lz37r8W2a5zzKi/7h+IH05YZmFXxlp3I9011aACOlCFQaef6FMltPuNwV1AGhtUgXxgWIswC9jUQceU/n+6BUw==
+  dependencies:
+    "@beans/foundation" "^18.0.0"
+    "@beans/helpers" "^18.0.0"
+    "@beans/icon" "^18.0.0"
+    "@beans/link" "^18.0.0"
+    "@beans/selectors" "^18.0.0"
 
 "@beans/constants@^18.0.0", "@beans/constants@^18.2.1":
   version "18.2.1"
@@ -1499,6 +1544,31 @@
     "@beans/icon" "^18.0.0"
     "@beans/selectors" "^18.0.0"
     "@beans/theme" "^18.0.0"
+
+"@beans/menu@^18.0.0":
+  version "18.2.4"
+  resolved "https://nexus.ourtesco.com/repository/online-web-group/@beans/menu/-/menu-18.2.4.tgz#59954ac18a99134a58bed9beab4d0851cdffdfc7"
+  integrity sha512-uaQQ0C2s4SWCOVsR8ZLYVZvePbhNI9/DUjJ4ShJb7iGPGMSZQJEunpRrN5Cbqu8HXct3Gw9AumhdSO5ltYFomg==
+  dependencies:
+    "@beans/button" "^18.0.0"
+    "@beans/foundation" "^18.0.0"
+    "@beans/helpers" "^18.0.0"
+    "@beans/icon" "^18.0.0"
+    "@beans/link" "^18.0.0"
+    "@beans/selectors" "^18.0.0"
+
+"@beans/multiselect-dropdown@^18.2.4":
+  version "18.2.4"
+  resolved "https://nexus.ourtesco.com/repository/online-web-group/@beans/multiselect-dropdown/-/multiselect-dropdown-18.2.4.tgz#144a2b387b9db75670daffceda942c8e0d6983ac"
+  integrity sha512-HhY108xtc5NTVD3KnhyiwfFuYJroppvISdlpItzvf35uo3I3P9Tla5hpgmiId1S9D7oFLVLhRTwbK7Kf09PBxQ==
+  dependencies:
+    "@beans/checkbox-with-label" "^18.0.0"
+    "@beans/chips" "^18.0.0"
+    "@beans/foundation" "^18.0.0"
+    "@beans/helpers" "^18.0.0"
+    "@beans/icon" "^18.0.0"
+    "@beans/menu" "^18.0.0"
+    "@beans/selectors" "^18.0.0"
 
 "@beans/responsive-image@^18.2.3":
   version "18.2.3"
@@ -4422,6 +4492,13 @@
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/@types/keygrip/-/keygrip-1.0.2.tgz#513abfd256d7ad0bf1ee1873606317b33b1b2a72"
   integrity sha512-GJhpTepz2udxGexqos8wgaBx4I/zWIDPh/KOGEwAqtuGDkOUJu5eFvwmdBX4AmB8Odsr+9pHCQqiAqDL/yKMKw==
+
+"@types/lodash.debounce@^4.0.6":
+  version "4.0.6"
+  resolved "https://registry.yarnpkg.com/@types/lodash.debounce/-/lodash.debounce-4.0.6.tgz#c5a2326cd3efc46566c47e4c0aa248dc0ee57d60"
+  integrity sha512-4WTmnnhCfDvvuLMaF3KV4Qfki93KebocUF45msxhYyjMttZDQYzHkO639ohhk8+oco2cluAFL3t5+Jn4mleylQ==
+  dependencies:
+    "@types/lodash" "*"
 
 "@types/lodash.find@^4.6.6":
   version "4.6.6"

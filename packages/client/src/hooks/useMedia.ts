@@ -3,7 +3,13 @@ import { useEffect, useState, useCallback } from 'react';
 import { ViewportSize } from 'config/constants';
 import createMediaListener from 'utils/createMediaListener';
 
-const media = createMediaListener({
+type Media = {
+  isMobile: string;
+  isTablet: string;
+  isDesktop: string;
+};
+
+const MediaQueries: Media = {
   isMobile: `(min-width: ${ViewportSize.PHONE}px) and (max-width: ${
     ViewportSize.TABLET - 1
   }px)`,
@@ -11,18 +17,14 @@ const media = createMediaListener({
     ViewportSize.SMALL_DESKTOP - 1
   }px)`,
   isDesktop: `(min-width: ${ViewportSize.SMALL_DESKTOP}px)`,
-});
-
-type Media = {
-  isMobile: boolean;
-  isTablet: boolean;
-  isDesktop: boolean;
 };
+
+const media = createMediaListener(MediaQueries);
 
 const useMedia = () => {
   const [viewport, setViewport] = useState<ViewportSize>(ViewportSize.PHONE);
 
-  const calculateViewport = useCallback((media: Media) => {
+  const calculateViewport = useCallback((media) => {
     const { isMobile, isTablet, isDesktop } = media;
     switch (true) {
       case isMobile:
@@ -40,8 +42,8 @@ const useMedia = () => {
     }
   }, []);
   useEffect(() => {
-    calculateViewport(media.getState() as Media);
-    media.listen((media) => calculateViewport({ ...media } as Media));
+    calculateViewport(media.getState());
+    media.listen((media) => calculateViewport({ ...media }));
     return media.dispose;
   }, []);
 

@@ -1,4 +1,4 @@
-import React, { useState, useMemo, FC } from 'react';
+import React, { useState, FC } from 'react';
 import { useLocation } from 'react-router-dom';
 
 import MenuItem from '../MenuItem';
@@ -30,25 +30,23 @@ const MenuMobile: FC = () => {
     <Navigation data-testid={MOBILE_MENU_TEST_ID}>
       {isOpened && <MoreMenuMobile />}
       <ItemsList amount={itemsVisible.length}>
-        {Object.entries(menuItemsMobile.visible).map(([page, name]) => {
-          return (
-            <MenuItem key={name} name={name} page={page}>
-              <Item>
-                <IconWrapper>
-                  <IconDefault
-                    src={iconsSrc[page as PageWithIcon]?.default}
-                    alt='alt'
-                  />
-                  <IconActive
-                    src={iconsSrc[page as PageWithIcon]?.active}
-                    alt='alt'
-                  />
-                </IconWrapper>
-                <div>{name}</div>
-              </Item>
-            </MenuItem>
-          );
-        })}
+        {Object.entries(menuItemsMobile.visible).map(([page, name]) => (
+          <MenuItem key={name} name={name} page={page}>
+            <Item>
+              <IconWrapper>
+                <IconDefault
+                  src={iconsSrc[page as PageWithIcon]?.default}
+                  alt='alt'
+                />
+                <IconActive
+                  src={iconsSrc[page as PageWithIcon]?.active}
+                  alt='alt'
+                />
+              </IconWrapper>
+              <div>{name}</div>
+            </Item>
+          </MenuItem>
+        ))}
         <MoreButton
           onClick={handleMoreClick}
           isOpened={isOpened}

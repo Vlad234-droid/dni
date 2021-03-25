@@ -1,8 +1,12 @@
-import React, { FC, HTMLProps, RefObject } from 'react';
+import React, { FC, RefObject } from 'react';
 import styled from 'styled-components';
 
 import Label from '../Label';
 import Error from '../Error';
+
+type TestProps = {
+  testId?: string;
+};
 
 export type Props = {
   label?: string;
@@ -11,14 +15,19 @@ export type Props = {
 
 export type Registrable = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  register: RefObject<any>;
+  unregister: (name: string) => void;
+  setValue: <T extends object>(name: string, data: any, config?: T) => void;
+  register: (name?: string) => void | RefObject<any>;
 };
 
-type DivProps = HTMLProps<HTMLDivElement>;
-
-const FieldWrapper: FC<Props> = ({ children, label, error }) => {
+const FieldWrapper: FC<Props & TestProps> = ({
+  children,
+  label,
+  error,
+  testId,
+}) => {
   return (
-    <Wrapper>
+    <Wrapper testId={testId}>
       {label && <Label>{label}</Label>}
       {children}
       {error && <Error>{error}</Error>}
@@ -26,12 +35,13 @@ const FieldWrapper: FC<Props> = ({ children, label, error }) => {
   );
 };
 
-const Wrapper = styled.div<DivProps>`
+const Wrapper = styled.div.attrs<TestProps>(({ testId }) => ({
+  'data-testid': testId,
+}))<TestProps>`
   margin-top: 5px;
   display: flex;
   flex-direction: column;
   position: relative;
-  padding-bottom: 20px;
 `;
 
 export default FieldWrapper;

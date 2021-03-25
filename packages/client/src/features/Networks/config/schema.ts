@@ -11,7 +11,7 @@ const schema: Yup.SchemaOf<FormData> = Yup.object().shape({
     200,
     'Length of description should be less 200 characters',
   ),
-  partnership: Yup.string().email(),
+  partnership: Yup.array().of(Yup.string().email()),
 });
 
 export default schema;

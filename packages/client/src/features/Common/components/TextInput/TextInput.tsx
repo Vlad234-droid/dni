@@ -1,15 +1,27 @@
-import React, { FC, HTMLProps } from 'react';
+import { FC, HTMLProps } from 'react';
 import Input from '@beans/input';
+import FormGroup from '@beans/form-group';
 
-import Wrapper, { Props as WrapperProps, Registrable } from '../FieldWrapper';
+import { Props as WrapperProps, Registrable } from '../FieldWrapper';
 
-type Props = HTMLProps<HTMLInputElement> & WrapperProps & Registrable;
+type Props = HTMLProps<HTMLInputElement> & WrapperProps & Partial<Registrable>;
 
-const TextInput: FC<Props> = ({ label, error, register, ...rest }) => {
+const TextInput: FC<Props> = ({
+  label,
+  error,
+  register,
+  required,
+  ...rest
+}) => {
   return (
-    <Wrapper {...{ label, error }}>
+    <FormGroup
+      required={required}
+      labelText={label}
+      errorMessage={error}
+      error={Boolean(error)}
+    >
       <Input domRef={register} {...rest} defaultValue={''} />
-    </Wrapper>
+    </FormGroup>
   );
 };
 

@@ -23,7 +23,7 @@ const CenterContainer = styled.div`
   flex-basis: 100%;
   margin-top: 32px;
   width: 100%;
-  overflow-x: scroll;
+  overflow-x: auto;
 `;
 
 export { Wrapper, LeftContainer, RightContainer, CenterContainer };

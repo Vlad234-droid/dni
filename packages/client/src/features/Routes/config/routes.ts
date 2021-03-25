@@ -4,6 +4,7 @@ import { buildRoute } from '../utils';
 const routes = [
   Page.ABOUT,
   Page.EVENTS,
+  Page.CREATE_EVENTS,
   Page.NETWORKS,
   Page.ADD_NETWORKS,
   Page.NEWS_FEED,

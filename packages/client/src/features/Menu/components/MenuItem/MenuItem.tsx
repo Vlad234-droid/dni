@@ -1,5 +1,7 @@
 import React, { FC } from 'react';
 
+import { Page } from 'features/Page';
+
 import { MenuLink } from './styled';
 
 export const MENU_TEST_ID_PREFIX = 'menu-item-';
@@ -10,7 +12,7 @@ const MenuItem: FC<{ name?: string; page: string }> = ({
   children,
 }) => (
   <MenuLink
-    exact={true}
+    exact={page === Page.ABOUT}
     activeClassName={'active-link'}
     data-testid={`${MENU_TEST_ID_PREFIX}${name}`}
     to={`/${page}`}

@@ -1,5 +1,4 @@
 import React, { FC, HTMLProps, useRef, useEffect, ChangeEvent } from 'react';
-import { useFormContext } from 'react-hook-form';
 import Button from '@beans/button';
 import Icon from '@beans/icon';
 
@@ -9,10 +8,17 @@ type Props = HTMLProps<HTMLInputElement> &
   WrapperProps &
   Registrable & { name: string };
 
-const FileInput: FC<Props> = ({ label, error, name }) => {
-  const labelEl = useRef<HTMLLabelElement>(null);
-  const handleClickInput = () => labelEl.current && labelEl.current.click();
-  const { register, unregister, setValue } = useFormContext();
+const FileInput: FC<Props> = ({
+  label,
+  error,
+  name,
+  register,
+  unregister,
+  setValue,
+}) => {
+  const labelEl = useRef<HTMLLabelElement | null>(null);
+  // @ts-ignore
+  const handleClickInput = () => labelEl.current?.click();
   useEffect(() => {
     register(name);
     return () => {
@@ -29,11 +35,7 @@ const FileInput: FC<Props> = ({ label, error, name }) => {
     <Wrapper {...{ error }}>
       <div>
         <label htmlFor={name} ref={labelEl}>
-          <Button
-            variant='secondary'
-            domRef={register}
-            onClick={handleClickInput}
-          >
+          <Button variant='secondary' onClick={handleClickInput}>
             <Icon graphic='add' inverse={true} />
             {label}
           </Button>
