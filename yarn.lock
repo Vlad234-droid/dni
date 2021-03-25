@@ -1570,6 +1570,18 @@
     "@beans/menu" "^18.0.0"
     "@beans/selectors" "^18.0.0"
 
+"@beans/notification@^18.4.0":
+  version "18.5.0"
+  resolved "https://nexus.ourtesco.com/repository/online-web-group/@beans/notification/-/notification-18.5.0.tgz#3d140bcab4611259d6bde94fcf8eb95f43e2d48d"
+  integrity sha512-WnlRzUP9szSIm9IK3Ks9LHFmYDwaycPS1tcUL/o3F16DkbGTSUfRMn3c/b3se0FxvjV8Ii+VbmahmDLQyomgsQ==
+  dependencies:
+    "@beans/constants" "^18.0.0"
+    "@beans/foundation" "^18.0.0"
+    "@beans/helpers" "^18.0.0"
+    "@beans/icon" "^18.0.0"
+    "@beans/selectors" "^18.0.0"
+    "@beans/typography" "^18.0.0"
+
 "@beans/responsive-image@^18.2.3":
   version "18.2.3"
   resolved "https://nexus.ourtesco.com/repository/online-web-group/@beans/responsive-image/-/responsive-image-18.2.3.tgz#b7989c7233e95bc4e629d0d0a5316e29e4b8708a"

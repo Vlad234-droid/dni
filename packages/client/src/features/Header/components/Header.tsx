@@ -3,6 +3,7 @@ import Link from '@beans/link';
 import { TescoLogo } from '@beans/branding';
 
 import { Wrapper, Block } from './styled';
+import Toaster from 'features/Toaster';
 
 const Header: React.FC = () => (
   <Wrapper>
@@ -23,6 +24,7 @@ const Header: React.FC = () => (
         variant='iconButton'
       />
     </Block>
+    <Toaster/>
   </Wrapper>
 );
 
