@@ -55,7 +55,6 @@ const PostSelectOptionsTitle = styled.div`
 const PostSelectOptions = styled.div`
   top: 0;
   position: absolute;
-  box-sizing: border-box;
   max-width: 228px;
   font-size: 14px;
   line-height: 22px;

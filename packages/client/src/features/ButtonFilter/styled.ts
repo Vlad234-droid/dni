@@ -27,7 +27,7 @@ const Button = styled(BaseButton).attrs<ButtonProps>(({ active }) => ({
   vertical-align: text-top;
   & > span {
     font-weight: normal;
-    ${textXS}
+    ${textXS};
   }
 
   &:not(:last-child) {

@@ -56,7 +56,6 @@ const PostContent = styled.div`
 `;
 
 const PostPublishedWrapper = styled.div`
-  box-sizing: border-box;
   max-width: 561px;
   padding: 24px;
   border: 1px solid #cccccc;

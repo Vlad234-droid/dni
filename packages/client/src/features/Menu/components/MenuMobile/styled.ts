@@ -7,16 +7,7 @@ export const Navigation = styled.nav`
   justify-content: space-between;
 `;
 
-export const HiddenItems = styled.div`
-  overflow: hidden;
-  position: fixed;
-  bottom: 60px;
-  background: ${({ theme }) => theme.colors.white};
-  width: calc(75%);
-  z-index: 999;
-`;
-
-export const VisibleItems = styled.div<{ amount: number }>`
+export const ItemsList = styled.div<{ amount: number }>`
   height: 100%;
   display: flex;
   flex-wrap: nowrap;

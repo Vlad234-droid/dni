@@ -33,7 +33,6 @@ const PostDocumentWrapper = styled.div`
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  box-sizing: border-box;
   min-height: 186px;
   background-color: ${({ theme }) => theme.colors.primary};
 `;

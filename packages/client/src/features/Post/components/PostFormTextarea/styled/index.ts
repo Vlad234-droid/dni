@@ -11,7 +11,6 @@ const PostFormTextArea = styled.textarea<{
   resize: vertical;
   overflow: hidden;
   min-height: 40px;
-  box-sizing: border-box;
   height: ${({ height }) => height}px;
   color: ${({ theme }) => theme.colors.base};
   border: 1px solid ${({ theme }) => theme.colors.lines.base};

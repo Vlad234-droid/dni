@@ -46,7 +46,6 @@ const PostDropZoneLayer = styled.div<{
   left: 0;
   z-index: 2;
   position: absolute;
-  box-sizing: border-box;
   border-radius: 4px;
   border: 1px
     ${({ isActive }) => (isActive ? 'solid #99BAD9' : 'dashed #00539F')};
@@ -58,7 +57,6 @@ const PostDropZoneWrapper = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  box-sizing: border-box;
   overflow: hidden;
   border-radius: 4px;
   padding: 22px 22px 17px;

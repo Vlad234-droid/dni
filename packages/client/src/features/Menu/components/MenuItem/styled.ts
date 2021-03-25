@@ -15,12 +15,11 @@ const stylesMenuItemActive = css`
 const stylesMenuItem = css`
   ${stylesMenuItemDefault};
   display: block;
-  box-sizing: border-box;
   font-size: 14px;
   line-height: 20px;
 
   &:hover {
-    ${stylesMenuItemActive}
+    background-color: ${({ theme }) => theme.colors.background.dark};
   }
 
   ${({ theme }) => css`
@@ -40,5 +39,9 @@ export const MenuLink = styled(NavLink)`
 
   &.${(props) => props.activeClassName} {
     ${stylesMenuItemActive};
+
+    & .beans-icon__svg {
+      stroke: ${({ theme }) => theme.colors.white};
+    }
   }
 `;

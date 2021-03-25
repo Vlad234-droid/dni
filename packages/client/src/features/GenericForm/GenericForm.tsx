@@ -38,16 +38,16 @@ function GenericForm<T, N>({
   };
 
   return (
-      <form onSubmit={handleSubmit(submit)} ref={refDom}>
-        {formFields.map(({ Element, testID, ...props }, idx) => (
-          <FieldWrapper key={idx}>
-            <Element
-              {...props}
-             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-              error={errors[props.name!] && errors[props.name!].message}
-             id={testID}
-             {...rest}
-           />
+    <form onSubmit={handleSubmit(submit)} ref={refDom}>
+      {formFields.map(({ Element, testID, ...props }, idx) => (
+        <FieldWrapper key={idx}>
+          <Element
+            {...props}
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            error={errors[props.name!] && errors[props.name!].message}
+            id={testID}
+            {...rest}
+          />
         </FieldWrapper>
       ))}
       {renderContent && renderContent()}

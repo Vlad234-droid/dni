@@ -55,9 +55,14 @@ export default createGlobalStyle<{
     border-collapse: collapse;
     border-spacing: 0;
   }
-  
+
+  /* apply a natural box layout model to all elements, but allowing components to change */
   html {
     box-sizing: border-box;
+  }
+
+  *, *:before, *:after {
+    box-sizing: inherit;
   }
   
   body {

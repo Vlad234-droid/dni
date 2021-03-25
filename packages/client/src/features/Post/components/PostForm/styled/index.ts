@@ -24,7 +24,6 @@ const PostFormFieldset = styled.fieldset`
 const PostFormInputSubmit = styled.input.attrs(() => ({
   type: 'submit',
 }))`
-  box-sizing: border-box;
   margin-top: 24px;
   padding: 9px 19px 7px;
   font-size: 16px;
@@ -57,7 +56,6 @@ const PostContentBox = styled.div`
 `;
 
 const PostFormWrapper = styled.form`
-  box-sizing: border-box;
   max-width: 561px;
   padding: 24px;
   border: 1px solid #d9e5f1;

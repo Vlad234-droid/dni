@@ -38,7 +38,7 @@ export const Wrapper = styled.div`
   }
 
   & h3 .beans-multi-line-ellipsis__visible-text {
-    ${textXS}
+    ${textXS};
   }
 
   & .beans-title-link__container {

@@ -15,4 +15,6 @@ interface StylesItemsVisible {
   amount: number;
 }
 
-export type { StylesItemsVisible };
+type PageWithIcon = Page.EVENTS | Page.NETWORKS | Page.NEWS_FEED;
+
+export type { StylesItemsVisible, PageWithIcon };
