@@ -40,7 +40,6 @@ const PostArchiveLabel = styled.div`
 const PostArchiveMark = styled.div`
   display: flex;
   align-items: center;
-  box-sizing: border-box;
   min-height: 32px;
   padding: 5px 8px;
   border-radius: 20px;
@@ -94,7 +93,6 @@ const PostContent = styled.div`
 `;
 
 const PostArchivedWrapper = styled.div`
-  box-sizing: border-box;
   max-width: 561px;
   padding: 24px;
   border: 1px solid ${({ theme }) => theme.colors.lines.light};

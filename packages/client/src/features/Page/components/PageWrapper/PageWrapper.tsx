@@ -17,7 +17,6 @@ const Wrapper = styled.div`
   padding: 24px 0 0;
   border-radius: 16px 16px 0 0;
   background-color: ${({ theme }) => theme.colors.white};
-  box-sizing: border-box;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 
   ${Media.desktop`

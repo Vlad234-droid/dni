@@ -15,7 +15,6 @@ const stylesMenuItemActive = css`
 const stylesMenuItem = css`
   ${stylesMenuItemDefault};
   display: block;
-  box-sizing: border-box;
   font-size: 14px;
   line-height: 20px;
 

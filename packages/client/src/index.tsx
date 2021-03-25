@@ -19,8 +19,6 @@ const globalThemeStyles = {
   normalize: true,
 };
 
-console.log('theme', merge(defaultTheme, theme));
-
 ReactDOM.render(
   <ThemeProvider
     theme={merge(defaultTheme, theme)}

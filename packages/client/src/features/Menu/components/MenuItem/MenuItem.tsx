@@ -4,7 +4,7 @@ import { MenuLink } from './styled';
 
 export const MENU_TEST_ID_PREFIX = 'menu-item-';
 
-const MenuItem: FC<{ name?: string; page: string; location?: Location }> = ({
+const MenuItem: FC<{ name?: string; page: string }> = ({
   name,
   page,
   children,
