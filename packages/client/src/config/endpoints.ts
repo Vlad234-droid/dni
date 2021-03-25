@@ -10,8 +10,18 @@ export default (httpClient: AxiosInstance) => ({
     signOut: <T>() => httpClient.post<T>('/auth/logout'),
   },
   networks: {
-    fetchAll: <T>() => httpClient.get<T>('/networks'),
+    fetchAll: <T>(data: Config = {}) =>
+      httpClient.get<T>('/networks', { params: data }),
     fetchOne: <T>(id: number) => httpClient.get<T>(`/networks/${id}`),
-    one: <T>(data: Config) => httpClient.post<T>(`/networks`, data),
+    create: <T>(data: T) => httpClient.post<T>(`/networks`, data),
+  },
+  events: {
+    fetchAll: <T>(data: Config = {}) =>
+      httpClient.get<T>('/events', { params: data }),
+    fetchOne: <T>(id: number) => httpClient.get<T>(`/events/${id}`),
+    create: <T>(data: T) => httpClient.post<T>(`/events`, data),
+  },
+  common: {
+    upload: <T>(data: FormData) => httpClient.post<T>(`/upload`, data),
   },
 });

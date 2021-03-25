@@ -8,9 +8,9 @@ type Status = 'accepted' | 'declined';
 type Event = {
   title: string;
   network: Network;
-  maxParticipantsCount: number;
-  startDateTime: DateString;
-  endDateTime: DateString;
+  maxParticipants: number;
+  startedAt: DateString;
+  finishedAt: DateString;
   surveyLink: string;
   description: string;
   slug: string;

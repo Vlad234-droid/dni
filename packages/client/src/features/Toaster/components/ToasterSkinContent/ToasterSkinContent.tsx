@@ -1,5 +1,5 @@
-import React from 'react';
-
 const ContentExample = () => <>Content example</>;
+const ContentErrorEntity = () => <>Something went wrong</>;
+const ContentSuccessEntity = () => <>Entity successfully created</>;
 
-export { ContentExample };
+export { ContentExample, ContentErrorEntity, ContentSuccessEntity };

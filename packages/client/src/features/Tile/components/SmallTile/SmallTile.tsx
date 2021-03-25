@@ -11,9 +11,9 @@ type Props = {
   participants: number;
   link: string;
   image: {
-    alt: string;
-    src: string;
-  };
+    alternativeText: string;
+    url: string;
+  } | null;
   renderAction: () => JSX.Element;
   renderMeta?: () => JSX.Element;
 };

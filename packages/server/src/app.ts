@@ -1,6 +1,7 @@
 import express from 'express';
 import http from 'http';
 import multer from 'multer';
+import cors from 'cors';
 
 import { envAccessor, ConfigAccessor } from './services';
 import { healthCheck, api } from './routes';
@@ -33,14 +34,14 @@ const { openId, openIdCookieParser } = openIdConfig(config);
 openId
   .then((openIdMiddleware) => {
     // middlewares
+    app.use(cors());
     app.use('/', healthCheck);
     // app.use(openIdMiddleware);
     app.use(openIdCookieParser);
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
-    app.use(apiMiddleware(context, api));
     app.use('/api/upload', upload.any(), formData);
-    app.use('/api', api);
+    app.use(apiMiddleware(context, api));
     app.use('/api/*', (_, res) => res.sendStatus(404));
     app.use(clientStaticFolder);
     app.use(publicStaticFolder);

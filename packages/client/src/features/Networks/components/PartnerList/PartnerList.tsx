@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-// @ts-ignore
 import { Accordion, AccordionGroup } from '@beans/accordion';
 import { Partner as PartnerType } from '../../config/formFields';
 import Partner from '../Partner';

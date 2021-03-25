@@ -27,4 +27,18 @@ const getEntitySelectors = <T, V>(
   return [selectAll, selectById];
 };
 
+type FilterPayload = {
+  // pagination
+  _limit: number;
+  _start: number;
+
+  // filtering
+  _where?: string;
+
+  // sorting
+  _sort?: 'created_at:desc' | 'created_at:asc';
+};
+
+export type { FilterPayload };
+
 export { getDataOrReject, DEFAULT_META, getEntitySelectors };

@@ -1,1 +1,5 @@
-export { ContentExample } from './ToasterSkinContent';
+export {
+  ContentExample,
+  ContentSuccessEntity,
+  ContentErrorEntity,
+} from './ToasterSkinContent';

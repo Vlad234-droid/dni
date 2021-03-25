@@ -1,4 +1,4 @@
-import React, { FC, useCallback } from 'react';
+import React, { FC, useCallback, useState } from 'react';
 import Button from '@beans/button';
 import Icon from '@beans/icon';
 import { Link } from 'react-router-dom';
@@ -10,15 +10,31 @@ import PageWrapper from '../PageWrapper';
 import Heading from 'features/Heading';
 import { useMedia } from 'context/InterfaceContext';
 import ButtonFilter from 'features/ButtonFilter';
-import EventCarousel from 'features/EventCarousel';
+import { EventCarousel, EventList } from 'features/Events';
 import EventTable from 'features/EventTable';
-import EventList from 'features/EventList';
 
-import { filters } from './data';
+const ON_AIR = 'ON_AIR';
+const THIS_MONTH = 'THIS_MONTH';
+
+const filters = [
+  {
+    key: ON_AIR,
+    title: 'On-air',
+    active: true,
+  },
+  {
+    key: THIS_MONTH,
+    title: 'This month',
+    active: false,
+  },
+];
+
+type Filter = typeof ON_AIR | typeof THIS_MONTH;
 
 const TEST_ID = 'container-events';
 
 const Events: FC = () => {
+  const [filter, setFilter] = useState<Filter>(ON_AIR);
   const { isMobile } = useMedia();
 
   const renderMain = useCallback(
@@ -36,19 +52,19 @@ const Events: FC = () => {
           )}
           renderCenter={() => (
             <ButtonFilter
-              filters={filters}
-              onChange={() => console.log('test')}
+              initialFilters={filters}
+              onChange={(key) => setFilter(key as Filter)}
             />
           )}
         />
         <PageWrapper>
           <EventCarousel />
-          <EventList />
+          <EventList filter={filter} />
           <EventTable />
         </PageWrapper>
       </div>
     ),
-    [isMobile],
+    [isMobile, filter],
   );
 
   return (

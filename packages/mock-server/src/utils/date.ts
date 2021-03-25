@@ -7,4 +7,6 @@ const DATE_TIME_FORMAT = `${DATE_FORMAT} ${TIME_FORMAT}`;
 const dateToFormat = (date: Date, format: string) =>
   DateTime.fromJSDate(date).toFormat(format);
 
-export { dateToFormat, DATE_FORMAT, TIME_FORMAT, DATE_TIME_FORMAT };
+const dateToIso = (date: Date) => DateTime.fromJSDate(date).toISO();
+
+export { dateToFormat, dateToIso, DATE_FORMAT, TIME_FORMAT, DATE_TIME_FORMAT };

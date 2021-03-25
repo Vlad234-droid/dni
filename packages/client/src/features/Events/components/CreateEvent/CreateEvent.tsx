@@ -1,5 +1,4 @@
 import React, { FC } from 'react';
-import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -16,12 +15,46 @@ import schema from '../../config/schema';
 import { FormData } from '../../config/types';
 import Media from 'styles/media';
 import { FieldWrapper } from 'features/Common/styled';
+import { ToastSkin, toasterActions } from 'features/Toaster';
+import { unwrapResult } from '@reduxjs/toolkit';
+import useDispatch from 'hooks/useDispatch';
+
+import { createOne, uploadImage, SetOnePayload } from '../../store';
 
 const CreateEventForm: FC = () => {
   const dispatch = useDispatch();
-  // TODO fix when implement redux for this
-  //@ts-ignore
-  const onSubmit = (data: FormData) => console.log(data);
+
+  const onSubmit = async (data: FormData) => {
+    const image = data.image;
+    const result = await dispatch(
+      createOne(({
+        ...data,
+        network: null,
+        image: null,
+      } as unknown) as SetOnePayload),
+    );
+
+    if (createOne.fulfilled.match(result)) {
+      const event = unwrapResult(result);
+
+      if (image) {
+        await dispatch(uploadImage({ image, id: event.id }));
+      }
+
+      dispatch(
+        toasterActions.createToast({
+          skin: ToastSkin.ENTITY_CREATE_SUCCESS,
+        }),
+      );
+    } else {
+      dispatch(
+        toasterActions.createToast({
+          skin: ToastSkin.ENTITY_CREATE_ERROR,
+        }),
+      );
+    }
+  };
+
   const methods = useForm({
     resolver: yupResolver(schema),
   });
@@ -29,7 +62,7 @@ const CreateEventForm: FC = () => {
   const { isTablet } = useMedia();
   return (
     <FormWrapper>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onSubmit)} noValidate>
         <FieldWrapper>
           <FileInput
             unregister={unregister}
@@ -69,11 +102,11 @@ const CreateEventForm: FC = () => {
             <Column size={7}>
               <TextInput
                 register={register}
-                name={'participantCount'}
+                name={'maxParticipants'}
                 placeholder={'1'}
                 label={'Max participants'}
-                error={errors['participantCount']?.message}
-                id={'participantCount'}
+                error={errors['maxParticipants']?.message}
+                id={'maxParticipants'}
                 required
               />
             </Column>
@@ -83,24 +116,24 @@ const CreateEventForm: FC = () => {
           <Row>
             <Column size={isTablet ? 24 : 12}>
               <DateTimePicker
-                name={'startDate'}
+                name={'startedAt'}
                 unregister={unregister}
                 setValue={setValue}
                 register={register}
                 // @ts-ignore
-                error={errors['startDate']?.message}
+                error={errors['startedAt']?.message}
                 labels={['Start date', 'Start time']}
                 required
               />
             </Column>
             <Column size={isTablet ? 24 : 12}>
               <DateTimePicker
-                name={'endDate'}
+                name={'finishedAt'}
                 unregister={unregister}
                 setValue={setValue}
                 register={register}
                 // @ts-ignore
-                error={errors['endDate']?.message}
+                error={errors['finishedAt']?.message}
                 labels={['End date', 'End time']}
                 required
               />
@@ -113,6 +146,18 @@ const CreateEventForm: FC = () => {
             name={'description'}
             label={'Description'}
             error={errors['description']?.message}
+          />
+        </FieldWrapper>
+        <FieldWrapper>
+          <TextInput
+            register={register}
+            name={'surveyLink'}
+            placeholder={'A few word about your event'}
+            label={'Link to Survey'}
+            // @ts-ignore
+            error={errors['surveyLink']?.message}
+            id={'surveyLink'}
+            required
           />
         </FieldWrapper>
         <Grid>

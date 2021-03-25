@@ -1,5 +1,9 @@
 import { ToastSkin, ToastVariant } from './types';
-import { ContentExample } from '../components/ToasterSkinContent';
+import {
+  ContentExample,
+  ContentSuccessEntity,
+  ContentErrorEntity,
+} from '../components/ToasterSkinContent';
 
 const skins: Record<
   ToastSkin,
@@ -19,6 +23,18 @@ const skins: Record<
     title: 'Hello, World!',
     Content: ContentExample,
     timeout: 10000,
+  },
+  [ToastSkin.ENTITY_CREATE_SUCCESS]: {
+    variant: ToastVariant.SUCCESS,
+    title: 'Success',
+    Content: ContentSuccessEntity,
+    timeout: 5000,
+  },
+  [ToastSkin.ENTITY_CREATE_ERROR]: {
+    variant: ToastVariant.ERROR,
+    title: 'Error',
+    Content: ContentErrorEntity,
+    timeout: 5000,
   },
 };
 

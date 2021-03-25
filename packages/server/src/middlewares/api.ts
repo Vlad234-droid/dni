@@ -268,6 +268,6 @@ const api = (requestCtx: ContextProvider<any>) =>
 export const apiMiddleware = <T extends ContextProvider<any>>(
   context: T,
   route: Router,
-) => route.use(api(context));
+) => route.use('/api', api(context));
 
 const unsafelyUnpackResponseData = <T>(res: { data: T }) => res.data;

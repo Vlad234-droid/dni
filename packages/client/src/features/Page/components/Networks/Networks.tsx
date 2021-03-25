@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import Button from '@beans/button';
 import Icon from '@beans/icon';
 import { Link } from 'react-router-dom';
@@ -10,14 +10,36 @@ import PageWrapper from '../PageWrapper';
 import Heading from 'features/Heading';
 import { useMedia } from 'context/InterfaceContext';
 import ButtonFilter from 'features/ButtonFilter';
-import NetworkCarousel from 'features/NetworkCarousel';
-import NetworkList from 'features/NetworkList';
+import { NetworkList, NetworkCarousel } from 'features/Networks';
 
-import { filters } from './data';
+const ALL = 'ALL';
+const YOUR_NETWORKS = 'YOUR_NETWORKS';
+const YOU_MANAGE = 'YOU_MANAGE';
+
+const filters = [
+  {
+    key: ALL,
+    title: 'All',
+    active: true,
+  },
+  {
+    key: YOUR_NETWORKS,
+    title: 'Your networks',
+    active: false,
+  },
+  {
+    key: YOU_MANAGE,
+    title: 'You manage',
+    active: false,
+  },
+];
+
+type Filter = typeof ALL | typeof YOUR_NETWORKS | typeof YOU_MANAGE;
 
 const TEST_ID = 'container-networks';
 
 const Networks: FC = () => {
+  const [filter, setFilter] = useState<Filter>(ALL);
   const { isMobile } = useMedia();
 
   return (
@@ -37,14 +59,14 @@ const Networks: FC = () => {
             )}
             renderCenter={() => (
               <ButtonFilter
-                filters={filters}
-                onChange={() => console.log('test')}
+                initialFilters={filters}
+                onChange={(key) => setFilter(key as Filter)}
               />
             )}
           />
           <PageWrapper>
             <NetworkCarousel />
-            <NetworkList />
+            <NetworkList filter={filter} />
           </PageWrapper>
         </div>
       )}

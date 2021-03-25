@@ -2,7 +2,6 @@ import { useState, useEffect, useRef, Dispatch, SetStateAction } from 'react';
 
 // utils
 import API from 'utils/api';
-import { AxiosResponse } from 'axios';
 
 type Config = {
   [key: string]: string;
@@ -12,7 +11,7 @@ interface FetchHandler<T, R = T> {
   (exec: ExecHandler<T>, res?: ResponseHandler<T, R>, config?: Config): void;
 }
 interface ExecHandler<T> {
-  (api: typeof API): Promise<AxiosResponse<T>>;
+  (api: typeof API): Promise<T>;
 }
 interface ResponseHandler<T, R = T> {
   (res: T): R;
@@ -50,7 +49,7 @@ function useFetch<T, R = T>(initialValue: R | null = null): Response<T, R> {
     (async () => {
       if (isLoading && responseHandler.current && executer.current) {
         try {
-          const { data: response } = await executer.current(API);
+          const response = await executer.current(API);
           setResponse(responseHandler.current(response));
         } catch (error) {
           console.log('Somthing going wrong!', error);

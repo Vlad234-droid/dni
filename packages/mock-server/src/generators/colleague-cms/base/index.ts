@@ -1,11 +1,11 @@
 import faker from 'faker';
-import { dateToFormat, DATE_TIME_FORMAT } from 'utils';
+import { dateToIso } from 'utils';
 
 const generateBase = () => {
   const base = {
     id: faker.random.number(),
-    created_at: dateToFormat(new Date(), DATE_TIME_FORMAT),
-    updated_at: dateToFormat(new Date(), DATE_TIME_FORMAT),
+    created_at: dateToIso(new Date()),
+    updated_at: dateToIso(new Date()),
   };
 
   return base;

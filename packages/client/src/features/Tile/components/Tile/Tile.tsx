@@ -18,9 +18,9 @@ type Props = {
   renderMeta: () => JSX.Element | undefined;
   participants: number;
   image: {
-    alt: string;
-    src: string;
-  };
+    alternativeText: string;
+    url: string;
+  } | null;
   orientation: {
     aboveTablet: typeof HORIZONTAL | typeof VERTICAL;
     belowTablet: typeof HORIZONTAL | typeof VERTICAL;
@@ -44,9 +44,12 @@ const Tile: FC<Props> = ({
       orientation={orientation}
       responsiveImage={
         <ResponsiveImage
-          alt={image.alt}
-          src={image.src}
+          alt={image && image.alternativeText}
+          src={image && image.url}
           fallbackSizeRatio='57%'
+          maxHeight='120px'
+          maxWidth='100%'
+          objectFit='cover'
         />
       }
       title={

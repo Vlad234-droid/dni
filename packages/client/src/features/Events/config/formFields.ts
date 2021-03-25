@@ -16,7 +16,7 @@ const formFields: Array<FormField<Names>> = [
   },
   {
     Element: TextInput,
-    name: 'name',
+    name: 'title',
     placeholder: 'Name of event',
     testID: 'eventName',
     label: 'Name your event',
@@ -32,7 +32,7 @@ const formFields: Array<FormField<Names>> = [
   },
   {
     Element: TextInput,
-    name: 'participantCount',
+    name: 'maxParticipants',
     placeholder: '1',
     testID: 'participants',
     label: 'Max participants',
@@ -40,16 +40,14 @@ const formFields: Array<FormField<Names>> = [
   },
   {
     Element: DateTimePicker,
-    name: 'startDate',
-    placeholder: 'email',
+    name: 'startedAt',
     testID: 'startDate',
     labels: ['Start date', 'Start time'],
     required: true,
   },
   {
     Element: DateTimePicker,
-    name: 'endDate',
-    placeholder: 'email',
+    name: 'finishedAt',
     testID: 'startDate',
     labels: ['End date', 'End time'],
     required: true,
@@ -60,6 +58,13 @@ const formFields: Array<FormField<Names>> = [
     placeholder: 'A few word about this network',
     testID: 'message',
     label: 'Description',
+  },
+  {
+    Element: TextInput,
+    name: 'surveyLink',
+    placeholder: 'A few word about your event',
+    testID: 'surveyLink',
+    label: 'Link to Survey',
   },
 ];
 

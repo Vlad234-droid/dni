@@ -1,15 +1,12 @@
 import * as Yup from 'yup';
 
-import { FormData } from './types';
-
 const schema = Yup.object().shape({
   image: Yup.mixed().nullable(),
-  name: Yup.string().required('Name is required'),
+  title: Yup.string().required('Title is required'),
   network: Yup.string().required('Network is required'),
-  participantCount: Yup.number().required('Network is required'),
-  email: Yup.string().email().required('Network is required'),
-  startDate: Yup.date().required('Start Date is required'),
-  endDate: Yup.date()
+  maxParticipants: Yup.number().required('Participants count is required'),
+  startedAt: Yup.date().required('Start Date is required'),
+  finishedAt: Yup.date()
     .when(
       'startDate',
       (startDate: Date, schema: any) => startDate && schema.min(startDate),
@@ -19,7 +16,7 @@ const schema = Yup.object().shape({
     200,
     'Length of description should be less 200 characters',
   ),
-  link: Yup.string(),
+  surveyLink: Yup.string(),
 });
 
 export default schema;

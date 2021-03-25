@@ -1,18 +1,19 @@
 import { EntityState, createEntityAdapter } from '@reduxjs/toolkit';
-import { Network } from '@dni-connectors/colleague-cms-api';
+import { Event } from '@dni-connectors/colleague-cms-api';
 
-const ROOT = 'networks';
+const ROOT = 'events';
 const LIST_ACTION = `${ROOT}/list`;
 const ONE_ACTION = `${ROOT}/one`;
 const SET_ONE_ACTION = `${ROOT}/set_one`;
+const UPLOAD_IMG_ACTION = `${ROOT}/upload_img`;
 
-const EntityAdapter = createEntityAdapter<Network>();
+const EntityAdapter = createEntityAdapter<Event>();
 
 type State = {
   isLoading: boolean;
   error: null | string;
   meta: Meta;
-} & EntityState<Network>;
+} & EntityState<Event>;
 
 type Meta = {
   count: number;
@@ -21,23 +22,31 @@ type Meta = {
   pageCount: number;
 };
 
-type ListResponse = Array<Network>;
+type ListResponse = Array<Event>;
 
-type OneResponse = Network;
+type OneResponse = Event;
+type OneImageResponse = Event['image'];
 
 type OnePayload = {
   id: number;
 };
 
-type SetOnePayload = Network;
+type SetOnePayload = Event;
+
+type UploadImgPayload = {
+  id: number;
+  image: File;
+};
 
 export type {
   State,
-  Network,
+  Event,
   ListResponse,
   OneResponse,
   SetOnePayload,
   OnePayload,
+  UploadImgPayload,
+  OneImageResponse,
 };
 
 export {
@@ -47,4 +56,5 @@ export {
   LIST_ACTION,
   ONE_ACTION,
   SET_ONE_ACTION,
+  UPLOAD_IMG_ACTION,
 };

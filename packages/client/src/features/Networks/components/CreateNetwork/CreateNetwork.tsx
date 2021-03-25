@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import Button from '@beans/button';
 import Icon from '@beans/icon';
 import { Row, Grid } from '@beans/grid';
+import { ToastSkin, toasterActions } from 'features/Toaster';
 
 import GenericForm from 'features/GenericForm';
 import formFields, { partners } from '../../config/formFields';
@@ -22,7 +23,14 @@ const AddNetworkForm: FC = () => {
   const dispatch = useDispatch();
   // TODO fix when implement redux for this
   //@ts-ignore
-  const onSubmit = (data: FormData) => console.log(data);
+  const onSubmit = (data: FormData) => {
+    dispatch(
+      toasterActions.createToast({
+        skin: ToastSkin.ENTITY_CREATE_SUCCESS,
+      }),
+    );
+    console.log(data);
+  };
 
   return (
     <FormWrapper>

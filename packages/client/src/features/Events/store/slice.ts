@@ -13,19 +13,36 @@ const initialState: T.State = T.EntityAdapter.getInitialState({
 
 const getList = createAsyncThunk<T.ListResponse, FilterPayload>(
   T.LIST_ACTION,
-  async (filters) => await API.networks.fetchAll<T.ListResponse>(filters),
+  async (filters) => await API.events.fetchAll<T.ListResponse>(filters),
 );
 
 const getOne = createAsyncThunk<T.OneResponse, T.OnePayload>(
   T.ONE_ACTION,
-  async ({ id }: T.OnePayload) =>
-    await API.networks.fetchOne<T.OneResponse>(id),
+  async ({ id }: T.OnePayload) => await API.events.fetchOne<T.OneResponse>(id),
 );
 
 const createOne = createAsyncThunk<T.OneResponse, T.SetOnePayload>(
   T.SET_ONE_ACTION,
-  async (data) => await API.networks.create<T.OneResponse>(data),
+  async (data) => await API.events.create<T.OneResponse>(data),
 );
+
+const uploadImage = createAsyncThunk<
+  Pick<T.OneResponse, 'id' | 'image'>,
+  T.UploadImgPayload
+>(T.UPLOAD_IMG_ACTION, async ({ id, image }) => {
+  const data = new FormData();
+  data.append('refId', String(id));
+  data.append('ref', 'Event');
+  data.append('field', 'image');
+  data.append('files', image);
+
+  const uploadedImage = await API.common.upload<T.OneImageResponse>(data);
+
+  return {
+    id,
+    image: uploadedImage,
+  };
+});
 
 const slice = createSlice({
   name: T.ROOT,
@@ -62,10 +79,18 @@ const slice = createSlice({
         T.EntityAdapter.upsertOne(state, action.payload);
         stopLoading(state);
       })
-      .addCase(createOne.rejected, stopLoading);
+      .addCase(uploadImage.pending, startLoading)
+      .addCase(uploadImage.fulfilled, (state: T.State, action) => {
+        T.EntityAdapter.updateOne(state, {
+          ...action.payload,
+          changes: { image: action.payload.image },
+        });
+        stopLoading(state);
+      })
+      .addCase(uploadImage.rejected, stopLoading);
   },
 });
 
-export { getList, getOne, createOne };
+export { getList, getOne, createOne, uploadImage };
 
 export default slice.reducer;

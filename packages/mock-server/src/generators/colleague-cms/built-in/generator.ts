@@ -19,7 +19,10 @@ export const generateFile = () => {
     name: faker.random.word(),
     previewUrl: faker.image.imageUrl(IMG_WIDTH / 2, IMG_HEIGHT / 2),
     size: faker.random.number(),
-    url: faker.image.imageUrl(IMG_WIDTH, IMG_HEIGHT),
+    url: `${faker.image.imageUrl(
+      IMG_WIDTH,
+      IMG_HEIGHT,
+    )}?random=${faker.random.number()}`,
     width: IMG_WIDTH,
   };
   return file;

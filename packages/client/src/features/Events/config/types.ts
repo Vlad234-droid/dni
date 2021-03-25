@@ -1,13 +1,12 @@
 interface FormData {
   image?: File | null;
-  name: string;
+  title: string;
   network: string;
-  participantCount: number;
-  email: string;
-  startDate: Date;
-  endDate: Date;
+  maxParticipants: number;
+  startedAt: Date;
+  finishedAt: Date;
   description?: string;
-  link?: string;
+  surveyLink?: string;
 }
 
 export default interface Event extends FormData {
@@ -16,4 +15,6 @@ export default interface Event extends FormData {
 
 type Names = keyof FormData;
 
-export type { FormData, Names };
+type Filter = 'ON_AIR' | 'THIS_MONTH';
+
+export type { FormData, Names, Filter };

@@ -9,6 +9,8 @@ enum ToastVariant {
 
 enum ToastSkin {
   EXAMPLE = 'example',
+  ENTITY_CREATE_SUCCESS = 'entity_create_success',
+  ENTITY_CREATE_ERROR = 'entity_create_error',
 }
 
 type Toast = {
