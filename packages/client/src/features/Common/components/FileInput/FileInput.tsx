@@ -2,9 +2,11 @@ import React, { FC, HTMLProps, useRef, useEffect, ChangeEvent } from 'react';
 import Button from '@beans/button';
 import Icon from '@beans/icon';
 
-import Wrapper, { Props as WrapperProps } from '../FieldWrapper';
+import Wrapper, { Props as WrapperProps, Registrable } from '../FieldWrapper';
 
-type Props = HTMLProps<HTMLInputElement> & WrapperProps & { name: string };
+type Props = HTMLProps<HTMLInputElement> &
+  WrapperProps &
+  Registrable & { name: string };
 
 const FileInput: FC<Props> = ({
   label,

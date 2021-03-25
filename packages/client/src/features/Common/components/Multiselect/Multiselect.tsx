@@ -1,12 +1,11 @@
 import React, { FC, HTMLProps, useEffect, useState } from 'react';
-import { useFormContext } from 'react-hook-form';
 
 // @ts-ignore
 import MultiSelectDropdown, {
   CheckboxOption,
 } from '@beans/multiselect-dropdown';
 
-import Wrapper, { Props as WrapperProps } from '../FieldWrapper';
+import Wrapper, { Props as WrapperProps, Registrable } from '../FieldWrapper';
 
 type Options = {
   options: Array<Record<string, any>>;
@@ -14,6 +13,7 @@ type Options = {
 
 type Props = HTMLProps<HTMLScriptElement> &
   WrapperProps &
+  Registrable &
   Options & { name: string };
 
 export type Values = Record<string, boolean>;
@@ -41,11 +41,12 @@ const Multiselect: FC<Props> = ({
   error,
   options,
   placeholder,
+  register,
+  unregister,
+  setValue,
 }) => {
   const [isOpen, setOpen] = useState(false);
   const [values, changeValues] = useState<Values>(getSelectedValues(options));
-
-  const { register, unregister, setValue } = useFormContext();
 
   useEffect(() => {
     register(name);
