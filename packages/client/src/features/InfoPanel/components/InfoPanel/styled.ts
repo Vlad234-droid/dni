@@ -58,4 +58,23 @@ export const Description = styled.p`
     line-height: 28px;
     margin-bottom: 24px;
   `}
+
+  p {
+    margin-bottom: 8px;
+  }
+`;
+
+export const FootnoteWrapper = styled.div`
+  margin-bottom: 32px;
+
+  & > p {
+    ${Media.small_desktop`
+      display: flex;
+    `}
+    p {
+      ${Media.small_desktop`
+        margin-right: 4px;
+      `}
+    }
+  }
 `;

@@ -28,6 +28,10 @@ const Subtitle = styled.h4`
      font-size: 24px;
      line-height: 28px;
   `}
+
+  p {
+    margin-bottom: 8px;
+  }
 `;
 
 export { Wrapper, Title, Subtitle };

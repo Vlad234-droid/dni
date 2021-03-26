@@ -10,7 +10,7 @@ export const Wrapper = styled.div`
   background-color: ${({ theme }) => theme.colors.tescoBlue};
   display: flex;
   justify-content: space-between;
-  min-height: 492px;
+  min-height: 500px;
 
   ${Media.large_phone`
     margin-top: 72px;
@@ -18,7 +18,7 @@ export const Wrapper = styled.div`
 
   ${Media.tablet`
      margin: 132px 0 58px;
-     min-height: unset;
+     min-height: 534px;
   `}
 `;
 
@@ -53,11 +53,14 @@ export const Description = styled.div`
   `}
 
   &:last-child {
-    display: none;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 5;
+    overflow: hidden;
 
-    ${Media.tablet`
-      display: block;
-    `}
+    // ${Media.tablet`
+    //   display: -webkit-box;
+    // `}
   }
 
   &:not(:last-child) {

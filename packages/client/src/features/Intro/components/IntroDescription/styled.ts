@@ -34,4 +34,8 @@ export const Content = styled.div<{ isOpen: boolean }>`
           max-width: 463px;
       `}
   `}
+
+  p {
+    margin-bottom: 16px;
+  }
 `;
