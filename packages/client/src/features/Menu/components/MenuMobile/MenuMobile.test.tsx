@@ -1,36 +1,22 @@
 import React from 'react';
 import userEvent from '@testing-library/user-event';
-import { createMemoryHistory } from 'history';
-import { Router } from 'react-router-dom';
 
-import { renderWithTheme, screen } from 'utils/testUtils';
+import { renderWithRouter, screen } from 'utils/testUtils';
 import { menuItemsMobile } from '../../config/items';
-import MenuMobile, {
-  MOBILE_MENU_TEST_ID,
-  MOBILE_MORE_TEST_ID,
-} from './MenuMobile';
+import MenuMobile, { MOBILE_MENU_TEST_ID } from './MenuMobile';
 import { MENU_TEST_ID_PREFIX } from '../MenuItem';
 
-describe('Menu feature', () => {
-  const history = createMemoryHistory();
-
-  const renderWithRouter = () =>
-    renderWithTheme(
-      <Router history={history}>
-        <MenuMobile />
-      </Router>,
-    );
-
-  describe('MenuMobile', () => {
+describe('<MenuMobile />', () => {
+  describe('#render', () => {
     it('should render correctly', () => {
-      renderWithRouter();
+      renderWithRouter(<MenuMobile />);
       const result = screen.getByTestId(MOBILE_MENU_TEST_ID);
 
       expect(result).toBeInTheDocument();
     });
 
     it('should contain available visible items', () => {
-      renderWithRouter();
+      renderWithRouter(<MenuMobile />);
 
       Object.values(menuItemsMobile.visible).forEach((name) => {
         const result = screen.getByTestId(`${MENU_TEST_ID_PREFIX}${name}`);
@@ -38,10 +24,12 @@ describe('Menu feature', () => {
         expect(result).toBeInTheDocument();
       });
     });
+  });
 
+  describe('#handleMoreClick', () => {
     it('should show available hidden items on menu open', () => {
-      renderWithRouter();
-      const buttonMore = screen.getByTestId(MOBILE_MORE_TEST_ID);
+      renderWithRouter(<MenuMobile />);
+      const buttonMore = screen.getByTestId('menu-more-button');
 
       userEvent.click(buttonMore);
 
@@ -53,8 +41,8 @@ describe('Menu feature', () => {
     });
 
     it('should hide available hidden items on menu close', () => {
-      renderWithRouter();
-      const buttonMore = screen.getByTestId(MOBILE_MORE_TEST_ID);
+      renderWithRouter(<MenuMobile />);
+      const buttonMore = screen.getByTestId('menu-more-button');
 
       userEvent.click(buttonMore);
       userEvent.click(buttonMore);

@@ -18,7 +18,7 @@ import reportWebVitals from './reportWebVitals';
 const globalThemeStyles = {
   normalize: true,
 };
-console.log(merge(defaultTheme, theme));
+
 ReactDOM.render(
   <ThemeProvider
     theme={merge(defaultTheme, theme)}

@@ -6,7 +6,7 @@ import MenuItem from '../MenuItem';
 import { Wrapper, ItemsList, Links } from './styled';
 
 const MoreMenuMobile: FC = () => (
-  <Wrapper>
+  <Wrapper data-testid='more-menu-mobile'>
     <ItemsList>
       {Object.entries(menuItemsMobile.hidden).map(([page, name]) => (
         <MenuItem key={name} name={name} page={page}>

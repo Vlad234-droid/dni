@@ -5,7 +5,7 @@ import { buildPath, buildRoute } from './index';
 describe('Routes utils', () => {
   describe('buildPath', () => {
     it('should return About path', () => {
-      const result = buildPath(Page.ABOUT);
+      const result = buildPath('');
       const expected = '/';
 
       expect(result).toEqual(expected);

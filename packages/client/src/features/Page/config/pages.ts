@@ -16,8 +16,8 @@ const pages: Record<Page, PageElement> = {
   [Page.NETWORKS]: Networks,
   [Page.ADD_NETWORKS]: CreateNetwork,
   [Page.NEWS_FEED]: NewsFeed,
-  [Page.NOT_FOUND]: NotFound,
   [Page.REPORTS]: Reports,
+  [Page.NOT_FOUND]: NotFound,
 };
 
 export { pages };

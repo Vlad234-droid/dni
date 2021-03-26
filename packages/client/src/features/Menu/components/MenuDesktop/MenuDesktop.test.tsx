@@ -1,35 +1,24 @@
 import React from 'react';
-import { createMemoryHistory } from 'history';
-import { Router } from 'react-router-dom';
 
-import { renderWithTheme, screen } from 'utils/testUtils';
+import { renderWithRouter, screen } from 'utils/testUtils';
 
-import { menuItems } from '../../config/items';
+import { menuItemsDesktop } from '../../config/items';
 import { MENU_TEST_ID_PREFIX } from '../MenuItem';
 import MenuDesktop, { MENU_DESKTOP_TEST_ID } from './MenuDesktop';
 
-describe('Menu feature', () => {
-  const history = createMemoryHistory();
-
-  const renderWithRouter = () =>
-    renderWithTheme(
-      <Router history={history}>
-        <MenuDesktop />
-      </Router>,
-    );
-
-  describe('MenuDesktop', () => {
+describe('<MenuDesktop />', () => {
+  describe('render', () => {
     it('should render correctly', () => {
-      renderWithRouter();
+      renderWithRouter(<MenuDesktop />);
       const result = screen.getByTestId(MENU_DESKTOP_TEST_ID);
 
       expect(result).toBeInTheDocument();
     });
 
     it('should contain available items', () => {
-      renderWithRouter();
+      renderWithRouter(<MenuDesktop />);
 
-      Object.values(menuItems).forEach((name) => {
+      Object.values(menuItemsDesktop).forEach((name) => {
         const result = screen.getByTestId(`${MENU_TEST_ID_PREFIX}${name}`);
 
         expect(result).toBeInTheDocument();

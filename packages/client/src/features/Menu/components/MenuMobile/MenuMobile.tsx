@@ -16,7 +16,6 @@ import {
 } from './styled';
 
 export const MOBILE_MENU_TEST_ID = 'menu-mobile';
-export const MOBILE_MORE_TEST_ID = 'menu-more-button';
 
 const MenuMobile: FC = () => {
   const [isOpened, setOpened] = useState(false);
