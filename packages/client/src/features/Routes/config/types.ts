@@ -17,7 +17,7 @@ type Route = {
 };
 
 type BuildPath = (
-  page: any,
+  page: Page,
   root?: string,
   prefix?: string,
   sufix?: string,

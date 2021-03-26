@@ -22,9 +22,7 @@ const WithRouterProvider: FC = ({ children }) => {
 
   return (
     <ThemeProvider theme={merge(defaultTheme, theme)}>
-      <Router history={history}>
-        <div>{children}</div>
-      </Router>
+      <Router history={history}>{children}</Router>
     </ThemeProvider>
   );
 };
