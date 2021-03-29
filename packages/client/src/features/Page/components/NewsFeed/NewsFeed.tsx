@@ -9,7 +9,7 @@ const NewsFeed: FC = () => (
   <div data-testid={`${PAGE_PREFIX}${Page.NEWS_FEED}`}>
     <BasePage
       renderMain={() => (
-        <div data-testid={'container_feeds'}>
+        <div data-testid='container_feeds'>
           <Post />
         </div>
       )}

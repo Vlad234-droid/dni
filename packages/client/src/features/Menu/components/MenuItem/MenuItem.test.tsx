@@ -1,28 +1,27 @@
 import React from 'react';
 import { css } from 'styled-components';
-import { render, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { Router, Route, Switch } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 
-import { renderWithTheme } from 'utils/testUtils';
+import { renderWithRouter } from 'utils/testUtils';
 import MenuItem, { MENU_TEST_ID_PREFIX } from './MenuItem';
 
-describe('Menu feature', () => {
-  const menuItem = {
-    name: 'About',
-    page: 'about',
-    styles: `color: red;`,
-    stylesActive: css`
-      color: green;
-    `,
-  };
+describe('<MenuItem />', () => {
+  describe('#render', () => {
+    const menuItem = {
+      name: 'About',
+      page: 'about',
+      styles: `color: red;`,
+      stylesActive: css`
+        color: green;
+      `,
+    };
+    const history = createMemoryHistory();
 
-  const history = createMemoryHistory();
-
-  const renderWithRouter = () =>
-    renderWithTheme(
-      <Router history={history}>
+    const render = () =>
+      renderWithRouter(
         <Switch>
           <Route path='/' exact>
             <MenuItem {...menuItem}>
@@ -34,24 +33,22 @@ describe('Menu feature', () => {
               <div>{menuItem.name}</div>
             </MenuItem>
           </Route>
-        </Switch>
-      </Router>,
-    );
+        </Switch>,
+      );
 
-  const menuItemTestId = `${MENU_TEST_ID_PREFIX}${menuItem.name}`;
+    const menuItemTestId = `${MENU_TEST_ID_PREFIX}${menuItem.name}`;
 
-  describe('MenuItem', () => {
     it('should render correctly', () => {
-      renderWithRouter();
+      render();
       const result = screen.getByTestId(menuItemTestId);
 
       expect(result).toBeInTheDocument();
     });
 
     it('should change history location', () => {
-      renderWithRouter();
+      render();
       const menuItemLink = screen.getByTestId(menuItemTestId);
-      const expected = '/' + menuItem.page;
+      const expected = '/';
       userEvent.click(menuItemLink);
 
       const result = history.location.pathname;

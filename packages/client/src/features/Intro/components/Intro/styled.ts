@@ -48,5 +48,6 @@ export const Content = styled.div`
 
   ${Media.tablet`
      flex-direction: row;
+       align-items: flex-start;
   `}
 `;

@@ -17,7 +17,7 @@ type Props = {
   title: string;
   subTitle: string;
   subDescription: string;
-  description: string;
+  description: string | string[];
   image: {
     src: string;
   };
@@ -36,7 +36,13 @@ const CarouselContent: FC<Props> = ({
       <SubTitle>{subTitle}</SubTitle>
       <DescriptionWrapper>
         <Description>{subDescription}</Description>
-        <Description>{description}</Description>
+        <Description>
+          {Array.isArray(description) ? (
+            description.map((item, index) => <p key={index}>{item}</p>)
+          ) : (
+            <p>{description}</p>
+          )}
+        </Description>
       </DescriptionWrapper>
       <Button inverse variant='primary'>
         Read more

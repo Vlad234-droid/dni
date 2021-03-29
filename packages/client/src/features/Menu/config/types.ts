@@ -16,5 +16,6 @@ interface StylesItemsVisible {
 }
 
 type PageWithIcon = Page.EVENTS | Page.NETWORKS | Page.NEWS_FEED;
+type HiddenMobilePages = Page.ABOUT | Page.REPORTS;
 
-export type { StylesItemsVisible, PageWithIcon };
+export type { StylesItemsVisible, PageWithIcon, HiddenMobilePages };

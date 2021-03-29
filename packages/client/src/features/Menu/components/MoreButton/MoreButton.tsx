@@ -19,7 +19,11 @@ const MoreButton: FC<Props> = ({ onClick, isOpened, pathname }) => {
   const moreButtonText = useMemo(() => getMoreButtonText(pathname), [pathname]);
 
   return (
-    <Wrapper onClick={onClick} isActive={isActive}>
+    <Wrapper
+      data-testid='menu-more-button'
+      onClick={onClick}
+      isActive={isActive}
+    >
       <Item>
         <Icon graphic={'actions'} size='sm' />
         <Text>{moreButtonText}</Text>

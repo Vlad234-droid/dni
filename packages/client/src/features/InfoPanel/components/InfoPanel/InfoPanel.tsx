@@ -1,10 +1,19 @@
 import React, { FC } from 'react';
 import Icon from '@beans/icon';
 import Link from '@beans/link';
+import { Footnote } from '@beans/typography';
 
 import { useMedia } from 'context/InterfaceContext';
 
-import { Wrapper, IconWrapper, Content, Title, Description } from './styled';
+import data from '../../config/data';
+import {
+  Wrapper,
+  IconWrapper,
+  Content,
+  Title,
+  Description,
+  FootnoteWrapper,
+} from './styled';
 
 // TODO: spread component on InfoPanel and its content parts, when get more info about InfoPanels
 const InfoPanel: FC = () => {
@@ -17,12 +26,18 @@ const InfoPanel: FC = () => {
         <Icon graphic='lists' size={iconSize} />
       </IconWrapper>
       <Content>
-        <Title>Please, fill “This is Me” survey</Title>
+        <Title>{data.title}</Title>
         <Description>
-          Having better data around the diversity of our colleagues give us a
-          greater insight into where we need to focus our attention to make
-          Tesco a place where everyone is welcome.
+          {data.description.map((item, index) => (
+            <p key={index}>{item}</p>
+          ))}
         </Description>
+        <FootnoteWrapper>
+          <Footnote>
+            <p>{data.footnote.title}</p>
+            <Link href={data.footnote.link}>{data.footnote.linkText}</Link>
+          </Footnote>
+        </FootnoteWrapper>
         <Link
           href={'/'}
           icon={{ graphic: 'externalLink', position: { global: 'right' } }}

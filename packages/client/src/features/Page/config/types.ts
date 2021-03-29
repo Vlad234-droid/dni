@@ -7,8 +7,8 @@ enum Page {
   NETWORKS = 'networks',
   ADD_NETWORKS = 'networks/add',
   NEWS_FEED = 'news-feed',
-  NOT_FOUND = '*',
   REPORTS = 'reports',
+  NOT_FOUND = '*',
 }
 
 type PageElement = LazyExoticComponent<FC> | ComponentType | FC;
