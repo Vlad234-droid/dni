@@ -43,10 +43,11 @@ export const Content = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   color: ${({ theme }) => theme.colors.white};
 
   ${Media.tablet`
      flex-direction: row;
+       align-items: flex-start;
   `}
 `;
