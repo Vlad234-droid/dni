@@ -42,14 +42,6 @@ const Events: FC = () => {
       <div data-testid={TEST_ID}>
         <PageHeader
           renderLeft={() => <Heading>Events</Heading>}
-          renderRight={() => (
-            <Link to={`/${Page.CREATE_EVENTS}`}>
-              <Button variant='primary'>
-                <Icon graphic='add' />
-                {!isMobile && 'Create an Event'}
-              </Button>
-            </Link>
-          )}
           renderCenter={() => (
             <ButtonFilter
               initialFilters={filters}

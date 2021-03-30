@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 import styled from 'styled-components';
-import { useForm, SubmitHandler } from 'react-hook-form';
+import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import Icon from '@beans/icon';
@@ -35,14 +35,7 @@ const CreatePartner = ({ partner, onCancel }: Props) => {
     resolver: yupResolver(schema),
   });
 
-  const {
-    register,
-    handleSubmit,
-    errors,
-    reset,
-    setValue,
-    unregister,
-  } = methods;
+  const { register, handleSubmit, errors, reset, control } = methods;
   const submit: SubmitHandler<FormData> = (data) => {
     console.log(data);
   };
@@ -66,29 +59,37 @@ const CreatePartner = ({ partner, onCancel }: Props) => {
               name={'name'}
               error={errors['name']! && errors['name'].message}
               // @ts-ignore
-              register={register}
+              domRef={register}
+              required
             />
           </Column>
           <Column>
             <TextInput
               placeholder={'Website or social network'}
-              label={'Link to Partner (optional)'}
+              label={'Link to Partner'}
               defaultValue={partner?.link}
               name={'link'}
               error={errors['link']! && errors['link'].message}
               // @ts-ignore
-              register={register}
+              domRef={register}
+              required
             />
           </Column>
         </Row>
       </FieldWrapper>
       <FieldWrapper>
-        <FileInput
+        <Controller
           name={'logo'}
-          label={'Partner’s logo (optional)'}
-          register={register}
-          setValue={setValue}
-          unregister={unregister}
+          control={control}
+          render={(props) => (
+            <FileInput
+              label={'Partner’s logo'}
+              onChange={props.onChange}
+              // @ts-ignore
+              error={errors['logo']?.message}
+              id={'image'}
+            />
+          )}
         />
       </FieldWrapper>
       <ActionContainer>

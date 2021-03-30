@@ -4,17 +4,17 @@ import React, { FC, HTMLProps, useEffect, useState } from 'react';
 import MultiSelectDropdown, {
   CheckboxOption,
 } from '@beans/multiselect-dropdown';
+import FormGroup from '@beans/form-group';
 
-import Wrapper, { Props as WrapperProps, Registrable } from '../FieldWrapper';
+import { FieldProps } from '../../config/types';
 
 type Options = {
   options: Array<Record<string, any>>;
 };
 
 type Props = HTMLProps<HTMLScriptElement> &
-  WrapperProps &
-  Registrable &
-  Options & { name: string };
+  FieldProps &
+  Options & { onChange: (d: Array<string>) => void };
 
 export type Values = Record<string, boolean>;
 
@@ -36,27 +36,18 @@ export const formatValues = (values: Values) =>
 export const TEST_ID = 'common_multiselect';
 
 const Multiselect: FC<Props> = ({
-  name,
   label,
   error,
   options,
   placeholder,
-  register,
-  unregister,
-  setValue,
+  onChange,
 }) => {
   const [isOpen, setOpen] = useState(false);
   const [values, changeValues] = useState<Values>(getSelectedValues(options));
 
   useEffect(() => {
-    register(name);
-    return () => {
-      unregister(name);
-    };
-  }, [register, unregister, name]);
-
-  useEffect(() => {
-    setValue(name, formatValues(values));
+    // @ts-ignore
+    onChange(formatValues(values) as Array<string>);
   }, [values]);
 
   const handleToggleOpen = () => setOpen(!isOpen);
@@ -69,7 +60,7 @@ const Multiselect: FC<Props> = ({
   };
 
   return (
-    <Wrapper {...{ label, error }} testId={TEST_ID}>
+    <FormGroup {...{ label, error }} testId={TEST_ID}>
       <MultiSelectDropdown
         selectText={placeholder}
         onDropdownToggle={handleToggleOpen}
@@ -81,7 +72,7 @@ const Multiselect: FC<Props> = ({
           <CheckboxOption id={id} key={id} labelText={labelText} />
         ))}
       </MultiSelectDropdown>
-    </Wrapper>
+    </FormGroup>
   );
 };
 

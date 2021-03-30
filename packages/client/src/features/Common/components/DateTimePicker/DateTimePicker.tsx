@@ -10,20 +10,13 @@ import TimeInput from '../TimeInput';
 
 type Props = {
   labels: [string, string];
-  name: string;
   error: string;
+  onChange: (date: DateTime) => void;
 };
 
-const DateTimePicker = ({
-  labels,
-  name,
-  setValue,
-  error,
-  ...methods
-}: Props & Registrable) => {
+const DateTimePicker = ({ labels, error, onChange }: Props) => {
   const [dateLabel, timeLabel] = labels;
   const [date, setDate] = useState<DateTime>();
-  useRegisterField(methods, name);
 
   const handleChange = (updated: DateObject) => {
     const prevValue = date?.toObject() || {};
@@ -32,7 +25,7 @@ const DateTimePicker = ({
 
   useEffect(() => {
     if (date) {
-      setValue(name, date);
+      onChange(date);
     }
   }, [date]);
 

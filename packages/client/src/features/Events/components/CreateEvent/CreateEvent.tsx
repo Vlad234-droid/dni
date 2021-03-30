@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
+import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import Button from '@beans/button';
 import { Row, Grid, Column } from '@beans/grid';
@@ -17,12 +18,14 @@ import Media from 'styles/media';
 import { FieldWrapper } from 'features/Common/styled';
 import { ToastSkin, toasterActions } from 'features/Toaster';
 import { unwrapResult } from '@reduxjs/toolkit';
-import useDispatch from 'hooks/useDispatch';
 
 import { createOne, uploadImage, SetOnePayload } from '../../store';
 
 const CreateEventForm: FC = () => {
   const dispatch = useDispatch();
+  const { handleSubmit, errors, register, control } = useForm({
+  resolver: yupResolver(schema),
+  });
 
   const onSubmit = async (data: FormData) => {
     const image = data.image;
@@ -55,28 +58,28 @@ const CreateEventForm: FC = () => {
     }
   };
 
-  const methods = useForm({
-    resolver: yupResolver(schema),
-  });
-  const { handleSubmit, errors, register, setValue, unregister } = methods;
   const { isTablet } = useMedia();
   return (
     <FormWrapper>
       <form onSubmit={handleSubmit(onSubmit)} noValidate>
         <FieldWrapper>
-          <FileInput
-            unregister={unregister}
-            setValue={setValue}
-            register={register}
+          <Controller
             name={'image'}
-            label={'Image (optional)'}
-            error={errors['image']?.message}
-            id={'image'}
+            control={control}
+            render={(props) => (
+              <FileInput
+                label={'Image (optional)'}
+                onChange={props.onChange}
+                error={errors['image']?.message}
+                id={'image'}
+              />
+            )}
           />
         </FieldWrapper>
         <FieldWrapper>
           <TextInput
-            register={register}
+            // @ts-ignore
+            domRef={register}
             name={'title'}
             placeholder={'Name of event'}
             label={'Name your event'}
@@ -90,7 +93,8 @@ const CreateEventForm: FC = () => {
           <Row>
             <Column size={17}>
               <TextInput
-                register={register}
+                // @ts-ignore
+                domRef={register}
                 name={'network'}
                 placeholder={'Name your network'}
                 label={'Network'}
@@ -101,7 +105,8 @@ const CreateEventForm: FC = () => {
             </Column>
             <Column size={7}>
               <TextInput
-                register={register}
+                // @ts-ignore
+                domRef={register}
                 name={'maxParticipants'}
                 placeholder={'1'}
                 label={'Max participants'}
@@ -115,34 +120,41 @@ const CreateEventForm: FC = () => {
         <FieldWrapper>
           <Row>
             <Column size={isTablet ? 24 : 12}>
-              <DateTimePicker
+              <Controller
                 name={'startedAt'}
-                unregister={unregister}
-                setValue={setValue}
-                register={register}
-                // @ts-ignore
-                error={errors['startedAt']?.message}
-                labels={['Start date', 'Start time']}
-                required
+                control={control}
+                render={(props) => (
+                  <DateTimePicker
+                    // @ts-ignore
+                    error={errors['startedAt']?.message}
+                    labels={['Start date', 'Start time']}
+                    onChange={props.onChange}
+                    required
+                  />
+                )}
               />
             </Column>
             <Column size={isTablet ? 24 : 12}>
-              <DateTimePicker
+              <Controller
                 name={'finishedAt'}
-                unregister={unregister}
-                setValue={setValue}
-                register={register}
-                // @ts-ignore
-                error={errors['finishedAt']?.message}
-                labels={['End date', 'End time']}
-                required
+                control={control}
+                render={(props) => (
+                  <DateTimePicker
+                    // @ts-ignore
+                    error={errors['finishedAt']?.message}
+                    labels={['End date', 'End time']}
+                    onChange={props.onChange}
+                    required
+                  />
+                )}
               />
             </Column>
           </Row>
         </FieldWrapper>
         <FieldWrapper>
           <TextArea
-            register={register}
+            // @ts-ignore
+            domRef={register}
             name={'description'}
             label={'Description'}
             error={errors['description']?.message}

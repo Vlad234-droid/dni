@@ -8,8 +8,8 @@ const schema = Yup.object().shape({
   startedAt: Yup.date().required('Start Date is required'),
   finishedAt: Yup.date()
     .when(
-      'startDate',
-      (startDate: Date, schema: any) => startDate && schema.min(startDate),
+      'startedAt',
+      (startedAt: Date, schema: any) => startedAt && schema.min(startedAt),
     )
     .required('End Date is required'),
   description: Yup.string().max(

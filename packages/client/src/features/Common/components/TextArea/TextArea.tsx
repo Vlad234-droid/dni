@@ -2,16 +2,15 @@ import { FC, HTMLProps } from 'react';
 import Textarea from '@beans/textarea';
 import FormGroup from '@beans/form-group';
 
-import { Props as WrapperProps, Registrable } from '../FieldWrapper';
+import { FieldProps } from '../../config/types';
 
 type Props = HTMLProps<HTMLTextAreaElement> &
-  WrapperProps &
-  Partial<Registrable>;
+  FieldProps & { defaultValue?: string };
 
-const TextArea: FC<Props> = ({ label, error, register, ...rest }) => {
+const TextArea: FC<Props> = ({ label, error, ...rest }) => {
   return (
     <FormGroup labelText={label} errorMessage={error} error={Boolean(error)}>
-      <Textarea domRef={register} {...rest} defaultValue={''} />
+      <Textarea {...rest} />
     </FormGroup>
   );
 };

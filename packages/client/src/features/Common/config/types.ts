@@ -1,3 +1,5 @@
+import { RefObject } from 'react';
+
 export type Date = {
   dd: string;
   mm: string;
@@ -24,4 +26,10 @@ export type DateValid = {
   dd: boolean;
   mm: boolean;
   yyyy: boolean;
+};
+
+export type FieldProps = {
+  label?: string;
+  error?: string;
+  domRef?: RefObject<any>;
 };

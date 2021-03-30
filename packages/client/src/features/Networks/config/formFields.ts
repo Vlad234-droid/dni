@@ -8,6 +8,7 @@ export type Partner = {
   link?: string;
   avatar: string;
 };
+
 export const partners: Array<Partner> = [
   { id: 1, name: 'Diabetes UK', link: 'http://websitename.com/', avatar: '' },
   {
@@ -64,20 +65,6 @@ const formFields: Array<FormField<Names>> = [
     testID: 'message',
     label: 'Description',
     required: true,
-  },
-  {
-    Element: Multiselect,
-    name: 'partnership',
-    placeholder: 'Choose Partner',
-    testID: 'partnership',
-    label: 'Network Partnership',
-    required: true,
-    // hardcode options now
-    options: partners.map(({ id, name, link }) => ({
-      id,
-      labelText: `${name} ${link}`.trim(),
-      selected: false,
-    })),
   },
 ];
 

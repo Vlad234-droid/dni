@@ -30,7 +30,7 @@ function GenericForm<T, N>({
   const methods = useForm({
     resolver: yupResolver(schema),
   });
-  const { handleSubmit, errors, reset, ...rest } = methods;
+  const { handleSubmit, errors, reset, register } = methods;
 
   const submit: Handler<T> = (data) => {
     reset();
@@ -46,7 +46,7 @@ function GenericForm<T, N>({
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
             error={errors[props.name!] && errors[props.name!].message}
             id={testID}
-            {...rest}
+            domRef={register}
           />
         </FieldWrapper>
       ))}

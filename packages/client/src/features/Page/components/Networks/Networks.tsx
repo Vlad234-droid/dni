@@ -49,14 +49,6 @@ const Networks: FC = () => {
         <div data-testid={TEST_ID}>
           <PageHeader
             renderLeft={() => <Heading>Networks</Heading>}
-            renderRight={() => (
-              <Link to={`/${Page.ADD_NETWORKS}`}>
-                <Button variant='primary'>
-                  <Icon graphic='add' />
-                  {!isMobile && 'Create Network'}
-                </Button>
-              </Link>
-            )}
             renderCenter={() => (
               <ButtonFilter
                 initialFilters={filters}

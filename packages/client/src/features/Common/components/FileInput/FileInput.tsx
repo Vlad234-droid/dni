@@ -1,45 +1,45 @@
-import React, { FC, HTMLProps, useRef, useEffect, ChangeEvent } from 'react';
+import React, {
+  FC,
+  HTMLProps,
+  ChangeEvent,
+  useRef,
+  useState,
+  useEffect,
+} from 'react';
 import Button from '@beans/button';
 import Icon from '@beans/icon';
 
-import Wrapper, { Props as WrapperProps, Registrable } from '../FieldWrapper';
+import Wrapper from '../FieldWrapper';
+import { FieldProps } from '../../config/types';
 
 type Props = HTMLProps<HTMLInputElement> &
-  WrapperProps &
-  Registrable & { name: string };
+  FieldProps & { onChange: (file: File) => void };
 
-const FileInput: FC<Props> = ({
-  label,
-  error,
-  name,
-  register,
-  unregister,
-  setValue,
-}) => {
-  const labelEl = useRef<HTMLLabelElement | null>(null);
+const FileInput: FC<Props> = ({ label, error, onChange, name }) => {
+  const [file, setFile] = useState<File | null>(null);
+  const inputEl = useRef<HTMLInputElement | null>(null);
   // @ts-ignore
-  const handleClickInput = () => labelEl.current?.click();
-  useEffect(() => {
-    register(name);
-    return () => {
-      unregister(name);
-    };
-  }, [register, unregister, name]);
+  const handleClickButton = () => inputEl.current?.click();
 
   const handleAttachFile = ({ target }: ChangeEvent<HTMLInputElement>) => {
     if (!target.files) return;
-    setValue(name, target.files[0], { shouldValidate: false });
+    setFile(target.files[0]);
   };
+
+  useEffect(() => {
+    if (file) onChange(file);
+  }, [file]);
 
   return (
     <Wrapper {...{ error }}>
       <div>
-        <label htmlFor={name} ref={labelEl}>
-          <Button variant='secondary' onClick={handleClickInput}>
+        <label htmlFor={name}>
+          <Button variant='secondary' onClick={handleClickButton}>
             <Icon graphic='add' inverse={true} />
             {label}
           </Button>
           <input
+            ref={inputEl}
             type='file'
             id={name}
             name={name}
@@ -47,6 +47,8 @@ const FileInput: FC<Props> = ({
             hidden
           />
         </label>
+        <br />
+        {file && file.name}
       </div>
     </Wrapper>
   );
