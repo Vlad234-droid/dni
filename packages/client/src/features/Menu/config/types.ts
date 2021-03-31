@@ -7,7 +7,7 @@ export type IconSrc = {
 
 export type MenuItem = string;
 
-type NotVisiblePage = Page.ADD_NETWORKS | Page.NOT_FOUND | Page.CREATE_EVENTS;
+type NotVisiblePage = Page.NOT_FOUND;
 
 export type VisiblePages = Exclude<Page, NotVisiblePage>;
 

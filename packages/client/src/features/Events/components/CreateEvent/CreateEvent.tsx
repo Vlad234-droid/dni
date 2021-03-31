@@ -5,6 +5,7 @@ import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import Button from '@beans/button';
 import { Row, Grid, Column } from '@beans/grid';
+import { unwrapResult } from '@reduxjs/toolkit';
 import { useMedia } from 'context/InterfaceContext';
 import {
   TextArea,
@@ -12,19 +13,18 @@ import {
   FileInput,
   DateTimePicker,
 } from 'features/Common';
-import schema from '../../config/schema';
-import { FormData } from '../../config/types';
 import Media from 'styles/media';
 import { FieldWrapper } from 'features/Common/styled';
 import { ToastSkin, toasterActions } from 'features/Toaster';
-import { unwrapResult } from '@reduxjs/toolkit';
 
+import { FormData } from '../../config/types';
+import schema from '../../config/schema';
 import { createOne, uploadImage, SetOnePayload } from '../../store';
 
 const CreateEventForm: FC = () => {
   const dispatch = useDispatch();
   const { handleSubmit, errors, register, control } = useForm({
-  resolver: yupResolver(schema),
+    resolver: yupResolver(schema),
   });
 
   const onSubmit = async (data: FormData) => {
@@ -36,7 +36,7 @@ const CreateEventForm: FC = () => {
         image: null,
       } as unknown) as SetOnePayload),
     );
-
+    // @ts-ignore
     if (createOne.fulfilled.match(result)) {
       const event = unwrapResult(result);
 
@@ -162,7 +162,8 @@ const CreateEventForm: FC = () => {
         </FieldWrapper>
         <FieldWrapper>
           <TextInput
-            register={register}
+            // @ts-ignore
+            domRef={register}
             name={'surveyLink'}
             placeholder={'A few word about your event'}
             label={'Link to Survey'}
