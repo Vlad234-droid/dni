@@ -1,7 +1,11 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 import API from 'utils/api';
-import { DEFAULT_META, FilterPayload } from 'utils/storeHelper';
+import {
+  DEFAULT_META,
+  FilterPayload,
+  PaginationPayload,
+} from 'utils/storeHelper';
 
 import * as T from './types';
 
@@ -11,7 +15,10 @@ const initialState: T.State = T.EntityAdapter.getInitialState({
   meta: DEFAULT_META,
 });
 
-const getList = createAsyncThunk<T.ListResponse, FilterPayload>(
+const getList = createAsyncThunk<
+  T.ListResponse,
+  FilterPayload & PaginationPayload
+>(
   T.LIST_ACTION,
   async (filters) => await API.networks.fetchAll<T.ListResponse>(filters),
 );
@@ -27,10 +34,20 @@ const createOne = createAsyncThunk<T.OneResponse, T.SetOnePayload>(
   async (data) => await API.networks.create<T.OneResponse>(data),
 );
 
+const getCount = createAsyncThunk<number, FilterPayload>(
+  T.COUNT_ACTION,
+  (data) => API.networks.count<number>(data),
+);
+
 const slice = createSlice({
   name: T.ROOT,
   initialState,
-  reducers: {},
+  reducers: {
+    clear(state) {
+      T.EntityAdapter.removeAll(state);
+      state.meta = initialState.meta;
+    },
+  },
   extraReducers: (builder) => {
     const startLoading = (state: T.State) => {
       state.isLoading = true;
@@ -40,6 +57,16 @@ const slice = createSlice({
     };
 
     builder
+      .addCase(getCount.pending, startLoading)
+      .addCase(getCount.fulfilled, (state: T.State, action) => {
+        const total = action.payload;
+        const meta = state.meta;
+        state.meta = {
+          ...meta,
+          total,
+        };
+        stopLoading(state);
+      })
       .addCase(getList.pending, startLoading)
       .addCase(getList.fulfilled, (state: T.State, action) => {
         const data = action.payload;
@@ -66,6 +93,8 @@ const slice = createSlice({
   },
 });
 
-export { getList, getOne, createOne };
+const { clear } = slice.actions;
+
+export { getList, getOne, createOne, getCount, clear };
 
 export default slice.reducer;

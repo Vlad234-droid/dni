@@ -5,6 +5,7 @@ const ROOT = 'networks';
 const LIST_ACTION = `${ROOT}/list`;
 const ONE_ACTION = `${ROOT}/one`;
 const SET_ONE_ACTION = `${ROOT}/set_one`;
+const COUNT_ACTION = `${ROOT}/count`;
 
 const EntityAdapter = createEntityAdapter<Network>();
 
@@ -18,7 +19,6 @@ type Meta = {
   count: number;
   total: number;
   page: number;
-  pageCount: number;
 };
 
 type ListResponse = Array<Network>;
@@ -47,4 +47,5 @@ export {
   LIST_ACTION,
   ONE_ACTION,
   SET_ONE_ACTION,
+  COUNT_ACTION,
 };

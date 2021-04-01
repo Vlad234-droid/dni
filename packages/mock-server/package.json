@@ -4,8 +4,8 @@
   "main": "src/app.ts",
   "license": "MIT",
   "scripts": {
-    "run:dev": "NODE_PATH=./src nodemon --watch 'src/**/*' -e ts,tsx --exec 'ts-node --files' src/app.ts",
-    "run:mocked:prod": "NODE_PATH=./src ts-node --transpile-only --project tsconfig.json -- src/app.ts",
+    "run:dev": "cross-env NODE_PATH=./src nodemon --watch \"src/**/*\" -e ts,tsx --exec \"ts-node --files\" src/app.ts",
+    "run:mocked:prod": "cross-env NODE_PATH=./src ts-node --transpile-only --project tsconfig.json -- src/app.ts",
     "clean": "rimraf coverage",
     "clean:all": "yarn clean && rimraf node_modules",
     "test": "jest",

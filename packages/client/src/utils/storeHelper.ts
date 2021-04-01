@@ -27,11 +27,17 @@ const getEntitySelectors = <T, V>(
   return [selectAll, selectById];
 };
 
-type FilterPayload = {
-  // pagination
+type PaginationPayload = {
   _limit: number;
   _start: number;
+};
 
+const DEFAULT_PAGINATION: PaginationPayload = {
+  _start: 0,
+  _limit: 10,
+};
+
+type FilterPayload = {
   // filtering
   _where?: string;
 
@@ -39,6 +45,11 @@ type FilterPayload = {
   _sort?: 'created_at:desc' | 'created_at:asc';
 };
 
-export type { FilterPayload };
+export type { FilterPayload, PaginationPayload };
 
-export { getDataOrReject, DEFAULT_META, getEntitySelectors };
+export {
+  getDataOrReject,
+  DEFAULT_META,
+  getEntitySelectors,
+  DEFAULT_PAGINATION,
+};

@@ -6,6 +6,7 @@ const LIST_ACTION = `${ROOT}/list`;
 const ONE_ACTION = `${ROOT}/one`;
 const SET_ONE_ACTION = `${ROOT}/set_one`;
 const UPLOAD_IMG_ACTION = `${ROOT}/upload_img`;
+const COUNT_ACTION = `${ROOT}/count`;
 
 const EntityAdapter = createEntityAdapter<Event>();
 
@@ -57,4 +58,5 @@ export {
   ONE_ACTION,
   SET_ONE_ACTION,
   UPLOAD_IMG_ACTION,
+  COUNT_ACTION,
 };

@@ -1,15 +1,18 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useState, useCallback, useMemo } from 'react';
 import Button from '@beans/button';
 import { useSelector } from 'react-redux';
+import InfiniteScroll from 'react-infinite-scroller';
 
 import Heading, { Size, Color } from 'features/Heading';
 import { SmallTile } from 'features/Tile';
 import { Wrapper, ListContainer } from './styled';
 import useDispatch from 'hooks/useDispatch';
+import useStore from 'hooks/useStore';
 import { normalizeImage } from 'utils/content';
-import { FilterPayload } from 'utils/storeHelper';
+import { FilterPayload, DEFAULT_PAGINATION } from 'utils/storeHelper';
 import { Filter } from '../../config/types';
-import { getList, listSelector } from '../../store';
+import { getList, getCount, listSelector, clear } from '../../store';
+import { useScrollContainer } from 'context/ScrollContainerContext';
 
 type Props = {
   filter?: Filter;
@@ -17,26 +20,48 @@ type Props = {
 
 const NetworkList: FC<Props> = ({ filter }) => {
   const dispatch = useDispatch();
+  const [filters, setFilters] = useState<FilterPayload>();
 
-  const [filters, setFilters] = useState<FilterPayload>({
-    _start: 0,
-    _limit: 10,
-  });
-  const [withFilter, setWithFilter] = useState(false);
+  const scrollContainer = useScrollContainer();
 
+  const {
+    meta: { total },
+    isLoading,
+  } = useStore((state) => state.networks);
   const list = useSelector(listSelector);
+  const hasMore = useMemo(() => list.length < total, [list, total]);
+
+  const loadNetworks = useCallback(
+    (page: number) => {
+      if (filters && hasMore && !isLoading) {
+        dispatch(
+          getList({
+            ...filters,
+            ...{
+              ...DEFAULT_PAGINATION,
+              _start: page * DEFAULT_PAGINATION._limit,
+            },
+          }),
+        );
+      }
+    },
+    [filters, hasMore, isLoading],
+  );
 
   useEffect(() => {
-    if (withFilter) {
-      dispatch(getList(filters));
-    }
-  }, [filters, withFilter]);
+    (async () => {
+      if (filters) {
+        await dispatch(clear());
+        await dispatch(getCount(filters));
+      }
+    })();
+  }, [filters]);
 
   useEffect(() => {
     let where;
     switch (filter) {
       case 'ALL': {
-        where = '';
+        where = undefined;
         break;
       }
       case 'YOUR_NETWORKS': {
@@ -49,8 +74,10 @@ const NetworkList: FC<Props> = ({ filter }) => {
       }
     }
     setFilters({ ...filters, _where: JSON.stringify(where) });
-    setWithFilter(true);
   }, [filter]);
+
+  // TODO: add loader component
+  const Loader = <div key='loader'>Loading ...</div>;
 
   return (
     <Wrapper>
@@ -58,21 +85,32 @@ const NetworkList: FC<Props> = ({ filter }) => {
         New Networks
       </Heading>
       <ListContainer>
-        {list.map(({ id, title, image }) => (
-          <SmallTile
-            link='/networks'
-            renderAction={() => (
-              <Button variant='primary' onClick={() => console.log('test')}>
-                Join
-              </Button>
-            )}
-            id={id}
-            key={`networks-${id}`}
-            title={title}
-            participants={300}
-            image={normalizeImage(image)}
-          />
-        ))}
+        <InfiniteScroll
+          key={filter} // unique key for unmount when switch filter
+          loadMore={loadNetworks}
+          hasMore={!isLoading && hasMore}
+          pageStart={-1}
+          loader={Loader}
+          threshold={0}
+          getScrollParent={() => scrollContainer!.current}
+          useWindow={false}
+        >
+          {list.map(({ id, title, image }) => (
+            <SmallTile
+              link='/networks'
+              renderAction={() => (
+                <Button variant='primary' onClick={() => console.log('test')}>
+                  Join
+                </Button>
+              )}
+              id={id}
+              key={id}
+              title={title}
+              participants={300}
+              image={normalizeImage(image)}
+            />
+          ))}
+        </InfiniteScroll>
       </ListContainer>
     </Wrapper>
   );

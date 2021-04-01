@@ -14,12 +14,16 @@ export default (httpClient: AxiosInstance) => ({
       httpClient.get<T>('/networks', { params: data }),
     fetchOne: <T>(id: number) => httpClient.get<T>(`/networks/${id}`),
     create: <T>(data: T) => httpClient.post<T>(`/networks`, data),
+    count: <T>(data: Config = {}) =>
+      httpClient.get<T>(`/networks/count`, { params: data }),
   },
   events: {
     fetchAll: <T>(data: Config = {}) =>
       httpClient.get<T>('/events', { params: data }),
     fetchOne: <T>(id: number) => httpClient.get<T>(`/events/${id}`),
     create: <T>(data: T) => httpClient.post<T>(`/events`, data),
+    count: <T>(data: Config = {}) =>
+      httpClient.get<T>(`/events/count`, { params: data }),
   },
   common: {
     upload: <T>(data: FormData) => httpClient.post<T>(`/upload`, data),

@@ -4,7 +4,7 @@ import { buildCRUD } from 'utils';
 
 import { generateEvent, generateEvents } from 'generators/colleague-cms';
 
-const COLLECTION_SIZE = 20;
+const COLLECTION_SIZE = 60;
 
 const CRUD = buildCRUD<Event>(
   () => generateEvents(COLLECTION_SIZE),

@@ -19,7 +19,9 @@ const buildCRUD = <T extends BaseType>(
   return {
     findAll: (start: QueryType = 0, limit: QueryType = 10) => {
       // TODO: add sort and filtering
-      return defaultSort(copyData.slice(+start, +limit));
+      const begin = +start;
+      const end = +limit;
+      return defaultSort(copyData.slice(begin, begin + end));
     },
     findBy: (id: QueryType) => {
       if (Number.isNaN(+id)) {

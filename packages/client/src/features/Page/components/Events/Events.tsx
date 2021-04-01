@@ -1,7 +1,4 @@
 import React, { FC, useCallback, useState } from 'react';
-import Button from '@beans/button';
-import Icon from '@beans/icon';
-import { Link } from 'react-router-dom';
 
 import { Page, PAGE_PREFIX } from 'features/Page';
 import BasePage from '../BasePage';
@@ -10,8 +7,7 @@ import PageWrapper from '../PageWrapper';
 import Heading from 'features/Heading';
 import { useMedia } from 'context/InterfaceContext';
 import ButtonFilter from 'features/ButtonFilter';
-import { EventCarousel, EventList } from 'features/Events';
-import EventTable from 'features/EventTable';
+import { EventCarousel, EventList, EventTable } from 'features/Events';
 
 const ON_AIR = 'ON_AIR';
 const THIS_MONTH = 'THIS_MONTH';

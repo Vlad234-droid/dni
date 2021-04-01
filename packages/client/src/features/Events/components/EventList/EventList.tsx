@@ -1,12 +1,14 @@
-import { FC, useEffect, useState } from 'react';
+import { FC, useEffect, useState, useCallback, useMemo } from 'react';
 import Button from '@beans/button';
 import { useSelector } from 'react-redux';
+import Icon from '@beans/icon';
 
 import Heading, { Size, Color } from 'features/Heading';
 import { SmallTile } from 'features/Tile';
 
 import { Wrapper, ListContainer } from './styled';
 
+import useStore from 'hooks/useStore';
 import useDispatch from 'hooks/useDispatch';
 import { normalizeImage } from 'utils/content';
 import {
@@ -15,9 +17,9 @@ import {
   lastDayOf,
   FULL_FORMAT,
 } from 'utils/date';
-import { FilterPayload } from 'utils/storeHelper';
+import { FilterPayload, DEFAULT_PAGINATION } from 'utils/storeHelper';
 
-import { getList, listSelector } from '../../store';
+import { getList, listSelector, clear, getCount } from '../../store';
 import { Filter } from '../../config/types';
 
 type Props = {
@@ -27,19 +29,48 @@ type Props = {
 const EventList: FC<Props> = ({ filter }) => {
   const dispatch = useDispatch();
 
-  const [filters, setFilters] = useState<FilterPayload>({
-    _start: 0,
-    _limit: 10,
-  });
-  const [withFilter, setWithFilter] = useState(false);
+  const [page, setPage] = useState<number>(0);
+  const [filters, setFilters] = useState<FilterPayload>();
 
+  const {
+    meta: { total },
+    isLoading,
+  } = useStore((state) => state.events);
   const list = useSelector(listSelector);
+  const hasMore = useMemo(() => list.length < total, [list, total]);
+
+  const loadEvents = useCallback(
+    (page: number) => {
+      if (filters && hasMore && !isLoading) {
+        dispatch(
+          getList({
+            ...filters,
+            ...{
+              ...DEFAULT_PAGINATION,
+              _start: page * DEFAULT_PAGINATION._limit,
+            },
+          }),
+        );
+      }
+    },
+    [filters, hasMore, isLoading],
+  );
 
   useEffect(() => {
-    if (withFilter) {
-      dispatch(getList(filters));
+    if (filters && hasMore) {
+      loadEvents(page);
     }
-  }, [filters, withFilter]);
+  }, [filters, page, hasMore]);
+
+  useEffect(() => {
+    (async () => {
+      if (filters) {
+        await dispatch(clear());
+        setPage(0);
+        await dispatch(getCount(filters));
+      }
+    })();
+  }, [filters]);
 
   useEffect(() => {
     let where;
@@ -63,8 +94,10 @@ const EventList: FC<Props> = ({ filter }) => {
       }
     }
     setFilters({ ...filters, _where: JSON.stringify(where) });
-    setWithFilter(true);
   }, [filter]);
+
+  // TODO: add loader component
+  const Loader = <div key='loader'>Loading ...</div>;
 
   return (
     <Wrapper>
@@ -90,7 +123,16 @@ const EventList: FC<Props> = ({ filter }) => {
             image={normalizeImage(image)}
           />
         ))}
+        {isLoading && Loader}
       </ListContainer>
+      <Button
+        disabled={!hasMore || isLoading}
+        variant='secondary'
+        onClick={() => setPage(page + 1)}
+      >
+        More New Events
+        <Icon graphic='expand' size='xx' />
+      </Button>
     </Wrapper>
   );
 };

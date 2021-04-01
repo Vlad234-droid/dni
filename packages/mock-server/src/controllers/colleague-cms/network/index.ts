@@ -4,7 +4,7 @@ import { buildCRUD } from 'utils';
 
 import { generateNetwork, generateNetworks } from 'generators/colleague-cms';
 
-const COLLECTION_SIZE = 20;
+const COLLECTION_SIZE = 60;
 
 const CRUD = buildCRUD<Network>(
   () => generateNetworks(COLLECTION_SIZE),
