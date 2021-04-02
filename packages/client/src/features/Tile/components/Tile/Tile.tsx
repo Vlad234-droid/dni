@@ -43,48 +43,9 @@ const Tile: FC<Props> = ({
   orientation,
   hideParticipants = false,
 }) => {
-  const memoizedParticipants = useMemo(() => {
-    if (!isNumber(participants) || hideParticipants) return null;
-
-    return (
-      <TileText>
-        <Icon graphic='account' size={'sm'} />
-        {participants} participants
-      </TileText>
-    );
-  }, [participants, hideParticipants]);
-
-  const memoizedTitle = useMemo(
-    () => (
-      <TitleWithEllipsis maxLines={1} titleHeight='30px'>
-        {title}
-      </TitleWithEllipsis>
-    ),
-    [title],
-  );
-
-  const memoizedMeta = useMemo(() => {
-    if (!meta) return null;
-
-    return <TileMeta>{meta}</TileMeta>;
-  }, [meta]);
-
   // TODO move image normalization to action when loading images?
   //@ts-ignore
   const memoizedImage = useMemo(() => normalizeImage(image), [image]);
-
-  // TODO: is it needed?
-  const memoizedDescription = useMemo(() => {
-    if (!description) return null;
-
-    return (
-      <DescriptionContainer descriptionHeight={`${descriptionHeight}px`}>
-        <WindowResize>
-          <Description ellipse>{description}</Description>
-        </WindowResize>
-      </DescriptionContainer>
-    );
-  }, [description, descriptionHeight]);
 
   return (
     <BaseTile
@@ -100,11 +61,26 @@ const Tile: FC<Props> = ({
           objectFit='cover'
         />
       }
-      title={memoizedTitle}
+      title={
+        <TitleWithEllipsis maxLines={1} titleHeight='30px'>
+          {title}
+        </TitleWithEllipsis>
+      }
     >
-      {memoizedDescription}
-      {memoizedMeta}
-      {memoizedParticipants}
+      {description && (
+        <DescriptionContainer descriptionHeight={`${descriptionHeight}px`}>
+          <WindowResize>
+            <Description ellipse>{description}</Description>
+          </WindowResize>
+        </DescriptionContainer>
+      )}
+      {meta && <TileMeta>{meta}</TileMeta>}
+      {isNumber(participants) && !hideParticipants && (
+        <TileText>
+          <Icon graphic='account' size={'sm'} />
+          {participants} participants
+        </TileText>
+      )}
       {renderAction()}
     </BaseTile>
   );

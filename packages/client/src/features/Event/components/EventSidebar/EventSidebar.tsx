@@ -1,4 +1,4 @@
-import React, { FC, useMemo, useCallback, useEffect, useState } from 'react';
+import React, { FC, useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Button from '@beans/button';
@@ -36,20 +36,6 @@ const EventSidebar: FC = () => {
     dispatch(getEvents(filters));
   }, []);
 
-  const memoizedRenderAction = useMemo(
-    () => () => (
-      <Button variant='primary' onClick={() => console.log('test')}>
-        Take part
-      </Button>
-    ),
-    [],
-  );
-
-  const memoizedRenderStatus = useMemo(
-    () => () => <StatusLabel type={StatusType.SUCCESS}>On Air</StatusLabel>,
-    [],
-  );
-
   return (
     <div data-testid='events_sidebar'>
       <Title>Events</Title>
@@ -64,8 +50,14 @@ const EventSidebar: FC = () => {
               title={title}
               image={image}
               participants={maxParticipants}
-              renderAction={memoizedRenderAction}
-              renderStatus={memoizedRenderStatus}
+              renderAction={() => (
+                <Button variant='primary' onClick={() => console.log('test')}>
+                  Take part
+                </Button>
+              )}
+              renderStatus={() => (
+                <StatusLabel type={StatusType.SUCCESS}>On Air</StatusLabel>
+              )}
               // TODO: dont like transformation here - its duplicated everywhere - and is created again and again in lists
               // TODO: transform before save to store
               meta={isoDateToFormat(created_at, FULL_FORMAT)}
@@ -80,7 +72,11 @@ const EventSidebar: FC = () => {
               id={id}
               title={title}
               image={image}
-              renderAction={memoizedRenderAction}
+              renderAction={() => (
+                <Button variant='primary' onClick={() => console.log('test')}>
+                  Take part
+                </Button>
+              )}
               meta={isoDateToFormat(created_at, FULL_FORMAT)}
               link='/events'
             />
