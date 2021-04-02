@@ -25,6 +25,7 @@ export const TileMeta = styled(BodyText)`
   && {
     display: none;
     ${textXX};
+
     ${({ theme }) => css`
       ${Media.tablet`
         display: block;

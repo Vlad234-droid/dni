@@ -9,6 +9,7 @@ export const Title = styled.h5`
 
 export const List = styled.div`
   margin-bottom: 24px;
+
   & > div {
     margin-bottom: 8px;
   }
