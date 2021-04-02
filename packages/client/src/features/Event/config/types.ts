@@ -1,16 +1,19 @@
+import { DateObjectUnits } from 'luxon';
+
 interface FormData {
   image?: File | null;
   title: string;
   network: string;
   maxParticipants: number;
-  startedAt: Date;
-  finishedAt: Date;
+  startedAt: DateObjectUnits;
+  finishedAt: DateObjectUnits;
   description?: string;
   surveyLink?: string;
 }
 
 export default interface Event extends FormData {
   id: number;
+  participants?: number;
 }
 
 type Names = keyof FormData;

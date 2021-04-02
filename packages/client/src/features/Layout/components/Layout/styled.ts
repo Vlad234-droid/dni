@@ -3,6 +3,8 @@ import styled, { css } from 'styled-components';
 
 import Media from 'styles/media';
 
+import { LayoutProps } from '../../config/types';
+
 type Props = HTMLProps<HTMLDivElement>;
 
 export const Wrapper = styled.div<Props>`
@@ -56,9 +58,11 @@ export const LeftContainer = styled.div.attrs({
 
 export const MainContainer = styled.div.attrs({
   'data-testid': 'main-content',
-})`
+})<Partial<LayoutProps>>`
   grid-area: main;
   overflow-y: auto;
+  background-color: ${({ theme, withBackground }) =>
+    withBackground ? theme.colors.background.dark : 'transparent'};
 
   ${({ theme }) => css`
     ${Media.large_tablet`

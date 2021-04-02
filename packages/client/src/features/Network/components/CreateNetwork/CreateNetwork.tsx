@@ -13,8 +13,8 @@ import { FieldWrapper } from 'features/Common/styled';
 import { partners } from '../../config/formFields';
 import schema from '../../config/schema';
 import { FormData, Names } from '../../config/types';
-import Media from '../../../../styles/media';
-import { PartnersEditor } from 'features/Networks';
+import Media from 'styles/media';
+import { PartnersEditor } from 'features/Network';
 import { FileInput, TextArea, TextInput } from '../../../Common';
 
 const AddNetworkForm: FC = () => {

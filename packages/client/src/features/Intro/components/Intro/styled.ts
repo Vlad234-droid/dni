@@ -5,7 +5,7 @@ import Media from 'styles/media';
 import backgroundImage from '../../assets/banner.jpg';
 
 export const Wrapper = styled.div.attrs({
-  'data-testid': 'about',
+  'data-testid': 'intro',
 })`
   background: url(${backgroundImage}) no-repeat center;
   background-size: cover;

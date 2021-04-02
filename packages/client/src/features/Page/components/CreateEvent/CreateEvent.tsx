@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 
 import { Page, PAGE_PREFIX } from 'features/Page';
 import { BackLink } from 'features/Common';
-import { CreateEvent } from 'features/Events';
+import { CreateEvent } from 'features/Event';
 import Heading from 'features/Heading';
 
 import BasePage from '../BasePage';

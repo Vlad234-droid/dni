@@ -33,9 +33,8 @@ const EventCarousel: FC = () => {
           title={title}
           participants={maxParticipants}
           link='/events'
-          renderMeta={() => (
-            <span>{isoDateToFormat(created_at, FULL_FORMAT)}</span>
-          )}
+          // TODO: make transformation when data loaded before saving to store
+          meta={isoDateToFormat(created_at, FULL_FORMAT)}
           renderAction={() => (
             <Button variant='primary' onClick={() => console.log('test')}>
               Take part

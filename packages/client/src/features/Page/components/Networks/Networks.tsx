@@ -10,7 +10,7 @@ import PageWrapper from '../PageWrapper';
 import Heading from 'features/Heading';
 import { useMedia } from 'context/InterfaceContext';
 import ButtonFilter from 'features/ButtonFilter';
-import { NetworkList, NetworkCarousel } from 'features/Networks';
+import { NetworkList, NetworkCarousel } from 'features/Network';
 
 const ALL = 'ALL';
 const YOUR_NETWORKS = 'YOUR_NETWORKS';

@@ -5,7 +5,7 @@ import { BackLink } from 'features/Common';
 import BasePage from '../BasePage';
 import PageHeader from '../PageHeader';
 import PageWrapper from '../PageWrapper';
-import { CreateNetwork } from 'features/Networks';
+import { CreateNetwork } from 'features/Network';
 import Heading from '../../../Heading';
 
 const Networks: FC = () => {

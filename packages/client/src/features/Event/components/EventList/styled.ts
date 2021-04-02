@@ -10,10 +10,4 @@ const Wrapper = styled.div`
   `}
 `;
 
-const ListContainer = styled.div`
-  display: flex;
-  flex-flow: row wrap;
-  margin-top: 16px;
-`;
-
-export { Wrapper, ListContainer };
+export { Wrapper };

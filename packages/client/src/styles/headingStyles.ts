@@ -1,6 +1,12 @@
 import { css } from 'styled-components';
 
 // Describe reusable styles for app headings
+// 14px
+export const headingXX = css`
+  font-size: 14px;
+  line-height: 1.2;
+`;
+
 // 16px
 export const headingXS = css`
   font-size: ${({ theme }) => theme.fontSize.xs};

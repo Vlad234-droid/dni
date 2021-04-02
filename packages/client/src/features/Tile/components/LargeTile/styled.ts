@@ -1,11 +1,12 @@
 import styled from 'styled-components';
 import { BaseElement } from '@beans/foundation';
-import { BodyText } from '@beans/typography';
 
-import { textSM, textXX } from 'styles';
+import { textSM } from 'styles';
 import Media from 'styles/media';
 
 export const Wrapper = styled.div`
+  position: relative;
+
   & .beans-base-tile__panel-container {
     padding: 0;
   }
@@ -50,10 +51,9 @@ export const ActionContainer = styled(BaseElement)`
   }
 `;
 
-export const TileMeta = styled(BodyText)`
-  && {
-    margin-top: 8px;
-    ${textXX};
-    color: ${({ theme }) => theme.colors.grayscale};
-  }
+export const StatusContainer = styled.div`
+  position: absolute;
+  z-index: 10;
+  top: 10px;
+  left: 10px;
 `;

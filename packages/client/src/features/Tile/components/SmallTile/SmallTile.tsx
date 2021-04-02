@@ -1,21 +1,22 @@
 import React, { FC } from 'react';
-import { VERTICAL, HORIZONTAL } from '@beans/constants';
+import { HORIZONTAL } from '@beans/constants';
 
 import Tile from 'features/Tile';
 
-import { Wrapper, ActionContainer, TileMeta } from './styled';
+import { Wrapper, ActionContainer } from './styled';
 
 type Props = {
   id: number;
   title: string;
-  participants: number;
+  participants?: number;
   link: string;
   image: {
     alternativeText: string;
     url: string;
   } | null;
   renderAction: () => JSX.Element;
-  renderMeta?: () => JSX.Element;
+  meta?: string;
+  hideParticipants?: boolean;
 };
 
 const SmallTile: FC<Props> = ({
@@ -24,18 +25,20 @@ const SmallTile: FC<Props> = ({
   image,
   renderAction,
   link,
-  renderMeta,
+  meta,
+  hideParticipants,
 }) => (
   <Wrapper>
     <Tile
       link={link}
       renderAction={() => <ActionContainer>{renderAction()}</ActionContainer>}
-      renderMeta={() => renderMeta && <TileMeta>{renderMeta()}</TileMeta>}
+      meta={meta}
       title={title}
       participants={participants}
+      hideParticipants={hideParticipants}
       image={image}
       orientation={{
-        aboveTablet: VERTICAL,
+        aboveTablet: HORIZONTAL,
         belowTablet: HORIZONTAL,
       }}
     />

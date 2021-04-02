@@ -4,21 +4,23 @@ import { useSelector } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroller';
 
 import Heading, { Size, Color } from 'features/Heading';
-import { SmallTile } from 'features/Tile';
-import { Wrapper, ListContainer } from './styled';
 import useDispatch from 'hooks/useDispatch';
 import useStore from 'hooks/useStore';
-import { normalizeImage } from 'utils/content';
 import { FilterPayload, DEFAULT_PAGINATION } from 'utils/storeHelper';
+import { useScrollContainer } from 'context/ScrollContainerContext';
+import List from 'features/List';
+import { useMedia } from 'context/InterfaceContext';
+
 import { Filter } from '../../config/types';
 import { getList, getCount, listSelector, clear } from '../../store';
-import { useScrollContainer } from 'context/ScrollContainerContext';
+import { Wrapper, ListContainer } from './styled';
 
 type Props = {
   filter?: Filter;
 };
 
 const NetworkList: FC<Props> = ({ filter }) => {
+  const { isMobile } = useMedia();
   const dispatch = useDispatch();
   const [filters, setFilters] = useState<FilterPayload>();
 
@@ -28,8 +30,8 @@ const NetworkList: FC<Props> = ({ filter }) => {
     meta: { total },
     isLoading,
   } = useStore((state) => state.networks);
-  const list = useSelector(listSelector);
-  const hasMore = useMemo(() => list.length < total, [list, total]);
+  const networks = useSelector(listSelector);
+  const hasMore = useMemo(() => networks.length < total, [networks, total]);
 
   const loadNetworks = useCallback(
     (page: number) => {
@@ -95,21 +97,18 @@ const NetworkList: FC<Props> = ({ filter }) => {
           getScrollParent={() => scrollContainer!.current}
           useWindow={false}
         >
-          {list.map(({ id, title, image }) => (
-            <SmallTile
-              link='/networks'
-              renderAction={() => (
-                <Button variant='primary' onClick={() => console.log('test')}>
-                  Join
-                </Button>
-              )}
-              id={id}
-              key={id}
-              title={title}
-              participants={300}
-              image={normalizeImage(image)}
-            />
-          ))}
+          <List
+            link='/networks'
+            // TODO: object is not correct type
+            //@ts-ignore
+            items={networks}
+            isMobile={isMobile}
+            renderAction={() => (
+              <Button variant='primary' onClick={() => console.log('test')}>
+                Join
+              </Button>
+            )}
+          />
         </InfiniteScroll>
       </ListContainer>
     </Wrapper>

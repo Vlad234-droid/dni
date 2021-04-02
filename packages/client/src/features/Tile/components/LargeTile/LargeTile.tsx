@@ -3,7 +3,7 @@ import { VERTICAL } from '@beans/constants';
 
 import Tile from 'features/Tile';
 
-import { Wrapper, ActionContainer, TileMeta } from './styled';
+import { Wrapper, ActionContainer, StatusContainer } from './styled';
 
 type Props = {
   id: number;
@@ -15,7 +15,9 @@ type Props = {
     url: string;
   } | null;
   renderAction: () => JSX.Element;
-  renderMeta?: () => JSX.Element;
+  meta?: string;
+  renderStatus?: () => JSX.Element;
+  isOnAir?: boolean;
 };
 
 const LargeTile: FC<Props> = ({
@@ -23,14 +25,19 @@ const LargeTile: FC<Props> = ({
   participants,
   image,
   renderAction,
+  renderStatus,
   link,
-  renderMeta,
+  meta,
+  isOnAir,
 }) => (
   <Wrapper>
+    {isOnAir && renderStatus && (
+      <StatusContainer>{renderStatus()}</StatusContainer>
+    )}
     <Tile
       link={link}
       renderAction={() => <ActionContainer>{renderAction()}</ActionContainer>}
-      renderMeta={() => renderMeta && <TileMeta>{renderMeta()}</TileMeta>}
+      meta={meta}
       title={title}
       participants={participants}
       image={image}

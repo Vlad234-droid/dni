@@ -12,7 +12,6 @@ import PostForm from '../PostForm';
 import PostList from '../PostList';
 
 const PostWrapper = styled.div`
-  padding: 8px;
   font-family: ${({ theme }) => theme.fontFamily.text};
 `;
 

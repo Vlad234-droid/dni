@@ -1,8 +1,8 @@
 import { combineReducers } from '@reduxjs/toolkit';
 
 import { authReducer } from 'features/Auth';
-import { networksReducer } from 'features/Networks';
-import { eventsReducer } from 'features/Events';
+import { networksReducer } from 'features/Network';
+import { eventsReducer } from 'features/Event';
 import { postReducer } from 'features/Post';
 import { toasterReducer } from 'features/Toaster';
 

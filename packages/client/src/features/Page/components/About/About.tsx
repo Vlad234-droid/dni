@@ -17,6 +17,7 @@ const PageAbout: FC = () => {
   return (
     <div data-testid={`${PAGE_PREFIX}${Page.ABOUT}`}>
       <BasePage
+        withBackground={false}
         renderMain={() => (
           <>
             <Intro />

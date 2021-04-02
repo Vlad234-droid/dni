@@ -7,7 +7,7 @@ import PageWrapper from '../PageWrapper';
 import Heading from 'features/Heading';
 import { useMedia } from 'context/InterfaceContext';
 import ButtonFilter from 'features/ButtonFilter';
-import { EventCarousel, EventList, EventTable } from 'features/Events';
+import { EventCarousel, EventList, EventTable } from 'features/Event';
 
 const ON_AIR = 'ON_AIR';
 const THIS_MONTH = 'THIS_MONTH';

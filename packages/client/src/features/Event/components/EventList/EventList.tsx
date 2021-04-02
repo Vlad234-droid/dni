@@ -4,29 +4,23 @@ import { useSelector } from 'react-redux';
 import Icon from '@beans/icon';
 
 import Heading, { Size, Color } from 'features/Heading';
-import { SmallTile } from 'features/Tile';
-
-import { Wrapper, ListContainer } from './styled';
-
+import { useMedia } from 'context/InterfaceContext';
 import useStore from 'hooks/useStore';
 import useDispatch from 'hooks/useDispatch';
-import { normalizeImage } from 'utils/content';
-import {
-  isoDateToFormat,
-  firstDayOf,
-  lastDayOf,
-  FULL_FORMAT,
-} from 'utils/date';
+import { firstDayOf, lastDayOf } from 'utils/date';
 import { FilterPayload, DEFAULT_PAGINATION } from 'utils/storeHelper';
+import List from 'features/List';
 
 import { getList, listSelector, clear, getCount } from '../../store';
 import { Filter } from '../../config/types';
+import { Wrapper } from './styled';
 
 type Props = {
   filter?: Filter;
 };
 
 const EventList: FC<Props> = ({ filter }) => {
+  const { isMobile } = useMedia();
   const dispatch = useDispatch();
 
   const [page, setPage] = useState<number>(0);
@@ -36,8 +30,8 @@ const EventList: FC<Props> = ({ filter }) => {
     meta: { total },
     isLoading,
   } = useStore((state) => state.events);
-  const list = useSelector(listSelector);
-  const hasMore = useMemo(() => list.length < total, [list, total]);
+  const events = useSelector(listSelector);
+  const hasMore = useMemo(() => events.length < total, [events, total]);
 
   const loadEvents = useCallback(
     (page: number) => {
@@ -96,35 +90,24 @@ const EventList: FC<Props> = ({ filter }) => {
     setFilters({ ...filters, _where: JSON.stringify(where) });
   }, [filter]);
 
-  // TODO: add loader component
-  const Loader = <div key='loader'>Loading ...</div>;
-
   return (
     <Wrapper>
       <Heading size={Size.md} color={Color.black}>
         New Events
       </Heading>
-      <ListContainer>
-        {list.map(({ id, title, maxParticipants, image, created_at }) => (
-          <SmallTile
-            link='/events'
-            key={`events-${id}`}
-            id={id}
-            title={title}
-            participants={maxParticipants}
-            renderAction={() => (
-              <Button variant='primary' onClick={() => console.log('test')}>
-                Take part
-              </Button>
-            )}
-            renderMeta={() => (
-              <span>{isoDateToFormat(created_at, FULL_FORMAT)}</span>
-            )}
-            image={normalizeImage(image)}
-          />
-        ))}
-        {isLoading && Loader}
-      </ListContainer>
+      <List
+        link='/events'
+        // TODO: event is not correct type Event
+        //@ts-ignore
+        items={events}
+        hideParticipants={true}
+        isMobile={isMobile}
+        renderAction={() => (
+          <Button variant='primary' onClick={() => console.log('test')}>
+            Take part
+          </Button>
+        )}
+      />
       <Button
         disabled={!hasMore || isLoading}
         variant='secondary'

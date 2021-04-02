@@ -1,8 +1,9 @@
 import { BaseElement } from '@beans/foundation';
 import { BodyText } from '@beans/typography';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 import { textXX } from 'styles';
+import Media from 'styles/media';
 
 export const TileText = styled(BodyText)`
   && {
@@ -18,4 +19,18 @@ export const DescriptionContainer = styled(BaseElement)`
     descriptionHeight};
   margin-top: 4px;
   overflow: hidden;
+`;
+
+export const TileMeta = styled(BodyText)`
+  && {
+    display: none;
+    ${textXX};
+    ${({ theme }) => css`
+      ${Media.tablet`
+        display: block;
+        color: ${theme.colors.grayscale};
+        margin-top: 8px;
+      `}
+    `}
+  }
 `;
