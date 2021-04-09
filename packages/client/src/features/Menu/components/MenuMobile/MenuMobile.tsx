@@ -25,9 +25,13 @@ const MenuMobile: FC = () => {
     setOpened(!isOpened);
   };
 
+  const handleMoreMenuItemClick = () => {
+    setOpened(false);
+  };
+
   return (
     <Navigation data-testid={MOBILE_MENU_TEST_ID}>
-      {isOpened && <MoreMenuMobile />}
+      {isOpened && <MoreMenuMobile onItemClick={handleMoreMenuItemClick} />}
       <ItemsList amount={itemsVisible.length}>
         {Object.entries(menuItemsMobile.visible).map(([page, name]) => (
           <MenuItem key={name} name={name} page={page}>
