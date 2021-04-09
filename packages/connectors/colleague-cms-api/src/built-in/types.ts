@@ -12,6 +12,13 @@ type File = {
   width: number;
 };
 
+enum Status {
+  ARCHIVED = 'archived',
+  PUBLISHED = 'published',
+}
+
 type DateString = string;
 
 export type { DateString, File };
+
+export { Status };

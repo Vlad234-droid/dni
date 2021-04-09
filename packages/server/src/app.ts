@@ -3,7 +3,7 @@ import http from 'http';
 import multer from 'multer';
 import cors from 'cors';
 
-import { envAccessor, ConfigAccessor } from './services';
+import { envAccessor, ConfigAccessor, establishConnection } from './services';
 import { healthCheck, api } from './routes';
 import {
   clientStaticFolder,
@@ -15,9 +15,14 @@ import {
   formData,
 } from './middlewares';
 import { buildContext } from './context';
+import { buildIO } from './config/notification';
+import { sequelize } from './config/db';
 
 // validate if all required process env variables exist
 envAccessor.validate();
+
+// for dev purpose. TODO: remove after cli integration
+sequelize.sync();
 
 const config = ConfigAccessor.getInstance(envAccessor.getData()).getData();
 
@@ -28,6 +33,9 @@ const server = http.createServer(app);
 const PORT = config.port;
 
 const context = buildContext(config);
+
+// ws connection
+establishConnection(buildIO(server));
 
 const { openId, openIdCookieParser } = openIdConfig(config);
 
@@ -42,6 +50,7 @@ openId
     app.use(express.urlencoded({ extended: true }));
     app.use('/api/upload', upload.any(), formData);
     app.use(apiMiddleware(context, api));
+    app.use('/api', api);
     app.use('/api/*', (_, res) => res.sendStatus(404));
     app.use(clientStaticFolder);
     app.use(publicStaticFolder);

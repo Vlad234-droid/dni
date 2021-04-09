@@ -4,12 +4,14 @@ import {
   getNetworksByColleagueId,
   addNetworkToColleague,
   deleteNetworkFromColleague,
-} from '../controllers/colleague.controller';
+} from '../controllers/colleague';
 import {
   getNetworksByPartnerId,
   addNetworkToPartner,
   deleteNetworkFromPartner,
-} from '../controllers/partner.controller';
+} from '../controllers/partner';
+import { handleHook } from '../controllers/notification';
+import { cmsAuth } from '../middlewares/cms-auth';
 
 // controllers
 const healthCheck = express.Router();
@@ -24,5 +26,7 @@ api.delete('/colleague-networks', deleteNetworkFromColleague);
 api.get('/partner-networks/:partnerId', getNetworksByPartnerId);
 api.post('/partner-networks', addNetworkToPartner);
 api.delete('/partner-networks', deleteNetworkFromPartner);
+
+api.post('/notifications', cmsAuth, handleHook);
 
 export { healthCheck, api };

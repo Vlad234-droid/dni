@@ -1,16 +1,13 @@
 import React, { FC, useState } from 'react';
-import Button from '@beans/button';
-import Icon from '@beans/icon';
-import { Link } from 'react-router-dom';
 
 import { Page, PAGE_PREFIX } from 'features/Page';
 import BasePage from '../BasePage';
 import PageHeader from '../PageHeader';
 import PageWrapper from '../PageWrapper';
 import Heading from 'features/Heading';
-import { useMedia } from 'context/InterfaceContext';
 import ButtonFilter from 'features/ButtonFilter';
 import { NetworkList, NetworkCarousel } from 'features/Network';
+import { useNotification } from 'context/NotificationContext';
 
 const ALL = 'ALL';
 const YOUR_NETWORKS = 'YOUR_NETWORKS';
@@ -40,7 +37,7 @@ const TEST_ID = 'container-networks';
 
 const Networks: FC = () => {
   const [filter, setFilter] = useState<Filter>(ALL);
-  const { isMobile } = useMedia();
+  const { notifications, removeNotificationBy } = useNotification();
 
   return (
     <BasePage
@@ -57,6 +54,23 @@ const Networks: FC = () => {
             )}
           />
           <PageWrapper>
+            <>
+              <p>Notifications</p>
+              {notifications &&
+                notifications.map(({ id, entity }) => (
+                  <div
+                    key={id}
+                    style={{
+                      display: 'flex',
+                      width: '100%',
+                      justifyContent: 'space-around',
+                    }}
+                  >
+                    {entity!.title}
+                    <div onClick={() => removeNotificationBy([id])}>X</div>
+                  </div>
+                ))}
+            </>
             <NetworkCarousel />
             <NetworkList filter={filter} />
           </PageWrapper>

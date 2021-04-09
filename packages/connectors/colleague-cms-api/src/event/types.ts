@@ -1,9 +1,7 @@
-import { DateString, File } from '../built-in';
+import { DateString, File, Status } from '../built-in';
 import { Network } from '../network';
 import { User } from '../user';
 import { BaseApiParams, BaseType } from '../types';
-
-type Status = 'accepted' | 'declined';
 
 type Event = {
   title: string;
@@ -16,12 +14,15 @@ type Event = {
   slug: string;
   createdBy: User;
   image: File | null;
+  status: Status;
 } & BaseType;
+
+type UserStatus = 'accepted' | 'declined';
 
 type EventUser = {
   event: Event;
   user: User;
-  status: Status;
+  status: UserStatus;
 } & BaseType;
 
 type EventApiParams = {

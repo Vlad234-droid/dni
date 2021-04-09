@@ -1,10 +1,9 @@
-import { File } from '../built-in';
+import { File, Status } from '../built-in';
 import { User } from '../user';
 import { Organization } from '../organization';
 import { Question } from '../question';
 import { BaseApiParams, BaseType } from '../types';
 
-type Status = 'archived' | 'published';
 type NetworkUserStatus = 'joined' | 'left';
 
 type Network = {
