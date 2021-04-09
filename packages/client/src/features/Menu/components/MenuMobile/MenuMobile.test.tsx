@@ -19,7 +19,9 @@ describe('<MenuMobile />', () => {
       renderWithRouter(<MenuMobile />);
 
       Object.values(menuItemsMobile.visible).forEach((name) => {
-        const result = screen.getByTestId(`${MENU_TEST_ID_PREFIX}${name}`);
+        const result = screen.getByTestId(
+          `${MENU_TEST_ID_PREFIX}${name && name.toLowerCase()}`,
+        );
 
         expect(result).toBeInTheDocument();
       });
@@ -34,7 +36,9 @@ describe('<MenuMobile />', () => {
       userEvent.click(buttonMore);
 
       Object.values(menuItemsMobile.hidden).forEach((name) => {
-        const result = screen.getByTestId(`${MENU_TEST_ID_PREFIX}${name}`);
+        const result = screen.getByTestId(
+          `${MENU_TEST_ID_PREFIX}${name && name.toLowerCase()}`,
+        );
 
         expect(result).toBeInTheDocument();
       });
@@ -48,10 +52,43 @@ describe('<MenuMobile />', () => {
       userEvent.click(buttonMore);
 
       Object.values(menuItemsMobile.hidden).forEach((name) => {
-        const result = screen.queryByTestId(`${MENU_TEST_ID_PREFIX}${name}`);
+        const result = screen.queryByTestId(
+          `${MENU_TEST_ID_PREFIX}${name && name.toLowerCase()}`,
+        );
 
         expect(result).not.toBeInTheDocument();
       });
+    });
+  });
+
+  describe('#handleMenuItemClick', () => {
+    it('should close more menu popup on menu item click', () => {
+      renderWithRouter(<MenuMobile />);
+      const menuItem = screen.getByTestId('menu-item-networks');
+      const buttonMore = screen.getByTestId('menu-more-button');
+
+      userEvent.click(buttonMore);
+
+      expect(screen.queryByTestId('more-menu-mobile')).toBeInTheDocument();
+
+      userEvent.click(menuItem);
+
+      expect(screen.queryByTestId('more-menu-mobile')).not.toBeInTheDocument();
+    });
+
+    it('should close more menu popup on more menu item click', () => {
+      renderWithRouter(<MenuMobile />);
+      const buttonMore = screen.getByTestId('menu-more-button');
+
+      userEvent.click(buttonMore);
+
+      expect(screen.queryByTestId('more-menu-mobile')).toBeInTheDocument();
+
+      const menuItem = screen.getByTestId('menu-item-reports');
+
+      userEvent.click(menuItem);
+
+      expect(screen.queryByTestId('more-menu-mobile')).not.toBeInTheDocument();
     });
   });
 });

@@ -25,16 +25,22 @@ const MenuMobile: FC = () => {
     setOpened(!isOpened);
   };
 
-  const handleMoreMenuItemClick = () => {
+  const handleMenuItemClick = () => {
     setOpened(false);
   };
 
   return (
     <Navigation data-testid={MOBILE_MENU_TEST_ID}>
-      {isOpened && <MoreMenuMobile onItemClick={handleMoreMenuItemClick} />}
+      {isOpened && <MoreMenuMobile onItemClick={handleMenuItemClick} />}
       <ItemsList amount={itemsVisible.length}>
         {Object.entries(menuItemsMobile.visible).map(([page, name]) => (
-          <MenuItem key={name} name={name} page={page}>
+          <MenuItem
+            key={name}
+            name={name}
+            page={page}
+            removeActive={isOpened}
+            onClick={handleMenuItemClick}
+          >
             <Item>
               <IconWrapper>
                 <IconDefault
