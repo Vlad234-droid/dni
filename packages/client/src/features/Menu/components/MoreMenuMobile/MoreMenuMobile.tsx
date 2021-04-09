@@ -5,11 +5,15 @@ import { menuItemsMobile } from '../../config/items';
 import MenuItem from '../MenuItem';
 import { Wrapper, ItemsList, Links } from './styled';
 
-const MoreMenuMobile: FC = () => (
+type Props = {
+  onItemClick?: () => void;
+};
+
+const MoreMenuMobile: FC<Props> = ({ onItemClick }) => (
   <Wrapper data-testid='more-menu-mobile'>
     <ItemsList>
       {Object.entries(menuItemsMobile.hidden).map(([page, name]) => (
-        <MenuItem key={name} name={name} page={page}>
+        <MenuItem key={name} name={name} page={page} onClick={onItemClick}>
           {name}
         </MenuItem>
       ))}
