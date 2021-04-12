@@ -5,7 +5,7 @@ import { generateArray, dateToIso } from 'utils';
 import { generateBase } from '../base';
 import { generateNetwork } from '../network';
 import { colleague } from '../../colleague';
-import { generateFile } from '../built-in';
+import { generateFile, Status } from '../built-in';
 
 const user = colleague as User;
 
@@ -21,6 +21,7 @@ const generateEvent = () => {
     surveyLink: faker.internet.url(),
     slug: faker.random.words(2).replace(' ', '-').toLowerCase(),
     image: generateFile(),
+    status: faker.random.arrayElement(Status),
     createdBy: user,
   };
 

@@ -2,12 +2,10 @@ import faker from 'faker';
 import { Network, User } from '@dni-connectors/colleague-cms-api';
 
 import { generateArray } from 'utils';
-import { generateFile } from '../built-in';
+import { generateFile, Status } from '../built-in';
 import { generateOrganizations } from '../organization';
 import { colleague } from '../../colleague';
 import { generateBase } from '../base';
-
-const Status = ['archived', 'published'] as const;
 
 const user = colleague as User;
 
@@ -21,7 +19,7 @@ const generateNetwork = () => {
     image: generateFile(),
     managerEmail: faker.internet.email(),
     managers: [user],
-    partnerships: generateOrganizations(2),
+    partnerships: generateOrganizations(6),
     status: faker.random.arrayElement(Status),
     isPublished: true,
     children: [],

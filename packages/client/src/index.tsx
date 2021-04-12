@@ -6,6 +6,7 @@ import { ThemeProvider, defaultTheme } from '@beans/theme';
 import merge from 'lodash.merge';
 
 import { InterfaceProvider } from 'context/InterfaceContext';
+import { NotificationProvider } from 'context/NotificationContext';
 import store from 'store';
 import theme from 'theme';
 import GlobalStyle from 'styles';
@@ -27,12 +28,14 @@ ReactDOM.render(
     <Provider store={store}>
       <Auth>
         <InterfaceProvider>
-          <Router history={history}>
-            <React.StrictMode>
-              <GlobalStyle />
-              <Routes />
-            </React.StrictMode>
-          </Router>
+          <NotificationProvider>
+            <Router history={history}>
+              <React.StrictMode>
+                <GlobalStyle />
+                <Routes />
+              </React.StrictMode>
+            </Router>
+          </NotificationProvider>
         </InterfaceProvider>
       </Auth>
     </Provider>

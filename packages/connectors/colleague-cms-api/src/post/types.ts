@@ -1,17 +1,15 @@
-import { File } from '../built-in';
+import { File, Status } from '../built-in';
 import { Emotion } from '../emotion';
 import { Network } from '../network';
 import { Event } from '../event';
 import { User } from '../user';
 import { BaseApiParams, BaseType } from '../types';
 
-type Status = 'archived' | 'published';
-
 type Post = {
   title: string;
   attachments?: File[];
   description: string;
-  postAs: Poster;
+  postAs: Poster[];
   sharedToken: string;
   slug: string;
   status: Status;
@@ -21,18 +19,24 @@ type Post = {
 
 type Poster = PostAsUser | PostAsNetwork | PostAsEvent | null;
 
+enum Component {
+  EVENT = 'poster.event',
+  USER = 'poster.user',
+  NETWORK = 'poster.network',
+}
+
 type PostAsUser = {
-  __component: 'post-as.user';
+  __component: Component.USER;
   user: User;
 };
 
 type PostAsNetwork = {
-  __component: 'post-as.network';
+  __component: Component.NETWORK;
   network: Network;
 };
 
 type PostAsEvent = {
-  __component: 'post-as.event';
+  __component: Component.EVENT;
   event: Event;
 };
 
@@ -51,3 +55,5 @@ export type {
   PostApiParams,
   PostBody,
 };
+
+export { Component };

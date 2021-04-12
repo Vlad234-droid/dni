@@ -1,6 +1,6 @@
 import { ConfigAccessor, ProcessConfig } from './config-accessor';
 import { ProcessEnv } from './env-accessor';
-import { defaultConfig } from '../config';
+import { defaultConfig } from '../config/default';
 
 describe('Config accessor', () => {
   const processEnv = {

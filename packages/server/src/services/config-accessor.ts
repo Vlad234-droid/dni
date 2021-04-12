@@ -1,5 +1,5 @@
 import { ProcessEnv } from './env-accessor';
-import { defaultConfig } from '../config';
+import { defaultConfig } from '../config/default';
 
 type ProcessConfig = {
   // general

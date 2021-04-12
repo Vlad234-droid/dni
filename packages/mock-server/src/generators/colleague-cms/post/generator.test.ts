@@ -14,7 +14,7 @@ describe('Post generator', () => {
         title: { type: 'string' },
         attachments: { type: 'array' },
         description: { type: 'string' },
-        postAs: { type: 'object' },
+        postAs: { type: 'array' },
         sharedToken: { type: 'string' },
         slug: { type: 'string' },
         status: { type: 'string' },

@@ -9,6 +9,7 @@ const server = http.createServer(app);
 const PORT = config.port;
 
 app.disable('x-powered-by');
+app.use(express.static('assets'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/', healthCheck);
