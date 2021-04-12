@@ -15,7 +15,7 @@ class ColleagueNetwork
     ColleagueNetwork.init(
       {
         colleagueUuid: {
-          type: DataTypes.INTEGER,
+          type: DataTypes.UUID,
           allowNull: false,
         },
         networkId: {

@@ -19,7 +19,7 @@ const generateNetwork = () => {
     image: generateFile(),
     managerEmail: faker.internet.email(),
     managers: [user],
-    partnerships: generateOrganizations(2),
+    partnerships: generateOrganizations(6),
     status: faker.random.arrayElement(Status),
     isPublished: true,
     children: [],
