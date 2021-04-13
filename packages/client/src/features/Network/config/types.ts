@@ -1,3 +1,5 @@
+import { PostType } from 'features/Post';
+
 interface FormData {
   image?: File;
   title: string;
@@ -9,6 +11,7 @@ interface FormData {
 
 export default interface Network extends FormData {
   id: number;
+  posts: Array<PostType>;
 }
 
 type Names = keyof FormData;

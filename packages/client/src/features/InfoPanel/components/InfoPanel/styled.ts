@@ -1,44 +1,40 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
-import { headingXS, headingSM } from 'styles';
+import { headingSM } from 'styles';
 import Media from 'styles/media';
+
+import { Type } from '../../config/types';
 
 export const Wrapper = styled.div.attrs({
   'data-testid': 'info-panel',
-})`
+})<{ type: Type }>`
+  position: relative;
   display: flex;
   align-items: start;
-  padding: 16px 16px 32px;
-  background: ${({ theme }) => theme.colors.background.warning};
-  margin-top: 162px;
+  padding: 24px 16px 32px;
+  background: ${({ theme, type }) => theme.colors.background[type]};
 
   ${Media.tablet`
     padding: 48px 65.5px 54px;
-    margin-top: 0;
     align-items: center;
   `}
 `;
 
-export const IconWrapper = styled.div`
-  svg {
+export const Content = styled.div<{ type: Type }>`
+  margin-left: ${({ type }) => (type === Type.INFO ? '0' : '12px')};
+  width: 100%;
+  text-align: ${({ type }) => (type === Type.INFO ? 'center' : 'left')};
+
+  ${({ type }) => css`
     ${Media.tablet`
-      width: 120px;
-      height: 120px;
-  `}
-  }
-`;
-
-export const Content = styled.div`
-  margin-left: 12px;
-
-  ${Media.tablet`
-    margin-left: 65.5px;
+        margin-left: ${type === Type.INFO ? '0' : '65.5px'};
+    `}
   `}
 `;
 
 export const Title = styled.h2`
   color: ${({ theme }) => theme.colors.tescoBlue};
-  margin-bottom: 8px;
+  margin-bottom: 16px;
   ${headingSM}
 
   ${Media.tablet`
@@ -48,33 +44,18 @@ export const Title = styled.h2`
   `}
 `;
 
-export const Description = styled.p`
-  color: ${({ theme }) => theme.colors.tescoBlue};
-  margin-bottom: 16px;
-  ${headingXS};
+export const CloseIcon = styled.span`
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 40px;
+  height: 40px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 
   ${Media.tablet`
-    font-size: 20px;
-    line-height: 28px;
-    margin-bottom: 24px;
+     right: 16px;
+     top: 16px;
   `}
-
-  p {
-    margin-bottom: 8px;
-  }
-`;
-
-export const FootnoteWrapper = styled.div`
-  margin-bottom: 32px;
-
-  & > p {
-    ${Media.small_desktop`
-      display: flex;
-    `}
-    p {
-      ${Media.small_desktop`
-        margin-right: 4px;
-      `}
-    }
-  }
 `;

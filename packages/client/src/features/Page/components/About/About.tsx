@@ -1,15 +1,18 @@
 import React, { FC } from 'react';
+import Icon from '@beans/icon';
+import Link from '@beans/link';
 
 import MainCarousel, { CarouselContent } from 'features/MainCarousel';
 import { useMedia } from 'context/InterfaceContext';
 import { Page, PAGE_PREFIX } from 'features/Page';
 import Intro from 'features/Intro';
-import { InfoPanel } from 'features/InfoPanel';
+import InfoPanel, { InfoPanelType } from 'features/InfoPanel';
 import NetworksPreview from 'features/NetworksPreview';
 
 import BasePage from '../BasePage';
 import { InfoPanelReducer, Reducer, Footer } from './styled';
 import networks from './networks';
+import survey from './survey';
 
 const PageAbout: FC = () => {
   const { isMobile, isDesktop } = useMedia();
@@ -23,7 +26,14 @@ const PageAbout: FC = () => {
             <Intro />
             <Reducer>
               <InfoPanelReducer>
-                <InfoPanel />
+                <InfoPanel
+                  type={InfoPanelType.WARNING}
+                  title={survey.title}
+                  content={survey.description}
+                  footnote={survey.footnote}
+                  infoLink='/'
+                  customIcon='lists'
+                />
               </InfoPanelReducer>
               <NetworksPreview />
             </Reducer>

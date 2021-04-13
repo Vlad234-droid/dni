@@ -27,9 +27,11 @@ const SmallTile: FC<Props> = ({
   link,
   meta,
   hideParticipants,
+  id,
 }) => (
   <Wrapper>
     <Tile
+      id={id}
       link={link}
       renderAction={() => <ActionContainer>{renderAction()}</ActionContainer>}
       meta={meta}

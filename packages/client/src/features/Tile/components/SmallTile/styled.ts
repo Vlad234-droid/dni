@@ -20,7 +20,7 @@ export const Wrapper = styled.div`
 
   & .beans-base-tile__content-container {
     position: relative;
-    bottom: 12px;
+    bottom: 8px;
   }
 
   & .beans-title-link__container {
@@ -33,7 +33,7 @@ export const Wrapper = styled.div`
   }
 
   & .beans-responsive-image__image {
-    height: 106px;
+    height: 100%;
     width: unset;
   }
 

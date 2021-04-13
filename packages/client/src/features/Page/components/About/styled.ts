@@ -4,7 +4,7 @@ import { textXX } from 'styles';
 import Media from 'styles/media';
 
 const InfoPanelReducer = styled.div`
-  margin: 54px 0;
+  margin: 162px 0 54px;
 
   ${Media.tablet`
     margin: 60px 0;

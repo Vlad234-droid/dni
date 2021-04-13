@@ -1,9 +1,9 @@
 import React, { FC } from 'react';
-import Link from '@beans/link';
 
 import { menuItemsMobile } from '../../config/items';
 import MenuItem from '../MenuItem';
-import { Wrapper, ItemsList, Links } from './styled';
+import Links from '../Links';
+import { Wrapper, ItemsList, LinksWrapper } from './styled';
 
 type Props = {
   onItemClick?: () => void;
@@ -18,10 +18,9 @@ const MoreMenuMobile: FC<Props> = ({ onItemClick }) => (
         </MenuItem>
       ))}
     </ItemsList>
-    <Links>
-      <Link href='#'>Colleague Help</Link>
-      <Link href='#'>Terms & Conditions</Link>
-    </Links>
+    <LinksWrapper>
+      <Links />
+    </LinksWrapper>
   </Wrapper>
 );
 

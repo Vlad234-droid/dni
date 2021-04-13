@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import Media from 'styles/media';
 
 export const Wrapper = styled.div`
   overflow: hidden;
@@ -17,7 +18,13 @@ export const ItemsList = styled.div`
   margin-bottom: 24px;
 
   & a {
-    padding: 14px 12px;
+    padding: 20px 12px;
+    font-size: 16px;
+
+    ${Media.small_desktop`
+      padding: 14px 12px;
+      font-size: 14px;
+  `}
 
     &:not(:last-child) {
       border-bottom: 1px solid ${({ theme }) => theme.colors.lines.base};
@@ -25,12 +32,6 @@ export const ItemsList = styled.div`
   }
 `;
 
-export const Links = styled.div`
+export const LinksWrapper = styled.div`
   padding-left: 16px;
-  display: flex;
-  flex-direction: column;
-
-  & a {
-    margin-bottom: 8px;
-  }
 `;

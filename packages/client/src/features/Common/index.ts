@@ -11,3 +11,4 @@ export { default as Multiselect } from './components/Multiselect';
 export { default as BackLink } from './components/BackLink';
 export { default as ButtonGroup } from './components/ButtonGroup';
 export { default as StatusLabel, StatusType } from './components/StatusLabel';
+export { default as IconWrapper } from './components/IconWrapper';

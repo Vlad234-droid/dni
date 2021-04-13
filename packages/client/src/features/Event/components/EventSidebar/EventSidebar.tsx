@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import Button from '@beans/button';
 import slice from 'lodash.slice';
+import isEmpty from 'lodash.isempty';
 
 import { StatusLabel, StatusType } from 'features/Common';
 import { LargeTile, SmallTile } from 'features/Tile';
@@ -14,7 +15,7 @@ import {
   getList as getEvents,
   listSelector as eventsSelector,
 } from '../../store';
-import { Title, List } from './styled';
+import { Wrapper, Title, List } from './styled';
 
 const MAX_VISIBLE_ITEMS = 3;
 
@@ -27,17 +28,17 @@ const EventSidebar: FC = () => {
   // how often make requests?
   // this component depends on time passing, how often should it be updated?
   useEffect(() => {
-    // TODO: before load check whether events by current filters were not loaded
-    loadEvents(filters);
-  }, [filters]);
+    if (!isEmpty(events)) return;
 
-  // TODO: handle case when got an error during loading
+    loadEvents(filters);
+  }, [filters, events]);
+
   const loadEvents = useCallback((filters) => {
     dispatch(getEvents(filters));
   }, []);
 
   return (
-    <div data-testid='events_sidebar'>
+    <Wrapper data-testid='events-sidebar'>
       <Title>Events</Title>
       <List>
         {slice(events, 0, MAX_VISIBLE_ITEMS).map((event, index) => {
@@ -86,7 +87,7 @@ const EventSidebar: FC = () => {
       <Link to={'/events'}>
         <Button variant='secondary'>All events</Button>
       </Link>
-    </div>
+    </Wrapper>
   );
 };
 

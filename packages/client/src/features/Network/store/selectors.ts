@@ -8,14 +8,14 @@ import { EntityAdapter, Network } from './types';
 const networksSelectors = EntityAdapter.getSelectors(
   (state: RootState) => state.networks,
 );
+const [selectAll, selectById] = getEntitySelectors(networksSelectors);
 
-const [entitySelectors, entitySelector] = getEntitySelectors(networksSelectors);
+const byIdSelector = (id: Network['id']) =>
+  createSelector(
+    (state: RootState) => selectById(state, id),
+    (network) => network,
+  );
 
-const byIdSelector = createSelector(
-  (state: RootState, id: Network['id']) => entitySelector(state, id),
-  (network) => network,
-);
-
-const listSelector = createSelector(entitySelectors, (networks) => networks);
+const listSelector = createSelector(selectAll, (networks) => networks);
 
 export { byIdSelector, listSelector };

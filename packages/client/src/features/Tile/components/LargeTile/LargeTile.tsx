@@ -29,12 +29,14 @@ const LargeTile: FC<Props> = ({
   link,
   meta,
   isOnAir,
+  id,
 }) => (
   <Wrapper>
     {isOnAir && renderStatus && (
       <StatusContainer>{renderStatus()}</StatusContainer>
     )}
     <Tile
+      id={id}
       link={link}
       renderAction={() => <ActionContainer>{renderAction()}</ActionContainer>}
       meta={meta}

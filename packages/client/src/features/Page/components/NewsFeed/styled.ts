@@ -10,15 +10,11 @@ export const Container = styled.div`
   grid-template-rows: auto;
   grid-template-areas: 'left left';
 
-  ${Media.tablet`
-    padding: 32px 32px 0;
-    grid-template-areas: 'left right';
-  `}
-
   ${Media.small_desktop`
       padding: 32px 16px 0;
+      grid-template-areas: 'left right';
   `}
-  
+
   ${Media.desktop`
       padding: 32px 40px 0;
   `}
@@ -26,20 +22,20 @@ export const Container = styled.div`
 
 export const Left = styled.div`
   grid-area: left;
-
-  ${Media.tablet`
-    margin-right: 32px;
-  `}
-
-  ${Media.small_desktop`
-    margin-right: 16px;
-  `}
-  
-  ${Media.desktop`
-    margin-right: 40px;
-  `}
 `;
 
 export const Right = styled.aside`
   grid-area: right;
+
+  ${Media.tablet`
+    margin-left: 32px;
+  `}
+
+  ${Media.small_desktop`
+    margin-left: 16px;
+  `}
+
+  ${Media.desktop`
+    margin-left: 40px;
+  `}
 `;

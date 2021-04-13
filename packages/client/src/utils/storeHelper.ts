@@ -20,9 +20,9 @@ const DEFAULT_META = {
 };
 
 const getEntitySelectors = <T, V>(
-  es: EntitySelectors<T, V>,
+  entitySelectors: EntitySelectors<T, V>,
 ): [(state: V) => T[], (state: V, id: string | number) => T | undefined] => {
-  const { selectAll, selectById } = es;
+  const { selectAll, selectById } = entitySelectors;
 
   return [selectAll, selectById];
 };

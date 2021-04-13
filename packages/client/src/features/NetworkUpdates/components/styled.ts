@@ -7,6 +7,7 @@ export const Wrapper = styled.nav.attrs({
 })`
   font-family: ${({ theme }) => theme.fontFamily.text};
   background-color: ${({ theme }) => theme.colors.white};
+  margin-bottom: 48px;
 `;
 
 export const Title = styled.div`

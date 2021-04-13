@@ -4,12 +4,13 @@ enum Page {
   ABOUT = '',
   EVENTS = 'events',
   NETWORKS = 'networks',
+  NETWORK = 'networks/:id',
   NEWS_FEED = 'news-feed',
   REPORTS = 'reports',
   NOT_FOUND = '*',
 }
 
-type PageElement = LazyExoticComponent<FC> | ComponentType | FC;
+type PageElement = LazyExoticComponent<FC<any>> | ComponentType | FC<any>;
 
 export { Page };
 

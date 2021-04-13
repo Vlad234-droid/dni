@@ -27,7 +27,7 @@ const iconsSrc: Record<PageWithIcon, IconSrc> = {
 };
 
 const menuItems = {
-  [Page.NEWS_FEED]: 'News feed',
+  [Page.NEWS_FEED]: 'News Feed',
   [Page.EVENTS]: 'Events',
   [Page.NETWORKS]: 'Networks',
   [Page.REPORTS]: 'Reports',

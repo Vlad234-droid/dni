@@ -65,7 +65,7 @@ export const MainContainer = styled.div.attrs({
     withBackground ? theme.colors.background.dark : 'transparent'};
 
   ${({ theme }) => css`
-    ${Media.large_tablet`
+    ${Media.small_desktop`
         border-left: 1px solid ${theme.colors.lines.base};
     `}
   `}

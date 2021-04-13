@@ -10,14 +10,20 @@ import {
 const TEST_ID = 'page-header';
 
 type Props = {
-  renderLeft: () => JSX.Element;
+  renderLeft?: () => JSX.Element;
   renderRight?: () => JSX.Element;
   renderCenter?: () => JSX.Element;
 };
 
-const PageHeader: FC<Props> = ({ renderLeft, renderRight, renderCenter }) => (
+const PageHeader: FC<Props> = ({
+  renderLeft,
+  renderRight,
+  renderCenter,
+  children,
+}) => (
   <Wrapper data-testid={TEST_ID}>
-    <LeftContainer>{renderLeft()}</LeftContainer>
+    {children}
+    {renderLeft && <LeftContainer>{renderLeft()}</LeftContainer>}
     {renderRight && <RightContainer>{renderRight()}</RightContainer>}
     {renderCenter && <CenterContainer>{renderCenter()}</CenterContainer>}
   </Wrapper>

@@ -38,6 +38,7 @@ const List: FC<Props> = ({
           <SmallTile
             link={link}
             key={id}
+            id={id}
             renderAction={renderAction}
             // TODO: remove hack for networks
             meta={
@@ -54,6 +55,7 @@ const List: FC<Props> = ({
           //@ts-ignore
           <LargeTile
             link={link}
+            id={id}
             key={id}
             renderAction={renderAction}
             // TODO: remove hack for networks

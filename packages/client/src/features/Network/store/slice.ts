@@ -75,6 +75,7 @@ const slice = createSlice({
         state.meta = {
           ...meta,
         };
+
         stopLoading(state);
       })
       .addCase(getList.rejected, stopLoading)

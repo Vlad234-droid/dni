@@ -1,53 +1,58 @@
 import React, { FC } from 'react';
-import Icon from '@beans/icon';
 import Link from '@beans/link';
-import { Footnote } from '@beans/typography';
+import Icon from '@beans/icon';
 
-import { useMedia } from 'context/InterfaceContext';
+import { Type } from '../../config/types';
+import { Wrapper, Content, Title, CloseIcon } from './styled';
+import InfoPanelFootnote from '../InfoPanelFootnote';
+import InfoPanelIcon from '../InfoPanelIcon';
+import InfoPanelContent from '../InfoPanelContent';
 
-import data from '../../config/data';
-import {
-  Wrapper,
-  IconWrapper,
-  Content,
-  Title,
-  Description,
-  FootnoteWrapper,
-} from './styled';
+type Props = {
+  customIcon?: string;
+  title: string;
+  content: string[];
+  footnote?: {
+    title: string;
+    link: string;
+    linkText: string;
+  };
+  type: Type;
+  infoLink?: string;
+  onClose?: () => void;
+};
 
-// TODO: spread component on InfoPanel and its content parts, when get more info about InfoPanels
-const InfoPanel: FC = () => {
-  const { isMobile } = useMedia();
-  const iconSize = isMobile ? 'xl' : 'xxxl';
-
-  return (
-    <Wrapper>
-      <IconWrapper>
-        <Icon graphic='lists' size={iconSize} />
-      </IconWrapper>
-      <Content>
-        <Title>{data.title}</Title>
-        <Description>
-          {data.description.map((item, index) => (
-            <p key={index}>{item}</p>
-          ))}
-        </Description>
-        <FootnoteWrapper>
-          <Footnote>
-            <p>{data.footnote.title}</p>
-            <Link href={data.footnote.link}>{data.footnote.linkText}</Link>
-          </Footnote>
-        </FootnoteWrapper>
+const InfoPanel: FC<Props> = ({
+  type,
+  title,
+  content,
+  footnote,
+  infoLink,
+  customIcon,
+  onClose,
+}) => (
+  <Wrapper type={type}>
+    {onClose && (
+      <CloseIcon>
+        <Icon graphic='close' onClick={onClose} />
+      </CloseIcon>
+    )}
+    <InfoPanelIcon type={type} customIcon={customIcon} />
+    <Content type={type}>
+      <Title>{title}</Title>
+      <InfoPanelContent content={content} />
+      {footnote && <InfoPanelFootnote footnote={footnote} />}
+      {!(type === Type.INFO) && (
         <Link
-          href={'/'}
+          href={infoLink}
           icon={{ graphic: 'externalLink', position: { global: 'right' } }}
           variant='textButton'
         >
           Fill the survey
         </Link>
-      </Content>
-    </Wrapper>
-  );
-};
+      )}
+    </Content>
+  </Wrapper>
+);
 
 export default InfoPanel;

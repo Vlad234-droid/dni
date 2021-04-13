@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 type Props = HTMLProps<HTMLSpanElement>;
 
-// TODO: think how to reuse font styles
+// TODO: remove - is not commonly used
 const Label = styled.label<Props>`
   font-family: ${({ theme }) => theme.fontFamily.text};
   font-size: ${({ theme }) => theme.fontSize.xs};
