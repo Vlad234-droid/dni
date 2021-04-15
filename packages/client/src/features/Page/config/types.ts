@@ -3,6 +3,7 @@ import { ComponentType, LazyExoticComponent, FC } from 'react';
 enum Page {
   ABOUT = '',
   EVENTS = 'events',
+  EVENT = 'events/:id',
   NETWORKS = 'networks',
   NETWORK = 'networks/:id',
   NEWS_FEED = 'news-feed',

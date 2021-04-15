@@ -1,12 +1,13 @@
-import networkImage1 from '../../../NetworksPreview/assets/networkImage1.png';
-import networkImage2 from '../../../NetworksPreview/assets/networkImage2.png';
+import armedImage from './assets/armedImage.png';
+import bameImage from './assets/bameImage.png';
+import disabilityImage from './assets/disabilityImage.png';
+import lgbtImage from './assets/lgbtImage.png';
+import womenImage from './assets/womenImage.png';
 
 export default [
   {
     id: 1,
     title: 'Armed Forces at Tesco',
-    subTitle: 'Our Purpose:',
-    subDescription: 'Not specified',
     description: [
       'We work to support colleagues and people in the Armed Forces community. Armed Forces at Tesco brings together both former and current members of the Armed Forces and those who want to show their support, as well as coordinating activities to help colleagues meet each other and find their way at Tesco. For us there are three groups of people we think we can make the biggest difference to.',
       'The first is in providing support to former service personnel in their search for a civilian job – this may not necessarily be with Tesco. We recognise the value of their exceptional transferable skills such as leadership, an ability to cope under pressure, and the ability to work in a team as a part of a large-scale organisation. If veterans decide a career at Tesco is for them then they can be assured that the support does not end with their employment. For example, Veterans who suffer from Post-Traumatic Stress Disorder can have up to ten days (pro rata) off work to attend specialist treatment through a recognised support organisation each year.',
@@ -15,15 +16,12 @@ export default [
       'We are proud to be a Gold member Government’s Armed Forces Covenant which is a promise from the nation that those who serve or have served in the armed forces, and their families, are treated fairly. We first signed the Covenant in 2014 and re-signed again in 2018.',
     ],
     image: {
-      src: networkImage1,
+      src: armedImage,
     },
   },
   {
     id: 2,
     title: 'BAME at Tesco',
-    subTitle: 'Our Purpose:',
-    subDescription:
-      'Connecting BAME colleagues and supporting them to be the best that they can be',
     description: [
       'We are committed to supporting BAME (Black Asian and Minority Ethnic) colleagues and we were proud to have entered the award arena for the first time; achieving top 10 at the Ethnicity Awards in the ERG/Network category.',
       'The BAME at Tesco network aims to make a difference by raising awareness of diversity, culture and inclusion within Tesco, helping Tesco to serve customers from all backgrounds and communities a little better every day. The network’s vision is to connect colleagues from all ethnicities to develop their careers and ensure Tesco is recognised as a great place to work.',
@@ -32,15 +30,12 @@ export default [
       'Investing in Ethnicity; our second partnership aids with driving change using best practices. With the assistance from the maturity matrix we work in partnership to deliver action and create change. Offering our senior leaders, allies and steering committee bespoke sessions whilst having the opportunity to network with other organisations',
     ],
     image: {
-      src: networkImage2,
+      src: bameImage,
     },
   },
   {
     id: 3,
     title: 'Disability at Tesco',
-    subTitle: 'Our Purpose:',
-    subDescription:
-      'Helping to inspire and enable all colleagues with disabilities in their lives.',
     description: [
       'Our network vision is that every decision we take as a business should consider disability – both colleagues and customers.',
       'We use the skills and experience of the people with disabilities, their friends and allies within our organisation to help transform our business. We celebrate significant dates in the disability calendar, such as the International Day of Persons with Disabilities to increase awareness and drive change.',
@@ -49,14 +44,12 @@ export default [
       'We have a partnership with the Business Disability Forum, which provides support and expertise in building disability-smart organisations. We are also signatories to the Valuable 500 that aims to revolutionise disability inclusion through business leadership and opportunity.',
     ],
     image: {
-      src: networkImage1,
+      src: disabilityImage,
     },
   },
   {
     id: 4,
     title: 'LGBTQ+ at Tesco',
-    subTitle: 'Our Purpose:',
-    subDescription: 'Not specified',
     description: [
       'LGBTQ+ at Tesco was established in 2005 and exists to support and empower our LGBTQ+ colleagues so that they feel confident to be themselves at work and be the best that they can be.',
       'We want to connect our members together in a safe environment and provide support for those who need it as well as career development opportunities. We seek to educate the business on a range of issues and the spectrum of identities and celebrate our diverse workforce. We want Tesco to be a business where everyone is welcome, which uses its scale for good and where everyone is an ally.',
@@ -66,14 +59,12 @@ export default [
       'In addition, we are also signatories of the United Nations Standards of Conduct for Business on tackling discrimination against LGBTQ+ people.',
     ],
     image: {
-      src: networkImage1,
+      src: lgbtImage,
     },
   },
   {
     id: 5,
     title: 'Women at Tesco',
-    subTitle: 'Our Purpose:',
-    subDescription: 'Not specified',
     description: [
       'Women at Tesco have told us that they want to feel inspired and empowered to drive their careers forward. They want to be able to get advice and listen to life stories from both leaders and their peers in order to help them make the right choices.',
       'We will facilitate the opportunity for all colleagues to be part of our wider network and encourage colleagues to build their own network which supports them through every stage of their career. Women at Tesco champions gender diversity and promotes a culture of diverse and inclusive thinking, where women feel confident to share their views and articulate how they add value to the business.',
@@ -83,7 +74,7 @@ export default [
       'We committed under the HM Treasury Women in Finance Charter to have one third female representation at Board, Executive Committee and Direct level at Tesco Bank by end of 2022.',
     ],
     image: {
-      src: networkImage2,
+      src: womenImage,
     },
   },
 ];

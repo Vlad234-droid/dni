@@ -2,7 +2,7 @@ import styled from 'styled-components';
 
 import Media from 'styles/media';
 import { LargeHeading } from 'features/Common';
-import { headingSM, textSM } from 'styles';
+import { textSM } from 'styles';
 
 export const Wrapper = styled.div`
   position: relative;
@@ -29,10 +29,14 @@ export const ContentWrapper = styled.div.attrs((props) => ({
   z-index: 4;
   color: ${({ theme }) => theme.colors.white};
   padding: 40px 16px;
-  max-width: 568px;
 
   ${Media.tablet`
+    max-width: 568px;
     padding: 48px 24px 48px 65px;
+  `}
+
+  ${Media.desktop`
+    max-width: 700px;
   `}
 `;
 
@@ -44,23 +48,27 @@ export const Title = styled(LargeHeading)`
   `}
 `;
 
-export const Description = styled.div`
+export const Description = styled.div<{ isOpen: boolean }>`
   ${textSM};
   max-width: 328px;
 
+  ${Media.large_phone`
+    max-width: 60%;
+  `}
+
   ${Media.tablet`
-     max-width: unset;
+     max-width: 70%;
+  `}
+  
+  ${Media.small_desktop`
+    max-width: unset;
   `}
 
   &:last-child {
     display: -webkit-box;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 5;
-    overflow: hidden;
-
-    // ${Media.tablet`
-    //   display: -webkit-box;
-    // `}
+    -webkit-line-clamp: ${({ isOpen }) => (isOpen ? 'auto' : '5')};
+    overflow: ${({ isOpen }) => (isOpen ? 'visible' : 'hidden')};
   }
 
   &:not(:last-child) {
@@ -72,13 +80,8 @@ export const DescriptionWrapper = styled.div`
   margin-bottom: 40px;
 `;
 
-export const SubTitle = styled.h5`
-  margin: 0 0 16px;
-  ${headingSM}
-`;
-
 export const Image = styled.img`
-  max-width: 65%;
+  max-width: 226px;
   object-fit: cover;
   position: absolute;
   bottom: 0;
@@ -86,10 +89,10 @@ export const Image = styled.img`
   z-index: 3;
 
   ${Media.large_phone`
-    max-width: 70%;
+    max-width: 300px;
   `}
 
   ${Media.tablet`
-    max-width: 100%;
+    max-width: 409px;
   `}
 `;

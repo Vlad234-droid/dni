@@ -9,13 +9,14 @@ const eventsSelectors = EntityAdapter.getSelectors(
   (state: RootState) => state.events,
 );
 
-const [entitySelectors, entitySelector] = getEntitySelectors(eventsSelectors);
+const [selectAll, selectById] = getEntitySelectors(eventsSelectors);
 
-const byIdSelector = createSelector(
-  (state: RootState, id: Event['id']) => entitySelector(state, id),
-  (network) => network,
-);
+const byIdSelector = (id: Event['id']) =>
+  createSelector(
+    (state: RootState) => selectById(state, id),
+    (network) => network,
+  );
 
-const listSelector = createSelector(entitySelectors, (events) => events);
+const listSelector = createSelector(selectAll, (events) => events);
 
 export { byIdSelector, listSelector };

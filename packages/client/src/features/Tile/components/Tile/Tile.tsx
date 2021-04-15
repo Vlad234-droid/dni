@@ -51,44 +51,42 @@ const Tile: FC<Props> = ({
   const memoizedImage = useMemo(() => normalizeImage(image), [image]);
 
   return (
-    <Link to={`${link}/${id}`}>
-      <BaseTile
-        href={`${link}/${id}`}
-        orientation={orientation}
-        responsiveImage={
-          <ResponsiveImage
-            alt={memoizedImage?.alternativeText}
-            src={memoizedImage?.url}
-            fallbackSizeRatio='57%'
-            minHeight='126px'
-            maxHeight='126px'
-            maxWidth='100%'
-            objectFit='cover'
-          />
-        }
-        title={
-          <TitleWithEllipsis maxLines={1} titleHeight='30px'>
-            {title}
-          </TitleWithEllipsis>
-        }
-      >
-        {description && (
-          <DescriptionContainer descriptionHeight={`${descriptionHeight}px`}>
-            <WindowResize>
-              <Description ellipse>{description}</Description>
-            </WindowResize>
-          </DescriptionContainer>
-        )}
-        {meta && <TileMeta>{meta}</TileMeta>}
-        {isNumber(participants) && !hideParticipants && (
-          <TileText>
-            <Icon graphic='account' size={'sm'} />
-            {participants} participants
-          </TileText>
-        )}
-        {renderAction()}
-      </BaseTile>
-    </Link>
+    <BaseTile
+      href={`${link}/${id}`}
+      orientation={orientation}
+      responsiveImage={
+        <ResponsiveImage
+          alt={memoizedImage?.alternativeText}
+          src={memoizedImage?.url}
+          fallbackSizeRatio='57%'
+          minHeight='126px'
+          maxHeight='126px'
+          maxWidth='100%'
+          objectFit='cover'
+        />
+      }
+      title={
+        <TitleWithEllipsis maxLines={1} titleHeight='30px'>
+          {title}
+        </TitleWithEllipsis>
+      }
+    >
+      {description && (
+        <DescriptionContainer descriptionHeight={`${descriptionHeight}px`}>
+          <WindowResize>
+            <Description ellipse>{description}</Description>
+          </WindowResize>
+        </DescriptionContainer>
+      )}
+      {meta && <TileMeta>{meta}</TileMeta>}
+      {isNumber(participants) && !hideParticipants && (
+        <TileText>
+          <Icon graphic='account' size={'sm'} />
+          {participants} participants
+        </TileText>
+      )}
+      {renderAction()}
+    </BaseTile>
   );
 };
 

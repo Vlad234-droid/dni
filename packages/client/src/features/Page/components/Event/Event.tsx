@@ -1,34 +1,33 @@
 import React, { useState, FC } from 'react';
-import { RouteComponentProps } from 'react-router-dom';
 import styled from 'styled-components';
 
 import { Page, PAGE_PREFIX } from 'features/Page';
-import { Network } from 'features/Network';
+import { Event } from 'features/Event';
 import { ImageWrapperProvider } from 'context/ImageWrapperProvider';
 
 import BasePage from '../BasePage';
 import PageHeader from '../PageHeader';
 import PageWrapper from '../PageWrapper';
 
-const NetworkPage: FC<RouteComponentProps<{ id: string }>> = (props) => {
-  const [ref, setRef] = useState<HTMLDivElement | null>(null);
+const NetworkPage: FC = (props) => {
+  const [ref, setRef] = useState<HTMLElement | null>(null);
 
   return (
     <BasePage
-      data-testid={`${PAGE_PREFIX}${Page.NETWORK}`}
+      data-testid={`${PAGE_PREFIX}${Page.EVENT}`}
       renderMain={() => (
         <ImageWrapperProvider value={ref}>
-          <div>
+          <>
             <PageHeader>
               <ImageWrapper ref={(newRef) => setRef(newRef)} />
             </PageHeader>
             <PageWrapper>
-              <Network
+              <Event
                 // @ts-ignore
                 id={props.match.params.id}
               />
             </PageWrapper>
-          </div>
+          </>
         </ImageWrapperProvider>
       )}
     />

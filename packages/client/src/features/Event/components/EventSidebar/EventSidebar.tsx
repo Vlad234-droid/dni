@@ -37,6 +37,8 @@ const EventSidebar: FC = () => {
     dispatch(getEvents(filters));
   }, []);
 
+  if (!events) return null;
+
   return (
     <Wrapper data-testid='events-sidebar'>
       <Title>Events</Title>
@@ -57,7 +59,7 @@ const EventSidebar: FC = () => {
                 </Button>
               )}
               renderStatus={() => (
-                <StatusLabel type={StatusType.SUCCESS}>On Air</StatusLabel>
+                <StatusLabel type={StatusType.SUCCESS}>On-Air</StatusLabel>
               )}
               // TODO: dont like transformation here - its duplicated everywhere - and is created again and again in lists
               // TODO: transform before save to store

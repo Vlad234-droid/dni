@@ -1,5 +1,4 @@
-import React, { FC , HTMLProps } from 'react';
-
+import { HTMLProps } from 'react';
 
 import styled from 'styled-components';
 

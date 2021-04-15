@@ -9,6 +9,7 @@ const ControlsContainer = styled(BaseElement)`
   margin-right: 35px;
   z-index: 3;
   height: 100%;
+  max-height: 724px;
   display: flex;
   flex-direction: column;
   justify-content: center;

@@ -13,11 +13,11 @@ describe('#Carousel', () => {
       <CarouselContent
         title='test'
         description='test'
-        subTitle='test'
-        subDescription='test'
         image={{
           src: 'test',
         }}
+        isOpen={false}
+        onClick={jest.fn()}
       />
     </div>
   );

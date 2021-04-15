@@ -55,7 +55,6 @@ const Networks: FC = () => {
           />
           <PageWrapper>
             <>
-              <p>Notifications</p>
               {notifications &&
                 notifications.map(({ id, entity }) => (
                   <div

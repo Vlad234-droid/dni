@@ -23,8 +23,8 @@ export const DescriptionContainer = styled(BaseElement)`
 
 export const TileMeta = styled(BodyText)`
   && {
-    ${textXX};
     margin-top: 8px;
+    ${textXX};
 
     ${({ theme }) => css`
       ${Media.tablet`
