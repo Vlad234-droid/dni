@@ -18,16 +18,16 @@ export const Content = styled.div`
 `;
 
 export const LeftContent = styled.div`
-  flex-basis: 288px;
-  flex-grow: 1;
+  width: calc(100% - 320px);
   margin-bottom: 64px;
 
   ${Media.tablet`
-     margin-bottom: 0;
+    margin-bottom: 0;
   `}
 `;
 
 export const RightContent = styled.div`
+  width: 320px;
   margin-bottom: 24px;
 
   ${Media.tablet`

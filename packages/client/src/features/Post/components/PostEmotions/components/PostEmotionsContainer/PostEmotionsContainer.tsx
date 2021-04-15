@@ -1,47 +1,15 @@
 import React, { FC, useState } from 'react';
 import styled from 'styled-components';
 
-import { Emotion } from '../../config/types';
+import { Emoji, Emotion } from '../../config/types';
+import { variants } from '../../config/variants';
 import { iconsSrc } from '../../config/media';
 import PostEmotionsMultipanel, {
   PostEmotionsMultipanelWrapper,
-} from './components/PostEmotionsMultipanel';
+} from '../PostEmotionsMultipanel';
 import PostEmotionsVariants, {
   PostEmotionsVariantsWrapper,
-} from './components/PostEmotionsVariants';
-
-const variants = [
-  {
-    id: 'like',
-    image: iconsSrc.emojiLike,
-    name: 'like',
-    count: 1,
-  },
-  {
-    id: 'heart',
-    image: iconsSrc.emojiHeart,
-    name: 'heart',
-    count: 1,
-  },
-  {
-    id: 'smile',
-    image: iconsSrc.emojiSmile,
-    name: 'smile',
-    count: 1,
-  },
-  {
-    id: 'laugh',
-    image: iconsSrc.emojiLaugh,
-    name: 'laugh',
-    count: 1,
-  },
-  {
-    id: 'surprise',
-    image: iconsSrc.emojiSurprise,
-    name: 'surprise',
-    count: 1,
-  },
-];
+} from '../PostEmotionsVariants';
 
 const PostEmotionToggleButton = styled.div<{
   pressed: boolean;
@@ -82,7 +50,7 @@ const PostEmotionsWrapper = styled.div`
 
 interface PostEmotionsProps {
   emotions: Emotion[];
-  onEmotionClick: ({ variant }: { variant: Emotion }) => void;
+  onEmotionClick: ({ variant }: { variant: Emoji }) => void;
   onPostUnlike: () => void;
 }
 

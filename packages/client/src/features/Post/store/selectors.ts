@@ -1,37 +1,21 @@
-import { createEntityAdapter } from '@reduxjs/toolkit';
+import { createSelector } from '@reduxjs/toolkit';
 
-import { PostState } from './silce';
 import { RootState } from 'store/rootReducer';
-import { Post, PostForm, User } from '../config/types';
+import { getEntitySelectors } from 'utils/storeHelper';
 
-type PostFormSelector = (state: RootState) => PostForm;
+import { EntityAdapter, Post } from './types';
 
-const postFormSelector: PostFormSelector = (state) => {
-  return state.post.form;
-};
+const networksSelectors = EntityAdapter.getSelectors(
+  (state: RootState) => state.posts,
+);
 
-type PostFormPublishersSelector = (state: RootState) => User[];
+const [entitySelectors, entitySelector] = getEntitySelectors(networksSelectors);
 
-const postFormPublishersSelector: PostFormPublishersSelector = (state) => {
-  return state.post.publishers;
-};
+const byIdSelector = createSelector(
+  (state: RootState, id: Post['id']) => entitySelector(state, id),
+  (post) => post,
+);
 
-const postAdapter = createEntityAdapter<Post>({
-  selectId: (post) => post.id,
-});
+const listSelector = createSelector(entitySelectors, (posts) => posts);
 
-const postItemsSelector = postAdapter.getSelectors<PostState>((state) => state)
-  .selectAll;
-
-const postItemSelector = postAdapter.getSelectors<PostState>((state) => state)
-  .selectById;
-
-export type { PostFormSelector, PostFormPublishersSelector };
-
-export {
-  postAdapter,
-  postFormSelector,
-  postFormPublishersSelector,
-  postItemSelector,
-  postItemsSelector,
-};
+export { byIdSelector, listSelector };

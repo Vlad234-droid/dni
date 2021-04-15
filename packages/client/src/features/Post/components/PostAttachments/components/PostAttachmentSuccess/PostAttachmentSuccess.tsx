@@ -19,7 +19,7 @@ const PostAttachmentSuccess: FC<PostAttachmentSuccessProps> = ({
   return format === 'pdf' ? (
     <PostDocument name={name} />
   ) : (
-    <PostImage name={name} path={path} />
+    <PostImage path={path} />
   );
 };
 

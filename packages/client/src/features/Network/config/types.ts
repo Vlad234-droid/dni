@@ -1,4 +1,4 @@
-import { PostType } from 'features/Post';
+import { Post } from 'features/Post';
 
 interface FormData {
   image?: File;
@@ -11,7 +11,7 @@ interface FormData {
 
 export default interface Network extends FormData {
   id: number;
-  posts: Array<PostType>;
+  posts: Array<Post>;
 }
 
 type Names = keyof FormData;

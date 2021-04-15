@@ -1,59 +1,59 @@
+import { User } from 'features/User';
+// import { Network } from 'features/Network';
+import { Emotion } from '../components/PostEmotions';
+
 enum PostStatus {
-  EDITING = 'EDITING',
   PUBLISHED = 'published',
   ARCHIVED = 'archived',
 }
 
-type User = {
-  name: string;
-  avatarSrc: string;
-};
-
-enum AttachmentStatus {
-  INIT = 'init',
-  ERROR = 'error',
-  LOADING = 'loading',
-  SUCCESS = 'success',
-}
-
 type Attachment = {
-  format: string;
+  alternativeText: string;
+  caption: string;
+  ext: string;
+  height: number;
+  id: number;
+  mime: string;
   name: string;
-  path: string;
-  progress: number;
-  status: AttachmentStatus;
-};
-
-type Emotion = {
-  id: number | string;
-  name: string;
-  count: number;
-  // image: File;
-  image: string;
+  previewUrl: string | null;
+  size: number;
+  url: string;
+  width: number;
 };
 
 type Post = {
-  id: number;
-  slug: string;
+  id: number | string;
   title: string;
-  postAs: string;
-  status: PostStatus;
-  attachments: Attachment[];
+  attachments?: Attachment[];
   description: string;
+  postAs: Poster;
   sharedToken: string;
+  slug: string;
+  status: PostStatus;
   emotions: Emotion[];
   createdBy: User;
-  createdAt: string;
-  updatedAt: string;
+  created_at: string;
+  updated_at: string;
 };
 
-type PostForm = {
-  id: number;
-  title: string;
-  attachments: Attachment[];
-  createdBy: User;
-  description: string;
+type Poster = PostAsUser | PostAsNetwork | PostAsEvent | null;
+
+type PostAsUser = {
+  __component: 'post-as.user';
+  user: User;
 };
 
-export { PostStatus, AttachmentStatus };
-export type { User, Post, Emotion, PostForm, Attachment };
+type PostAsEvent = {
+  __component: 'post-as.event';
+  event: Event;
+};
+
+type PostAsNetwork = {
+  __component: 'post-as.network';
+  network: any;
+};
+
+type Filter = 'ALL' | 'BY_EVENT' | 'BY_NETWORK';
+
+export { PostStatus };
+export type { Post, Filter, Attachment };

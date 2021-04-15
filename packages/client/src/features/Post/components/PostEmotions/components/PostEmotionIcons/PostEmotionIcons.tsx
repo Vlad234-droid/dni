@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 const PostEmotionIcon = styled.div<{
-  iconSrc: string;
+  iconSrc: any;
 }>`
   overflow: hidden;
   border-radius: 100%;
