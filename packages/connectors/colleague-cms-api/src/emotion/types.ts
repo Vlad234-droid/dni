@@ -1,11 +1,9 @@
 import { Emoji } from '../emoji';
-import { User } from '../user';
 import { BaseType } from '../types';
 
 type Emotion = {
   count: number;
   emoji: Emoji;
-  createdBy: User;
 } & BaseType;
 
 type EmotionApiParams = {

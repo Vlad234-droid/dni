@@ -8,6 +8,6 @@ const DNI_CMS_API_URLS: ApiUrlConfig = {
   PROD: 'https://ourtesco.com/colleague-cms',
 };
 
-const TENANT_KEY = 'DniTesco';
+const TENANT_KEY = 'DiversityAndInclusion';
 
 export { DNI_CMS_API_URLS, TENANT_KEY };

@@ -5,18 +5,18 @@ const schema = Yup.object().shape({
   title: Yup.string().required('Title is required'),
   network: Yup.string().required('Network is required'),
   maxParticipants: Yup.number().required('Participants count is required'),
-  startedAt: Yup.date().required('Start Date is required'),
-  finishedAt: Yup.date()
+  startDate: Yup.date().required('Start Date is required'),
+  endDate: Yup.date()
     .when(
-      'startedAt',
-      (startedAt: Date, schema: any) => startedAt && schema.min(startedAt),
+      'startDate',
+      (startDate: Date, schema: any) => startDate && schema.min(startDate),
     )
     .required('End Date is required'),
   description: Yup.string().max(
     200,
     'Length of description should be less 200 characters',
   ),
-  surveyLink: Yup.string(),
+  surveryUrl: Yup.string(),
 });
 
 export default schema;

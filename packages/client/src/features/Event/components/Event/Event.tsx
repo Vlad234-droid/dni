@@ -41,7 +41,7 @@ type Filter = typeof ALL | typeof ARCHIVED;
 const Event: FC<Props> = ({ id }) => {
   const dispatch = useDispatch();
   const event = useSelector(byIdSelector(id));
-  const { description, title, image, maxParticipants, startedAt } = event || {};
+  const { description, title, image, maxParticipants, startDate } = event || {};
   const [isJoined, setIsJoined] = useState(false);
   const [filter, setFilter] = useState<Filter>(ALL);
   const { isLoading } = useStore((state) => state.networks);
@@ -99,7 +99,7 @@ const Event: FC<Props> = ({ id }) => {
         //@ts-ignore
         isOnAir={isOnAir}
         //@ts-ignore
-        startedAt={startedAt}
+        startDate={startDate}
       />
       <Content>
         <LeftContent>

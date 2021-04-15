@@ -18,7 +18,7 @@ const EventList: FC = () => {
   const [page, setPage] = useState<number>(0);
   const [list, setList] = useState<Event[]>([]);
   const filters = {
-    _where: JSON.stringify([{ finishedAt_lt: new Date() }]),
+    _where: JSON.stringify([{ endDate_lt: new Date() }]),
   };
 
   const [

@@ -71,18 +71,15 @@ const EventList: FC<Props> = ({ filter }) => {
     switch (filter) {
       case 'ON_AIR': {
         const currentDate = new Date();
-        where = [
-          { startedAt_lte: currentDate },
-          { finishedAt_gte: currentDate },
-        ];
+        where = [{ startDate_lte: currentDate }, { endDate_gte: currentDate }];
         break;
       }
       case 'THIS_MONTH': {
         const firstDayOfThisMonth = firstDayOf('month');
         const lastDayOfThisMonth = lastDayOf('month');
         where = [
-          { startedAt_gte: firstDayOfThisMonth },
-          { startedAt_lgte: lastDayOfThisMonth },
+          { startDate_gte: firstDayOfThisMonth },
+          { startDate_lgte: lastDayOfThisMonth },
         ];
         break;
       }

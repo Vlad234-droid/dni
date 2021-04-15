@@ -23,8 +23,7 @@ type Props = {
 const Network: FC<Props> = ({ id }) => {
   const dispatch = useDispatch();
   const network = useSelector(byIdSelector(id));
-  const { partnerships, description, title, image, managerEmail } =
-    network || {};
+  const { partners, description, title, image, contact } = network || {};
   const [isJoined, setIsJoined] = useState(false);
   const [showInfoPanel, setShowInfoPanel] = useState(true);
   const [infoPanelType, setInfoPanelType] = useState(InfoPanelType.INFO);
@@ -80,7 +79,7 @@ const Network: FC<Props> = ({ id }) => {
         //@ts-ignore
         title={title}
         //@ts-ignore
-        email={managerEmail}
+        email={contact}
         isJoined={isJoined}
         onLeave={handleLeave}
         onJoin={handleJoin}
@@ -108,9 +107,9 @@ const Network: FC<Props> = ({ id }) => {
         <RightContent>
           <NetworkPartners
             //@ts-ignore
-            partners={partnerships}
+            partners={partners}
             //@ts-ignore
-            email={managerEmail}
+            email={contact}
           />
         </RightContent>
       </Content>

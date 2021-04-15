@@ -121,12 +121,12 @@ const CreateEventForm: FC = () => {
           <Row>
             <Column size={isTablet ? 24 : 12}>
               <Controller
-                name={'startedAt'}
+                name={'startDate'}
                 control={control}
                 render={(props) => (
                   <DateTimePicker
                     // @ts-ignore
-                    error={errors['startedAt']?.message}
+                    error={errors['startDate']?.message}
                     labels={['Start date', 'Start time']}
                     onChange={props.onChange}
                     required
@@ -136,12 +136,12 @@ const CreateEventForm: FC = () => {
             </Column>
             <Column size={isTablet ? 24 : 12}>
               <Controller
-                name={'finishedAt'}
+                name={'endDate'}
                 control={control}
                 render={(props) => (
                   <DateTimePicker
                     // @ts-ignore
-                    error={errors['finishedAt']?.message}
+                    error={errors['endDate']?.message}
                     labels={['End date', 'End time']}
                     onChange={props.onChange}
                     required
@@ -164,12 +164,12 @@ const CreateEventForm: FC = () => {
           <TextInput
             // @ts-ignore
             domRef={register}
-            name={'surveyLink'}
+            name={'surveryUrl'}
             placeholder={'A few word about your event'}
             label={'Link to Survey'}
             // @ts-ignore
-            error={errors['surveyLink']?.message}
-            id={'surveyLink'}
+            error={errors['surveryUrl']?.message}
+            id={'surveryUrl'}
             required
           />
         </FieldWrapper>

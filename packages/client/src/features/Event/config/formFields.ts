@@ -40,15 +40,15 @@ const formFields: Array<FormField<Names>> = [
   },
   {
     Element: DateTimePicker,
-    name: 'startedAt',
+    name: 'startDate',
     testID: 'startDate',
     labels: ['Start date', 'Start time'],
     required: true,
   },
   {
     Element: DateTimePicker,
-    name: 'finishedAt',
-    testID: 'startDate',
+    name: 'endDate',
+    testID: 'endDate',
     labels: ['End date', 'End time'],
     required: true,
   },
@@ -61,9 +61,9 @@ const formFields: Array<FormField<Names>> = [
   },
   {
     Element: TextInput,
-    name: 'surveyLink',
+    name: 'surveryUrl',
     placeholder: 'A few word about your event',
-    testID: 'surveyLink',
+    testID: 'surveryUrl',
     label: 'Link to Survey',
   },
 ];

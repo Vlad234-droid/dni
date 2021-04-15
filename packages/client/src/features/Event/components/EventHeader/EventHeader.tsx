@@ -26,7 +26,7 @@ type Props = {
   onJoin: () => void;
   isOnAir?: boolean;
   participants: number;
-  startedAt: string;
+  startDate: string;
 };
 
 const EventHeader: FC<Props> = ({
@@ -37,7 +37,7 @@ const EventHeader: FC<Props> = ({
   onJoin,
   isOnAir = false,
   participants,
-  startedAt,
+  startDate,
 }) => {
   const { isMobile } = useMedia();
 
@@ -85,7 +85,7 @@ const EventHeader: FC<Props> = ({
         {/*</Actions>*/}
       </Heading>
       <>
-        <EventDate>{isoDateToFormat(startedAt, FULL_FORMAT)}</EventDate>
+        <EventDate>{isoDateToFormat(startDate, FULL_FORMAT)}</EventDate>
         <Participants>
           +{participants} are participating
           <Actions>

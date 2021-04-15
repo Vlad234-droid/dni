@@ -1,36 +1,25 @@
 import faker from 'faker';
-import {
-  Post,
-  PostAsUser,
-  User,
-  Component,
-} from '@dni-connectors/colleague-cms-api';
+import { Post } from '@dni-connectors/colleague-cms-api';
 
 import { generateArray } from 'utils';
-import { generateFile, Status } from '../built-in';
-import { generateEmotions } from '../emotion';
-import { colleague } from '../../colleague';
+import { generateFile } from '../built-in';
 import { generateBase } from '../base';
-
-const user = colleague as User;
-
-const poster: PostAsUser = {
-  __component: Component.USER,
-  user,
-};
+import { generateNetwork } from '../network';
+import { generateEvent } from '../event';
 
 const generatePost = () => {
   const post: Post = {
     ...generateBase(),
     title: faker.random.words(3),
     attachments: [generateFile()],
-    description: faker.random.words(10),
-    postAs: [poster],
-    sharedToken: faker.random.word().toLowerCase(),
+    content: faker.random.words(10),
     slug: faker.random.words(2).replace(' ', '-').toLowerCase(),
-    status: faker.random.arrayElement(Status),
-    emotions: generateEmotions(2),
-    createdBy: user,
+    authorName: faker.name.firstName(),
+    authorEmail: faker.internet.email(),
+    anonymous: faker.random.boolean(),
+    archived: faker.random.boolean(),
+    event: faker.random.arrayElement([generateEvent(), undefined]),
+    network: faker.random.arrayElement([generateNetwork(), undefined]),
   };
 
   return post;
@@ -39,4 +28,4 @@ const generatePost = () => {
 const generatePosts = (length: number) =>
   generateArray(length).map(() => generatePost());
 
-export { generatePost, generatePosts, poster };
+export { generatePost, generatePosts };

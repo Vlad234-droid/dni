@@ -319,7 +319,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"title\": \"Test\",\n    \"description\": \"Test\",\n    \"status\": \"published\",\n    \"managerEmail\": \"test1@test.com\",\n    \"isPublished\": true\n}",
+              "raw": "{\n    \"title\": \"Test\",\n    \"description\": \"Test\",\n    \"status\": \"published\",\n    \"contact\": \"test1@test.com\",\n    \"isPublished\": true\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -420,7 +420,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"title\": \"Test\",\n    \"description\": \"Test\",\n    \"maxParticipants\": 100,\n    \"startedAt\": \"2020-11-01 22:12:10\",\n    \"finishedAt\": \"2020-11-01 22:12:10\",\n    \"surveyLink\": \"http://test.com\",\n    \"slug\": \"test1\"\n}",
+              "raw": "{\n    \"title\": \"Test\",\n    \"description\": \"Test\",\n    \"maxParticipants\": 100,\n    \"startDate\": \"2020-11-01 22:12:10\",\n    \"endDate\": \"2020-11-01 22:12:10\",\n    \"surveryUrl\": \"http://test.com\",\n    \"slug\": \"test1\"\n}",
               "options": {
                 "raw": {
                   "language": "json"

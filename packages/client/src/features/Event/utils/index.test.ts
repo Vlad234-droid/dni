@@ -10,8 +10,8 @@ describe('#isEventOnAir', () => {
       image: null,
       network: 'mocked_network',
       maxParticipants: 42,
-      startedAt: DateTime.now(),
-      finishedAt: DateTime.now(),
+      startDate: DateTime.now(),
+      endDate: DateTime.now(),
     };
 
     expect(isEventOnAir(eventData)).toBe(false);
@@ -24,8 +24,8 @@ describe('#isEventOnAir', () => {
       image: null,
       network: 'mocked_network',
       maxParticipants: 42,
-      startedAt: DateTime.now().plus({ days: 1 }),
-      finishedAt: DateTime.now().plus({ days: 2 }),
+      startDate: DateTime.now().plus({ days: 1 }),
+      endDate: DateTime.now().plus({ days: 2 }),
     };
 
     expect(isEventOnAir(eventData)).toBe(false);
@@ -38,8 +38,8 @@ describe('#isEventOnAir', () => {
       image: null,
       network: 'mocked_network',
       maxParticipants: 42,
-      startedAt: DateTime.now().minus({ days: 2 }),
-      finishedAt: DateTime.now().minus({ days: 1 }),
+      startDate: DateTime.now().minus({ days: 2 }),
+      endDate: DateTime.now().minus({ days: 1 }),
     };
 
     expect(isEventOnAir(eventData)).toBe(false);
@@ -52,8 +52,8 @@ describe('#isEventOnAir', () => {
       image: null,
       network: 'mocked_network',
       maxParticipants: 42,
-      startedAt: DateTime.now().minus({ days: 1 }),
-      finishedAt: DateTime.now().plus({ days: 2 }),
+      startDate: DateTime.now().minus({ days: 1 }),
+      endDate: DateTime.now().plus({ days: 2 }),
     };
 
     expect(isEventOnAir(eventData)).toBe(true);

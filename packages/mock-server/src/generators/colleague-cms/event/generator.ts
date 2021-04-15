@@ -1,13 +1,10 @@
 import faker from 'faker';
-import { Event, User } from '@dni-connectors/colleague-cms-api';
+import { Event } from '@dni-connectors/colleague-cms-api';
 
 import { generateArray, dateToIso } from 'utils';
 import { generateBase } from '../base';
 import { generateNetwork } from '../network';
-import { colleague } from '../../colleague';
-import { generateFile, Status } from '../built-in';
-
-const user = colleague as User;
+import { generateFile } from '../built-in';
 
 const generateEvent = () => {
   const event: Event = {
@@ -16,13 +13,11 @@ const generateEvent = () => {
     network: generateNetwork(),
     description: faker.random.words(10),
     maxParticipants: faker.random.number(999),
-    startedAt: dateToIso(new Date()),
-    finishedAt: dateToIso(new Date()),
-    surveyLink: faker.internet.url(),
+    startDate: dateToIso(new Date()),
+    endDate: dateToIso(new Date()),
+    surveryUrl: faker.internet.url(),
     slug: faker.random.words(2).replace(' ', '-').toLowerCase(),
     image: generateFile(),
-    status: faker.random.arrayElement(Status),
-    createdBy: user,
   };
 
   return event;
