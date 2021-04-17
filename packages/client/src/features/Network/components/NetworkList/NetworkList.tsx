@@ -2,6 +2,7 @@ import { FC, useEffect, useState, useCallback, useMemo } from 'react';
 import Button from '@beans/button';
 import { useSelector } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroller';
+import isEmpty from 'lodash.isempty';
 
 import Heading, { Size, Color } from 'features/Heading';
 import useDispatch from 'hooks/useDispatch';
@@ -10,6 +11,7 @@ import { FilterPayload, DEFAULT_PAGINATION } from 'utils/storeHelper';
 import { useScrollContainer } from 'context/ScrollContainerContext';
 import List from 'features/List';
 import { useMedia } from 'context/InterfaceContext';
+import { EmptyContainer } from 'features/Common';
 
 import { Filter } from '../../config/types';
 import { getList, getCount, listSelector, clear } from '../../store';
@@ -22,7 +24,9 @@ type Props = {
 const NetworkList: FC<Props> = ({ filter }) => {
   const { isMobile } = useMedia();
   const dispatch = useDispatch();
-  const [filters, setFilters] = useState<FilterPayload>();
+  const [filters, setFilters] = useState<
+    FilterPayload & { id_in?: string[] }
+  >();
 
   const scrollContainer = useScrollContainer();
 
@@ -67,15 +71,11 @@ const NetworkList: FC<Props> = ({ filter }) => {
         break;
       }
       case 'YOUR_NETWORKS': {
-        where = [{ createdBy_eq: 1 }];
-        break;
-      }
-      case 'YOU_MANAGE': {
-        where = [{ managers_contains: 1 }];
+        where = { id_in: ['1', '2'] };
         break;
       }
     }
-    setFilters({ ...filters, _where: JSON.stringify(where) });
+    setFilters({ ...where });
   }, [filter]);
 
   // TODO: add loader component
@@ -86,31 +86,38 @@ const NetworkList: FC<Props> = ({ filter }) => {
       <Heading size={Size.md} color={Color.black}>
         New Networks
       </Heading>
-      <ListContainer>
-        <InfiniteScroll
-          key={filter} // unique key for unmount when switch filter
-          loadMore={loadNetworks}
-          hasMore={!isLoading && hasMore}
-          pageStart={-1}
-          loader={Loader}
-          threshold={0}
-          getScrollParent={() => scrollContainer!.current}
-          useWindow={false}
-        >
-          <List
-            link='/networks'
-            // TODO: object is not correct type
-            //@ts-ignore
-            items={networks}
-            isMobile={isMobile}
-            renderAction={() => (
-              <Button variant='primary' onClick={() => console.log('test')}>
-                Join
-              </Button>
-            )}
-          />
-        </InfiniteScroll>
-      </ListContainer>
+      {isEmpty(networks) ? (
+        <EmptyContainer
+          description='Unfortunately, we did not find any matches for your request'
+          explanation='Please change your filtering criteria to try again.'
+        />
+      ) : (
+        <ListContainer>
+          <InfiniteScroll
+            key={filter} // unique key for unmount when switch filter
+            loadMore={loadNetworks}
+            hasMore={!isLoading && hasMore}
+            pageStart={-1}
+            loader={Loader}
+            threshold={0}
+            getScrollParent={() => scrollContainer!.current}
+            useWindow={false}
+          >
+            <List
+              link='/networks'
+              // TODO: object is not correct type
+              //@ts-ignore
+              items={networks}
+              isMobile={isMobile}
+              renderAction={() => (
+                <Button variant='primary' onClick={() => console.log('test')}>
+                  Join
+                </Button>
+              )}
+            />
+          </InfiniteScroll>
+        </ListContainer>
+      )}
     </Wrapper>
   );
 };

@@ -39,7 +39,7 @@ const DEFAULT_PAGINATION: PaginationPayload = {
 
 type FilterPayload = {
   // filtering
-  _where?: string;
+  _where?: object;
 
   // sorting
   _sort?: 'created_at:desc' | 'created_at:asc';

@@ -7,8 +7,8 @@ export const fakeLoginConfig = (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   requestCtx: ContextProvider<any>,
   { identityClientId, identityClientSecret }: ProcessConfig,
-) => {
-  const middleware: Middleware = async (req, res, next) => {
+): Middleware => {
+  return async (req, res, next) => {
     const body = buildBody(identityClientId, identityClientSecret);
     const connector = identityApiConnector(requestCtx(req, res));
 
@@ -18,6 +18,4 @@ export const fakeLoginConfig = (
 
     next();
   };
-
-  return middleware;
 };

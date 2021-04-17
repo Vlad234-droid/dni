@@ -1,7 +1,7 @@
 import { AxiosInstance } from 'axios';
 
 type Config = {
-  [key: string]: string | number | undefined;
+  [key: string]: string | number | object | undefined;
 };
 
 export default (httpClient: AxiosInstance) => ({

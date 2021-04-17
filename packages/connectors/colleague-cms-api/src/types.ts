@@ -17,7 +17,7 @@ type ApiInput<T, U = unknown> = {
 };
 
 type BaseApiParams = {
-  // filter
+  // filter _where doesn't support right now
   _where?: string;
 
   // pagination

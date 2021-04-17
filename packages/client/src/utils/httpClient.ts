@@ -1,8 +1,11 @@
 import axios, { AxiosRequestConfig } from 'axios';
+import qs from 'qs';
 
 import { API_VERSION, API_URL } from 'config/api';
 
 const httpClient = axios.create({ baseURL: `${API_URL}/${API_VERSION}` });
+
+httpClient.defaults.paramsSerializer = (params) => qs.stringify(params);
 
 httpClient.interceptors.request.use(
   async (config): Promise<AxiosRequestConfig> => {

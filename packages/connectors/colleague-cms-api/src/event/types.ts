@@ -16,6 +16,11 @@ type Event = {
 
 type EventApiParams = {
   id: string;
+  startDate_lte?: string;
+  startDate_gte?: string;
+  startDate_lgte?: string;
+  endDate_gte?: string;
+  endDate_lt?: string;
 } & BaseApiParams;
 
 type EventBody = Omit<Network, 'id'>;

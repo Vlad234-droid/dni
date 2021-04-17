@@ -2,6 +2,7 @@ import { FC, useEffect, useState, useCallback, useMemo } from 'react';
 import Button from '@beans/button';
 import { useSelector } from 'react-redux';
 import Icon from '@beans/icon';
+import isEmpty from 'lodash.isempty';
 
 import Heading, { Size, Color } from 'features/Heading';
 import { useMedia } from 'context/InterfaceContext';
@@ -10,6 +11,7 @@ import useDispatch from 'hooks/useDispatch';
 import { firstDayOf, lastDayOf } from 'utils/date';
 import { FilterPayload, DEFAULT_PAGINATION } from 'utils/storeHelper';
 import List from 'features/List';
+import { EmptyContainer } from 'features/Common';
 
 import { getList, listSelector, clear, getCount } from '../../store';
 import { Filter } from '../../config/types';
@@ -67,24 +69,24 @@ const EventList: FC<Props> = ({ filter }) => {
   }, [filters]);
 
   useEffect(() => {
-    let where;
+    let where = {};
     switch (filter) {
       case 'ON_AIR': {
         const currentDate = new Date();
-        where = [{ startDate_lte: currentDate }, { endDate_gte: currentDate }];
+        where = { startDate_lte: currentDate, endDate_gte: currentDate };
         break;
       }
       case 'THIS_MONTH': {
-        const firstDayOfThisMonth = firstDayOf('month');
-        const lastDayOfThisMonth = lastDayOf('month');
-        where = [
-          { startDate_gte: firstDayOfThisMonth },
-          { startDate_lgte: lastDayOfThisMonth },
-        ];
+        const firstDayOfThisMonth = firstDayOf('month').toJSDate();
+        const lastDayOfThisMonth = lastDayOf('month').toJSDate();
+        where = {
+          startDate_gte: firstDayOfThisMonth,
+          startDate_lte: lastDayOfThisMonth,
+        };
         break;
       }
     }
-    setFilters({ ...filters, _where: JSON.stringify(where) });
+    setFilters(where);
   }, [filter]);
 
   return (
@@ -92,27 +94,36 @@ const EventList: FC<Props> = ({ filter }) => {
       <Heading size={Size.md} color={Color.black}>
         New Events
       </Heading>
-      <List
-        link='/events'
-        // TODO: event is not correct type Event
-        //@ts-ignore
-        items={events}
-        hideParticipants={true}
-        isMobile={isMobile}
-        renderAction={() => (
-          <Button variant='primary' onClick={() => console.log('test')}>
-            Take part
+      {isEmpty(events) ? (
+        <EmptyContainer
+          description='Unfortunately, we did not find any matches for your request'
+          explanation='Please change your filtering criteria to try again.'
+        />
+      ) : (
+        <>
+          <List
+            link='/events'
+            // TODO: event is not correct type Event
+            //@ts-ignore
+            items={events}
+            hideParticipants={true}
+            isMobile={isMobile}
+            renderAction={() => (
+              <Button variant='primary' onClick={() => console.log('test')}>
+                Take part
+              </Button>
+            )}
+          />
+          <Button
+            disabled={!hasMore || isLoading}
+            variant='secondary'
+            onClick={() => setPage(page + 1)}
+          >
+            More New Events
+            <Icon graphic='expand' size='xx' />
           </Button>
-        )}
-      />
-      <Button
-        disabled={!hasMore || isLoading}
-        variant='secondary'
-        onClick={() => setPage(page + 1)}
-      >
-        More New Events
-        <Icon graphic='expand' size='xx' />
-      </Button>
+        </>
+      )}
     </Wrapper>
   );
 };

@@ -15,6 +15,7 @@ type Network = {
 
 type NetworkApiParams = {
   id: string;
+  id_in?: string[];
 } & BaseApiParams;
 
 type NetworkBody = Omit<Network, 'id'>;
