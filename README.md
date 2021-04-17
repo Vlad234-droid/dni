@@ -26,7 +26,13 @@ Check that NodeJS is installed by running: `node --version`
 
 Check that Volta is installed by running: `volta --version`
 
-### 2. Install dependencies
+### 2. Login into the private npm registry
+
+Login into our private npm repository with your TPX (in lower case) and password
+
+Run `yarn npmrc:create '<TPX>:<password>'`
+
+### 3. Install dependencies
 
 All projects are managed by Lerna with Yarn Workspaces. Before
 starting any of the applications, do the following to ensure all
@@ -34,14 +40,6 @@ dependencies are satisfied.
 
 1.  Ensure you are in the top level root directory.
 2.  Install top level packages by running: `yarn bootstrap`
-
-### 3. Login into the private npm registry
-
-Login into our private npm repository with your TPX (in lower case) and password
-
-```
-yarn npmrc:create '<TPX>:<password>'
-```
 
 ## Configuration
 

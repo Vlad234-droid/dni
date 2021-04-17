@@ -8,10 +8,10 @@ type ProcessConfig = {
   applicationPath: string;
   uploadSize: number;
   // client
-  clientId: string;
-  clientSecret: string;
   cookieKey: string;
   // onelogin
+  oidcClientId: string;
+  oidcClientSecret: string;
   issuerUrl: string;
   refreshTokenSecret: string;
   registeredCallbackUrlPath: string;
@@ -19,6 +19,7 @@ type ProcessConfig = {
   redirectAfterLogoutUrl: string;
   // identity
   identityClientId: string;
+  identityClientSecret: string;
   identityUserScopedTokenCookieName: string;
   identityUserScopedTokenCookieSecret: string;
   // default
@@ -38,8 +39,8 @@ class ConfigAccessor {
       NODE_ENV: environment,
       NODE_PORT: port,
       APPLICATION_PATH: applicationPath,
-      CLIENT_ID: clientId,
-      CLIENT_SECRET: clientSecret,
+      OIDC_CLIENT_ID: oidcClientId,
+      OIDC_CLIENT_SECRET: oidcClientSecret,
       COOKIE_SESSION_KEY: cookieKey,
       ISSUER_URL: issuerUrl,
       REFRESH_TOKEN_SECRET: refreshTokenSecret,
@@ -47,6 +48,7 @@ class ConfigAccessor {
       REGISTERED_CALLBACK_URL_ROOT: registeredCallbackUrlRoot,
       REDIRECT_AFTER_LOGOUT_URL: redirectAfterLogoutUrl,
       IDENTITY_CLIENT_ID: identityClientId,
+      IDENTITY_CLIENT_SECRET: identityClientSecret,
       IDENTITY_USER_SCOPED_TOKEN_COOKIE_SECRET: identityUserScopedTokenCookieSecret,
       IDENTITY_USER_SCOPED_TOKEN_COOKIE_NAME: identityUserScopedTokenCookieName,
       MOCK_SERVER_URL: mockServerUrl,
@@ -59,8 +61,8 @@ class ConfigAccessor {
       port,
       // if root "/" needs to be converted to an empty string
       applicationPath: applicationPath.length > 1 ? applicationPath : '',
-      clientId,
-      clientSecret,
+      oidcClientId,
+      oidcClientSecret,
       cookieKey,
       issuerUrl,
       refreshTokenSecret,
@@ -68,6 +70,7 @@ class ConfigAccessor {
       registeredCallbackUrlRoot,
       redirectAfterLogoutUrl,
       identityClientId,
+      identityClientSecret,
       identityUserScopedTokenCookieSecret,
       identityUserScopedTokenCookieName,
       mockServerUrl,

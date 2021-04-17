@@ -1,16 +1,20 @@
 import express, { Request, Response } from 'express';
 
 import {
+  // colleague
   getNetworksByColleagueId,
   addNetworkToColleague,
   deleteNetworkFromColleague,
-} from '../controllers/colleague';
-import {
+  // partner
   getNetworksByPartnerId,
   addNetworkToPartner,
   deleteNetworkFromPartner,
-} from '../controllers/partner';
-import { handleHook } from '../controllers/notification';
+  // notification
+  handleHook,
+  // user
+  getProfile,
+} from '../controllers';
+
 import { cmsAuth } from '../middlewares/cms-auth';
 
 // controllers
@@ -28,5 +32,7 @@ api.post('/partner-networks', addNetworkToPartner);
 api.delete('/partner-networks', deleteNetworkFromPartner);
 
 api.post('/notifications', cmsAuth, handleHook);
+
+api.get('/users/profile', getProfile);
 
 export { healthCheck, api };

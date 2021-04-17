@@ -25,6 +25,7 @@
     "ws:mock-server": "yarn workspace @dni/mock-server",
     "ws:client": "yarn workspace @dni/client",
     "ws:connector:colleague": "yarn workspace @dni-connectors/colleague-api",
+    "ws:connector:identity": "yarn workspace @dni-connectors/identity-api",
     "ws:connector:colleague-cms": "yarn workspace @dni-connectors/colleague-cms-api",
     "ws:connector:common": "yarn workspace @dni-connectors/common",
     "ws:connector:confirmit": "yarn workspace @dni-connectors/confirmit-api",

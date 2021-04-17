@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@dni-connectors/colleague-cms-api": "1.0.0",
+    "@dni-connectors/identity-api": "1.0.0",
     "@energon-connectors/contact-api": "^0.3.6",
     "@energon-connectors/core": "^0.7.6",
     "@energon/fetch-client": "^0.10.1",

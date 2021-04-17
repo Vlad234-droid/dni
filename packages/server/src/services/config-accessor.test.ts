@@ -7,8 +7,8 @@ describe('Config accessor', () => {
     NODE_ENV: 'NODE_ENV',
     NODE_PORT: 'NODE_PORT',
     APPLICATION_PATH: 'APPLICATION_PATH',
-    CLIENT_ID: 'CLIENT_ID',
-    CLIENT_SECRET: 'CLIENT_SECRET',
+    OIDC_CLIENT_ID: 'OIDC_CLIENT_ID',
+    OIDC_CLIENT_SECRET: 'OIDC_CLIENT_SECRET',
     COOKIE_SESSION_KEY: 'COOKIE_SESSION_KEY',
     ISSUER_URL: 'ISSUER_URL',
     REFRESH_TOKEN_SECRET: 'REFRESH_TOKEN_SECRET',
@@ -16,6 +16,7 @@ describe('Config accessor', () => {
     REGISTERED_CALLBACK_URL_ROOT: 'REGISTERED_CALLBACK_URL_ROOT',
     REDIRECT_AFTER_LOGOUT_URL: 'REDIRECT_AFTER_LOGOUT_URL',
     IDENTITY_CLIENT_ID: 'IDENTITY_CLIENT_ID',
+    IDENTITY_CLIENT_SECRET: 'IDENTITY_CLIENT_SECRET',
     IDENTITY_USER_SCOPED_TOKEN_COOKIE_SECRET:
       'IDENTITY_USER_SCOPED_TOKEN_COOKIE_SECRET',
   } as ProcessEnv;
@@ -32,8 +33,8 @@ describe('Config accessor', () => {
 
   it('should contain valid data', () => {
     expect(configAccessor.getData()).toMatchObject({
-      clientId: 'CLIENT_ID',
-      clientSecret: 'CLIENT_SECRET',
+      oidcClientId: 'OIDC_CLIENT_ID',
+      oidcClientSecret: 'OIDC_CLIENT_SECRET',
     } as Partial<ProcessConfig>);
   });
 
