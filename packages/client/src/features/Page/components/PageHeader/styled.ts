@@ -11,7 +11,7 @@ const Wrapper = styled.div`
   justify-content: space-between;
   background-color: ${({ theme }) => theme.colors.background.darkest};
   align-items: flex-end;
-  height: 151px;
+  min-height: 151px;
 
   ${Media.large_tablet`
     padding: 54px 40px 80px 40px;

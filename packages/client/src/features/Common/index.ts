@@ -12,3 +12,6 @@ export { default as BackLink } from './components/BackLink';
 export { default as ButtonGroup } from './components/ButtonGroup';
 export { default as StatusLabel, StatusType } from './components/StatusLabel';
 export { default as IconWrapper } from './components/IconWrapper';
+export { default as Checkbox } from './components/Checkbox';
+export { default as Decrease } from './components/Decrease';
+export { default as Increase } from './components/Increase';

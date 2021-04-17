@@ -4,6 +4,7 @@ const DATE_FORMAT = 'yyyy-MM-dd';
 const TIME_FORMAT = 'HH:mm';
 const DATE_TIME_FORMAT = `${DATE_FORMAT} ${TIME_FORMAT}`;
 const FULL_FORMAT = "cccc, dd LLLL yyyy 'at' hh:mm";
+const FULL_DAY_FORMAT = 'LLLL dd, yyyy';
 
 const dateToFormat = (date: Date, format: string) =>
   DateTime.fromJSDate(date).toFormat(format);
@@ -25,4 +26,5 @@ export {
   TIME_FORMAT,
   DATE_TIME_FORMAT,
   FULL_FORMAT,
+  FULL_DAY_FORMAT,
 };

@@ -1,5 +1,3 @@
-import React from 'react';
-
 import { renderWithTheme } from 'utils/testUtils';
 
 import Carousel from './Carousel';
