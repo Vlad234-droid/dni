@@ -10,11 +10,11 @@ type Props = {
   title: string;
   participants?: number;
   link: string;
-  image: {
+  image?: {
     alternativeText: string;
     url: string;
   } | null;
-  renderAction: () => JSX.Element;
+  renderAction: (id: number) => JSX.Element;
   meta?: string;
   hideParticipants?: boolean;
 };
@@ -33,7 +33,7 @@ const SmallTile: FC<Props> = ({
     <Tile
       id={id}
       link={link}
-      renderAction={() => <ActionContainer>{renderAction()}</ActionContainer>}
+      renderAction={() => <ActionContainer>{renderAction(id)}</ActionContainer>}
       meta={meta}
       title={title}
       participants={participants}

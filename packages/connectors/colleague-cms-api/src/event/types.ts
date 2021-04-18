@@ -8,10 +8,10 @@ type Event = {
   maxParticipants: number;
   startDate: DateString;
   endDate: DateString;
-  surveryUrl: string;
+  surveryUrl?: string;
   description: string;
   slug: string;
-  image: File | null;
+  image?: File | null;
 } & BaseType;
 
 type EventApiParams = {

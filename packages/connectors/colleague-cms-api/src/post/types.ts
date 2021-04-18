@@ -7,8 +7,8 @@ type Post = {
   title: string;
   content: string;
   slug: string;
-  authorName: string;
-  authorEmail: string;
+  authorName?: string;
+  authorEmail?: string;
   anonymous: boolean;
   archived: boolean;
   event?: Event;
@@ -18,6 +18,8 @@ type Post = {
 
 type PostApiParams = {
   id: string;
+  network_eq?: string;
+  event_eq?: string;
 } & BaseApiParams;
 
 type PostBody = Omit<Post, 'id'>;

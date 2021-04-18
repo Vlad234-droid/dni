@@ -24,7 +24,8 @@ const Network: FC<Props> = ({ id }) => {
   const dispatch = useDispatch();
   const network = useSelector(byIdSelector(id));
   const { partners, description, title, image, contact } = network || {};
-  const [isJoined, setIsJoined] = useState(false);
+  const { networks = [] } = useStore((state) => state.auth.user);
+  const isJoined = networks.includes(+id);
   const [showInfoPanel, setShowInfoPanel] = useState(true);
   const [infoPanelType, setInfoPanelType] = useState(InfoPanelType.INFO);
   const { isLoading } = useStore((state) => state.networks);
@@ -39,12 +40,10 @@ const Network: FC<Props> = ({ id }) => {
   const loadNetwork = (id: number) => dispatch(getOne({ id }));
 
   const handleJoin = useCallback(() => {
-    setIsJoined(true);
     setInfoPanelType(InfoPanelType.SUCCESS);
   }, []);
 
   const handleLeave = useCallback(() => {
-    setIsJoined(false);
     setInfoPanelType(InfoPanelType.INFO);
     setShowInfoPanel(true);
   }, []);
@@ -76,11 +75,11 @@ const Network: FC<Props> = ({ id }) => {
           imageWrapperEl,
         )}
       <NetworkHeader
+        id={id}
         //@ts-ignore
         title={title}
         //@ts-ignore
         email={contact}
-        isJoined={isJoined}
         onLeave={handleLeave}
         onJoin={handleJoin}
       />

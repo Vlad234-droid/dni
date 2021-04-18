@@ -1,21 +1,21 @@
 import { Model, DataTypes, Sequelize } from 'sequelize';
 
-type ColleagueNetworkAttributes = {
-  colleagueUuid: number;
+type EmployeeNetworkAttributes = {
+  employeeNumber: string;
   networkId: number;
 };
 
-class ColleagueNetwork
-  extends Model<ColleagueNetworkAttributes>
-  implements ColleagueNetworkAttributes {
-  public colleagueUuid!: number;
+class EmployeeNetwork
+  extends Model<EmployeeNetworkAttributes>
+  implements EmployeeNetworkAttributes {
+  public employeeNumber!: string;
   public networkId!: number;
 
   static initialize(sequelize: Sequelize) {
-    ColleagueNetwork.init(
+    EmployeeNetwork.init(
       {
-        colleagueUuid: {
-          type: DataTypes.UUID,
+        employeeNumber: {
+          type: DataTypes.STRING(64),
           allowNull: false,
         },
         networkId: {
@@ -24,22 +24,22 @@ class ColleagueNetwork
         },
       },
       {
-        tableName: 'colleague_networks',
+        tableName: 'employees_networks',
         underscored: true,
         timestamps: false,
         indexes: [
           {
             unique: true,
-            fields: ['colleague_uuid', 'network_id'],
+            fields: ['employee_number', 'network_id'],
           },
         ],
         sequelize,
       },
     );
-    ColleagueNetwork.removeAttribute('id');
+    EmployeeNetwork.removeAttribute('id');
 
-    return ColleagueNetwork;
+    return EmployeeNetwork;
   }
 }
 
-export { ColleagueNetwork };
+export { EmployeeNetwork };

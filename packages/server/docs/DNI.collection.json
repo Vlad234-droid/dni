@@ -60,7 +60,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"title\": \"Test\",\n    \"description\": \"Test\",\n    \"sharedToken\": \"Test\",\n    \"status\": \"published\",\n    \"slug\": \"test3\"\n}",
+              "raw": "{\n    \"title\": \"Test\",\n    \"content\": \"Test\",\n    \"status\": \"published\",\n    \"slug\": \"test3\",\n    \"network\": 2,\n    \"authorName\": \"test\",\n    \"authorEmail\": \"test@test.com\",\n    \"anonymous\": false,\n    \"archived\": false\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -175,7 +175,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{ \"title\": \"test\", \"link\": \"http:test.com\" }",
+              "raw": "{\n    \"title\": \"test\",\n    \"contact\": \"http://test.com\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -185,36 +185,6 @@
             "url": {
               "raw": "{{HOST}}/organizations",
               "host": ["{{HOST}}"],
-              "path": ["organizations"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "http://localhost:1337/organizations",
-          "request": {
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "formdata",
-              "formdata": [
-                {
-                  "key": "data",
-                  "value": "{ \"title\": \"test\", \"link\": \"http:test.com\" }",
-                  "type": "text"
-                },
-                {
-                  "key": "files.image",
-                  "type": "file",
-                  "src": "/Users/akryvtsov/Downloads/entities.drawio — templates 2021-02-16 12-52-19.png"
-                }
-              ]
-            },
-            "url": {
-              "raw": "http://localhost:1337/organizations",
-              "protocol": "http",
-              "host": ["localhost"],
-              "port": "1337",
               "path": ["organizations"]
             }
           },
@@ -319,7 +289,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n    \"title\": \"Test\",\n    \"description\": \"Test\",\n    \"status\": \"published\",\n    \"contact\": \"test1@test.com\",\n    \"isPublished\": true\n}",
+              "raw": "{\n    \"title\": \"Test\",\n    \"description\": \"Test\",\n    \"contact\": \"test1@test.com\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -349,9 +319,9 @@
               }
             },
             "url": {
-              "raw": "{{HOST}}/networks/1",
+              "raw": "{{HOST}}/networks/92479",
               "host": ["{{HOST}}"],
-              "path": ["networks", "1"]
+              "path": ["networks", "92479"]
             }
           },
           "response": []
@@ -565,12 +535,12 @@
               "formdata": [
                 {
                   "key": "refId",
-                  "value": "6",
+                  "value": "9",
                   "type": "text"
                 },
                 {
                   "key": "ref",
-                  "value": "Emoji",
+                  "value": "Event",
                   "type": "text"
                 },
                 {
@@ -581,7 +551,7 @@
                 {
                   "key": "files",
                   "type": "file",
-                  "src": "/Users/akryvtsov/Downloads/images.jpeg"
+                  "src": "/Users/akryvtsov/Downloads/start-0e837dcc57769db2306d8d659f53555feb500b3c5d456879b9c843d1872e7baa.jpg"
                 }
               ]
             },
@@ -622,43 +592,160 @@
       ]
     },
     {
-      "name": "https://api-ppe.tesco.com/identity/v4/issue-token/token",
-      "request": {
-        "method": "POST",
-        "header": [
-          {
-            "key": "Accept",
-            "value": "application/vnd.tesco.identity.tokenresponse+json",
-            "type": "text"
-          },
-          {
-            "key": "Content-Type",
-            "value": "application/json",
-            "type": "text"
-          },
-          {
-            "key": "Authorization",
-            "value": "Basic MTgxNzM5YmMtOTM3ZC00MzhmLWExNWEtYWE2MzA5NWY4MjA1OjgwMTc4N2ViLWY2YjQtNDgwMS05M2M1LWE3YmQ2OTYxMTFhNg==",
-            "type": "text"
-          }
-        ],
-        "body": {
-          "mode": "raw",
-          "raw": "{\n  \"grant_type\": \"client_credentials\",\n  \"scope\": \"internal public\",\n  \"confidence_level\": 12\n}",
-          "options": {
-            "raw": {
-              "language": "json"
+      "name": "HOOK",
+      "item": [
+        {
+          "name": "/notimfications",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/notimfications",
+              "host": ["{{HOST}}"],
+              "path": ["notimfications"]
             }
-          }
-        },
-        "url": {
-          "raw": "https://api-ppe.tesco.com/identity/v4/issue-token/token",
-          "protocol": "https",
-          "host": ["api-ppe", "tesco", "com"],
-          "path": ["identity", "v4", "issue-token", "token"]
+          },
+          "response": []
         }
-      },
-      "response": []
+      ]
+    },
+    {
+      "name": "EMPLOYEE",
+      "item": [
+        {
+          "name": "/employee/profile",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/employees/profile?employeeNumber=UKE12375178",
+              "host": ["{{HOST}}"],
+              "path": ["employees", "profile"],
+              "query": [
+                {
+                  "key": "employeeNumber",
+                  "value": "UKE12375178"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/employees/:employeeNumber/networks",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/employees/UKE12375178/networks",
+              "host": ["{{HOST}}"],
+              "path": ["employees", "UKE12375178", "networks"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/employees/networks",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"employeeNumber\": \"UKE12375178\",\n    \"networkId\": 2\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{HOST}}/employees/networks",
+              "host": ["{{HOST}}"],
+              "path": ["employees", "networks"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/employees/networks",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"employeeNumber\": \"UKE12375178\",\n    \"networkId\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{HOST}}/employees/networks",
+              "host": ["{{HOST}}"],
+              "path": ["employees", "networks"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/employees/:employeeNumber/events",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{HOST}}/employees/UKE12375178/events",
+              "host": ["{{HOST}}"],
+              "path": ["employees", "UKE12375178", "events"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/employees/events",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"employeeNumber\": \"UKE12375178\",\n    \"eventId\": 3\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{HOST}}/employees/events",
+              "host": ["{{HOST}}"],
+              "path": ["employees", "events"]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/employees/events",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n    \"employeeNumber\": \"UKE12375178\",\n    \"eventId\": 1\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{HOST}}/employees/events",
+              "host": ["{{HOST}}"],
+              "path": ["employees", "events"]
+            }
+          },
+          "response": []
+        }
+      ]
     }
   ],
   "auth": {
@@ -683,7 +770,7 @@
   "variable": [
     {
       "key": "HOST",
-      "value": "http://localhost:9001/api"
+      "value": "http://localhost:9000/api"
     }
   ]
 }

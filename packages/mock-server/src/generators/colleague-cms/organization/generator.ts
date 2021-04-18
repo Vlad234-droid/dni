@@ -12,7 +12,7 @@ const generateOrganization = () => {
     ...generateBase(),
     image: generateFile(buildFullUrl(faker.random.arrayElement(images))),
     title: faker.random.words(3),
-    link: faker.internet.url(),
+    contact: faker.internet.url(),
   };
 
   return organization;

@@ -2,27 +2,21 @@ import React, { FC } from 'react';
 import styled from 'styled-components';
 import { TitleWithEllipsis } from '@beans/title-link';
 import Link from '@beans/link';
-import Button from '@beans/button';
 
 import Media from 'styles/media';
 import { useMedia } from 'context/InterfaceContext';
 import { headingMD } from 'styles';
+import NetworkAction from '../NetworkAction';
 
 type Props = {
+  id: number;
   title: string;
   email: string;
-  isJoined: boolean;
   onLeave: () => void;
   onJoin: () => void;
 };
 
-const NetworkHeader: FC<Props> = ({
-  title,
-  email,
-  isJoined,
-  onLeave,
-  onJoin,
-}) => {
+const NetworkHeader: FC<Props> = ({ id, title, email, onLeave, onJoin }) => {
   const { isMobile } = useMedia();
 
   // TODO: use commented code to display network actions edit and archive
@@ -39,15 +33,7 @@ const NetworkHeader: FC<Props> = ({
           {isMobile && <Link href={`mailto: ${email}`}>{email}</Link>}
         </div>
         <ButtonWrapper>
-          {isJoined ? (
-            <Button variant='primary' onClick={onLeave} size='xxl'>
-              Leave
-            </Button>
-          ) : (
-            <Button variant='primary' onClick={onJoin}>
-              Join
-            </Button>
-          )}
+          <NetworkAction {...{ id, onLeave, onJoin }} />
         </ButtonWrapper>
       </TitleWrapper>
       {/*<Actions>*/}

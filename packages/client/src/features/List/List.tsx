@@ -13,7 +13,7 @@ type Props = {
   items: Entity[];
   link: string;
   hideParticipants?: boolean;
-  renderAction: () => JSX.Element;
+  renderAction: (id: number) => JSX.Element;
   isMobile: boolean;
   isLoading?: boolean;
 };
@@ -32,7 +32,7 @@ const List: FC<Props> = ({
   <Wrapper>
     {items.map(
       //@ts-ignore
-      ({ id, maxParticipants, created_at, ...rest }: Entity) =>
+      ({ id, maxParticipants, startDate, ...rest }: Entity) =>
         isMobile ? (
           //@ts-ignore
           <SmallTile
@@ -44,7 +44,7 @@ const List: FC<Props> = ({
             meta={
               link === '/networks'
                 ? undefined
-                : isoDateToFormat(created_at, FULL_FORMAT)
+                : isoDateToFormat(startDate, FULL_FORMAT)
             }
             // TODO: remove hack for networks
             participants={maxParticipants || 300}
@@ -62,7 +62,7 @@ const List: FC<Props> = ({
             meta={
               link === '/networks'
                 ? undefined
-                : isoDateToFormat(created_at, FULL_FORMAT)
+                : isoDateToFormat(startDate, FULL_FORMAT)
             }
             // TODO: remove hack for networks
             participants={maxParticipants || 300}

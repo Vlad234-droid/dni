@@ -1,6 +1,8 @@
+import { defaultTheme } from '@beans/theme';
+import merge from 'lodash.merge';
 import graphics from './graphics';
 
-export default {
+export default merge(defaultTheme, {
   colors: {
     background: {
       dark: '#F2F6FA', // override
@@ -21,4 +23,4 @@ export default {
   icons: {
     graphics,
   },
-};
+});

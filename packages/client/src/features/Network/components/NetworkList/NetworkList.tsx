@@ -16,6 +16,7 @@ import { EmptyContainer } from 'features/Common';
 import { Filter } from '../../config/types';
 import { getList, getCount, listSelector, clear } from '../../store';
 import { Wrapper, ListContainer } from './styled';
+import NetworkAction from '../NetworkAction';
 
 type Props = {
   filter?: Filter;
@@ -25,8 +26,9 @@ const NetworkList: FC<Props> = ({ filter }) => {
   const { isMobile } = useMedia();
   const dispatch = useDispatch();
   const [filters, setFilters] = useState<
-    FilterPayload & { id_in?: string[] }
+    FilterPayload & { id_in?: number[] }
   >();
+  const { networks = [] } = useStore((state) => state.auth.user);
 
   const scrollContainer = useScrollContainer();
 
@@ -34,8 +36,8 @@ const NetworkList: FC<Props> = ({ filter }) => {
     meta: { total },
     isLoading,
   } = useStore((state) => state.networks);
-  const networks = useSelector(listSelector);
-  const hasMore = useMemo(() => networks.length < total, [networks, total]);
+  const list = useSelector(listSelector);
+  const hasMore = useMemo(() => list.length < total, [list, total]);
 
   const loadNetworks = useCallback(
     (page: number) => {
@@ -71,12 +73,12 @@ const NetworkList: FC<Props> = ({ filter }) => {
         break;
       }
       case 'YOUR_NETWORKS': {
-        where = { id_in: ['1', '2'] };
+        where = { id_in: [...networks, 999] };
         break;
       }
     }
     setFilters({ ...where });
-  }, [filter]);
+  }, [filter, networks]);
 
   // TODO: add loader component
   const Loader = <div key='loader'>Loading ...</div>;
@@ -86,7 +88,7 @@ const NetworkList: FC<Props> = ({ filter }) => {
       <Heading size={Size.md} color={Color.black}>
         New Networks
       </Heading>
-      {isEmpty(networks) ? (
+      {isEmpty(list) && !hasMore ? (
         <EmptyContainer
           description='Unfortunately, we did not find any matches for your request'
           explanation='Please change your filtering criteria to try again.'
@@ -107,13 +109,9 @@ const NetworkList: FC<Props> = ({ filter }) => {
               link='/networks'
               // TODO: object is not correct type
               //@ts-ignore
-              items={networks}
+              items={list}
               isMobile={isMobile}
-              renderAction={() => (
-                <Button variant='primary' onClick={() => console.log('test')}>
-                  Join
-                </Button>
-              )}
+              renderAction={(id) => <NetworkAction id={id} />}
             />
           </InfiniteScroll>
         </ListContainer>

@@ -16,6 +16,7 @@ import { EmptyContainer } from 'features/Common';
 import { getList, listSelector, clear, getCount } from '../../store';
 import { Filter } from '../../config/types';
 import { Wrapper } from './styled';
+import EventAction from '../EventAction';
 
 type Props = {
   filter?: Filter;
@@ -32,8 +33,8 @@ const EventList: FC<Props> = ({ filter }) => {
     meta: { total },
     isLoading,
   } = useStore((state) => state.events);
-  const events = useSelector(listSelector);
-  const hasMore = useMemo(() => events.length < total, [events, total]);
+  const list = useSelector(listSelector);
+  const hasMore = useMemo(() => list.length < total, [list, total]);
 
   const loadEvents = useCallback(
     (page: number) => {
@@ -94,7 +95,7 @@ const EventList: FC<Props> = ({ filter }) => {
       <Heading size={Size.md} color={Color.black}>
         New Events
       </Heading>
-      {isEmpty(events) ? (
+      {isEmpty(list) ? (
         <EmptyContainer
           description='Unfortunately, we did not find any matches for your request'
           explanation='Please change your filtering criteria to try again.'
@@ -105,14 +106,10 @@ const EventList: FC<Props> = ({ filter }) => {
             link='/events'
             // TODO: event is not correct type Event
             //@ts-ignore
-            items={events}
+            items={list}
             hideParticipants={true}
             isMobile={isMobile}
-            renderAction={() => (
-              <Button variant='primary' onClick={() => console.log('test')}>
-                Take part
-              </Button>
-            )}
+            renderAction={(id) => <EventAction id={id} />}
           />
           <Button
             disabled={!hasMore || isLoading}

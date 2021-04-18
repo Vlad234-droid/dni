@@ -1,9 +1,3 @@
-enum Status {
-  PENDING = 'pending',
-  ACTIVE = 'active',
-  LOCKED = 'locked',
-}
-
 enum UserRole {
   ADMIN = 'admin',
   MANAGER = 'manager',
@@ -13,10 +7,14 @@ enum UserRole {
 
 interface User {
   id: number;
-  firstName: string;
-  lastName: string;
-  status: Status;
+  name: string;
+  preferred_username: string;
   role: UserRole;
+  networks: number[];
+  events: number[];
+  params: {
+    employeeNumber: string;
+  };
 }
 
 interface DefaultUser extends Partial<User> {
@@ -24,4 +22,4 @@ interface DefaultUser extends Partial<User> {
 }
 
 export type { User, DefaultUser };
-export { Status, UserRole };
+export { UserRole };

@@ -1,5 +1,4 @@
-type LoginAction = (payload: { email: string; password: string }) => void;
-type LogoutAction = () => void;
+type FetchUserAction = () => void;
 
 type DynamicData = {
   userId: number;
@@ -13,4 +12,4 @@ type Rule = {
   };
 };
 
-export type { LoginAction, LogoutAction, DynamicData, Rule };
+export type { FetchUserAction, DynamicData, Rule };

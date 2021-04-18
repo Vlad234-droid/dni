@@ -7,9 +7,9 @@ type Network = {
   title: string;
   slug: string;
   description: string;
-  image: File | null;
+  image?: File | null;
   contact: string;
-  partners: Organization[];
+  partners?: Organization[];
   questions?: Question[];
 } & BaseType;
 

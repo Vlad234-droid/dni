@@ -8,6 +8,7 @@ import { LargeTile } from 'features/Tile';
 import { normalizeImage } from 'utils/content';
 import { Network } from '../../store';
 import { EmptyContainer } from 'features/Common';
+import NetworkAction from '../NetworkAction';
 
 const NetworkCarousel: FC = () => {
   const [{ response: list }, doFetch] = useFetch<Network[]>([]);
@@ -31,11 +32,7 @@ const NetworkCarousel: FC = () => {
       {list!.map(({ id, title, image }) => (
         <LargeTile
           link='/networks'
-          renderAction={() => (
-            <Button variant='primary' onClick={() => console.log('test')}>
-              Join
-            </Button>
-          )}
+          renderAction={(id) => <NetworkAction id={id} />}
           id={id}
           key={`networks-${id}`}
           title={title}

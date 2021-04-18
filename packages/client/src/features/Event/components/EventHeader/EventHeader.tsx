@@ -3,9 +3,10 @@ import { TitleWithEllipsis } from '@beans/title-link';
 import Button from '@beans/button';
 import Icon from '@beans/icon';
 
-import { IconWrapper, StatusLabel, StatusType } from 'features/Common';
+import { StatusLabel, StatusType } from 'features/Common';
 import { useMedia } from 'context/InterfaceContext';
 import { FULL_FORMAT, isoDateToFormat } from 'utils/date';
+import EventAction from '../EventAction';
 
 import {
   Wrapper,
@@ -19,22 +20,18 @@ import {
 } from './styled';
 
 type Props = {
+  id: number;
   title: string;
   description?: string | string[];
-  isJoined: boolean;
-  onLeave: () => void;
-  onJoin: () => void;
   isOnAir?: boolean;
   participants: number;
   startDate: string;
 };
 
 const EventHeader: FC<Props> = ({
+  id,
   title,
   description,
-  isJoined,
-  onLeave,
-  onJoin,
   isOnAir = false,
   participants,
   startDate,
@@ -60,15 +57,7 @@ const EventHeader: FC<Props> = ({
             </StatusWrapper>
           )}
           <ButtonWrapper>
-            {isJoined ? (
-              <Button variant='primary' onClick={onLeave} size='xxl'>
-                Miss out
-              </Button>
-            ) : (
-              <Button variant='primary' onClick={onJoin}>
-                Take part
-              </Button>
-            )}
+            <EventAction id={id} />
           </ButtonWrapper>
         </TitleWrapper>
         {/*<Actions>*/}

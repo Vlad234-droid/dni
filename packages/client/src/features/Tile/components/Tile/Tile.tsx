@@ -23,7 +23,7 @@ type Props = {
   meta?: string;
   participants?: number;
   hideParticipants?: boolean;
-  image: {
+  image?: {
     alternativeText: string;
     url: string;
   } | null;

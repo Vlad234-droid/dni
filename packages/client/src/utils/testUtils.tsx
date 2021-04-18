@@ -1,7 +1,6 @@
 import React, { FC, ReactElement } from 'react';
-import merge from 'lodash.merge';
 import { render, cleanup, RenderOptions } from '@testing-library/react';
-import { defaultTheme, ThemeProvider } from '@beans/theme';
+import { ThemeProvider } from '@beans/theme';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
@@ -12,7 +11,7 @@ import store from 'store';
 import Auth from 'features/Auth';
 
 const WithThemeProvider: FC = ({ children }) => (
-  <ThemeProvider theme={merge(defaultTheme, theme)}>
+  <ThemeProvider theme={theme}>
     <div>{children}</div>
   </ThemeProvider>
 );
@@ -21,7 +20,7 @@ const WithRouterProvider: FC = ({ children }) => {
   const history = createMemoryHistory();
 
   return (
-    <ThemeProvider theme={merge(defaultTheme, theme)}>
+    <ThemeProvider theme={theme}>
       <Router history={history}>{children}</Router>
     </ThemeProvider>
   );
