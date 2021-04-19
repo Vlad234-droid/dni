@@ -61,6 +61,8 @@ const Event: FC<Props> = ({ id }) => {
 
   if (isLoading) return <div>Loading network data...</div>;
 
+  const normalizeImg = normalizeImage(image);
+
   // TODO: normaluize image before save to store
   return (
     <Wrapper>
@@ -69,9 +71,9 @@ const Event: FC<Props> = ({ id }) => {
           <ResponsiveImage
             key={id}
             //@ts-ignore
-            alt={normalizeImage(image).alternativeText}
+            alt={normalizeImg?.alternativeText}
             //@ts-ignore
-            src={normalizeImage(image).url}
+            src={normalizeImg?.url}
             fallbackSizeRatio='57%'
             objectFit='cover'
           />,

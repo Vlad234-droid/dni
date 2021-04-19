@@ -44,7 +44,7 @@ const PostTitle = styled.h2`
   font-weight: bold;
   font-size: 20px;
   line-height: 28px;
-  color: ${({ theme }) => theme.colors.text.dark};;
+  color: ${({ theme }) => theme.colors.text.dark};
 `;
 
 const PostDescription = styled.div`

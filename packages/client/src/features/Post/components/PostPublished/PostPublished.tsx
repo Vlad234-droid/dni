@@ -49,13 +49,7 @@ const PostPublished: FC<PostPublishedProps> = ({ item }) => {
           <PostPublishedAttachments attachments={attachments} />
         )}
         <PostTitle>{title}</PostTitle>
-        <PostDescription>
-          <ReadMoreReadLess
-            value={content}
-            readMoreText={'Read more'}
-            readLessText={'Read less'}
-          />
-        </PostDescription>
+        <PostDescription>{content}</PostDescription>
         {/* <PostControls id={id} emotions={emotions} /> */}
       </PostContent>
     </PostPublishedWrapper>

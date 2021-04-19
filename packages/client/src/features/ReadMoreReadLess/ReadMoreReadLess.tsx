@@ -1,6 +1,14 @@
-import React, { FC, useState, useRef, useMemo, MutableRefObject } from 'react';
-import { useEffect } from 'react';
+import React, {
+  FC,
+  useState,
+  useRef,
+  useMemo,
+  MutableRefObject,
+  useCallback,
+ useEffect } from 'react';
+
 import styled from 'styled-components';
+import useEventListener from 'hooks/useEventListener';
 
 const ReadMoreReadLessValue = styled.pre<{
   isReadingMore: boolean;
@@ -8,10 +16,12 @@ const ReadMoreReadLessValue = styled.pre<{
   isUpdated: boolean;
 }>`
   flex-grow: 1;
-  overflow: ${({ isTogglerNeeded }) => isTogglerNeeded ? 'hidden' : 'auto'};
-  text-overflow: ${({ isTogglerNeeded }) => isTogglerNeeded ? 'ellipsis' : 'initial'};
-  white-space: ${({ isReadingMore }) => isReadingMore ? 'pre-wrap' : 'nowrap'};
-  position: ${({ isUpdated }) => isUpdated ? 'static' : 'absolute'};
+  overflow: ${({ isTogglerNeeded }) => (isTogglerNeeded ? 'hidden' : 'auto')};
+  text-overflow: ${({ isTogglerNeeded }) =>
+    isTogglerNeeded ? 'ellipsis' : 'initial'};
+  white-space: ${({ isReadingMore }) =>
+    isReadingMore ? 'pre-wrap' : 'nowrap'};
+  position: ${({ isUpdated }) => (isUpdated ? 'static' : 'absolute')};
 `;
 
 const ReadMoreReadLessToggler = styled.span<{
@@ -21,7 +31,7 @@ const ReadMoreReadLessToggler = styled.span<{
   white-space: nowrap;
   padding-left: 8px;
   color: ${({ theme }) => theme.colors.link.base};
-  opacity: ${({ isUpdated }) => isUpdated ? 1 : 0};
+  opacity: ${({ isUpdated }) => (isUpdated ? 1 : 0)};
 `;
 
 const ReadMoreReadLessWrapper = styled.div`
@@ -47,38 +57,30 @@ const ReadMoreReadLess: FC<ReadMoreReadLessProps> = ({
   const valueRef = useRef() as MutableRefObject<HTMLPreElement>;
   const containerRef = useRef() as MutableRefObject<HTMLDivElement>;
   const [isReadingMore, setReadingMore] = useState(false);
-  const [isTogglerNeeded, setTogglerNeeded] = useState(true);
+  const [isToggleNeeded, setToggleNeeded] = useState(true);
   const [isUpdated, setUpdated] = useState(false);
   const [valueWidth, setValueWidth] = useState(0);
 
-  const onTextAnalyze = () => {
+  const handleTextAnalyze = useCallback(() => {
     if (!containerRef.current || isReadingMore) {
       return;
     }
 
     if (valueWidth > containerRef.current.clientWidth) {
-      setTogglerNeeded(true);
+      setToggleNeeded(true);
     } else {
-      setTogglerNeeded(false);
+      setToggleNeeded(false);
     }
-  };
+  }, [valueWidth]);
+
+  useEventListener('resize', handleTextAnalyze);
 
   useEffect(() => {
-    if (isUpdated) {
-      window.addEventListener('resize', onTextAnalyze);
-    } else {
-      window.removeEventListener('resize', onTextAnalyze);
+    if (!isUpdated) {
       setValueWidth(valueRef.current.offsetWidth);
       setUpdated(true);
     }
-    
-    return () => {
-      window.removeEventListener('resize', onTextAnalyze);
-    };
-    
   }, [value, isUpdated]);
-
-  useMemo(onTextAnalyze, [valueWidth]);
 
   return (
     <ReadMoreReadLessWrapper
@@ -89,7 +91,7 @@ const ReadMoreReadLess: FC<ReadMoreReadLessProps> = ({
         ref={valueRef}
         isUpdated={isUpdated}
         isReadingMore={isReadingMore}
-        isTogglerNeeded={isTogglerNeeded}
+        isTogglerNeeded={isToggleNeeded}
       >
         {value}
         {isReadingMore && (
@@ -101,7 +103,7 @@ const ReadMoreReadLess: FC<ReadMoreReadLessProps> = ({
           </ReadMoreReadLessToggler>
         )}
       </ReadMoreReadLessValue>
-      {!isReadingMore && isTogglerNeeded && (
+      {!isReadingMore && isToggleNeeded && (
         <ReadMoreReadLessToggler
           isUpdated={isUpdated}
           onClick={() => setReadingMore(true)}
