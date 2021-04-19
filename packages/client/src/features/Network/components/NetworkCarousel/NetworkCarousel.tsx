@@ -1,11 +1,14 @@
 import { FC, useEffect, useState } from 'react';
 import Button from '@beans/button';
+import isEmpty from 'lodash.isempty';
 
 import Carousel from 'features/Carousel';
 import useFetch from 'hooks/useFetch';
 import { LargeTile } from 'features/Tile';
 import { normalizeImage } from 'utils/content';
 import { Network } from '../../store';
+import { EmptyContainer } from 'features/Common';
+import NetworkAction from '../NetworkAction';
 
 const NetworkCarousel: FC = () => {
   const [{ response: list }, doFetch] = useFetch<Network[]>([]);
@@ -22,16 +25,14 @@ const NetworkCarousel: FC = () => {
     );
   }, [filters]);
 
-  return (
+  return isEmpty(list) ? (
+    <EmptyContainer description='Nothing to show' />
+  ) : (
     <Carousel itemWidth='278px' id='network-carousel'>
       {list!.map(({ id, title, image }) => (
         <LargeTile
           link='/networks'
-          renderAction={() => (
-            <Button variant='primary' onClick={() => console.log('test')}>
-              Join
-            </Button>
-          )}
+          renderAction={(id) => <NetworkAction id={id} />}
           id={id}
           key={`networks-${id}`}
           title={title}

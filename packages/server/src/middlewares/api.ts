@@ -1,4 +1,3 @@
-import { Router } from 'express';
 import { createApiRouter, ContextProvider } from '@energon/rest-api-provider';
 import {
   cmsEmojisApiConnector,
@@ -265,9 +264,7 @@ const api = (requestCtx: ContextProvider<any>) =>
   });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const apiMiddleware = <T extends ContextProvider<any>>(
-  context: T,
-  route: Router,
-) => route.use('/api', api(context));
+export const apiMiddleware = <T extends ContextProvider<any>>(context: T) =>
+  api(context);
 
 const unsafelyUnpackResponseData = <T>(res: { data: T }) => res.data;

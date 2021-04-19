@@ -11,7 +11,6 @@ import { useNotification } from 'context/NotificationContext';
 
 const ALL = 'ALL';
 const YOUR_NETWORKS = 'YOUR_NETWORKS';
-const YOU_MANAGE = 'YOU_MANAGE';
 
 const filters = [
   {
@@ -24,14 +23,9 @@ const filters = [
     title: 'Your networks',
     active: false,
   },
-  {
-    key: YOU_MANAGE,
-    title: 'You manage',
-    active: false,
-  },
 ];
 
-type Filter = typeof ALL | typeof YOUR_NETWORKS | typeof YOU_MANAGE;
+type Filter = typeof ALL | typeof YOUR_NETWORKS;
 
 const TEST_ID = 'container-networks';
 

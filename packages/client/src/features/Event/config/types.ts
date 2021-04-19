@@ -5,10 +5,10 @@ interface FormData {
   title: string;
   network: string;
   maxParticipants: number;
-  startedAt: DateObjectUnits;
-  finishedAt: DateObjectUnits;
+  startDate: DateObjectUnits;
+  endDate: DateObjectUnits;
   description?: string;
-  surveyLink?: string;
+  surveryUrl?: string;
 }
 
 export default interface Event extends FormData {

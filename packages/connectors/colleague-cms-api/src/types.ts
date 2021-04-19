@@ -17,8 +17,7 @@ type ApiInput<T, U = unknown> = {
 };
 
 type BaseApiParams = {
-  // filter by title
-  title_contains?: string;
+  // filter _where doesn't support right now
   _where?: string;
 
   // pagination

@@ -6,6 +6,7 @@ export const Wrapper = styled.div`
   margin-top: 16px;
   display: flex;
   flex-flow: row wrap;
+  width: 100%;
 
   & > div {
     margin-bottom: 16px;

@@ -2,22 +2,18 @@ import { createContext } from 'react';
 
 import { defaultUserState, DefaultUser, User } from 'features/User';
 
-import { LoginAction, LogoutAction } from '../config/types';
+import { FetchUserAction } from '../config/types';
 
 type AuthData = {
   authenticated: boolean;
   user: DefaultUser | User;
-  accessToken: Nullable<string>;
-  login: LoginAction;
-  logout: LogoutAction;
+  fethUser: FetchUserAction;
 };
 
 export const defaultValue: AuthData = {
   authenticated: false, // to check if authenticated or not
   user: defaultUserState, // store all the user details
-  accessToken: null,
-  login: () => null, // to start the login process
-  logout: () => null, // logout the user
+  fethUser: () => null, // to start fetch user
 };
 
 const authContext = createContext<AuthData>(defaultValue);

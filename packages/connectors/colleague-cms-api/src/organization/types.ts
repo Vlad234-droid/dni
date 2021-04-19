@@ -3,8 +3,8 @@ import { BaseApiParams, BaseType } from '../types';
 
 type Organization = {
   title: string;
-  link: string;
-  image: File | null;
+  contact: string;
+  image?: File | null;
 } & BaseType;
 
 type OrganizationBody = Omit<Organization, 'id'>;

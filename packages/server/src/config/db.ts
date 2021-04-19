@@ -1,5 +1,5 @@
 import { Sequelize } from 'sequelize';
-import { Notification, PartnerNetwork, ColleagueNetwork } from '../models';
+import { Notification, EmployeeNetwork, EmployeeEvent } from '../models';
 
 const {
   POSTGRES_DB = '',
@@ -17,8 +17,8 @@ const sequelize = new Sequelize(POSTGRES_DB, POSTGRES_USER, POSTGRES_PASSWORD, {
 
 const DB = {
   Notification: Notification.initialize(sequelize),
-  PartnerNetwor: PartnerNetwork.initialize(sequelize),
-  ColleagueNetwork: ColleagueNetwork.initialize(sequelize),
+  EmployeeNetwork: EmployeeNetwork.initialize(sequelize),
+  EmployeeEvent: EmployeeEvent.initialize(sequelize),
 };
 
 (async () => {

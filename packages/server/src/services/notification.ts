@@ -1,12 +1,7 @@
 import { Server, Socket } from 'socket.io';
 import { Op } from 'sequelize';
 import { DB } from '../config/db';
-import {
-  Network,
-  Event,
-  Post,
-  Status,
-} from '@dni-connectors/colleague-cms-api';
+import { Network, Event, Post } from '@dni-connectors/colleague-cms-api';
 import { ActionType, EntityType } from '../models';
 
 // events
@@ -83,28 +78,16 @@ const analyzeAction = (data: Input, entityType: EntityType | undefined) => {
       switch (entityType) {
         case EntityType.POST: {
           const post = data.entry as Post;
-          if (post.status == Status.ARCHIVED) {
+          if (post.archived) {
             return ActionType.POST_ARCHIVED;
           } else {
             return ActionType.POST_UPDATED;
           }
         }
-        case EntityType.EVENT: {
-          const event = data.entry as Event;
-          if (event.status == Status.ARCHIVED) {
-            return ActionType.EVENT_ARCHIVED;
-          } else {
-            return ActionType.EVENT_UPDATED;
-          }
-        }
-        case EntityType.NETWORK: {
-          const network = data.entry as Network;
-          if (network.status == Status.ARCHIVED) {
-            return ActionType.NETWORK_ARCHIVED;
-          } else {
-            return ActionType.NETWORK_UPDATED;
-          }
-        }
+        case EntityType.EVENT:
+          return ActionType.EVENT_UPDATED;
+        case EntityType.NETWORK:
+          return ActionType.NETWORK_UPDATED;
         default:
           return;
       }

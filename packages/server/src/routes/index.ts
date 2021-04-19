@@ -1,16 +1,20 @@
 import express, { Request, Response } from 'express';
 
 import {
-  getNetworksByColleagueId,
-  addNetworkToColleague,
-  deleteNetworkFromColleague,
-} from '../controllers/colleague';
-import {
-  getNetworksByPartnerId,
-  addNetworkToPartner,
-  deleteNetworkFromPartner,
-} from '../controllers/partner';
-import { handleHook } from '../controllers/notification';
+  // employee
+  getProfile,
+  // employee-networks
+  getNetworksByEmployeeNumber,
+  addNetworkToEmployee,
+  deleteNetworkFromEmployee,
+  // employee-events
+  getEventsByEmployeeNumber,
+  addEventToEmployee,
+  deleteEventFromEmployee,
+  // notification
+  handleHook,
+} from '../controllers';
+
 import { cmsAuth } from '../middlewares/cms-auth';
 
 // controllers
@@ -19,13 +23,15 @@ const api = express.Router();
 
 healthCheck.get('/_status', (_: Request, res: Response) => res.sendStatus(200));
 
-api.get('/colleague-networks/:colleagueId', getNetworksByColleagueId);
-api.post('/colleague-networks', addNetworkToColleague);
-api.delete('/colleague-networks', deleteNetworkFromColleague);
+api.get('/employees/profile', getProfile);
 
-api.get('/partner-networks/:partnerId', getNetworksByPartnerId);
-api.post('/partner-networks', addNetworkToPartner);
-api.delete('/partner-networks', deleteNetworkFromPartner);
+api.get('/employees/:employeeNumber/networks', getNetworksByEmployeeNumber);
+api.post('/employees/networks', addNetworkToEmployee);
+api.delete('/employees/networks', deleteNetworkFromEmployee);
+
+api.get('/employees/:employeeNumber/events', getEventsByEmployeeNumber);
+api.post('/employees/events', addEventToEmployee);
+api.delete('/employees/events', deleteEventFromEmployee);
 
 api.post('/notifications', cmsAuth, handleHook);
 

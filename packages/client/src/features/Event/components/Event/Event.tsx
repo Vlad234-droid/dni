@@ -14,6 +14,7 @@ import EventHeader from '../EventHeader';
 import { Wrapper, Content, LeftContent, Filters } from './styled';
 import { byIdSelector, getOne } from '../../store';
 import { isEventOnAir } from '../../utils';
+import { takePartEvent, missOutEvent } from 'features/Auth/store';
 
 type Props = {
   id: number;
@@ -41,8 +42,7 @@ type Filter = typeof ALL | typeof ARCHIVED;
 const Event: FC<Props> = ({ id }) => {
   const dispatch = useDispatch();
   const event = useSelector(byIdSelector(id));
-  const { description, title, image, maxParticipants, startedAt } = event || {};
-  const [isJoined, setIsJoined] = useState(false);
+  const { description, title, image, maxParticipants, startDate } = event || {};
   const [filter, setFilter] = useState<Filter>(ALL);
   const { isLoading } = useStore((state) => state.networks);
   const imageWrapperEl = useImageWrapper();
@@ -56,14 +56,6 @@ const Event: FC<Props> = ({ id }) => {
   }, [event, id]);
 
   const loadEvent = (id: number) => dispatch(getOne({ id }));
-
-  const handleJoin = useCallback(() => {
-    setIsJoined(true);
-  }, []);
-
-  const handleLeave = useCallback(() => {
-    setIsJoined(false);
-  }, []);
 
   if (!event && !isLoading)
     return <Content>{`There is no event with id ${id}`}</Content>;
@@ -88,18 +80,16 @@ const Event: FC<Props> = ({ id }) => {
           imageWrapperEl,
         )}
       <EventHeader
+        id={id}
         //@ts-ignore
         title={title}
-        isJoined={isJoined}
-        onLeave={handleLeave}
-        onJoin={handleJoin}
         description={description}
         //@ts-ignore
         participants={maxParticipants}
         //@ts-ignore
         isOnAir={isOnAir}
         //@ts-ignore
-        startedAt={startedAt}
+        startDate={startDate}
       />
       <Content>
         <LeftContent>

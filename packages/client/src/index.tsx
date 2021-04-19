@@ -2,8 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
-import { ThemeProvider, defaultTheme } from '@beans/theme';
-import merge from 'lodash.merge';
+import { ThemeProvider } from '@beans/theme';
 
 import { InterfaceProvider } from 'context/InterfaceContext';
 import { NotificationProvider } from 'context/NotificationContext';
@@ -21,10 +20,7 @@ const globalThemeStyles = {
 };
 
 ReactDOM.render(
-  <ThemeProvider
-    theme={merge(defaultTheme, theme)}
-    globalStyles={globalThemeStyles}
-  >
+  <ThemeProvider theme={theme} globalStyles={globalThemeStyles}>
     <Provider store={store}>
       <Auth>
         <InterfaceProvider>

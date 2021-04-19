@@ -1,3 +1,3 @@
-export { UserRole, Status } from './config/types';
+export { UserRole } from './config/types';
 export type { User, DefaultUser } from './config/types';
 export { defaultUserState } from './config/user';

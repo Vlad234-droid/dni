@@ -8,10 +8,10 @@ describe('Env accessor', () => {
   });
 
   it('validate failed with missing env variable should throw an error', () => {
-    (<ProcessEnv>process.env).CLIENT_SECRET = '';
+    (<ProcessEnv>process.env).OIDC_CLIENT_SECRET = '';
 
     expect(() => envAccessor.reReadEnv().validate()).toThrowError(
-      'CLIENT_SECRET is missing',
+      'OIDC_CLIENT_SECRET is missing',
     );
   });
 

@@ -1,33 +1,33 @@
-import React, { FC, useCallback, useMemo } from 'react';
+import React, { FC, useEffect, useCallback, useMemo } from 'react';
 
 import useStore from 'hooks/useStore';
 import useDispatch from 'hooks/useDispatch';
 
-import { LoginAction, LogoutAction } from '../../config/types';
-import { login, logout, State as AuthState } from '../../store';
+import { FetchUserAction } from '../../config/types';
+import { profile, State as AuthState } from '../../store';
 import { AuthProvider } from '../../context/authContext';
 
 const Auth: FC = ({ children }) => {
-  const { user, token } = useStore<AuthState>((r) => r.auth);
+  const { user } = useStore<AuthState>((r) => r.auth);
   const dispatch = useDispatch();
 
   const isAuthenticated = useMemo(() => Boolean(user?.id), [user]);
 
-  const loginAction: LoginAction = useCallback(
-    (payload) => dispatch(login(payload)),
+  const fetchUserAction: FetchUserAction = useCallback(
+    () => dispatch(profile()),
     [],
   );
 
-  const logoutAction: LogoutAction = useCallback(() => dispatch(logout()), []);
+  useEffect(() => {
+    fetchUserAction();
+  }, [fetchUserAction]);
 
   return (
     <AuthProvider
       value={{
         authenticated: isAuthenticated,
         user: user,
-        accessToken: token,
-        login: loginAction,
-        logout: logoutAction,
+        fethUser: fetchUserAction,
       }}
     >
       {children}

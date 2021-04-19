@@ -6,11 +6,11 @@ import {
 import cookieParser from 'cookie-parser';
 
 import { ProcessConfig } from 'services/config-accessor';
-import { accessTokenJtiExtractor } from '../utils';
 
 export const openIdConfig = ({
-  clientId,
-  clientSecret,
+  environment,
+  oidcClientId,
+  oidcClientSecret,
   cookieKey,
   issuerUrl,
   refreshTokenSecret,
@@ -19,14 +19,16 @@ export const openIdConfig = ({
   redirectAfterLogoutUrl,
   applicationPath,
   identityClientId,
+  identityClientSecret,
   identityUserScopedTokenCookieSecret,
   identityUserScopedTokenCookieName,
   groupsWithAccess,
 }: ProcessConfig) => {
   const openIdCookieParser = cookieParser(cookieKey);
+  const isProduction = environment === 'production';
   const openId = getOpenidMiddleware({
-    clientId,
-    clientSecret,
+    clientId: oidcClientId,
+    clientSecret: oidcClientSecret,
     cookieKey,
     issuerUrl,
     refreshTokenSecret,
@@ -38,15 +40,14 @@ export const openIdConfig = ({
     scope: ['openid', 'profile', 'groups'],
     plugins: [
       identityTokenSwapPlugin({
-        identityIdAndSecret: identityClientId,
+        identityIdAndSecret: `${identityClientId}:${identityClientSecret}`,
         strategy: 'oidc',
         cookieConfig: {
           cookieName: identityUserScopedTokenCookieName,
           secret: identityUserScopedTokenCookieSecret,
           httpOnly: true,
-          secure: false,
-          signed: false,
-          cookieShapeResolver: accessTokenJtiExtractor(), // set to false if only access_token is needed
+          secure: isProduction,
+          signed: isProduction,
         },
       }),
       userDataPlugin({

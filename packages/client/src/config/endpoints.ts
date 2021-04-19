@@ -1,13 +1,24 @@
 import { AxiosInstance } from 'axios';
 
 type Config = {
-  [key: string]: string | number | undefined;
+  [key: string]: string | number | object | undefined;
 };
 
 export default (httpClient: AxiosInstance) => ({
   auth: {
     signIn: <T>(data?: Config) => httpClient.post<T>('/auth/login', data),
     signOut: <T>() => httpClient.post<T>('/auth/logout'),
+  },
+  user: {
+    profile: <T>() => httpClient.get<T>('/employees/profile'),
+    joinNetwork: <T>(data: Config) =>
+      httpClient.post<T>('/employees/networks', data),
+    leaveNetwork: <T>(data: Config) =>
+      httpClient.delete<T>('/employees/networks', { data }),
+    takePartEvent: <T>(data: Config) =>
+      httpClient.post<T>('/employees/events', data),
+    missOutEvent: <T>(data: Config) =>
+      httpClient.delete<T>('/employees/events', { data }),
   },
   networks: {
     fetchAll: <T>(data: Config = {}) =>

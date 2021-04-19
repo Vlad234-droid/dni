@@ -1,50 +1,46 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 import { defaultUserState } from 'features/User';
-import { getDataOrReject } from 'utils/storeHelper';
+import API from 'utils/api';
 
 import * as T from './types';
 
 const initialState: T.State = {
   user: defaultUserState,
-  token: null,
   isLoading: false,
   error: null,
 };
 
-const login = createAsyncThunk<
-  T.UserResponse,
-  T.LoginPayload,
-  {
-    rejectValue: T.ValidationError;
-  }
->(T.LOGIN_ACTION, async (payload: T.LoginPayload, { rejectWithValue }) => {
-  return await getDataOrReject<
-    T.UserResponse,
-    T.ValidationError,
-    ReturnType<typeof rejectWithValue>
-  >(async () => {
-    // return await API.Auth.signIn<T.UserResponse>(payload);
+const profile = createAsyncThunk<T.UserResponse>(
+  T.FETCH_PROFILE_ACTION,
+  async () => await API.user.profile<T.UserResponse>(),
+);
 
-    return {
-      user: { firstName: 'Test', lastName: 'Test', id: 1, role: 'admin' },
-      token: '1111',
-    } as T.UserResponse;
-  }, rejectWithValue);
-});
+const joinNetwork = createAsyncThunk<T.NetworkResponse, T.NetworkPayload>(
+  T.JOIN_NETWORK_ACTION,
+  async (data) => await API.user.joinNetwork<T.NetworkResponse>(data),
+);
 
-const logout = createAsyncThunk<T.UserResponse>(T.LOGOUT_ACTION, async () => {
-  // await API.Auth.signOut();
+const leaveNetwork = createAsyncThunk<T.NetworkResponse, T.NetworkPayload>(
+  T.LEAVE_NETWORK_ACTION,
+  async (data) => await API.user.leaveNetwork<T.NetworkResponse>(data),
+);
 
-  return { user: defaultUserState, token: null } as T.UserResponse;
-});
+const takePartEvent = createAsyncThunk<T.EventResponse, T.EventPayload>(
+  T.TAKE_PART_EVENT_ACTION,
+  async (data) => await API.user.takePartEvent<T.EventResponse>(data),
+);
+
+const missOutEvent = createAsyncThunk<T.EventResponse, T.EventPayload>(
+  T.MISS_OUT_EVENT_ACTION,
+  async (data) => await API.user.missOutEvent<T.EventResponse>(data),
+);
 
 const slice = createSlice({
   name: T.ROOT,
   initialState,
   reducers: {
     clear(state) {
-      state.token = null;
       state.user = defaultUserState;
     },
   },
@@ -52,39 +48,85 @@ const slice = createSlice({
     const startLoading = (state: T.State) => {
       state.isLoading = true;
     };
-    const handleRejection = (
-      state: T.State,
-      { payload: { message } = {} }: { payload?: { message?: string } },
-    ) => {
-      if (message) {
-        state.error = message;
-      }
+    const stopLoading = (state: T.State) => {
       state.isLoading = false;
     };
     const handleAuthentication = (
       state: T.State,
-      { payload: { user, token } }: { payload: T.UserResponse },
+      { payload: user }: { payload: T.UserResponse },
     ) => {
-      state.token = token;
       state.user = user;
-      state.isLoading = false;
-    };
-    const handleLogout = (state: T.State) => {
-      state.token = null;
-      state.user = defaultUserState;
-      state.isLoading = false;
+      stopLoading(state);
     };
 
     builder
-      .addCase(login.pending, startLoading)
-      .addCase(login.fulfilled, handleAuthentication)
-      .addCase(login.rejected, handleRejection)
-      .addCase(logout.fulfilled, handleLogout);
+      .addCase(profile.pending, startLoading)
+      .addCase(profile.fulfilled, handleAuthentication)
+      .addCase(profile.rejected, stopLoading)
+      .addCase(joinNetwork.pending, startLoading)
+      .addCase(joinNetwork.fulfilled, (state: T.State, action) => {
+        const networkId = +action.payload.body.networkId;
+        const networks = state.user.networks;
+
+        if (networks && networks.indexOf(networkId) === -1) {
+          networks.push(networkId);
+          state.user.networks = networks;
+        }
+
+        stopLoading(state);
+      })
+      .addCase(joinNetwork.rejected, stopLoading)
+      .addCase(leaveNetwork.pending, startLoading)
+      .addCase(leaveNetwork.fulfilled, (state: T.State, action) => {
+        const networkId = +action.payload.body.networkId;
+        const networks = state.user.networks;
+
+        if (networks && networks.indexOf(networkId) > -1) {
+          networks.splice(networks.indexOf(networkId), 1);
+          state.user.networks = networks;
+        }
+
+        stopLoading(state);
+      })
+      .addCase(leaveNetwork.rejected, stopLoading)
+      .addCase(takePartEvent.pending, startLoading)
+      .addCase(takePartEvent.fulfilled, (state: T.State, action) => {
+        const eventId = +action.payload.body.eventId;
+        const events = state.user.events;
+
+        if (events && events.indexOf(eventId) === -1) {
+          events.push(eventId);
+          state.user.events = events;
+        }
+
+        stopLoading(state);
+      })
+      .addCase(takePartEvent.rejected, stopLoading)
+      .addCase(missOutEvent.pending, startLoading)
+      .addCase(missOutEvent.fulfilled, (state: T.State, action) => {
+        const eventId = +action.payload.body.eventId;
+        const events = state.user.events;
+
+        if (events && events.indexOf(eventId) > -1) {
+          events.splice(events.indexOf(eventId), 1);
+          state.user.events = events;
+        }
+
+        stopLoading(state);
+      })
+      .addCase(missOutEvent.rejected, stopLoading);
   },
 });
 
 const { clear } = slice.actions;
 
-export { clear, logout, login };
+export {
+  clear,
+  profile,
+  joinNetwork,
+  leaveNetwork,
+  takePartEvent,
+  missOutEvent,
+};
 
 export default slice.reducer;
