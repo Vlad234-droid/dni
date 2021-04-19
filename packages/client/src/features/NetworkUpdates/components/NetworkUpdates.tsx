@@ -29,7 +29,7 @@ const NetworkUpdates: FC = () => (
         </MenuItem>
       ))}
     </List>
-    <Link to={'/'}>
+    <Link to={'/networks'}>
       <Button variant='secondary'>See all</Button>
     </Link>
   </Wrapper>

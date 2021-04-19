@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express';
 import { TESCO_API_URLS } from '@energon-connectors/core';
 
+import { identityApiRouter } from './identity';
 import { colleagueApiRouter } from './colleague';
 import { colleagueCmsApiRouter } from './colleague-cms';
 
@@ -10,6 +11,7 @@ const healthCheck = express.Router();
 const api = express.Router();
 
 api.use(API_PATH, colleagueApiRouter);
+api.use(API_PATH, identityApiRouter);
 api.use(colleagueCmsApiRouter);
 
 healthCheck.get('/_status', (_: Request, res: Response) => res.sendStatus(200));

@@ -10,7 +10,7 @@ const EXTS = MIME_TYPES.map(faker.system.fileExt);
 
 export const generateFile = (url = '') => {
   const file: File = {
-    id: faker.random.number(),
+    id: faker.datatype.number(),
     alternativeText: faker.random.word(),
     caption: faker.random.word(),
     ext: faker.random.arrayElement(EXTS),
@@ -18,13 +18,13 @@ export const generateFile = (url = '') => {
     mime: faker.random.arrayElement(MIME_TYPES),
     name: faker.random.word(),
     previewUrl: url || faker.image.imageUrl(IMG_WIDTH / 2, IMG_HEIGHT / 2),
-    size: faker.random.number(),
+    size: faker.datatype.number(),
     url:
       url ||
       `${faker.image.imageUrl(
         IMG_WIDTH,
         IMG_HEIGHT,
-      )}?random=${faker.random.number()}`,
+      )}?random=${faker.datatype.number()}`,
     width: IMG_WIDTH,
   };
   return file;
