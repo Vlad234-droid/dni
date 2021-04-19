@@ -16,8 +16,8 @@ COPY ./packages ./packages
 
 ARG BUILD_ENV_PARAM
 ENV BUILD_ENV_PARAM=$BUILD_ENV_PARAM
-RUN yarn build:prod
+RUN yarn build:dev
 
-CMD yarn run:prod
+CMD yarn run:dev
 
 EXPOSE 9000
