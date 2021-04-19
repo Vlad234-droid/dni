@@ -32,6 +32,7 @@ type BaseType = {
   id: number;
   created_at: DateString;
   updated_at: DateString;
+  published_at: DateString;
 };
 
 export type {

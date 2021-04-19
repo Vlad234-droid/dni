@@ -1,6 +1,5 @@
-import { User } from 'features/User';
 // import { Network } from 'features/Network';
-import { Emotion } from '../components/PostEmotions';
+import { Post } from '@dni-connectors/colleague-cms-api';
 
 enum PostStatus {
   PUBLISHED = 'published',
@@ -19,38 +18,6 @@ type Attachment = {
   size: number;
   url: string;
   width: number;
-};
-
-type Post = {
-  id: number | string;
-  title: string;
-  attachments?: Attachment[];
-  description: string;
-  postAs: Poster;
-  sharedToken: string;
-  slug: string;
-  status: PostStatus;
-  emotions: Emotion[];
-  createdBy: User;
-  created_at: string;
-  updated_at: string;
-};
-
-type Poster = PostAsUser | PostAsNetwork | PostAsEvent | null;
-
-type PostAsUser = {
-  __component: 'post-as.user';
-  user: User;
-};
-
-type PostAsEvent = {
-  __component: 'post-as.event';
-  event: Event;
-};
-
-type PostAsNetwork = {
-  __component: 'post-as.network';
-  network: any;
 };
 
 type Filter = 'ALL' | 'BY_EVENT' | 'BY_NETWORK';

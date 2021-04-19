@@ -25,17 +25,7 @@ interface PostPublishedProps {
 const postPublishedTestId = 'post-published-test-id';
 
 const PostPublished: FC<PostPublishedProps> = ({ item }) => {
-  const {
-    id,
-    title,
-    description,
-    emotions,
-    createdBy,
-    created_at,
-    updated_at,
-    attachments,
-  } = item;
-
+  const { id, title, content, authorName, published_at, attachments } = item;
   const media = useMedia();
 
   return (
@@ -48,11 +38,11 @@ const PostPublished: FC<PostPublishedProps> = ({ item }) => {
           <PostPublisherAvatarBox>
             {/* <PostPublisherAvatar src={createdBy.avatar} /> */}
           </PostPublisherAvatarBox>
-          <PostPublisherName>
-            {`${createdBy.firstName} ${createdBy.lastName}`}
-          </PostPublisherName>
+          <PostPublisherName>{`${authorName}`}</PostPublisherName>
         </PostPublisher>
-        <PostPublishDate>{new Date(created_at).toDateString()}</PostPublishDate>
+        <PostPublishDate>
+          {new Date(published_at).toDateString()}
+        </PostPublishDate>
       </PostHead>
       <PostContent>
         {attachments && attachments.length > 0 && (
@@ -61,12 +51,12 @@ const PostPublished: FC<PostPublishedProps> = ({ item }) => {
         <PostTitle>{title}</PostTitle>
         <PostDescription>
           <ReadMoreReadLess
-            value={description}
+            value={content}
             readMoreText={'Read more'}
             readLessText={'Read less'}
           />
         </PostDescription>
-        <PostControls id={id} emotions={emotions} />
+        {/* <PostControls id={id} emotions={emotions} /> */}
       </PostContent>
     </PostPublishedWrapper>
   );

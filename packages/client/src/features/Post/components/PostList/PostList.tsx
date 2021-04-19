@@ -12,11 +12,17 @@ import PostItem from '../PostItem';
 
 type Props = {
   filter?: Filter;
+  entityId?: number;
 };
 
-const PostList: FC<Props> = ({ filter }) => {
+const PostList: FC<Props> = ({ filter, entityId }) => {
   const dispatch = useDispatch();
-  const [filters, setFilters] = useState<FilterPayload>();
+  const [filters, setFilters] = useState<
+    FilterPayload & {
+      network_eq?: number;
+      event_eq?: number;
+    }
+  >();
 
   const scrollContainer = useScrollContainer();
 
@@ -61,16 +67,16 @@ const PostList: FC<Props> = ({ filter }) => {
         break;
       }
       case 'BY_EVENT': {
-        
+        where = { event_eq: entityId };
         break;
       }
       case 'BY_NETWORK': {
-        
+        where = { network_eq: entityId };
         break;
       }
     }
-    setFilters({ ...filters, _where: JSON.stringify(where) });
-  }, [filter]);
+    setFilters({ ...filters, ...where });
+  }, [filter, entityId]);
 
   // TODO: add loader component
   const Loader = <div key='loader'>Loading ...</div>;
@@ -87,12 +93,7 @@ const PostList: FC<Props> = ({ filter }) => {
       useWindow={false}
     >
       {posts.map((post) => {
-        return (
-          <PostItem
-            key={post.id}
-            item={post}
-          />
-        );
+        return <PostItem key={post.id} item={post} />;
       })}
     </InfiniteScroll>
   );

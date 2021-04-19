@@ -15,19 +15,12 @@ interface PostItemProps {
 
 const postItemTestId = 'post-item-test-id';
 
-const PostItem: FC<PostItemProps> = ({
-  item,
-}) => {
-  const { status } = item;
+const PostItem: FC<PostItemProps> = ({ item }) => {
+  const { archived } = item;
 
   return (
     <PostItemWrapper data-testid={postItemTestId}>
-      {status === PostStatus.PUBLISHED && (
-        <PostPublished item={item} />
-      )}
-      {status === PostStatus.ARCHIVED && (
-        <PostArchived item={item} />
-      )}
+      {archived ? <PostArchived item={item} /> : <PostPublished item={item} />}
     </PostItemWrapper>
   );
 };

@@ -101,7 +101,7 @@ const Network: FC<Props> = ({ id }) => {
       )}
       <Content>
         <LeftContent>
-          <Post />
+          <Post entityId={id} filter={'BY_NETWORK'} />
         </LeftContent>
         <RightContent>
           <NetworkPartners

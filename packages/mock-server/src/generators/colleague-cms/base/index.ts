@@ -6,6 +6,7 @@ const generateBase = () => {
     id: faker.random.number(),
     created_at: dateToIso(new Date()),
     updated_at: dateToIso(new Date()),
+    published_at: dateToIso(new Date()),
   };
 
   return base;

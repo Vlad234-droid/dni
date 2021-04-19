@@ -1,8 +1,7 @@
-import React, { FC, useState } from 'react';
+import { FC, useState } from 'react';
 
 import { Post } from '../../config/types';
 import {
-  PostPublisherAvatar,
   PostPublisherAvatarBox,
   PostPublisherName,
   PostArchiveEllipse,
@@ -24,7 +23,7 @@ interface PostArchivedProps {
 const postArchivedTestId = 'post-archived-test-id';
 
 const PostArchived: FC<PostArchivedProps> = ({ item }) => {
-  const { id, title, description, createdBy } = item;
+  const { id, title, content, authorName, authorEmail } = item;
   const [isContentVisible, setVisible] = useState(false);
 
   const onPostClick = () => {
@@ -43,9 +42,7 @@ const PostArchived: FC<PostArchivedProps> = ({ item }) => {
         <PostPublisherAvatarBox>
           {/* <PostPublisherAvatar src={createdBy.avatarSrc} /> */}
         </PostPublisherAvatarBox>
-        <PostPublisherName>
-            {`${createdBy.firstName} ${createdBy.lastName}`}
-          </PostPublisherName>
+        <PostPublisherName>{`${authorName}`}</PostPublisherName>
         <PostArchiveMark>
           <PostArchiveEllipse />
           <PostArchiveLabel>Archived</PostArchiveLabel>
@@ -55,7 +52,7 @@ const PostArchived: FC<PostArchivedProps> = ({ item }) => {
       {isContentVisible && (
         <PostContent>
           {title && <PostTitle>{title}</PostTitle>}
-          <PostDescription>{description}</PostDescription>
+          <PostDescription>{content}</PostDescription>
         </PostContent>
       )}
     </PostArchivedWrapper>
