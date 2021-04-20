@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import styled from 'styled-components';
 
-import { Emotion } from '../../../../config/types';
+import { Emotion } from '../../config/types';
 import { PostEmotionIconSmall } from '../PostEmotionIcons';
 import PostEmotionsDetails, {
   PostEmotionsDetailsWrapper,
@@ -58,11 +58,11 @@ const PostEmotionsMultipanel: FC<PostEmotionsMultipanelProps> = ({
   return (
     <PostEmotionsMultipanelWrapper data-testid={postEmotionsMultipanelTestId}>
       {emotions.map((emotion) => {
-        const { id, image } = emotion;
+        const { id, emoji } = emotion;
 
         return (
           <PostEmotionsItem key={id}>
-            <PostEmotionIconSmall iconSrc={image} />
+            <PostEmotionIconSmall iconSrc={emoji?.image?.url} />
             <PostEmotionsDetails emotions={[emotion]} />
           </PostEmotionsItem>
         );

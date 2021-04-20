@@ -2,23 +2,23 @@ import styled from 'styled-components';
 
 import { iconsSrc } from '../../../config/media';
 
-const PostPublisherAvatar = styled.img`
-  width: 40px;
-  height: 40px;
-  border-radius: 100%;
-`;
+const PostPublisherAvatar = styled.img``;
 
 const PostPublisherAvatarBox = styled.div`
   margin-right: 6px;
-  max-width: 50px;
+  display: flex;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 100%;
+  background-color: ${({ theme }) => theme.colors.tost};
 `;
 
 const PostPublisherName = styled.div`
   font-size: 16px;
   line-height: 24px;
   font-weight: bold;
-  width: 110px;
-  margin: 0 14px 0 6px;
+  padding: 6px;
   color: ${({ theme }) => theme.colors.text.base};
 `;
 
@@ -39,17 +39,21 @@ const PostArchiveLabel = styled.div`
 
 const PostArchiveMark = styled.div`
   display: flex;
+  flex-grow: 1;
   align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
   min-height: 32px;
-  padding: 5px 8px;
+  padding: 6px;
   border-radius: 20px;
 `;
 
 const PostArchiveInfo = styled.div`
-  padding: 5px 8px;
+  padding: 6px;
+  flex-grow: 1;
   font-size: 14px;
   line-height: 22px;
-  flex-grow: 1;
+  justify-content: center;
   color: ${({ theme }) => theme.colors.text.base};
 `;
 
@@ -67,9 +71,9 @@ const PostUnarchiveIcon = styled.div`
 
 const PostHead = styled.div`
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  flex-wrap: wrap;
 `;
 
 const PostTitle = styled.h2`
@@ -92,11 +96,13 @@ const PostContent = styled.div`
   padding-top: 16px;
 `;
 
-const PostArchivedWrapper = styled.div`
-  max-width: 561px;
-  padding: 24px;
+const PostArchivedWrapper = styled.div<{
+  isMobile: boolean;
+}>`
+  box-sizing: border-box;
+  padding: ${({ isMobile }) => (isMobile ? 16 : 24)}px;
   border: 1px solid ${({ theme }) => theme.colors.lines.light};
-  background-color: #f7f9fa; ;
+  background-color: #f7f9fa;
 `;
 
 export {

@@ -10,7 +10,7 @@ const appReducer = combineReducers({
   auth: authReducer,
   networks: networksReducer,
   events: eventsReducer,
-  post: postReducer,
+  posts: postReducer,
   toaster: toasterReducer,
   // TODO: add other reducers
 });

@@ -1,21 +1,23 @@
 import styled from 'styled-components';
 
-const PostPublisherAvatar = styled.img`
-  width: 40px;
-  height: 40px;
-  border-radius: 100%;
-`;
+const PostPublisherAvatar = styled.img``;
 
 const PostPublisherAvatarBox = styled.div`
   margin-right: 6px;
+  display: flex;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  border-radius: 100%;
+  background-color: ${({ theme }) => theme.colors.tost};
 `;
 
 const PostPublisherName = styled.div`
   font-size: 16px;
   line-height: 24px;
   font-weight: bold;
-  color: #333333;
-  margin: 0 14px 0 6px;
+  color: ${({ theme }) => theme.colors.text.dark};
+  padding: 6px;
 `;
 
 const PostPublisher = styled.div`
@@ -23,14 +25,16 @@ const PostPublisher = styled.div`
   align-items: center;
 `;
 
-const PostPublisDate = styled.div`
+const PostPublishDate = styled.div`
   font-size: 14px;
   line-height: 22px;
-  color: #666666;
+  padding: 6px;
+  color: ${({ theme }) => theme.colors.text.base};
 `;
 
 const PostHead = styled.div`
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
 `;
@@ -40,26 +44,28 @@ const PostTitle = styled.h2`
   font-weight: bold;
   font-size: 20px;
   line-height: 28px;
-  color: #333333;
+  color: ${({ theme }) => theme.colors.text.dark};
 `;
 
-const PostDescription = styled.p`
+const PostDescription = styled.div`
   margin: 0;
   padding-top: 8px;
   font-size: 16px;
   line-height: 24px;
-  color: #333333;
+  color: ${({ theme }) => theme.colors.text.dark};
 `;
 
 const PostContent = styled.div`
   padding-top: 12px;
 `;
 
-const PostPublishedWrapper = styled.div`
-  max-width: 561px;
-  padding: 24px;
-  border: 1px solid #cccccc;
-  background: #ffffff;
+const PostPublishedWrapper = styled.div<{
+  isMobile: boolean;
+}>`
+  box-sizing: border-box;
+  padding: ${({ isMobile }) => (isMobile ? 16 : 24)}px;
+  border: 1px solid ${({ theme }) => theme.colors.lines.base};
+  background-color: ${({ theme }) => theme.colors.background.base};
 `;
 
 export {
@@ -67,7 +73,7 @@ export {
   PostPublisherAvatarBox,
   PostPublisherName,
   PostPublisher,
-  PostPublisDate,
+  PostPublishDate,
   PostHead,
   PostTitle,
   PostDescription,

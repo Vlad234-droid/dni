@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import styled from 'styled-components';
 
-import { Emotion } from '../../../../config/types';
+import { Emotion } from '../../config/types';
 import { PostEmotionIconSmall } from '../PostEmotionIcons';
 
 const PostEmotionDetailsCounter = styled.div`
@@ -40,10 +40,10 @@ const postEmotionsDetailsTestId = 'post-emotions-details-test-id';
 const PostEmotionsDetails: FC<PostEmotionsDetailsProps> = ({ emotions }) => {
   return (
     <PostEmotionsDetailsWrapper data-testid={postEmotionsDetailsTestId}>
-      {emotions.map(({ id, image, count }) => {
+      {emotions.map(({ id, emoji, count }) => {
         return (
           <PostEmotionsItem key={id}>
-            <PostEmotionIconSmall iconSrc={image} />
+            <PostEmotionIconSmall iconSrc={emoji?.image?.url} />
             <PostEmotionDetailsCounter>{count}</PostEmotionDetailsCounter>
           </PostEmotionsItem>
         );

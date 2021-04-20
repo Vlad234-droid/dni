@@ -53,7 +53,6 @@ export const LeftContainer = styled.div.attrs({
   'data-testid': 'left-content',
 })`
   grid-area: left;
-  overflow-y: auto;
 `;
 
 export const MainContainer = styled.div.attrs({

@@ -49,8 +49,8 @@ export const ActionContainer = styled(BaseElement)`
   align-items: center;
   margin-top: 0;
   margin-bottom: 0;
-  padding: 0;
-  max-width: 102px;
+  padding: 5px;
+  max-width: 112px;
 
   & > button {
     width: 100%;

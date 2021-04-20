@@ -24,6 +24,7 @@ export const LeftContent = styled.div`
 
   ${Media.tablet`
      margin-bottom: 0;
+     width: 100%;
   `}
 `;
 

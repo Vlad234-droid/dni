@@ -59,8 +59,8 @@ const Tile: FC<Props> = ({
           alt={memoizedImage?.alternativeText}
           src={memoizedImage?.url}
           fallbackSizeRatio='57%'
-          minHeight='126px'
-          maxHeight='126px'
+          minHeight='116px'
+          maxHeight='116px'
           maxWidth='100%'
           objectFit='cover'
         />

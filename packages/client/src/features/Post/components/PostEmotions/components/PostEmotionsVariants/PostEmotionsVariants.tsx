@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import styled from 'styled-components';
 
-import { Emotion } from '../../../../config/types';
+import { Emoji } from '../../config/types';
 import { PostEmotionIconBig } from '../PostEmotionIcons';
 
 const PostEmotionsItem = styled.div`
@@ -22,8 +22,8 @@ const PostEmotionsVariantsWrapper = styled.div`
 `;
 
 interface PostEmotionsVariantsProps {
-  variants: Emotion[];
-  onVariantClick: ({ variant }: { variant: Emotion }) => void;
+  variants: Emoji[];
+  onVariantClick: ({ variant }: { variant: Emoji }) => void;
 }
 
 const postEmotionsVariantsTestId = 'post-emotions-details-test-id';

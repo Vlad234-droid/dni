@@ -1,7 +1,7 @@
 import faker from 'faker';
 import { Post } from '@dni-connectors/colleague-cms-api';
 
-import { generateArray } from 'utils';
+import { generateArray, randomArray } from 'utils';
 import { generateFile } from '../built-in';
 import { generateBase } from '../base';
 import { generateNetwork } from '../network';
@@ -11,13 +11,13 @@ const generatePost = () => {
   const post: Post = {
     ...generateBase(),
     title: faker.random.words(3),
-    attachments: [generateFile()],
+    attachments: randomArray(1, 4, generateFile),
     content: faker.random.words(10),
     slug: faker.random.words(2).replace(' ', '-').toLowerCase(),
     authorName: faker.name.firstName(),
     authorEmail: faker.internet.email(),
-    anonymous: faker.random.boolean(),
-    archived: faker.random.boolean(),
+    anonymous: faker.datatype.boolean(),
+    archived: faker.datatype.boolean(),
     event: faker.random.arrayElement([generateEvent(), undefined]),
     network: faker.random.arrayElement([generateNetwork(), undefined]),
   };

@@ -8,7 +8,7 @@ import { generateBase } from '../base';
 const generateEmotion = () => {
   const emotion: Emotion = {
     ...generateBase(),
-    count: faker.random.number(20),
+    count: faker.datatype.number(20),
     emoji: generateEmoji(),
   };
 

@@ -6,7 +6,7 @@ const buildAbsolutePath = (path: string) =>
 
 const normalizeImage = (image: File | null | undefined) => {
   if (!image) {
-    return null;
+    return;
   }
 
   return {

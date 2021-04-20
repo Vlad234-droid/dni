@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import styled from 'styled-components';
 
-import { cutFileName } from '../../../../utils';
+import { cutString } from '../../../../utils';
 import { Attachment } from '../../../../config/types';
 import PostAttachmentSuccess from '../PostAttachmentSuccess';
 
@@ -11,6 +11,7 @@ const PostAttachmentDownloadLink = styled.a`
   left: 0;
   width: 100%;
   height: 100%;
+  cursor: default;
 `;
 
 const PostPublishedAttachmentWrapper = styled.div`
@@ -19,13 +20,18 @@ const PostPublishedAttachmentWrapper = styled.div`
 
 const postPublishedAttachmentTestId = 'post-published-attachment-test-id';
 
-const PostPublishedAttachment: FC<Attachment> = ({ format, name, path }) => {
-  const nameToView = cutFileName({ name, format, maxLength: 24 });
+const PostPublishedAttachment: FC<Attachment> = ({ ext, name, url }) => {
+  const nameToView = cutString({ name, format: ext, maxLength: 24 });
 
   return (
     <PostPublishedAttachmentWrapper data-testid={postPublishedAttachmentTestId}>
-      <PostAttachmentSuccess name={nameToView} path={path} format={format} />
-      <PostAttachmentDownloadLink href={path} download={name} />
+      <PostAttachmentSuccess name={nameToView} path={url} format={ext} />
+      <PostAttachmentDownloadLink
+        href={url}
+        onClick={(event) => {
+          event.preventDefault();
+        }}
+      />
     </PostPublishedAttachmentWrapper>
   );
 };

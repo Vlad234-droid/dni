@@ -5,9 +5,7 @@
   "license": "MIT",
   "scripts": {
     "run:dev": "env-cmd -f .env nodemon --watch \"src/**/*\" -e ts,tsx --exec \"ts-node --files\" src/app.ts",
-    "run:prod": "env-cmd -f .env.${BUILD_ENV_PARAM} node ./build/app.js",
-    "build": "env-cmd -f .env.${BUILD_ENV_PARAM} tsc --project ./",
-    "build:dev": "env-cmd -f .env tsc --project ./",
+    "run:prod": "env-cmd -f .env.${BUILD_ENV_PARAM} ts-node --transpile-only -- src/app.ts",
     "clean": "rimraf build coverage",
     "clean:all": "yarn clean && rimraf node_modules",
     "test": "jest",

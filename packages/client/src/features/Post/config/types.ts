@@ -1,59 +1,26 @@
+// import { Network } from 'features/Network';
+import { Post } from '@dni-connectors/colleague-cms-api';
+
 enum PostStatus {
-  EDITING = 'EDITING',
   PUBLISHED = 'published',
   ARCHIVED = 'archived',
 }
 
-type User = {
-  name: string;
-  avatarSrc: string;
-};
-
-enum AttachmentStatus {
-  INIT = 'init',
-  ERROR = 'error',
-  LOADING = 'loading',
-  SUCCESS = 'success',
-}
-
 type Attachment = {
-  format: string;
-  name: string;
-  path: string;
-  progress: number;
-  status: AttachmentStatus;
-};
-
-type Emotion = {
-  id: number | string;
-  name: string;
-  count: number;
-  // image: File;
-  image: string;
-};
-
-type Post = {
+  alternativeText: string;
+  caption: string;
+  ext: string;
+  height: number;
   id: number;
-  slug: string;
-  title: string;
-  postAs: string;
-  status: PostStatus;
-  attachments: Attachment[];
-  description: string;
-  sharedToken: string;
-  emotions: Emotion[];
-  createdBy: User;
-  createdAt: string;
-  updatedAt: string;
+  mime: string;
+  name: string;
+  previewUrl: string | null;
+  size: number;
+  url: string;
+  width: number;
 };
 
-type PostForm = {
-  id: number;
-  title: string;
-  attachments: Attachment[];
-  createdBy: User;
-  description: string;
-};
+type Filter = 'ALL' | 'BY_EVENT' | 'BY_NETWORK';
 
-export { PostStatus, AttachmentStatus };
-export type { User, Post, Emotion, PostForm, Attachment };
+export { PostStatus };
+export type { Post, Filter, Attachment };

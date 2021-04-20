@@ -10,6 +10,8 @@ const ToasterWrapper = styled.div`
   position: absolute;
   width: 100%;
   top: 45px;
+  left: 0;
+  z-index: 1;
   & > * {
     margin-top: 8px;
   }

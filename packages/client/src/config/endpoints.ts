@@ -39,4 +39,12 @@ export default (httpClient: AxiosInstance) => ({
   common: {
     upload: <T>(data: FormData) => httpClient.post<T>(`/upload`, data),
   },
+  posts: {
+    fetchAll: <T>(data: Config = {}) =>
+      httpClient.get<T>('/posts', { params: data }),
+    fetchOne: <T>(id: number) => httpClient.get<T>(`/posts/${id}`),
+    create: <T>(data: T) => httpClient.post<T>(`/posts`, data),
+    count: <T>(data: Config = {}) =>
+      httpClient.get<T>(`/posts/count`, { params: data }),
+  },
 });

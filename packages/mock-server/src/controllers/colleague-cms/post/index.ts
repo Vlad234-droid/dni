@@ -4,7 +4,7 @@ import { buildCRUD } from 'utils';
 
 import { generatePost, generatePosts } from 'generators/colleague-cms';
 
-const COLLECTION_SIZE = 20;
+const COLLECTION_SIZE = 100;
 
 const CRUD = buildCRUD<Post>(
   () => generatePosts(COLLECTION_SIZE),

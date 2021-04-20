@@ -12,7 +12,7 @@ const generateEvent = () => {
     title: faker.random.words(3),
     network: generateNetwork(),
     description: faker.random.words(10),
-    maxParticipants: faker.random.number(999),
+    maxParticipants: faker.datatype.number(999),
     startDate: dateToIso(new Date()),
     endDate: dateToIso(new Date()),
     surveryUrl: faker.internet.url(),

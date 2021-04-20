@@ -14,7 +14,6 @@ import EventHeader from '../EventHeader';
 import { Wrapper, Content, LeftContent, Filters } from './styled';
 import { byIdSelector, getOne } from '../../store';
 import { isEventOnAir } from '../../utils';
-import { takePartEvent, missOutEvent } from 'features/Auth/store';
 
 type Props = {
   id: number;
@@ -62,6 +61,8 @@ const Event: FC<Props> = ({ id }) => {
 
   if (isLoading) return <div>Loading network data...</div>;
 
+  const normalizeImg = normalizeImage(image);
+
   // TODO: normaluize image before save to store
   return (
     <Wrapper>
@@ -70,9 +71,9 @@ const Event: FC<Props> = ({ id }) => {
           <ResponsiveImage
             key={id}
             //@ts-ignore
-            alt={normalizeImage(image).alternativeText}
+            alt={normalizeImg?.alternativeText}
             //@ts-ignore
-            src={normalizeImage(image).url}
+            src={normalizeImg?.url}
             fallbackSizeRatio='57%'
             objectFit='cover'
           />,
@@ -99,7 +100,7 @@ const Event: FC<Props> = ({ id }) => {
               onChange={(key) => setFilter(key as Filter)}
             />
           </Filters>
-          <Post />
+          <Post entityId={id} filter={'BY_EVENT'} />
         </LeftContent>
       </Content>
     </Wrapper>

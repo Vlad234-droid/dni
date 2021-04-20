@@ -1,9 +1,5 @@
-export { default as PostFormAttachment } from './components/PostFormAttachment';
-export { default as PostFormAttachments } from './components/PostFormAttachments';
 export { default as PostPublishedAttachment } from './components/PostPublishedAttachment';
 export { default as PostPublishedAttachments } from './components/PostPublishedAttachments';
-export { default as PostAttachmentError } from './components/PostAttachmentError';
-export { default as PostAttachmentLoad } from './components/PostAttachmentLoad';
 export { default as PostAttachmentSuccess } from './components/PostAttachmentSuccess';
 export { default as PostDocument } from './components/PostDocument';
 export { default as PostImage } from './components/PostImage';

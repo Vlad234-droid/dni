@@ -1,9 +1,4 @@
-export { default } from './components/PostContainer';
-export { default as postReducer } from './store/silce';
-export type { Post as PostType } from './config/types';
-
-/*
-{
-  index:   
-}
-*/
+export { default } from './components/PostList';
+export { default as postReducer } from './store/slice';
+export { PostStatus } from './config/types';
+export type { Post } from './config/types';

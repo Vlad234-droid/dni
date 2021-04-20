@@ -1,59 +1,56 @@
 import React, { FC } from 'react';
 
 import { Post } from '../../config/types';
-import { PostReaderHandler } from '../../store/handlers';
 import { PostPublishedAttachments } from '../PostAttachments';
 import PostControls from '../PostControls';
 import {
-  PostPublisherAvatar,
+  // PostPublisherAvatar,
   PostPublisherAvatarBox,
   PostPublisherName,
   PostPublisher,
-  PostPublisDate,
+  PostPublishDate,
   PostHead,
   PostTitle,
   PostDescription,
   PostContent,
   PostPublishedWrapper,
 } from './styled';
+import { useMedia } from 'context/InterfaceContext';
+import ReadMoreReadLess from 'features/ReadMoreReadLess';
 
 interface PostPublishedProps {
   item: Post;
-  handler: PostReaderHandler['published'];
 }
 
 const postPublishedTestId = 'post-published-test-id';
 
-const PostPublished: FC<PostPublishedProps> = ({ handler, item }) => {
-  const {
-    id,
-    title,
-    description,
-    emotions,
-    createdBy,
-    createdAt,
-    updatedAt,
-    attachments,
-  } = item;
+const PostPublished: FC<PostPublishedProps> = ({ item }) => {
+  const { id, title, content, authorName, published_at, attachments } = item;
+  const media = useMedia();
 
   return (
-    <PostPublishedWrapper data-testid={postPublishedTestId}>
+    <PostPublishedWrapper
+      data-testid={postPublishedTestId}
+      isMobile={media.isMobile}
+    >
       <PostHead>
         <PostPublisher>
           <PostPublisherAvatarBox>
-            <PostPublisherAvatar src={createdBy.avatarSrc} />
+            {/* <PostPublisherAvatar src={createdBy.avatar} /> */}
           </PostPublisherAvatarBox>
-          <PostPublisherName>{createdBy.name}</PostPublisherName>
+          <PostPublisherName>{`${authorName}`}</PostPublisherName>
         </PostPublisher>
-        <PostPublisDate>{updatedAt || createdAt}</PostPublisDate>
+        <PostPublishDate>
+          {new Date(published_at).toDateString()}
+        </PostPublishDate>
       </PostHead>
       <PostContent>
-        {attachments.length > 0 && (
+        {attachments && attachments.length > 0 && (
           <PostPublishedAttachments attachments={attachments} />
         )}
-        {title && <PostTitle>{title}</PostTitle>}
-        <PostDescription>{description}</PostDescription>
-        <PostControls id={id} handler={handler} emotions={emotions} />
+        <PostTitle>{title}</PostTitle>
+        <PostDescription>{content}</PostDescription>
+        {/* <PostControls id={id} emotions={emotions} /> */}
       </PostContent>
     </PostPublishedWrapper>
   );
