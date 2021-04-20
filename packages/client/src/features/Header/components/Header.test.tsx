@@ -1,18 +1,18 @@
 import React from 'react';
-import { renderWithTheme, screen } from 'utils/testUtils';
 
-import { AuthProvider, defaultValue } from '../../Auth/context/authContext';
+import { renderWithProviders, screen } from 'utils/testUtils';
+
 import Header from './Header';
 
 describe('Header feature', () => {
   it('should render correctly', () => {
-    renderWithTheme(<Header />);
+    renderWithProviders(<Header />);
     const header = screen.getByTestId('header');
     expect(header).toBeInTheDocument();
   });
 
   it('should render user links', () => {
-    renderWithTheme(<Header />);
+    renderWithProviders(<Header />);
     const links = screen.getByTestId('links');
     expect(links).toBeInTheDocument();
   });

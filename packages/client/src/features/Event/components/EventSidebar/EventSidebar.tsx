@@ -9,8 +9,9 @@ import { StatusLabel, StatusType, EmptyContainer } from 'features/Common';
 import { LargeTile, SmallTile } from 'features/Tile';
 import useDispatch from 'hooks/useDispatch';
 import { FULL_FORMAT, isoDateToFormat } from 'utils/date';
-import EventAction from '../EventAction';
+import useStore from 'hooks/useStore';
 
+import EventAction from '../EventAction';
 import { isEventOnAir } from '../../utils';
 import {
   getList as getEvents,
@@ -18,15 +19,15 @@ import {
 } from '../../store';
 import { Wrapper, Title, List } from './styled';
 
+const TEST_ID = 'events-sidebar';
 const MAX_VISIBLE_ITEMS = 3;
 
 const EventSidebar: FC = () => {
   const dispatch = useDispatch();
   const events = useSelector(eventsSelector);
-  // TODO: set sorting to get first by startDate - even default
+  const { isLoading } = useStore((state) => state.events);
   const [filters] = useState({ _start: 0, _limit: 3 });
 
-  // how often make requests?
   // this component depends on time passing, how often should it be updated?
   useEffect(() => {
     if (!isEmpty(events)) return;
@@ -38,17 +39,26 @@ const EventSidebar: FC = () => {
     dispatch(getEvents(filters));
   }, []);
 
-  if (!events) return null;
+  if (!isLoading && isEmpty(events)) {
+    return <EmptyContainer description='You have no events' />;
+  }
 
   return (
-    <Wrapper data-testid='events-sidebar'>
+    <Wrapper data-testid={TEST_ID}>
       <Title>Events</Title>
-      {isEmpty(events) ? (
-        <EmptyContainer description="You don't have any  events" />
+      {isLoading ? (
+        <div>Loading events...</div>
       ) : (
-        <List>
-          {slice(events, 0, MAX_VISIBLE_ITEMS).map(
-            ({ id, title, maxParticipants, image, created_at }, index) => {
+        <>
+          <List>
+            {slice(events, 0, MAX_VISIBLE_ITEMS).map((eventItem, index) => {
+              const {
+                id,
+                title,
+                maxParticipants,
+                image,
+                created_at,
+              } = eventItem;
               return !index ? (
                 <LargeTile
                   key={id}
@@ -65,7 +75,7 @@ const EventSidebar: FC = () => {
                   meta={isoDateToFormat(created_at, FULL_FORMAT)}
                   // TODO: event type is not Event
                   //@ts-ignore
-                  isOnAir={isEventOnAir(event)}
+                  isOnAir={isEventOnAir(eventItem)}
                   link='/events'
                 />
               ) : (
@@ -79,15 +89,17 @@ const EventSidebar: FC = () => {
                   link='/events'
                 />
               );
-            },
-          )}
-        </List>
+            })}
+          </List>
+          <Link to={'/events'}>
+            <Button variant='secondary'>All events</Button>
+          </Link>
+        </>
       )}
-      <Link to={'/events'}>
-        <Button variant='secondary'>All events</Button>
-      </Link>
     </Wrapper>
   );
 };
+
+export { TEST_ID };
 
 export default EventSidebar;

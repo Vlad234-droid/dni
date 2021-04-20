@@ -1,1 +1,1 @@
-export { default } from './PageHeader';
+export { default, TEST_ID } from './PageHeader';

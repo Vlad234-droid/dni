@@ -34,7 +34,7 @@ export const Wrapper = styled.div<Props>`
 `;
 
 export const HeaderContainer = styled.div.attrs({
-  'data-testid': 'main-header',
+  'data-testid': 'header-container',
 })<Props>`
   position: relative;
   z-index: 1000;

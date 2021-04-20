@@ -1,1 +1,1 @@
-export { default } from './BasePage';
+export { default, TEST_ID } from './BasePage';

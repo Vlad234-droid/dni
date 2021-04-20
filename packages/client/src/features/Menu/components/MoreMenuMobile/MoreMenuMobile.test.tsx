@@ -26,7 +26,7 @@ describe('<MoreMenuMobile />', () => {
 
       Object.values(menuItemsMobile.hidden).forEach((name) => {
         expect(
-          getByTestId(`${MENU_TEST_ID_PREFIX}${name}`),
+          getByTestId(`${MENU_TEST_ID_PREFIX}${name?.toLowerCase()}`),
         ).toBeInTheDocument();
       });
     });

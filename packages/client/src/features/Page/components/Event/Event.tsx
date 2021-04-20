@@ -1,7 +1,7 @@
 import React, { useState, FC } from 'react';
 import styled from 'styled-components';
+import { RouteComponentProps } from 'react-router-dom';
 
-import { Page, PAGE_PREFIX } from 'features/Page';
 import { Event } from 'features/Event';
 import { ImageWrapperProvider } from 'context/ImageWrapperProvider';
 
@@ -9,28 +9,32 @@ import BasePage from '../BasePage';
 import PageHeader from '../PageHeader';
 import PageWrapper from '../PageWrapper';
 
-const NetworkPage: FC = (props) => {
+const TEST_ID = 'event-page';
+const IMAGE_WRAPPER_TEST_ID = 'mage-wrapper';
+
+const EventPage: FC<RouteComponentProps<{ id: string }>> = (props) => {
   const [ref, setRef] = useState<HTMLElement | null>(null);
 
   return (
-    <BasePage
-      data-testid={`${PAGE_PREFIX}${Page.EVENT}`}
-      renderMain={() => (
-        <ImageWrapperProvider value={ref}>
-          <>
-            <PageHeader>
-              <ImageWrapper ref={(newRef) => setRef(newRef)} />
-            </PageHeader>
-            <PageWrapper>
-              <Event
-                // @ts-ignore
-                id={props.match.params.id}
-              />
-            </PageWrapper>
-          </>
-        </ImageWrapperProvider>
-      )}
-    />
+    <div data-testid={TEST_ID}>
+      <BasePage
+        renderMain={() => (
+          <ImageWrapperProvider value={ref}>
+            <>
+              <PageHeader>
+                <ImageWrapper
+                  data-testid={IMAGE_WRAPPER_TEST_ID}
+                  ref={(newRef) => setRef(newRef)}
+                />
+              </PageHeader>
+              <PageWrapper>
+                <Event id={parseInt(props.match.params.id, 10)} />
+              </PageWrapper>
+            </>
+          </ImageWrapperProvider>
+        )}
+      />
+    </div>
   );
 };
 
@@ -42,4 +46,6 @@ const ImageWrapper = styled.div`
   bottom: 0;
 `;
 
-export default NetworkPage;
+export { TEST_ID, IMAGE_WRAPPER_TEST_ID };
+
+export default EventPage;

@@ -1,1 +1,1 @@
-export { default } from './components/Header';
+export { default, TEST_ID } from './components/Header';

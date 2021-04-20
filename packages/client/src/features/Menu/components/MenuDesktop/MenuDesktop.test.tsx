@@ -19,7 +19,9 @@ describe('<MenuDesktop />', () => {
       renderWithRouter(<MenuDesktop />);
 
       Object.values(menuItemsDesktop).forEach((name) => {
-        const result = screen.getByTestId(`${MENU_TEST_ID_PREFIX}${name}`);
+        const result = screen.getByTestId(
+          `${MENU_TEST_ID_PREFIX}${name?.toLowerCase()}`,
+        );
 
         expect(result).toBeInTheDocument();
       });

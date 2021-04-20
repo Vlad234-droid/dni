@@ -18,10 +18,11 @@ const initialState: T.State = T.EntityAdapter.getInitialState({
 const getList = createAsyncThunk<
   T.ListResponse,
   FilterPayload & PaginationPayload
->(
-  T.LIST_ACTION,
-  async (filters) => await API.events.fetchAll<T.ListResponse>(filters),
-);
+>(T.LIST_ACTION, async (filters) => {
+  const response = await API.events.fetchAll<T.ListResponse>(filters);
+
+  return response;
+});
 
 const getOne = createAsyncThunk<T.OneResponse, T.OnePayload>(
   T.ONE_ACTION,

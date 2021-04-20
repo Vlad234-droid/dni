@@ -6,11 +6,13 @@ import MenuDesktop from '../MenuDesktop';
 import MenuMobile from '../MenuMobile';
 import Links from '../Links';
 
+const TEST_ID = 'menu';
+
 const MainMenu: FC = () => {
   const { isDesktop } = useMedia();
 
   return (
-    <>
+    <div data-testid={TEST_ID}>
       {!isDesktop ? (
         <MenuMobile />
       ) : (
@@ -20,8 +22,10 @@ const MainMenu: FC = () => {
           <Links />
         </>
       )}
-    </>
+    </div>
   );
 };
+
+export { TEST_ID };
 
 export default MainMenu;

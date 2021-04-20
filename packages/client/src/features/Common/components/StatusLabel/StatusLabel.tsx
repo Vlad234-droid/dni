@@ -35,7 +35,7 @@ const Content = styled.span`
 `;
 
 const StatusLabel: FC<Props> = ({ children, type }) => (
-  <Wrapper type={type}>
+  <Wrapper type={type} data-testid='status-label'>
     <Content>{children}</Content>
   </Wrapper>
 );

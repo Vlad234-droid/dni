@@ -5,8 +5,10 @@ import { TescoLogo } from '@beans/branding';
 import { Wrapper, Block } from './styled';
 import Toaster from 'features/Toaster';
 
+const TEST_ID = 'header';
+
 const Header: React.FC = () => (
-  <Wrapper>
+  <Wrapper data-testid={TEST_ID}>
     <Block>
       <TescoLogo />
     </Block>
@@ -24,8 +26,10 @@ const Header: React.FC = () => (
         variant='iconButton'
       />
     </Block>
-    <Toaster/>
+    <Toaster />
   </Wrapper>
 );
+
+export { TEST_ID };
 
 export default Header;

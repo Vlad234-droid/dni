@@ -6,7 +6,7 @@ import ResponsiveImage from '@beans/responsive-image';
 import useDispatch from 'hooks/useDispatch';
 import useStore from 'hooks/useStore';
 import InfoPanel, { InfoPanelType } from 'features/InfoPanel';
-import Post from 'features/Post';
+import { PostList } from 'features/Post';
 import { useImageWrapper } from 'context';
 import { normalizeImage } from 'utils/content';
 
@@ -14,6 +14,8 @@ import { byIdSelector, getOne } from '../../store';
 import { Wrapper, Content, LeftContent, RightContent } from './styled';
 import NetworkPartners from './NetworkPartners';
 import NetworkHeader from './NetworkHeader';
+
+const TEST_ID = 'network';
 
 type Props = {
   id: number;
@@ -57,9 +59,9 @@ const Network: FC<Props> = ({ id }) => {
 
   if (isLoading) return <Content>Loading network data...</Content>;
 
-  // TODO: normaluize image before save to store
+  // TODO: normalize image before save to store
   return (
-    <Wrapper>
+    <Wrapper data-testid={TEST_ID}>
       {imageWrapperEl &&
         createPortal(
           <ResponsiveImage
@@ -71,7 +73,6 @@ const Network: FC<Props> = ({ id }) => {
             fallbackSizeRatio='57%'
             objectFit='cover'
           />,
-          //@ts-ignore
           imageWrapperEl,
         )}
       <NetworkHeader
@@ -101,7 +102,7 @@ const Network: FC<Props> = ({ id }) => {
       )}
       <Content>
         <LeftContent>
-          <Post entityId={id} filter={'BY_NETWORK'} />
+          <PostList entityId={id} filter={'BY_NETWORK'} />
         </LeftContent>
         <RightContent>
           <NetworkPartners
@@ -115,5 +116,7 @@ const Network: FC<Props> = ({ id }) => {
     </Wrapper>
   );
 };
+
+export { TEST_ID };
 
 export default Network;

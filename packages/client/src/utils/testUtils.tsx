@@ -1,14 +1,21 @@
 import React, { FC, ReactElement } from 'react';
-import { render, cleanup, RenderOptions } from '@testing-library/react';
+import {
+  render as rtlRender,
+  cleanup,
+  RenderOptions,
+} from '@testing-library/react';
 import { ThemeProvider } from '@beans/theme';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
-import { InterfaceProvider } from 'context/InterfaceContext';
+import { configureStore } from '@reduxjs/toolkit';
+import { createStore } from 'redux';
 
+import { InterfaceProvider } from 'context/InterfaceContext';
 import theme from 'theme';
 import store from 'store';
 import Auth from 'features/Auth';
+import rootReducer from 'store/rootReducer';
 
 const WithThemeProvider: FC = ({ children }) => (
   <ThemeProvider theme={theme}>
@@ -42,20 +49,48 @@ const WithAllProviders: FC = ({ children }) => {
   );
 };
 
+const render = (
+  ui: ReactElement,
+  {
+    initialState,
+    store = createStore(rootReducer, initialState),
+    ...renderOptions
+  }: any = {},
+) => {
+  const history = createMemoryHistory();
+
+  const Wrapper = ({ children }: any) => {
+    return (
+      <ThemeProvider theme={theme}>
+        <Provider store={store}>
+          <Auth>
+            <InterfaceProvider>
+              <Router history={history}>{children}</Router>
+            </InterfaceProvider>
+          </Auth>
+        </Provider>
+      </ThemeProvider>
+    );
+  };
+
+  return rtlRender(ui, { wrapper: Wrapper, ...renderOptions });
+};
+
 const renderWithProviders = (ui: ReactElement, options?: RenderOptions) =>
-  render(ui, { ...options, wrapper: WithAllProviders });
+  rtlRender(ui, { ...options, wrapper: WithAllProviders });
 
 const renderWithTheme = (ui: ReactElement, options?: RenderOptions) =>
-  render(ui, { ...options, wrapper: WithThemeProvider });
+  rtlRender(ui, { ...options, wrapper: WithThemeProvider });
 
 const renderWithRouter = (ui: ReactElement, options?: RenderOptions) =>
-  render(ui, { ...options, wrapper: WithRouterProvider });
+  rtlRender(ui, { ...options, wrapper: WithRouterProvider });
 
 const cleanupAfterEach = () => afterEach(cleanup);
 
 export * from '@testing-library/react';
 
 export {
+  render,
   renderWithProviders,
   renderWithTheme,
   renderWithRouter,
