@@ -10,6 +10,7 @@ const store = configureStore({
 //   module.hot.accept('./reducer', () => store.replaceReducer(reducer));
 // }
 
+// TODO: #move to types?
 export type AppDispatch = typeof store.dispatch;
 
 export type Store = typeof store;

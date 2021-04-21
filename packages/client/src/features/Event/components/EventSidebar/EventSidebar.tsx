@@ -25,7 +25,7 @@ const MAX_VISIBLE_ITEMS = 3;
 const EventSidebar: FC = () => {
   const dispatch = useDispatch();
   const events = useSelector(eventsSelector);
-  const { isLoading } = useStore((state) => state.events);
+  const { loading } = useStore((state) => state.events);
   const [filters] = useState({ _start: 0, _limit: 3 });
 
   // this component depends on time passing, how often should it be updated?
@@ -39,14 +39,16 @@ const EventSidebar: FC = () => {
     dispatch(getEvents(filters));
   }, []);
 
-  if (!isLoading && isEmpty(events)) {
+  if (loading == 'idle') return null;
+
+  if (loading === 'succeeded' && isEmpty(events)) {
     return <EmptyContainer description='You have no events' />;
   }
 
   return (
     <Wrapper data-testid={TEST_ID}>
       <Title>Events</Title>
-      {isLoading ? (
+      {loading === 'pending' ? (
         <div>Loading events...</div>
       ) : (
         <>
@@ -59,6 +61,7 @@ const EventSidebar: FC = () => {
                 image,
                 created_at,
               } = eventItem;
+
               return !index ? (
                 <LargeTile
                   key={id}

@@ -31,14 +31,14 @@ const EventList: FC<Props> = ({ filter }) => {
 
   const {
     meta: { total },
-    isLoading,
+    loading,
   } = useStore((state) => state.events);
   const list = useSelector(listSelector);
   const hasMore = useMemo(() => list.length < total, [list, total]);
 
   const loadEvents = useCallback(
     (page: number) => {
-      if (filters && hasMore && !isLoading) {
+      if (filters && hasMore && !(loading === 'pending')) {
         dispatch(
           getList({
             ...filters,
@@ -50,7 +50,7 @@ const EventList: FC<Props> = ({ filter }) => {
         );
       }
     },
-    [filters, hasMore, isLoading],
+    [filters, hasMore, loading],
   );
 
   useEffect(() => {
@@ -112,7 +112,7 @@ const EventList: FC<Props> = ({ filter }) => {
             renderAction={(id) => <EventAction id={id} />}
           />
           <Button
-            disabled={!hasMore || isLoading}
+            disabled={!hasMore || loading === 'pending'}
             variant='secondary'
             onClick={() => setPage(page + 1)}
           >

@@ -8,8 +8,8 @@ import { ThemeProvider } from '@beans/theme';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
-import { configureStore } from '@reduxjs/toolkit';
-import { createStore } from 'redux';
+import { applyMiddleware, createStore } from 'redux';
+import thunkMiddleware from 'redux-thunk';
 
 import { InterfaceProvider } from 'context/InterfaceContext';
 import theme from 'theme';
@@ -53,11 +53,16 @@ const render = (
   ui: ReactElement,
   {
     initialState,
-    store = createStore(rootReducer, initialState),
+    store = createStore(
+      rootReducer,
+      initialState,
+      applyMiddleware(thunkMiddleware),
+    ),
     ...renderOptions
   }: any = {},
 ) => {
   const history = createMemoryHistory();
+  store.dispatch = jest.fn();
 
   const Wrapper = ({ children }: any) => {
     return (

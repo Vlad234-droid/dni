@@ -1,36 +1,60 @@
 import React from 'react';
 
-import { renderWithProviders, render } from 'utils/testUtils';
+import { render } from 'utils/testUtils';
 
 import EventSidebar, { TEST_ID } from './EventSidebar';
 
 // TODO: check getEvents action was dispatched with filters
 // TODO: check one large and two small tiles rendered
 // TODO: check on Air rendered
-// TODO: check isEmpty(events)
-// TODO: check isLoading
 describe('<EventSidebar />', () => {
   describe('#render', () => {
-    it('should render wrapper', () => {
-      const { getByTestId } = renderWithProviders(<EventSidebar />);
+    const initialState = {
+      events: {
+        entities: {},
+        loading: 'idle',
+        ids: [],
+        error: null,
+        meta: {},
+      },
+    };
 
-      expect(getByTestId(TEST_ID)).toBeInTheDocument();
+    it('should not render wrapper, if loading is not started', () => {
+      const { queryByTestId } = render(<EventSidebar />, {
+        initialState,
+      });
+
+      expect(queryByTestId(TEST_ID)).not.toBeInTheDocument();
     });
 
-    it('should render All events link', () => {
-      const { getByText } = render(<EventSidebar />, {
+    it('should render wrapper and Loading state is loading is pending', () => {
+      const { getByText, queryByTestId } = render(<EventSidebar />, {
         initialState: {
+          ...initialState,
           events: {
-            entities: {},
-            isLoading: false,
-            ids: [],
-            error: null,
-            meta: {},
+            ...initialState.events,
+            loading: 'pending',
           },
         },
       });
 
-      expect(getByText('All events')).toBeInTheDocument();
+      expect(queryByTestId(TEST_ID)).toBeInTheDocument();
+      expect(getByText('Loading events...')).toBeInTheDocument();
+    });
+
+    it('should render empty container, if loading is succeeded and no events', () => {
+      const { getByText, queryByTestId } = render(<EventSidebar />, {
+        initialState: {
+          ...initialState,
+          events: {
+            ...initialState.events,
+            loading: 'succeeded',
+          },
+        },
+      });
+
+      expect(queryByTestId(TEST_ID)).not.toBeInTheDocument();
+      expect(getByText('You have no events')).toBeInTheDocument();
     });
   });
 });

@@ -11,9 +11,10 @@ import { normalizeImage } from 'utils/content';
 import ButtonFilter from 'features/ButtonFilter';
 
 import EventHeader from '../EventHeader';
-import { Wrapper, Content, LeftContent, Filters } from './styled';
 import { byIdSelector, getOne } from '../../store';
 import { isEventOnAir } from '../../utils';
+
+import { Wrapper, Content, LeftContent, Filters } from './styled';
 
 const TEST_ID = 'event';
 
@@ -45,7 +46,7 @@ const Event: FC<Props> = ({ id }) => {
   const event = useSelector(byIdSelector(id));
   const { description, title, image, maxParticipants, startDate } = event || {};
   const [filter, setFilter] = useState<Filter>(ALL);
-  const { isLoading } = useStore((state) => state.networks);
+  const { loading } = useStore((state) => state.events);
   const imageWrapperEl = useImageWrapper();
   //@ts-ignore
   const isOnAir = useMemo(() => event && isEventOnAir(event), [event]);
@@ -58,14 +59,14 @@ const Event: FC<Props> = ({ id }) => {
 
   const loadEvent = (id: number) => dispatch(getOne({ id }));
 
-  if (isLoading) return <div>Loading network data...</div>;
+  if (loading === 'pending') return <div>Loading network data...</div>;
 
-  if (!isLoading && !event)
+  if (loading === 'succeeded' && !event)
     return <Content>{`There is no event with id ${id}`}</Content>;
 
   const normalizeImg = normalizeImage(image);
 
-  // TODO: normaluize image before save to store
+  // TODO: normalize image before save to store
   return (
     <Wrapper data-testid={TEST_ID}>
       {imageWrapperEl &&
