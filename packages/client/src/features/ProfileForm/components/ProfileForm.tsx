@@ -3,9 +3,9 @@ import React, { FC } from 'react';
 import { TextInput, FieldWrapper } from 'features/Common';
 import InfoPanel, { InfoPanelType } from 'features/InfoPanel';
 
-import profileData from './data';
-import surveyData from './survey';
-import { getFieldLabel } from './utils';
+import profileData from '../config/data';
+import surveyData from '../config/survey';
+import { getFieldLabel } from '../utils';
 import {
   Wrapper,
   LeftContent,

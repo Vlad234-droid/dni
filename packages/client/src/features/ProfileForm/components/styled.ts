@@ -19,17 +19,25 @@ export const Section = styled.div`
 
   &:first-child {
     & > div:nth-child(-n + 5) {
-      width: calc(50% - 16px);
+      width: calc(50% - 8px);
       flex-grow: 2;
       display: inline-flex;
 
       & div {
         width: 100%;
       }
+
+      ${Media.tablet`
+         width: calc(50% - 16px);
+      `}
     }
 
     & > div:nth-child(2n):not(:last-child) {
-      margin-right: 32px;
+      margin-right: 16px;
+
+      ${Media.tablet`
+         margin-right: 32px;
+      `}
     }
   }
 
