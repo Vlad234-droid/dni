@@ -9,6 +9,7 @@ export default {
   footnote: {
     title: 'For more information, please see the',
     linkText: 'Frequently asked questions guide',
-    link: '#',
+    link:
+      'https://colleague-help.ourtesco.com/hc/article_attachments/360070029231/This_is_Me_FAQ_guide.pdf',
   },
 };

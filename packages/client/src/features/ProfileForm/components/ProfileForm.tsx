@@ -60,7 +60,6 @@ const ProfileForm: FC = () => (
         title={surveyData.title}
         content={surveyData.description}
         footnote={surveyData.footnote}
-        infoLink='/'
         isSmall
       />
     </RightContent>
