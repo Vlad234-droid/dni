@@ -16,8 +16,9 @@ type Props = {
 const InfoPanelFootnote: FC<Props> = ({ footnote }) => (
   <Wrapper>
     <Footnote>
-      <span>{footnote.title}</span>
-      <Link href={footnote.link}>{footnote.linkText}</Link>
+      <span>
+        {footnote.title} <Link href={footnote.link}>{footnote.linkText}</Link>
+      </span>
     </Footnote>
   </Wrapper>
 );

@@ -8,6 +8,7 @@ enum Page {
   NETWORK = 'networks/:id',
   NEWS_FEED = 'news-feed',
   REPORTS = 'reports',
+  PROFILE = 'profile',
   NOT_FOUND = '*',
 }
 

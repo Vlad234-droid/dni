@@ -20,7 +20,7 @@ const Header: React.FC = () => (
         variant='iconButton'
       />
       <Link
-        href={'/'}
+        href={'/profile'}
         inverse={true}
         icon={{ graphic: 'account', position: { global: 'right' } }}
         variant='iconButton'

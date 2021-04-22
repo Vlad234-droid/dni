@@ -1,5 +1,4 @@
 import React, { FC, useMemo } from 'react';
-import { Link } from 'react-router-dom';
 import isNumber from 'lodash.isnumber';
 import Icon from '@beans/icon';
 import { WindowResize } from '@beans/helpers';

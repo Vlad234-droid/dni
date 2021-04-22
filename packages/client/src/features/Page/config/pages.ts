@@ -9,6 +9,7 @@ import Network from '../components/Network';
 import NewsFeed from '../components/NewsFeed';
 import NotFound from '../components/NotFound';
 import Reports from '../components/Reports';
+import Profile from '../components/Profile';
 
 const pages: Record<Page, PageElement> = {
   [Page.ABOUT]: About,
@@ -18,6 +19,7 @@ const pages: Record<Page, PageElement> = {
   [Page.NETWORK]: Network,
   [Page.NEWS_FEED]: NewsFeed,
   [Page.REPORTS]: Reports,
+  [Page.PROFILE]: Profile,
   [Page.NOT_FOUND]: NotFound,
 };
 

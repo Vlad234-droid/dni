@@ -20,6 +20,7 @@ type Props = {
   type: Type;
   infoLink?: string;
   onClose?: () => void;
+  isSmall?: boolean;
 };
 
 const InfoPanel: FC<Props> = ({
@@ -30,17 +31,18 @@ const InfoPanel: FC<Props> = ({
   infoLink,
   customIcon,
   onClose,
+  isSmall = false,
 }) => (
-  <Wrapper type={type}>
+  <Wrapper type={type} isSmall={isSmall}>
     {onClose && (
-      <CloseIcon>
+      <CloseIcon isSmall={isSmall}>
         <Icon graphic='close' onClick={onClose} />
       </CloseIcon>
     )}
     <InfoPanelIcon type={type} customIcon={customIcon} />
-    <Content type={type}>
-      <Title>{title}</Title>
-      <InfoPanelContent content={content} />
+    <Content type={type} isSmall={isSmall}>
+      <Title isSmall={isSmall}>{title}</Title>
+      <InfoPanelContent content={content} isSmall={isSmall} />
       {footnote && <InfoPanelFootnote footnote={footnote} />}
       {!(type === Type.INFO) && (
         <Link
