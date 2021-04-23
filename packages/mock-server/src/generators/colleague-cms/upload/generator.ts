@@ -1,4 +1,4 @@
-import { generateArray } from 'utils';
+import { generateArray } from '../../../utils';
 import { generateFile } from '../built-in';
 import { generateBase } from '../base';
 

@@ -1,7 +1,7 @@
 import faker from 'faker';
 import { Post } from '@dni-connectors/colleague-cms-api';
 
-import { generateArray, randomArray } from 'utils';
+import { generateArray, randomArray } from '../../../utils';
 import { generateFile } from '../built-in';
 import { generateBase } from '../base';
 import { generateNetwork } from '../network';

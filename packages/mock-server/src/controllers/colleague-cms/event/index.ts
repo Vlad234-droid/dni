@@ -1,20 +1,14 @@
 import { createApiRouter } from '@energon/rest-api-provider';
 import { cmsEventsApiDef, Event } from '@dni-connectors/colleague-cms-api';
-import { buildCRUD } from 'utils';
-
-import { generateEvent, generateEvents } from 'generators/colleague-cms';
+import { buildEventCRUD } from 'crud';
 
 const COLLECTION_SIZE = 60;
-
-const CRUD = buildCRUD<Event>(
-  () => generateEvents(COLLECTION_SIZE),
-  generateEvent,
-);
+const CRUD = buildEventCRUD(COLLECTION_SIZE);
 
 export const cmsEventsApiRouter = createApiRouter(cmsEventsApiDef)({
   getEvents: async ({ params: { _start, _limit } }) =>
     CRUD.findAll(_start, _limit),
-  getEventsCount: async () => COLLECTION_SIZE,
+  getEventsCount: async () => CRUD.count(),
   getEvent: async ({ params: { id } }) => CRUD.findBy(id)! as Event,
   postEvent: async () => CRUD.createOne(),
   putEvent: async ({ params: { id } }) => CRUD.updateOne(id),
