@@ -1,8 +1,11 @@
 import { Server, Socket } from 'socket.io';
-import { Op } from 'sequelize';
-import { DB } from '../config/db';
+import {
+  getRepository,
+  Notification,
+  NotificationActionType,
+  NotificationEntityType,
+} from '@dni/database';
 import { Network, Event, Post } from '@dni-connectors/colleague-cms-api';
-import { ActionType, EntityType } from '../models';
 
 // events
 const NOTIFICATIONS = 'notifications';
@@ -22,7 +25,7 @@ const handleData = async (data: Input) => {
   const preparedData = analyze(data);
 
   if (preparedData) {
-    const result = await DB.Notification.create(preparedData);
+    const result = await getRepository(Notification).save(preparedData);
     if (openSocket) {
       openSocket.emit(NOTIFICATIONS, await findAllNotifications());
       openSocket.emit(NOTIFICATION_CREATE, [result]);
@@ -47,17 +50,20 @@ const analyze = (data: Input) => {
 const analyzeEntityType = (data: Input) => {
   switch (data.model) {
     case 'post':
-      return EntityType.POST;
+      return NotificationEntityType.POST;
     case 'event':
-      return EntityType.EVENT;
+      return NotificationEntityType.EVENT;
     case 'network':
-      return EntityType.NETWORK;
+      return NotificationEntityType.NETWORK;
     default:
       return;
   }
 };
 
-const analyzeAction = (data: Input, entityType: EntityType | undefined) => {
+const analyzeAction = (
+  data: Input,
+  entityType: NotificationEntityType | undefined,
+) => {
   if (!entityType) {
     return;
   }
@@ -65,40 +71,40 @@ const analyzeAction = (data: Input, entityType: EntityType | undefined) => {
   switch (data.event) {
     case 'entry.create':
       switch (entityType) {
-        case EntityType.POST:
-          return ActionType.POST_CREATED;
-        case EntityType.EVENT:
-          return ActionType.EVENT_CREATED;
-        case EntityType.NETWORK:
-          return ActionType.NETWORK_CREATED;
+        case NotificationEntityType.POST:
+          return NotificationActionType.POST_CREATED;
+        case NotificationEntityType.EVENT:
+          return NotificationActionType.EVENT_CREATED;
+        case NotificationEntityType.NETWORK:
+          return NotificationActionType.NETWORK_CREATED;
         default:
           return;
       }
     case 'entry.update':
       switch (entityType) {
-        case EntityType.POST: {
+        case NotificationEntityType.POST: {
           const post = data.entry as Post;
           if (post.archived) {
-            return ActionType.POST_ARCHIVED;
+            return NotificationActionType.POST_ARCHIVED;
           } else {
-            return ActionType.POST_UPDATED;
+            return NotificationActionType.POST_UPDATED;
           }
         }
-        case EntityType.EVENT:
-          return ActionType.EVENT_UPDATED;
-        case EntityType.NETWORK:
-          return ActionType.NETWORK_UPDATED;
+        case NotificationEntityType.EVENT:
+          return NotificationActionType.EVENT_UPDATED;
+        case NotificationEntityType.NETWORK:
+          return NotificationActionType.NETWORK_UPDATED;
         default:
           return;
       }
     case 'entry.delete':
       switch (entityType) {
-        case EntityType.POST:
-          return ActionType.POST_REMOVED;
-        case EntityType.EVENT:
-          return ActionType.EVENT_REMOVED;
-        case EntityType.NETWORK:
-          return ActionType.NETWORK_REMOVED;
+        case NotificationEntityType.POST:
+          return NotificationActionType.POST_REMOVED;
+        case NotificationEntityType.EVENT:
+          return NotificationActionType.EVENT_REMOVED;
+        case NotificationEntityType.NETWORK:
+          return NotificationActionType.NETWORK_REMOVED;
         default:
           return;
       }
@@ -108,8 +114,10 @@ const analyzeAction = (data: Input, entityType: EntityType | undefined) => {
 };
 
 const findAllNotifications = () => {
-  return DB.Notification.findAll({
-    order: [['createdAt', 'DESC']],
+  return getRepository(Notification).find({
+    order: {
+      createdAt: 'DESC',
+    },
   });
 };
 
@@ -120,13 +128,7 @@ const establishConnection = (io: Server) => {
       socket.emit(NOTIFICATIONS, await findAllNotifications());
     });
     socket.on(NOTIFICATION_REMOVE, async (ids: number[]) => {
-      await DB.Notification.destroy({
-        where: {
-          id: {
-            [Op.in]: ids,
-          },
-        },
-      });
+      await getRepository(Notification).delete(ids);
       socket.emit(NOTIFICATION_REMOVE, ids);
       socket.emit(NOTIFICATIONS, await findAllNotifications());
     });
