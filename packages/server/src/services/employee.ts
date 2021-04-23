@@ -1,6 +1,6 @@
 import { Response } from 'express';
 import { getOpenIdUserInfo } from '@energon/onelogin';
-import { DB } from '../config/db';
+import { getRepository, EmployeeEvent, EmployeeNetwork } from '@dni/database';
 
 const profileInfoExtractor = async (res: Response) => {
   const userInfo = getOpenIdUserInfo(res);
@@ -29,7 +29,7 @@ const profileInfoExtractor = async (res: Response) => {
 };
 
 const findNetworksBy = async (employeeNumber: string) => {
-  return await DB.EmployeeNetwork.findAll({
+  return await getRepository(EmployeeNetwork).find({
     where: { employeeNumber },
   });
 };
@@ -38,7 +38,7 @@ const createNetworkRelation = async (
   employeeNumber: string,
   networkId: number,
 ) => {
-  await DB.EmployeeNetwork.create({
+  await getRepository(EmployeeNetwork).save({
     employeeNumber,
     networkId,
   });
@@ -48,33 +48,29 @@ const removeNetworkRelation = async (
   employeeNumber: string,
   networkId: number,
 ) => {
-  await DB.EmployeeNetwork.destroy({
-    where: {
-      employeeNumber,
-      networkId,
-    },
+  await getRepository(EmployeeNetwork).remove({
+    employeeNumber,
+    networkId,
   });
 };
 
 const findEventsBy = async (employeeNumber: string) => {
-  return await DB.EmployeeEvent.findAll({
+  return await getRepository(EmployeeEvent).find({
     where: { employeeNumber },
   });
 };
 
 const createEventRelation = async (employeeNumber: string, eventId: number) => {
-  await DB.EmployeeEvent.create({
+  await getRepository(EmployeeEvent).save({
     employeeNumber,
     eventId,
   });
 };
 
 const removeEventRelation = async (employeeNumber: string, eventId: number) => {
-  await DB.EmployeeEvent.destroy({
-    where: {
-      employeeNumber,
-      eventId,
-    },
+  await getRepository(EmployeeEvent).remove({
+    employeeNumber,
+    eventId,
   });
 };
 

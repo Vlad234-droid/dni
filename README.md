@@ -44,7 +44,8 @@ dependencies are satisfied.
 ## Configuration
 
 1. Client. [Check out](packages/client/README.md#L5) for details
-2. Server. [Check out](packages/server/README.md#L13) for details
+2. Server. [Check out](packages/server/README.md#L3) for details
+3. Database. [Check out](packages/server/README.md#L3) for details
 
 ## Available Scripts
 

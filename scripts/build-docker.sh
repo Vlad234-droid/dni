@@ -12,6 +12,7 @@ docker build \
   --tag $IMAGE_NAME \
   --build-arg BUILD_ENV_PARAM=$BUILD_ENV_PARAM \
   --build-arg NPM_CREDENTIALS=$NPM_CREDENTIALS \
+  --file dockerfiles/Dockerfile \
   .;
 
 rm -rf temp

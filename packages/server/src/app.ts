@@ -19,13 +19,10 @@ import {
 } from './middlewares';
 import { buildContext } from './context';
 import { buildIO } from './config/notification';
-import { sequelize } from './config/db';
+import './config/db';
 
 // validate if all required process env variables exist
 envAccessor.validate();
-
-// for dev purpose. TODO: remove after cli integration. Use `{ force: true }` for development
-sequelize.sync();
 
 const config = ConfigAccessor.getInstance(envAccessor.getData()).getData();
 

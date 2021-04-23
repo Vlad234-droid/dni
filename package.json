@@ -29,6 +29,7 @@
     "ws:connector:colleague-cms": "yarn workspace @dni-connectors/colleague-cms-api",
     "ws:connector:common": "yarn workspace @dni-connectors/common",
     "ws:connector:confirmit": "yarn workspace @dni-connectors/confirmit-api",
+    "ws:db": "yarn workspace @dni/database",
     "client": "lerna run --scope @dni/client",
     "server": "lerna run --scope @dni/server",
     "run:dev:server": "yarn server run:dev --stream",
