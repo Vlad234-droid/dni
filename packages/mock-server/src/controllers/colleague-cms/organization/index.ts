@@ -3,19 +3,10 @@ import {
   cmsOrganizationsApiDef,
   Organization,
 } from '@dni-connectors/colleague-cms-api';
-import { buildCRUD } from 'utils';
-
-import {
-  generateOrganization,
-  generateOrganizations,
-} from 'generators/colleague-cms';
+import { buildOrganizationCRUD } from 'crud';
 
 const COLLECTION_SIZE = 20;
-
-const CRUD = buildCRUD<Organization>(
-  () => generateOrganizations(COLLECTION_SIZE),
-  generateOrganization,
-);
+const CRUD = buildOrganizationCRUD(COLLECTION_SIZE);
 
 export const cmsOrganizationsApiRouter = createApiRouter(
   cmsOrganizationsApiDef,

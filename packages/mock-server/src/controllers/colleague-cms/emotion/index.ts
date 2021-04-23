@@ -1,15 +1,9 @@
 import { createApiRouter } from '@energon/rest-api-provider';
-import { cmsEmotionsApiDef, Emotion } from '@dni-connectors/colleague-cms-api';
-import { buildCRUD } from 'utils';
-
-import { generateEmotion, generateEmotions } from 'generators/colleague-cms';
+import { cmsEmotionsApiDef } from '@dni-connectors/colleague-cms-api';
+import { buildEmotionCRUD } from 'crud';
 
 const COLLECTION_SIZE = 20;
-
-const CRUD = buildCRUD<Emotion>(
-  () => generateEmotions(COLLECTION_SIZE),
-  generateEmotion,
-);
+const CRUD = buildEmotionCRUD(COLLECTION_SIZE);
 
 export const cmsEmotionsApiRouter = createApiRouter(cmsEmotionsApiDef)({
   postEmotion: async () => CRUD.createOne(),

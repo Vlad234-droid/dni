@@ -1,7 +1,7 @@
 import faker from 'faker';
 import { Event } from '@dni-connectors/colleague-cms-api';
 
-import { generateArray, dateToIso } from 'utils';
+import { generateArray, dateToIso } from '../../../utils';
 import { generateBase } from '../base';
 import { generateNetwork } from '../network';
 import { generateFile } from '../built-in';

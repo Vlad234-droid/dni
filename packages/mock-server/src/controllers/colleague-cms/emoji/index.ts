@@ -1,15 +1,10 @@
 import { createApiRouter } from '@energon/rest-api-provider';
 import { cmsEmojisApiDef, Emoji } from '@dni-connectors/colleague-cms-api';
-import { buildCRUD } from 'utils';
-
-import { generateEmoji, generateEmojis } from 'generators/colleague-cms';
+import { buildEmojiCRUD } from 'crud';
 
 const COLLECTION_SIZE = 5;
 
-const CRUD = buildCRUD<Emoji>(
-  () => generateEmojis(COLLECTION_SIZE),
-  generateEmoji,
-);
+const CRUD = buildEmojiCRUD(COLLECTION_SIZE);
 
 export const cmsEmojisApiRouter = createApiRouter(cmsEmojisApiDef)({
   getEmojis: async () => CRUD.findAll(),

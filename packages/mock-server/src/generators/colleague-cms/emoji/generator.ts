@@ -1,7 +1,7 @@
 import faker from 'faker';
 import { Emoji } from '@dni-connectors/colleague-cms-api';
 
-import { generateArray } from 'utils';
+import { generateArray } from '../../../utils';
 import { generateFile } from '../built-in';
 import { generateBase } from '../base';
 
