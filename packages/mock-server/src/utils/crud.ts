@@ -32,9 +32,9 @@ const buildCRUD = <T extends BaseType>(
 
       if (item) {
         return item;
+      } else {
+        return { ...generateOne(), id: +id };
       }
-
-      notFound();
     },
     deleteBy: (id: QueryType) => {
       const item = copyData.find((post) => post.id == id);
@@ -65,6 +65,7 @@ const buildCRUD = <T extends BaseType>(
 
       return item;
     },
+    count: () => copyData.length,
   };
 };
 

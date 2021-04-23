@@ -1,5 +1,5 @@
 import faker from 'faker';
-import { dateToIso } from 'utils';
+import { dateToIso } from '../../../utils';
 
 const generateBase = () => {
   const base = {

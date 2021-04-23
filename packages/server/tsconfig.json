@@ -6,7 +6,10 @@
     "typeRoots": ["../../node_modules/@types", "./src/types"],
     "baseUrl": "./src",
     "outDir": "./build",
-    "noEmit": false
+    "noEmit": false,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "strictPropertyInitialization": false
   },
   "include": ["./src/**/*"]
 }

@@ -46,9 +46,3 @@ Builds the app for production to the `build` folder.
 - Run `yarn test` to run tests.
 - Run `yarn test:coverage` to collect coverage.
 - Run `yarn test:watch` to run tests in watch mode.
-
-### DB
-
-- Run `yarn db:docker:compose:up` create db.
-- Run `yarn db:docker:compose:start` start db.
-- Run `yarn db:docker:compose:down` stop db

@@ -1,15 +1,10 @@
 import { createApiRouter } from '@energon/rest-api-provider';
 import { cmsUploadApiDef, UploadFile } from '@dni-connectors/colleague-cms-api';
-import { buildCRUD } from 'utils';
 
-import { generateUpload, generateUploads } from 'generators/colleague-cms';
+import { buildUploadCRUD } from 'crud';
 
 const COLLECTION_SIZE = 20;
-
-const CRUD = buildCRUD<UploadFile>(
-  () => generateUploads(COLLECTION_SIZE),
-  generateUpload,
-);
+const CRUD = buildUploadCRUD(COLLECTION_SIZE);
 
 export const cmsUploadApiRouter = createApiRouter(cmsUploadApiDef)({
   getFiles: async ({ params: { _start, _limit } }) =>

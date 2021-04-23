@@ -31,3 +31,6 @@ yarn-error.log*
 # editors
 .vscode
 .idea
+
+# docker build
+temp

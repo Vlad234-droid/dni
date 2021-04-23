@@ -1,7 +1,7 @@
 import faker from 'faker';
 import { Organization } from '@dni-connectors/colleague-cms-api';
 
-import { generateArray, buildFullUrl } from 'utils';
+import { generateArray, buildFullUrl } from '../../../utils';
 import { generateFile } from '../built-in';
 import { generateBase } from '../base';
 
