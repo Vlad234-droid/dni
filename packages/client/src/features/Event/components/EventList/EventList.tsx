@@ -12,6 +12,7 @@ import { firstDayOf, lastDayOf } from 'utils/date';
 import { FilterPayload, DEFAULT_PAGINATION } from 'utils/storeHelper';
 import List from 'features/List';
 import { EmptyContainer } from 'features/Common';
+import { Page } from 'features/Page';
 
 import { getList, listSelector, clear, getCount } from '../../store';
 import { Filter } from '../../config/types';
@@ -103,7 +104,7 @@ const EventList: FC<Props> = ({ filter }) => {
       ) : (
         <>
           <List
-            link='/events'
+            link={Page.EVENTS}
             // TODO: event is not correct type Event
             //@ts-ignore
             items={list}

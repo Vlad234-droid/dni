@@ -9,8 +9,9 @@ import { StatusLabel, StatusType, EmptyContainer } from 'features/Common';
 import { LargeTile, SmallTile } from 'features/Tile';
 import useDispatch from 'hooks/useDispatch';
 import { FULL_FORMAT, isoDateToFormat } from 'utils/date';
-import EventAction from '../EventAction';
+import { Page } from 'features/Page';
 
+import EventAction from '../EventAction';
 import { isEventOnAir } from '../../utils';
 import {
   getList as getEvents,
@@ -66,7 +67,7 @@ const EventSidebar: FC = () => {
                   // TODO: event type is not Event
                   //@ts-ignore
                   isOnAir={isEventOnAir(event)}
-                  link='/events'
+                  link={Page.EVENTS}
                 />
               ) : (
                 <SmallTile
@@ -76,14 +77,14 @@ const EventSidebar: FC = () => {
                   image={image}
                   renderAction={() => <EventAction id={id} />}
                   meta={isoDateToFormat(created_at, FULL_FORMAT)}
-                  link='/events'
+                  link={Page.EVENTS}
                 />
               );
             },
           )}
         </List>
       )}
-      <Link to={'/events'}>
+      <Link to={Page.EVENTS}>
         <Button variant='secondary'>All events</Button>
       </Link>
     </Wrapper>

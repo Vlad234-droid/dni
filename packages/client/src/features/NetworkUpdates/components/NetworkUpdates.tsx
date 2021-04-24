@@ -4,6 +4,7 @@ import Icon from '@beans/icon';
 import Button from '@beans/button';
 
 import { MenuItem } from 'features/Menu';
+import { Page } from 'features/Page';
 
 import { items } from '../config/items';
 import { Wrapper, Title, List, Item, Image, Name, Count } from './styled';
@@ -29,7 +30,7 @@ const NetworkUpdates: FC = () => (
         </MenuItem>
       ))}
     </List>
-    <Link to={'/networks'}>
+    <Link to={Page.NETWORKS}>
       <Button variant='secondary'>See all</Button>
     </Link>
   </Wrapper>

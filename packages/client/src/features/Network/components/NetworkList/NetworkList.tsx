@@ -1,5 +1,4 @@
 import { FC, useEffect, useState, useCallback, useMemo } from 'react';
-import Button from '@beans/button';
 import { useSelector } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroller';
 import isEmpty from 'lodash.isempty';
@@ -12,6 +11,7 @@ import { useScrollContainer } from 'context/ScrollContainerContext';
 import List from 'features/List';
 import { useMedia } from 'context/InterfaceContext';
 import { EmptyContainer } from 'features/Common';
+import { Page } from 'features/Page';
 
 import { Filter } from '../../config/types';
 import { getList, getCount, listSelector, clear } from '../../store';
@@ -106,7 +106,7 @@ const NetworkList: FC<Props> = ({ filter }) => {
             useWindow={false}
           >
             <List
-              link='/networks'
+              link={Page.NETWORKS}
               // TODO: object is not correct type
               //@ts-ignore
               items={list}

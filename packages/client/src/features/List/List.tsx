@@ -4,6 +4,7 @@ import { FULL_FORMAT, isoDateToFormat } from 'utils/date';
 import { SmallTile, LargeTile } from 'features/Tile';
 import Event from 'features/Event';
 import Network from 'features/Network';
+import { Page } from 'features/Page';
 
 import { Wrapper } from './styled';
 
@@ -42,7 +43,7 @@ const List: FC<Props> = ({
             renderAction={renderAction}
             // TODO: remove hack for networks
             meta={
-              link === '/networks'
+              link === Page.NETWORKS
                 ? undefined
                 : isoDateToFormat(startDate, FULL_FORMAT)
             }
@@ -60,7 +61,7 @@ const List: FC<Props> = ({
             renderAction={renderAction}
             // TODO: remove hack for networks
             meta={
-              link === '/networks'
+              link === Page.NETWORKS
                 ? undefined
                 : isoDateToFormat(startDate, FULL_FORMAT)
             }

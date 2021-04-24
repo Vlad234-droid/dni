@@ -1,4 +1,4 @@
-import { Page, pages } from 'features/Page';
+import { Page, pages, Page } from 'features/Page';
 
 import { buildPath, buildRoute } from './index';
 
@@ -13,7 +13,7 @@ describe('Routes utils', () => {
 
     it('should return another Page path', () => {
       const result = buildPath(Page.EVENTS);
-      const expected = '/events';
+      const expected = Page.EVENTS;
 
       expect(result).toEqual(expected);
     });
@@ -22,7 +22,7 @@ describe('Routes utils', () => {
   describe('buildRoute', () => {
     it('should return a route', () => {
       const expected = {
-        path: '/events',
+        path: Page.EVENTS,
         exact: true,
         page: 'events',
         Component: pages[Page.EVENTS],
