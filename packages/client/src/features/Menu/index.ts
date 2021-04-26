@@ -1,4 +1,4 @@
-export { default } from './components/MainMenu';
+export { default, TEST_ID } from './components/MainMenu';
 export { default as MenuDesktop } from './components/MenuDesktop';
 export { default as MenuMobile } from './components/MenuMobile';
 export { default as MoreMenu } from './components/MoreMenuMobile';

@@ -9,12 +9,12 @@ import { Table, Body, Cell, Row } from 'features/Table';
 import Heading, { Size, Color } from 'features/Heading';
 import { useMedia } from 'context/InterfaceContext';
 import useFetch from 'hooks/useFetch';
-import { DEFAULT_PAGINATION } from 'utils/storeHelper';
+import { DEFAULT_PAGINATION } from 'config/constants';
 import { isoDateToFormat, FULL_FORMAT } from 'utils/date';
 import { EmptyContainer } from 'features/Common';
 import { Page } from 'features/Page';
 
-import { Event } from '../../store';
+import Event from '../../config/types';
 import { Wrapper } from './styled';
 
 const EventTable: FC = () => {

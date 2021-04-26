@@ -1,4 +1,5 @@
 import { ComponentType, LazyExoticComponent, FC } from 'react';
+import List from '../../List';
 
 enum Page {
   ABOUT = '',
@@ -8,6 +9,7 @@ enum Page {
   NETWORK = 'networks/:id',
   NETWORK_NEWS = 'network-news',
   REPORTS = 'reports',
+  PROFILE = 'profile',
   NOT_FOUND = '*',
 }
 

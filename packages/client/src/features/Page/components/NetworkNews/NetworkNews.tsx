@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 
 import { Page, PAGE_PREFIX } from 'features/Page';
-import Post from 'features/Post';
+import { PostList } from 'features/Post';
 import { EventSidebar } from 'features/Event';
 import { useMedia } from 'context/InterfaceContext';
 
@@ -17,7 +17,7 @@ const NetworkNews: FC = () => {
         renderMain={() => (
           <Container>
             <Left data-testid='container_feeds'>
-              <Post />
+              <PostList />
             </Left>
             {isDesktop && (
               <Right>

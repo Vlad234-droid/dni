@@ -1,5 +1,5 @@
 import React, { FC, useState } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import Button from '@beans/button';
 
 import Media from 'styles/media';
@@ -7,13 +7,14 @@ import { headingXS } from 'styles';
 
 type Props = {
   content: string[];
+  isSmall: boolean;
 };
 
-const InfoPanelContent: FC<Props> = ({ content }) => {
+const InfoPanelContent: FC<Props> = ({ content, isSmall }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <Wrapper>
+    <Wrapper isSmall={isSmall}>
       {isOpen && content.length > 1 ? (
         content.map((item, index) => <p key={index}>{item}</p>)
       ) : (
@@ -32,16 +33,20 @@ const InfoPanelContent: FC<Props> = ({ content }) => {
   );
 };
 
-export const Wrapper = styled.div`
+export const Wrapper = styled.div<{ isSmall: boolean }>`
   color: ${({ theme }) => theme.colors.base};
   margin-bottom: 16px;
   ${headingXS};
 
-  ${Media.tablet`
-    font-size: 20px;
-    line-height: 28px;
-    margin-bottom: 24px;
-  `}
+  ${({ isSmall }) =>
+    !isSmall &&
+    css`
+      ${Media.tablet`
+      font-size: 20px;
+      line-height: 28px;
+      margin-bottom: 24px;
+    `}
+    `}
 
   p {
     margin-bottom: 8px;

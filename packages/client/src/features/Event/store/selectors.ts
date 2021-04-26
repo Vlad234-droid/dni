@@ -3,9 +3,10 @@ import { createSelector } from '@reduxjs/toolkit';
 import { RootState } from 'store/rootReducer';
 import { getEntitySelectors } from 'utils/storeHelper';
 
-import { EntityAdapter, Event } from './types';
+import { eventsAdapter } from './slice';
+import Event from '../config/types';
 
-const eventsSelectors = EntityAdapter.getSelectors(
+const eventsSelectors = eventsAdapter.getSelectors(
   (state: RootState) => state.events,
 );
 

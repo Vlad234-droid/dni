@@ -1,11 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 import API from 'utils/api';
-import {
-  DEFAULT_META,
-  FilterPayload,
-  PaginationPayload,
-} from 'utils/storeHelper';
+import { FilterPayload, PaginationPayload } from 'types/payload';
+import { DEFAULT_META } from 'config/constants';
 
 import * as T from './types';
 
@@ -25,8 +22,7 @@ const getList = createAsyncThunk<
 
 const getOne = createAsyncThunk<T.OneResponse, T.OnePayload>(
   T.ONE_ACTION,
-  async ({ id }: T.OnePayload) =>
-    await API.posts.fetchOne<T.OneResponse>(id),
+  async ({ id }: T.OnePayload) => await API.posts.fetchOne<T.OneResponse>(id),
 );
 
 const createOne = createAsyncThunk<T.OneResponse, T.SetOnePayload>(

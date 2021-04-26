@@ -1,1 +1,1 @@
-export { default } from './PageWrapper';
+export { default, TEST_ID } from './PageWrapper';

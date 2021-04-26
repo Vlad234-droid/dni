@@ -6,7 +6,7 @@ import { eventsReducer } from 'features/Event';
 import { postReducer } from 'features/Post';
 import { toasterReducer } from 'features/Toaster';
 
-const appReducer = combineReducers({
+const rootReducer = combineReducers({
   auth: authReducer,
   networks: networksReducer,
   events: eventsReducer,
@@ -15,6 +15,6 @@ const appReducer = combineReducers({
   // TODO: add other reducers
 });
 
-export type RootState = ReturnType<typeof appReducer>;
+export type RootState = ReturnType<typeof rootReducer>;
 
-export default appReducer;
+export default rootReducer;

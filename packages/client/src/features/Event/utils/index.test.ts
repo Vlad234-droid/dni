@@ -1,61 +1,42 @@
 import { DateTime } from 'luxon';
+import { buildEventCRUD } from '@dni/mock-server/src/crud';
 
 import { isEventOnAir } from './index';
 
 describe('#isEventOnAir', () => {
-  it('should return false, if now is equal to end and start', () => {
-    const eventData = {
-      id: 1,
-      title: 'mocked_title',
-      image: null,
-      network: 'mocked_network',
-      maxParticipants: 42,
-      startDate: DateTime.now(),
-      endDate: DateTime.now(),
-    };
+  const eventData = buildEventCRUD(1).findAll()[0];
 
+  it('should return false, if now is equal to end and start', () => {
     expect(isEventOnAir(eventData)).toBe(false);
   });
 
   it('should return false, if now < start', () => {
-    const eventData = {
-      id: 1,
-      title: 'mocked_title',
-      image: null,
-      network: 'mocked_network',
-      maxParticipants: 42,
-      startDate: DateTime.now().plus({ days: 1 }),
-      endDate: DateTime.now().plus({ days: 2 }),
+    const newEventData = {
+      ...eventData,
+      startDate: DateTime.now().plus({ days: 1 }).toISO(),
+      endDate: DateTime.now().plus({ days: 2 }).toISO(),
     };
 
-    expect(isEventOnAir(eventData)).toBe(false);
+    expect(isEventOnAir(newEventData)).toBe(false);
   });
 
   it('should return false, if now > end', () => {
-    const eventData = {
-      id: 1,
-      title: 'mocked_title',
-      image: null,
-      network: 'mocked_network',
-      maxParticipants: 42,
-      startDate: DateTime.now().minus({ days: 2 }),
-      endDate: DateTime.now().minus({ days: 1 }),
+    const newEventData = {
+      ...eventData,
+      startDate: DateTime.now().minus({ days: 2 }).toISO(),
+      endDate: DateTime.now().minus({ days: 1 }).toISO(),
     };
 
-    expect(isEventOnAir(eventData)).toBe(false);
+    expect(isEventOnAir(newEventData)).toBe(false);
   });
 
   it('should return true, if now is in range of start and end time', () => {
-    const eventData = {
-      id: 1,
-      title: 'mocked_title',
-      image: null,
-      network: 'mocked_network',
-      maxParticipants: 42,
-      startDate: DateTime.now().minus({ days: 1 }),
-      endDate: DateTime.now().plus({ days: 2 }),
+    const newEventData = {
+      ...eventData,
+      startDate: DateTime.now().minus({ days: 1 }).toISO(),
+      endDate: DateTime.now().plus({ days: 2 }).toISO(),
     };
 
-    expect(isEventOnAir(eventData)).toBe(true);
+    expect(isEventOnAir(newEventData)).toBe(true);
   });
 });

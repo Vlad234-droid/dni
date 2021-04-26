@@ -1,19 +1,21 @@
-import React, { FC, useEffect, useCallback, useState, useMemo } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { createPortal } from 'react-dom';
 import ResponsiveImage from '@beans/responsive-image';
 
 import useDispatch from 'hooks/useDispatch';
 import useStore from 'hooks/useStore';
-import Post from 'features/Post';
+import { PostList } from 'features/Post';
 import { useImageWrapper } from 'context';
 import { normalizeImage } from 'utils/content';
 import ButtonFilter from 'features/ButtonFilter';
 
 import EventHeader from '../EventHeader';
-import { Wrapper, Content, LeftContent, Filters } from './styled';
 import { byIdSelector, getOne } from '../../store';
-import { isEventOnAir } from '../../utils';
+
+import { Wrapper, Content, LeftContent, Filters } from './styled';
+
+const TEST_ID = 'event';
 
 type Props = {
   id: number;
@@ -37,16 +39,16 @@ const filters = [
 
 type Filter = typeof ALL | typeof ARCHIVED;
 
-// TODO: fix data for network and type
+// TODO: filter events by all and archived
+// TODO: Pass events to PostList
 const Event: FC<Props> = ({ id }) => {
   const dispatch = useDispatch();
   const event = useSelector(byIdSelector(id));
   const { description, title, image, maxParticipants, startDate } = event || {};
   const [filter, setFilter] = useState<Filter>(ALL);
-  const { isLoading } = useStore((state) => state.networks);
+  const { loading } = useStore((state) => state.events);
   const imageWrapperEl = useImageWrapper();
-  //@ts-ignore
-  const isOnAir = useMemo(() => event && isEventOnAir(event), [event]);
+  const isOnAir = true;
 
   useEffect(() => {
     if (event) return;
@@ -56,28 +58,25 @@ const Event: FC<Props> = ({ id }) => {
 
   const loadEvent = (id: number) => dispatch(getOne({ id }));
 
-  if (!event && !isLoading)
-    return <Content>{`There is no event with id ${id}`}</Content>;
+  if (loading === 'pending') return <div>Loading network data...</div>;
 
-  if (isLoading) return <div>Loading network data...</div>;
+  if (loading === 'succeeded' && !event)
+    return <Content>{`There is no event with id ${id}`}</Content>;
 
   const normalizeImg = normalizeImage(image);
 
-  // TODO: normaluize image before save to store
+  // TODO: normalize image before save to store
   return (
-    <Wrapper>
+    <Wrapper data-testid={TEST_ID}>
       {imageWrapperEl &&
         createPortal(
           <ResponsiveImage
             key={id}
-            //@ts-ignore
             alt={normalizeImg?.alternativeText}
-            //@ts-ignore
             src={normalizeImg?.url}
             fallbackSizeRatio='57%'
             objectFit='cover'
           />,
-          //@ts-ignore
           imageWrapperEl,
         )}
       <EventHeader
@@ -100,11 +99,13 @@ const Event: FC<Props> = ({ id }) => {
               onChange={(key) => setFilter(key as Filter)}
             />
           </Filters>
-          <Post entityId={id} filter={'BY_EVENT'} />
+          <PostList entityId={id} filter={'BY_EVENT'} />
         </LeftContent>
       </Content>
     </Wrapper>
   );
 };
+
+export { TEST_ID };
 
 export default Event;

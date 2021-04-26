@@ -1,5 +1,6 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import qs from 'qs';
+
 import './mockHttpClient';
 
 import { API_VERSION, API_URL } from 'config/api';

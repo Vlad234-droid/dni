@@ -10,7 +10,7 @@ type Props = HTMLProps<HTMLDivElement>;
 export const Wrapper = styled.div<Props>`
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: 53px 1fr 60px;
+  grid-template-rows: 53px 1fr 53px;
   grid-template-areas: 'header' 'main' 'left';
   height: 100vh;
 
@@ -34,7 +34,7 @@ export const Wrapper = styled.div<Props>`
 `;
 
 export const HeaderContainer = styled.div.attrs({
-  'data-testid': 'main-header',
+  'data-testid': 'header-container',
 })<Props>`
   position: relative;
   z-index: 1000;

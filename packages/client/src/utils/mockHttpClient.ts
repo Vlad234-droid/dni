@@ -7,20 +7,14 @@ import {
   buildPostCRUD,
 } from '@dni/mock-server/src/crud';
 
+import { getMathId } from 'utils/testUtils';
+
 let mock = {} as MockAdapter;
 
 if (process.env.NODE_ENV === 'test') {
   const COLLECTION_SIZE = 9;
   mock = new MockAdapter(axios);
 
-  const mathId = (url: string, exp: RegExp) => {
-    const res = url.match(exp);
-    if (res!.length == 2) {
-      return res![1];
-    }
-
-    return 0;
-  };
   // user
   mock.onPost(Endpoint.SIGN_IN).reply(200, {});
   mock.onPost(Endpoint.SIGN_OUT).reply(200, {});
@@ -55,7 +49,7 @@ if (process.env.NODE_ENV === 'test') {
     .onGet(oneNetwork)
     .reply((config) => [
       200,
-      networkCRUD.findBy(mathId(config.url!, oneNetwork)),
+      networkCRUD.findBy(getMathId(config.url!, oneNetwork)),
     ]);
   // events
   const eventCRUD = buildEventCRUD(COLLECTION_SIZE);
@@ -64,7 +58,10 @@ if (process.env.NODE_ENV === 'test') {
   mock.onGet(Endpoint.EVENTS_COUNT).reply(200, eventCRUD.count());
   mock
     .onGet(oneEvent)
-    .reply((config) => [200, eventCRUD.findBy(mathId(config.url!, oneEvent))]);
+    .reply((config) => [
+      200,
+      eventCRUD.findBy(getMathId(config.url!, oneEvent)),
+    ]);
   // posts
   const postsCRUD = buildPostCRUD(COLLECTION_SIZE);
   const onePost = new RegExp(`${Endpoint.POSTS}/(\\d+)`);
@@ -72,7 +69,10 @@ if (process.env.NODE_ENV === 'test') {
   mock.onGet(Endpoint.POSTS_COUNT).reply(200, postsCRUD.count());
   mock
     .onGet(onePost)
-    .reply((config) => [200, postsCRUD.findBy(mathId(config.url!, onePost))]);
+    .reply((config) => [
+      200,
+      postsCRUD.findBy(getMathId(config.url!, onePost)),
+    ]);
 }
 
 export { mock };

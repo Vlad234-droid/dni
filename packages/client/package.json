@@ -43,6 +43,7 @@
     "@beans/notification": "^18.4.0",
     "@beans/responsive-image": "^18.2.3",
     "@beans/selectors": "^18.2.2",
+    "@beans/spinner": "^18.4.0",
     "@beans/textarea": "^18.2.2",
     "@beans/theme": "^18.2.1",
     "@beans/title-link": "^18.2.3",

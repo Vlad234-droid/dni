@@ -36,7 +36,7 @@ describe('<MenuItem />', () => {
         </Switch>,
       );
 
-    const menuItemTestId = `${MENU_TEST_ID_PREFIX}${menuItem.name}`;
+    const menuItemTestId = `${MENU_TEST_ID_PREFIX}${menuItem.name?.toLowerCase()}`;
 
     it('should render correctly', () => {
       render();

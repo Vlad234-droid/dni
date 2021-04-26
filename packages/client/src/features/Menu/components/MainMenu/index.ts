@@ -1,1 +1,1 @@
-export { default } from './MainMenu';
+export { default, TEST_ID } from './MainMenu';

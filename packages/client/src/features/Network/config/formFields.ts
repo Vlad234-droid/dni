@@ -1,5 +1,5 @@
 import { FormField } from 'features/GenericForm';
-import { TextArea, TextInput, FileInput, Multiselect } from 'features/Common';
+import { TextArea, TextInput, FileInput } from 'features/Common';
 import { Names } from './types';
 
 export type Partner = {

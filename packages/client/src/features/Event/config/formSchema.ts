@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
 
-const schema = Yup.object().shape({
+const formSchema = Yup.object().shape({
   image: Yup.mixed().nullable(),
   title: Yup.string().required('Title is required'),
   network: Yup.string().required('Network is required'),
@@ -16,7 +16,7 @@ const schema = Yup.object().shape({
     200,
     'Length of description should be less 200 characters',
   ),
-  surveryUrl: Yup.string(),
+  surveyUrl: Yup.string(),
 });
 
-export default schema;
+export default formSchema;

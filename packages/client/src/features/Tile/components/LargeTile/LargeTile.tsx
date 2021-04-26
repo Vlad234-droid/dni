@@ -2,8 +2,11 @@ import React, { FC } from 'react';
 import { VERTICAL } from '@beans/constants';
 
 import Tile from 'features/Tile';
+import { StatusLabel, StatusType } from 'features/Common';
 
 import { Wrapper, ActionContainer, StatusContainer } from './styled';
+
+const TEST_ID = 'large-tile';
 
 type Props = {
   id: number;
@@ -16,7 +19,6 @@ type Props = {
   } | null;
   renderAction: (id: number) => JSX.Element;
   meta?: string;
-  renderStatus?: () => JSX.Element;
   isOnAir?: boolean;
 };
 
@@ -25,15 +27,16 @@ const LargeTile: FC<Props> = ({
   participants,
   image,
   renderAction,
-  renderStatus,
   link,
   meta,
   isOnAir,
   id,
 }) => (
-  <Wrapper>
-    {isOnAir && renderStatus && (
-      <StatusContainer>{renderStatus()}</StatusContainer>
+  <Wrapper data-testid={TEST_ID}>
+    {isOnAir && (
+      <StatusContainer>
+        <StatusLabel type={StatusType.SUCCESS}>On-Air</StatusLabel>
+      </StatusContainer>
     )}
     <Tile
       id={id}
@@ -50,5 +53,7 @@ const LargeTile: FC<Props> = ({
     />
   </Wrapper>
 );
+
+export { TEST_ID };
 
 export default LargeTile;

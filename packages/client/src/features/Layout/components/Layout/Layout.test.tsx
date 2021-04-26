@@ -15,7 +15,7 @@ describe('#Layout component', () => {
   it('should render expected content', () => {
     renderLayout();
 
-    expect(screen.getByTestId('main-header')).toBeInTheDocument();
+    expect(screen.getByTestId('header-container')).toBeInTheDocument();
     expect(screen.getByTestId('left-content')).toBeInTheDocument();
     expect(screen.getByTestId('main-content')).toBeInTheDocument();
   });

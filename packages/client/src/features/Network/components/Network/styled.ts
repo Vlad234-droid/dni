@@ -18,7 +18,8 @@ export const Content = styled.div`
 `;
 
 export const LeftContent = styled.div`
-  width: calc(100% - 320px);
+  flex-basis: 288px;
+  flex-grow: 1;
   margin-bottom: 64px;
 
   ${Media.tablet`
@@ -27,7 +28,6 @@ export const LeftContent = styled.div`
 `;
 
 export const RightContent = styled.div`
-  width: 320px;
   margin-bottom: 24px;
 
   ${Media.tablet`

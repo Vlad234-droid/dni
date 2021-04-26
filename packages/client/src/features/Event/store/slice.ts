@@ -1,16 +1,29 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import {
+  createAsyncThunk,
+  createEntityAdapter,
+  createSlice,
+} from '@reduxjs/toolkit';
 
 import API from 'utils/api';
+import { FilterPayload, PaginationPayload } from 'types/payload';
+import { DEFAULT_META } from 'config/constants';
+import { Loading } from 'store/types';
+
+import Event, * as T from '../config/types';
+
 import {
-  DEFAULT_META,
-  FilterPayload,
-  PaginationPayload,
-} from 'utils/storeHelper';
+  GET_COUNT_ACTION,
+  GET_LIST_ACTION,
+  GET_ONE_ACTION,
+  ROOT,
+  SET_ONE_ACTION,
+  UPLOAD_IMG_ACTION,
+} from './actionTypes';
 
-import * as T from './types';
+const eventsAdapter = createEntityAdapter<Event>();
 
-const initialState: T.State = T.EntityAdapter.getInitialState({
-  isLoading: false,
+const initialState: T.State = eventsAdapter.getInitialState({
+  loading: Loading.IDLE,
   error: null,
   meta: DEFAULT_META,
 });
@@ -19,24 +32,25 @@ const getList = createAsyncThunk<
   T.ListResponse,
   FilterPayload & PaginationPayload
 >(
-  T.LIST_ACTION,
-  async (filters) => await API.events.fetchAll<T.ListResponse>(filters),
+  GET_LIST_ACTION,
+  async (filters: FilterPayload & PaginationPayload) =>
+    await API.events.fetchAll<T.ListResponse>(filters),
 );
 
 const getOne = createAsyncThunk<T.OneResponse, T.OnePayload>(
-  T.ONE_ACTION,
+  GET_ONE_ACTION,
   async ({ id }: T.OnePayload) => await API.events.fetchOne<T.OneResponse>(id),
 );
 
 const createOne = createAsyncThunk<T.OneResponse, T.SetOnePayload>(
-  T.SET_ONE_ACTION,
+  SET_ONE_ACTION,
   async (data) => await API.events.create<T.OneResponse>(data),
 );
 
 const uploadImage = createAsyncThunk<
   Pick<T.OneResponse, 'id' | 'image'>,
   T.UploadImgPayload
->(T.UPLOAD_IMG_ACTION, async ({ id, image }) => {
+>(UPLOAD_IMG_ACTION, async ({ id, image }) => {
   const data = new FormData();
   data.append('refId', String(id));
   data.append('ref', 'Event');
@@ -52,74 +66,84 @@ const uploadImage = createAsyncThunk<
 });
 
 const getCount = createAsyncThunk<number, FilterPayload>(
-  T.COUNT_ACTION,
+  GET_COUNT_ACTION,
   (data) => API.events.count<number>(data),
 );
 
 const slice = createSlice({
-  name: T.ROOT,
+  name: ROOT,
   initialState,
   reducers: {
     clear(state) {
-      T.EntityAdapter.removeAll(state);
+      eventsAdapter.removeAll(state);
       state.meta = initialState.meta;
     },
   },
   extraReducers: (builder) => {
-    const startLoading = (state: T.State) => {
-      state.isLoading = true;
+    const setPending = (state: T.State) => {
+      state.loading = Loading.PENDING;
     };
-    const stopLoading = (state: T.State) => {
-      state.isLoading = false;
+
+    const setSucceeded = (state: T.State) => {
+      state.loading = Loading.SUCCEEDED;
+    };
+
+    // TODO: #set info about error received?
+    const setFailed = (state: T.State) => {
+      state.loading = Loading.FAILED;
     };
 
     builder
-      .addCase(getCount.pending, startLoading)
-      .addCase(getCount.fulfilled, (state: T.State, action) => {
-        const total = action.payload;
+      .addCase(getCount.pending, setPending)
+      // TODO: #action is not typed?
+      .addCase(getCount.fulfilled, (state: T.State, { payload: total }) => {
         const meta = state.meta;
         state.meta = {
           ...meta,
           total,
         };
-        stopLoading(state);
+        setSucceeded(state);
       })
-      .addCase(getList.pending, startLoading)
-      .addCase(getList.fulfilled, (state: T.State, action) => {
-        const data = action.payload;
-        T.EntityAdapter.upsertMany(state, data);
-        const meta = state.meta;
-        state.meta = {
-          ...meta,
-        };
-        stopLoading(state);
+      // TODO: #rejected is not handled?
+      .addCase(getList.pending, setPending)
+      .addCase(getList.fulfilled, (state: T.State, { payload: events }) => {
+        eventsAdapter.upsertMany(state, events);
+        setSucceeded(state);
       })
-      .addCase(getList.rejected, stopLoading)
-      .addCase(getOne.pending, startLoading)
-      .addCase(getOne.fulfilled, (state: T.State, action) => {
-        T.EntityAdapter.upsertOne(state, action.payload);
-        stopLoading(state);
+      .addCase(getList.rejected, setFailed)
+      .addCase(getOne.pending, setPending)
+      .addCase(getOne.fulfilled, (state: T.State, { payload: event }) => {
+        eventsAdapter.upsertOne(state, event);
+        setSucceeded(state);
       })
-      .addCase(getOne.rejected, stopLoading)
-      .addCase(createOne.pending, startLoading)
-      .addCase(createOne.fulfilled, (state: T.State, action) => {
-        T.EntityAdapter.upsertOne(state, action.payload);
-        stopLoading(state);
+      .addCase(getOne.rejected, setFailed)
+      .addCase(createOne.pending, setPending)
+      .addCase(createOne.fulfilled, (state: T.State, { payload: event }) => {
+        eventsAdapter.upsertOne(state, event);
+        setSucceeded(state);
       })
-      .addCase(uploadImage.pending, startLoading)
-      .addCase(uploadImage.fulfilled, (state: T.State, action) => {
-        T.EntityAdapter.updateOne(state, {
-          ...action.payload,
-          changes: { image: action.payload.image },
+      .addCase(uploadImage.pending, setPending)
+      .addCase(uploadImage.fulfilled, (state: T.State, { payload }) => {
+        eventsAdapter.updateOne(state, {
+          ...payload,
+          changes: { image: payload.image },
         });
-        stopLoading(state);
+        setSucceeded(state);
       })
-      .addCase(uploadImage.rejected, stopLoading);
+      .addCase(uploadImage.rejected, setFailed);
   },
 });
 
 const { clear } = slice.actions;
 
-export { getList, getOne, createOne, uploadImage, getCount, clear };
+export {
+  eventsAdapter,
+  getList,
+  getOne,
+  createOne,
+  uploadImage,
+  getCount,
+  clear,
+};
 
 export default slice.reducer;

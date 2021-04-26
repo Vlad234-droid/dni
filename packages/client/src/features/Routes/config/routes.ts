@@ -9,6 +9,7 @@ const routes = [
   Page.NETWORK,
   Page.NETWORK_NEWS,
   Page.REPORTS,
+  Page.PROFILE,
   Page.NOT_FOUND,
 ].map((element) => buildRoute(element));
 

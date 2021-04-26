@@ -10,7 +10,7 @@ import { EmptyContainer } from 'features/Common';
 import { Page } from 'features/Page';
 
 import EventAction from '../EventAction';
-import { Event } from '../../store';
+import Event from '../../config/types';
 
 const EventCarousel: FC = () => {
   const [{ response: list }, doFetch] = useFetch<Event[]>([]);

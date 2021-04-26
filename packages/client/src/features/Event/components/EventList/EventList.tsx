@@ -9,15 +9,17 @@ import { useMedia } from 'context/InterfaceContext';
 import useStore from 'hooks/useStore';
 import useDispatch from 'hooks/useDispatch';
 import { firstDayOf, lastDayOf } from 'utils/date';
-import { FilterPayload, DEFAULT_PAGINATION } from 'utils/storeHelper';
+import { FilterPayload } from 'types/payload';
+import { DEFAULT_PAGINATION } from 'config/constants';
 import List from 'features/List';
 import { EmptyContainer } from 'features/Common';
 import { Page } from 'features/Page';
 
 import { getList, listSelector, clear, getCount } from '../../store';
-import { Filter } from '../../config/types';
 import { Wrapper } from './styled';
 import EventAction from '../EventAction';
+
+type Filter = 'ON_AIR' | 'THIS_MONTH';
 
 type Props = {
   filter?: Filter;
@@ -32,14 +34,14 @@ const EventList: FC<Props> = ({ filter }) => {
 
   const {
     meta: { total },
-    isLoading,
+    loading,
   } = useStore((state) => state.events);
   const list = useSelector(listSelector);
   const hasMore = useMemo(() => list.length < total, [list, total]);
 
   const loadEvents = useCallback(
     (page: number) => {
-      if (filters && hasMore && !isLoading) {
+      if (filters && hasMore && !(loading === 'pending')) {
         dispatch(
           getList({
             ...filters,
@@ -51,7 +53,7 @@ const EventList: FC<Props> = ({ filter }) => {
         );
       }
     },
-    [filters, hasMore, isLoading],
+    [filters, hasMore, loading],
   );
 
   useEffect(() => {
@@ -113,7 +115,7 @@ const EventList: FC<Props> = ({ filter }) => {
             renderAction={(id) => <EventAction id={id} />}
           />
           <Button
-            disabled={!hasMore || isLoading}
+            disabled={!hasMore || loading === 'pending'}
             variant='secondary'
             onClick={() => setPage(page + 1)}
           >
