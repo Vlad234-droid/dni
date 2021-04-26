@@ -9,6 +9,7 @@ import { LargeTile, SmallTile } from 'features/Tile';
 import { FULL_FORMAT, isoDateToFormat } from 'utils/date';
 import { Loading } from 'store/types';
 import { EntityListPayload } from 'types/payload';
+import { Page } from 'features/Page';
 
 import { isEventOnAir } from '../../utils';
 import Event from '../../config/types';
@@ -72,8 +73,6 @@ const EventSidebar: FC<Props> = ({
     );
   }
 
-  console.log('events', events);
-
   // TODO: remove network data from event, keep only network id
 
   return (
@@ -116,7 +115,7 @@ const EventSidebar: FC<Props> = ({
       </List>
       {events &&
         (count > MAX_VISIBLE_ITEMS || events.length > MAX_VISIBLE_ITEMS) && (
-          <Link to={'/events'}>
+          <Link to={Page.EVENTS}>
             <Button variant='secondary'>All events</Button>
           </Link>
         )}

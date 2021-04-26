@@ -3,13 +3,14 @@ import isEmpty from 'lodash.isempty';
 
 import Carousel from 'features/Carousel';
 import { LargeTile } from 'features/Tile';
-
 import useFetch from 'hooks/useFetch';
 import { normalizeImage } from 'utils/content';
 import { isoDateToFormat, FULL_FORMAT } from 'utils/date';
-import Event from '../../config/types';
 import { EmptyContainer } from 'features/Common';
+import { Page } from 'features/Page';
+
 import EventAction from '../EventAction';
+import Event from '../../config/types';
 
 const EventCarousel: FC = () => {
   const [{ response: list }, doFetch] = useFetch<Event[]>([]);
@@ -36,7 +37,7 @@ const EventCarousel: FC = () => {
           id={id}
           title={title}
           participants={maxParticipants}
-          link='/events'
+          link={Page.EVENTS}
           // TODO: make transformation when data loaded before saving to store
           meta={isoDateToFormat(startDate, FULL_FORMAT)}
           renderAction={(id) => <EventAction id={id} />}

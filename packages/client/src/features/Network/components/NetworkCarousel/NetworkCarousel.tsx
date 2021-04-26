@@ -1,13 +1,14 @@
 import { FC, useEffect, useState } from 'react';
-import Button from '@beans/button';
 import isEmpty from 'lodash.isempty';
 
 import Carousel from 'features/Carousel';
 import useFetch from 'hooks/useFetch';
 import { LargeTile } from 'features/Tile';
 import { normalizeImage } from 'utils/content';
-import { Network } from '../../store';
 import { EmptyContainer } from 'features/Common';
+import { Page } from 'features/Page';
+
+import { Network } from '../../store';
 import NetworkAction from '../NetworkAction';
 
 const NetworkCarousel: FC = () => {
@@ -31,7 +32,7 @@ const NetworkCarousel: FC = () => {
     <Carousel itemWidth='278px' id='network-carousel'>
       {list!.map(({ id, title, image }) => (
         <LargeTile
-          link='/networks'
+          link={Page.NETWORKS}
           renderAction={(id) => <NetworkAction id={id} />}
           id={id}
           key={`networks-${id}`}

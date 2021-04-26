@@ -13,6 +13,7 @@ import { FilterPayload } from 'types/payload';
 import { DEFAULT_PAGINATION } from 'config/constants';
 import List from 'features/List';
 import { EmptyContainer } from 'features/Common';
+import { Page } from 'features/Page';
 
 import { getList, listSelector, clear, getCount } from '../../store';
 import { Wrapper } from './styled';
@@ -105,7 +106,7 @@ const EventList: FC<Props> = ({ filter }) => {
       ) : (
         <>
           <List
-            link='/events'
+            link={Page.EVENTS}
             // TODO: event is not correct type Event
             //@ts-ignore
             items={list}
