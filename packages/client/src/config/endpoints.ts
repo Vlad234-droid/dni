@@ -12,14 +12,14 @@ export enum Endpoint {
   USER_PROFILE = '/employees/profile',
   USER_NETWORKS = '/employees/networks',
   USER_EVENTS = '/employees/events',
+  USER_EVENTS_PARTICIPANTS = '/employees/events/participants',
+  USER_NETWORKS_PARTICIPANTS = '/employees/networks/participants',
   // networks
   NETWORKS = '/networks',
   NETWORKS_COUNT = '/networks/count',
-  NETWORKS_PARTICIPANTS = '/networks/participants',
   // events
   EVENTS = '/events',
   EVENTS_COUNT = '/events/count',
-  EVENTS_PARTICIPANTS = '/events/participants',
   // posts
   POSTS = '/posts',
   POSTS_COUNT = '/posts/count',
@@ -38,10 +38,14 @@ export default (httpClient: AxiosInstance) => ({
       httpClient.post<T>(Endpoint.USER_NETWORKS, data),
     leaveNetwork: <T>(data: Config) =>
       httpClient.delete<T>(Endpoint.USER_NETWORKS, { data }),
-    takePartEvent: <T>(data: Config) =>
+    joinEvent: <T>(data: Config) =>
       httpClient.post<T>(Endpoint.USER_EVENTS, data),
-    missOutEvent: <T>(data: Config) =>
+    leaveEvent: <T>(data: Config) =>
       httpClient.delete<T>(Endpoint.USER_EVENTS, { data }),
+    eventParticipants: <T>() =>
+      httpClient.get<T>(Endpoint.USER_EVENTS_PARTICIPANTS),
+    networkParticipants: <T>() =>
+      httpClient.get<T>(Endpoint.USER_NETWORKS_PARTICIPANTS),
   },
   networks: {
     fetchAll: <T>(data: Config = {}) =>
@@ -51,7 +55,6 @@ export default (httpClient: AxiosInstance) => ({
     create: <T>(data: T) => httpClient.post<T>(Endpoint.NETWORKS, data),
     count: <T>(data: Config = {}) =>
       httpClient.get<T>(Endpoint.NETWORKS_COUNT, { params: data }),
-    participants: <T>() => httpClient.get<T>(Endpoint.NETWORKS_PARTICIPANTS),
   },
   events: {
     fetchAll: <T>(data: Config = {}) =>
@@ -60,7 +63,6 @@ export default (httpClient: AxiosInstance) => ({
     create: <T>(data: T) => httpClient.post<T>(Endpoint.EVENTS, data),
     count: <T>(data: Config = {}) =>
       httpClient.get<T>(Endpoint.EVENTS_COUNT, { params: data }),
-    participants: <T>() => httpClient.get<T>(Endpoint.EVENTS_PARTICIPANTS),
   },
   common: {
     upload: <T>(data: FormData) =>

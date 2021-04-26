@@ -16,7 +16,7 @@ import { EmptyContainer } from 'features/Common';
 import { Page } from 'features/Page';
 
 import { getList, listSelector, clear, getCount } from '../../store';
-
+import { getEventParticipants } from 'features/Auth/store';
 import { Filter, ALL, THIS_WEEK, THIS_MONTH } from '../../config/types';
 import { Wrapper } from './styled';
 import EventAction from '../EventAction';
@@ -47,6 +47,7 @@ const EventList: FC = () => {
   const [filter, setFilter] = useState<Filter>(ALL);
   const [filters, setFilters] = useState<FilterPayload>();
 
+  const { eventParticipants } = useStore((state) => state.auth);
   const {
     meta: { total },
     loading,
@@ -86,6 +87,12 @@ const EventList: FC = () => {
       }
     })();
   }, [filters]);
+
+  useEffect(() => {
+    (async () => {
+      await dispatch(getEventParticipants());
+    })();
+  }, []);
 
   useEffect(() => {
     let where = {};
@@ -134,9 +141,12 @@ const EventList: FC = () => {
             // TODO: event is not correct type Event
             //@ts-ignore
             items={list}
-            hideParticipants={true}
+            hideMaxParticipants={false}
+            participants={eventParticipants}
             isMobile={isMobile}
-            renderAction={(id) => <EventAction id={id} />}
+            renderAction={(id, disabled) => (
+              <EventAction id={id} disabled={disabled} />
+            )}
           />
           <Button
             disabled={!hasMore || loading === 'pending'}

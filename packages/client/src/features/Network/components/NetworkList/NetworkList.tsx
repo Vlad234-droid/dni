@@ -14,6 +14,7 @@ import { useMedia } from 'context/InterfaceContext';
 import { EmptyContainer } from 'features/Common';
 import { Page } from 'features/Page';
 
+import { getNetworkParticipants } from 'features/Auth/store';
 import { Filter, ALL, YOUR_NETWORKS } from '../../config/types';
 import { getList, getCount, listSelector, clear } from '../../store';
 import { Wrapper, ListContainer } from './styled';
@@ -49,6 +50,7 @@ const NetworkList: FC = () => {
   } = useStore((state) => state.networks);
   const list = useSelector(listSelector);
   const hasMore = useMemo(() => list.length < total, [list, total]);
+  const { networkParticipants } = useStore((state) => state.auth);
 
   const loadNetworks = useCallback(
     (page: number) => {
@@ -84,12 +86,18 @@ const NetworkList: FC = () => {
         break;
       }
       case 'YOUR_NETWORKS': {
-        where = { id_in: [...networks, 999] };
+        where = { id_in: [...networks, -1] };
         break;
       }
     }
     setFilters({ ...where });
-  }, [filter, networks]);
+  }, [filter]);
+
+  useEffect(() => {
+    (async () => {
+      await dispatch(getNetworkParticipants());
+    })();
+  }, []);
 
   // TODO: add loader component
   const Loader = <div key='loader'>Loading ...</div>;
@@ -122,6 +130,7 @@ const NetworkList: FC = () => {
               // TODO: object is not correct type
               //@ts-ignore
               items={list}
+              participants={networkParticipants}
               isMobile={isMobile}
               renderAction={(id) => <NetworkAction id={id} />}
             />

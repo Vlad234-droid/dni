@@ -4,13 +4,17 @@ const ROOT = 'auth';
 const FETCH_PROFILE_ACTION = `${ROOT}/profile`;
 const JOIN_NETWORK_ACTION = `${ROOT}/joinNetwork`;
 const LEAVE_NETWORK_ACTION = `${ROOT}/leaveNetwork`;
-const TAKE_PART_EVENT_ACTION = `${ROOT}/takePartEvent`;
-const MISS_OUT_EVENT_ACTION = `${ROOT}/missOutEvent`;
+const JOIN_EVENT_ACTION = `${ROOT}/joinEvent`;
+const LEAVE_EVENT_ACTION = `${ROOT}/leaveEvent`;
+const EVENT_PARTICIPANTS_ACTION = `${ROOT}/eventParticipants`;
+const NETWORK_PARTICIPANTS_ACTION = `${ROOT}/networkParticipants`;
 
 type State = {
   user: DefaultUser | User;
   isLoading: boolean;
   error: Nullable<string>;
+  networkParticipants: Record<number, number>;
+  eventParticipants: Record<number, number>;
 };
 
 type UserResponse = DefaultUser | User;
@@ -40,6 +44,13 @@ type ValidationError = {
   path: string[];
 };
 
+type Participant = {
+  id: number;
+  participants: number;
+};
+
+type ParticipantsResponse = Participant[];
+
 export type {
   State,
   UserResponse,
@@ -48,6 +59,7 @@ export type {
   NetworkResponse,
   EventPayload,
   EventResponse,
+  ParticipantsResponse,
 };
 
 export {
@@ -56,6 +68,8 @@ export {
   FETCH_PROFILE_ACTION,
   JOIN_NETWORK_ACTION,
   LEAVE_NETWORK_ACTION,
-  TAKE_PART_EVENT_ACTION,
-  MISS_OUT_EVENT_ACTION,
+  JOIN_EVENT_ACTION,
+  LEAVE_EVENT_ACTION,
+  EVENT_PARTICIPANTS_ACTION,
+  NETWORK_PARTICIPANTS_ACTION,
 };

@@ -3,6 +3,7 @@ import isEmpty from 'lodash.isempty';
 
 import Carousel from 'features/Carousel';
 import useFetch from 'hooks/useFetch';
+import useStore from 'hooks/useStore';
 import { LargeTile } from 'features/Tile';
 import { normalizeImage } from 'utils/content';
 import { EmptyContainer } from 'features/Common';
@@ -13,6 +14,7 @@ import NetworkAction from '../NetworkAction';
 
 const NetworkCarousel: FC = () => {
   const [{ response: list }, doFetch] = useFetch<Network[]>([]);
+  const { networkParticipants } = useStore((state) => state.auth);
 
   const [filters] = useState({
     _start: 0,
@@ -33,11 +35,11 @@ const NetworkCarousel: FC = () => {
       {list!.map(({ id, title, image }) => (
         <LargeTile
           link={Page.NETWORKS}
-          renderAction={(id) => <NetworkAction id={id} />}
+          renderAction={() => <NetworkAction id={id} />}
           id={id}
           key={`networks-${id}`}
           title={title}
-          participants={120}
+          participants={networkParticipants[id]! || 0}
           image={normalizeImage(image)}
         />
       ))}

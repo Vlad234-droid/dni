@@ -37,8 +37,8 @@ api.get('/employees/:employeeNumber/events', getEventsByEmployeeNumber);
 api.post('/employees/events', addEventToEmployee);
 api.delete('/employees/events', deleteEventFromEmployee);
 
-api.get('/events/participants', getEventsParticipants);
-api.get('/networks/participants', getNetworksParticipants);
+api.get('/employees/events/participants', getEventsParticipants);
+api.get('/employees/networks/participants', getNetworksParticipants);
 
 api.post('/notifications', cmsAuth, handleHook);
 

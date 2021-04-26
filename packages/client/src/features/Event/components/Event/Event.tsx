@@ -47,6 +47,7 @@ const Event: FC<Props> = ({ id }) => {
   const { description, title, image, maxParticipants, startDate } = event || {};
   const [, setFilter] = useState<Filter>(ALL);
   const { loading } = useStore((state) => state.events);
+  const { eventParticipants } = useStore((state) => state.auth);
   const imageWrapperEl = useImageWrapper();
   const isOnAir = true;
 
@@ -85,7 +86,8 @@ const Event: FC<Props> = ({ id }) => {
         title={title}
         description={description}
         //@ts-ignore
-        participants={maxParticipants}
+        participants={eventParticipants[id]! || 0}
+        maxParticipants={maxParticipants}
         //@ts-ignore
         isOnAir={isOnAir}
         //@ts-ignore

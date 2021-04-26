@@ -20,7 +20,6 @@ type Props = {
 };
 
 const Graphics = ({ active, data }: Props) => {
-  console.log(data);
   const [period, setPeriod] = useState<Period>(Period.CURRENT_YEAR);
   const buttonList = useMemo(() => {
     return [

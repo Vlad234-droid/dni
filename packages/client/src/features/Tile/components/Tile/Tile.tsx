@@ -21,7 +21,8 @@ type Props = {
   renderAction: () => JSX.Element;
   meta?: string;
   participants?: number;
-  hideParticipants?: boolean;
+  maxParticipants?: number;
+  hideMaxParticipants?: boolean;
   image?: {
     alternativeText: string;
     url: string;
@@ -42,7 +43,8 @@ const Tile: FC<Props> = ({
   renderAction,
   meta,
   orientation,
-  hideParticipants = false,
+  maxParticipants,
+  hideMaxParticipants = false,
   id,
 }) => {
   // TODO move image normalization to action when loading images?
@@ -78,10 +80,12 @@ const Tile: FC<Props> = ({
         </DescriptionContainer>
       )}
       {meta && <TileMeta>{meta}</TileMeta>}
-      {isNumber(participants) && !hideParticipants && (
+      {isNumber(participants) && (
         <TileText>
           <Icon graphic='account' size={'sm'} />
-          {participants} participants
+          {participants}
+          {!hideMaxParticipants && maxParticipants && ` / ${maxParticipants}`}
+          &nbsp; participants
         </TileText>
       )}
       {renderAction()}

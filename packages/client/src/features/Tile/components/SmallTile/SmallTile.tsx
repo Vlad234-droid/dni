@@ -16,10 +16,11 @@ type Props = {
     alternativeText: string;
     url: string;
   } | null;
-  renderAction: (id: number) => JSX.Element;
+  renderAction: () => JSX.Element;
   meta?: string;
-  hideParticipants?: boolean;
   isOnAir?: boolean;
+  maxParticipants?: number;
+  hideMaxParticipants?: boolean;
 };
 
 const SmallTile: FC<Props> = ({
@@ -29,18 +30,20 @@ const SmallTile: FC<Props> = ({
   renderAction,
   link,
   meta,
-  hideParticipants,
+  maxParticipants,
+  hideMaxParticipants,
   id,
 }) => (
   <Wrapper data-testid={TEST_ID}>
     <Tile
       id={id}
       link={link}
-      renderAction={() => <ActionContainer>{renderAction(id)}</ActionContainer>}
+      renderAction={() => <ActionContainer>{renderAction()}</ActionContainer>}
       meta={meta}
       title={title}
       participants={participants}
-      hideParticipants={hideParticipants}
+      maxParticipants={maxParticipants}
+      hideMaxParticipants={hideMaxParticipants}
       image={image}
       orientation={{
         aboveTablet: HORIZONTAL,

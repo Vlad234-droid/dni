@@ -4,13 +4,14 @@ import Button from '@beans/button';
 import useStore from 'hooks/useStore';
 import useDispatch from 'hooks/useDispatch';
 
-import { takePartEvent, missOutEvent } from 'features/Auth/store';
+import { joinEvent, leaveEvent } from 'features/Auth/store';
 
 type Props = {
   id: number;
+  disabled?: boolean;
 };
 
-const EventAction: FC<Props> = ({ id }) => {
+const EventAction: FC<Props> = ({ id, disabled }) => {
   const dispatch = useDispatch();
 
   const { events = [], params } = useStore((state) => state.auth.user);
@@ -20,7 +21,7 @@ const EventAction: FC<Props> = ({ id }) => {
   const handleJoin = useCallback(
     async (eventId: number) => {
       if (employeeNumber) {
-        await dispatch(takePartEvent({ employeeNumber, eventId }));
+        await dispatch(joinEvent({ employeeNumber, eventId }));
       }
     },
     [employeeNumber],
@@ -29,7 +30,7 @@ const EventAction: FC<Props> = ({ id }) => {
   const handleLeave = useCallback(
     async (eventId: number) => {
       if (employeeNumber) {
-        await dispatch(missOutEvent({ employeeNumber, eventId }));
+        await dispatch(leaveEvent({ employeeNumber, eventId }));
       }
     },
     [employeeNumber],
@@ -40,7 +41,11 @@ const EventAction: FC<Props> = ({ id }) => {
       Leave
     </Button>
   ) : (
-    <Button variant='primary' onClick={() => handleJoin(id)}>
+    <Button
+      disabled={disabled}
+      variant='primary'
+      onClick={() => handleJoin(id)}
+    >
       Join
     </Button>
   );
