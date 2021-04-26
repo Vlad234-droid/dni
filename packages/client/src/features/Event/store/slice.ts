@@ -97,13 +97,12 @@ const slice = createSlice({
       .addCase(getCount.pending, setPending)
       // TODO: #action is not typed?
       .addCase(getCount.fulfilled, (state: T.State, { payload: total }) => {
-        setSucceeded({
-          ...state,
-          meta: {
-            ...state.meta,
-            total,
-          },
-        });
+        const meta = state.meta;
+        state.meta = {
+          ...meta,
+          total,
+        };
+        setSucceeded(state);
       })
       // TODO: #rejected is not handled?
       .addCase(getList.pending, setPending)
