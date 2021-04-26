@@ -10,8 +10,8 @@ describe('#isEventOnAir', () => {
       image: null,
       network: 'mocked_network',
       maxParticipants: 42,
-      startDate: DateTime.now(),
-      endDate: DateTime.now(),
+      startDate: DateTime.now().toISO(),
+      endDate: DateTime.now().toISO(),
     };
 
     expect(isEventOnAir(eventData)).toBe(false);

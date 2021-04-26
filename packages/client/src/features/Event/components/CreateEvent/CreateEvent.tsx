@@ -6,6 +6,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import Button from '@beans/button';
 import { Row, Grid, Column } from '@beans/grid';
 import { unwrapResult } from '@reduxjs/toolkit';
+import { DateObjectUnits } from 'luxon';
+
 import { useMedia } from 'context/InterfaceContext';
 import {
   TextArea,
@@ -17,14 +19,24 @@ import Media from 'styles/media';
 import { FieldWrapper } from 'features/Common/styled';
 import { ToastSkin, toasterActions } from 'features/Toaster';
 
-import { FormData } from '../../config/types';
-import schema from '../../config/schema';
+import formSchema from '../../config/formSchema';
 import { createOne, uploadImage, SetOnePayload } from '../../store';
+
+interface FormData {
+  image?: File | null;
+  title: string;
+  network: string;
+  maxParticipants: number;
+  startDate: DateObjectUnits;
+  endDate: DateObjectUnits;
+  description?: string;
+  surveyUrl?: string;
+}
 
 const CreateEventForm: FC = () => {
   const dispatch = useDispatch();
   const { handleSubmit, errors, register, control } = useForm({
-    resolver: yupResolver(schema),
+    resolver: yupResolver(formSchema),
   });
 
   const onSubmit = async (data: FormData) => {
@@ -164,12 +176,12 @@ const CreateEventForm: FC = () => {
           <TextInput
             // @ts-ignore
             domRef={register}
-            name={'surveryUrl'}
+            name={'surveyUrl'}
             placeholder={'A few word about your event'}
             label={'Link to Survey'}
             // @ts-ignore
-            error={errors['surveryUrl']?.message}
-            id={'surveryUrl'}
+            error={errors['surveyUrl']?.message}
+            id={'surveyUrl'}
             required
           />
         </FieldWrapper>

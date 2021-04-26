@@ -1,5 +1,4 @@
 import React, { FC, useEffect, useState } from 'react';
-import Button from '@beans/button';
 import isEmpty from 'lodash.isempty';
 
 import Carousel from 'features/Carousel';
@@ -8,7 +7,7 @@ import { LargeTile } from 'features/Tile';
 import useFetch from 'hooks/useFetch';
 import { normalizeImage } from 'utils/content';
 import { isoDateToFormat, FULL_FORMAT } from 'utils/date';
-import { Event } from '../../store';
+import Event from '../../config/types';
 import { EmptyContainer } from 'features/Common';
 import EventAction from '../EventAction';
 

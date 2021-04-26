@@ -1,41 +1,40 @@
 import {
-  createSlice,
   createAsyncThunk,
   createEntityAdapter,
+  createSlice,
 } from '@reduxjs/toolkit';
 
 import API from 'utils/api';
-import {
-  DEFAULT_META,
-  FilterPayload,
-  PaginationPayload,
-} from 'utils/storeHelper';
+import { FilterPayload, PaginationPayload } from 'types/payload';
+import { DEFAULT_META } from 'config/constants';
+import { Loading } from 'store/types';
 
-import * as T from './types';
+import Event, * as T from '../config/types';
+
 import {
-  ROOT,
+  GET_COUNT_ACTION,
   GET_LIST_ACTION,
   GET_ONE_ACTION,
+  ROOT,
   SET_ONE_ACTION,
   UPLOAD_IMG_ACTION,
-  GET_COUNT_ACTION,
-} from './actions';
+} from './actionTypes';
 
-const eventsAdapter = createEntityAdapter<T.Event>();
+const eventsAdapter = createEntityAdapter<Event>();
 
 const initialState: T.State = eventsAdapter.getInitialState({
-  loading: 'idle',
+  loading: Loading.IDLE,
   error: null,
   meta: DEFAULT_META,
 });
 
-// TODO: #filters type?
 const getList = createAsyncThunk<
   T.ListResponse,
   FilterPayload & PaginationPayload
 >(
   GET_LIST_ACTION,
-  async (filters) => await API.events.fetchAll<T.ListResponse>(filters),
+  async (filters: FilterPayload & PaginationPayload) =>
+    await API.events.fetchAll<T.ListResponse>(filters),
 );
 
 const getOne = createAsyncThunk<T.OneResponse, T.OnePayload>(
@@ -82,16 +81,16 @@ const slice = createSlice({
   },
   extraReducers: (builder) => {
     const setPending = (state: T.State) => {
-      state.loading = 'pending';
+      state.loading = Loading.PENDING;
     };
 
     const setSucceeded = (state: T.State) => {
-      state.loading = 'succeeded';
+      state.loading = Loading.SUCCEEDED;
     };
 
     // TODO: #set info about error received?
     const setFailed = (state: T.State) => {
-      state.loading = 'failed';
+      state.loading = Loading.FAILED;
     };
 
     builder

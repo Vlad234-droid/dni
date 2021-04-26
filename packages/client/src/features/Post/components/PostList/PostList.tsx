@@ -4,7 +4,8 @@ import InfiniteScroll from 'react-infinite-scroller';
 
 import useDispatch from 'hooks/useDispatch';
 import useStore from 'hooks/useStore';
-import { FilterPayload, DEFAULT_PAGINATION } from 'utils/storeHelper';
+import { FilterPayload } from 'types/payload';
+import { DEFAULT_PAGINATION } from 'config/constants';
 import { useScrollContainer } from 'context/ScrollContainerContext';
 import { Filter } from '../../config/types';
 import { getList, getCount, listSelector, clear } from '../../store';

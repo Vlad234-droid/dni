@@ -4,7 +4,7 @@ import { RootState } from 'store/rootReducer';
 import { getEntitySelectors } from 'utils/storeHelper';
 
 import { eventsAdapter } from './slice';
-import { Event } from './types';
+import Event from '../config/types';
 
 const eventsSelectors = eventsAdapter.getSelectors(
   (state: RootState) => state.events,

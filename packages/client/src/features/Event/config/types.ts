@@ -1,23 +1,50 @@
-import { DateObjectUnits } from 'luxon';
+import { Event } from '@dni-connectors/colleague-cms-api';
 
-interface FormData {
-  image?: File | null;
-  title: string;
-  network: string;
-  maxParticipants: number;
-  startDate: DateObjectUnits;
-  endDate: DateObjectUnits;
-  description?: string;
-  surveryUrl?: string;
-}
+import { EntityState } from '@reduxjs/toolkit';
 
-export default interface Event extends FormData {
+import { Loading } from 'store/types';
+
+// TODO: #is not it common?
+type State = {
+  loading: Loading;
+  error: null | string;
+  meta: Meta;
+} & EntityState<Event>;
+
+// TODO: #is not it common?
+type Meta = {
+  count: number;
+  total: number;
+  page: number;
+  pageCount: number;
+};
+
+// TODO: #why general names?
+type ListResponse = Array<Event>;
+
+type OneResponse = Event;
+type OneImageResponse = Event['image'];
+
+type OnePayload = {
   id: number;
-  participants?: number;
-}
+};
 
-type Names = keyof FormData;
+type SetOnePayload = Event;
 
-type Filter = 'ON_AIR' | 'THIS_MONTH';
+// TODO: #common?
+type UploadImgPayload = {
+  id: number;
+  image: File;
+};
 
-export type { FormData, Names, Filter };
+export type {
+  State,
+  ListResponse,
+  OneResponse,
+  SetOnePayload,
+  OnePayload,
+  UploadImgPayload,
+  OneImageResponse,
+};
+
+export default Event;

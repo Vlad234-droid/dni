@@ -8,4 +8,4 @@ export {
   clear,
 } from './slice';
 export { byIdSelector, listSelector } from './selectors';
-export * from './types';
+export * from '../config/types';

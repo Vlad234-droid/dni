@@ -17,6 +17,7 @@ type Props = {
   renderAction: (id: number) => JSX.Element;
   meta?: string;
   hideParticipants?: boolean;
+  isOnAir?: boolean;
 };
 
 const SmallTile: FC<Props> = ({

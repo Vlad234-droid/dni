@@ -10,8 +10,8 @@ import { Wrapper } from './styled';
 import Heading, { Size, Color } from 'features/Heading';
 import { useMedia } from 'context/InterfaceContext';
 import useFetch from 'hooks/useFetch';
-import { DEFAULT_PAGINATION } from 'utils/storeHelper';
-import { Event } from '../../store';
+import { DEFAULT_PAGINATION } from 'config/constants';
+import Event from '../../config/types';
 import { isoDateToFormat, FULL_FORMAT } from 'utils/date';
 import { EmptyContainer } from 'features/Common';
 

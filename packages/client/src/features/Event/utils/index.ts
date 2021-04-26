@@ -5,5 +5,8 @@ import Event from '../config/types';
 export const isEventOnAir = (event: Event) => {
   const now = DateTime.now();
 
-  return event.startDate < now && event.endDate > now;
+  return (
+    DateTime.fromISO(event.startDate) < now &&
+    DateTime.fromISO(event.endDate) > now
+  );
 };

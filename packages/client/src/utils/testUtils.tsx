@@ -62,21 +62,18 @@ const render = (
   }: any = {},
 ) => {
   const history = createMemoryHistory();
-  store.dispatch = jest.fn();
 
-  const Wrapper = ({ children }: any) => {
-    return (
-      <ThemeProvider theme={theme}>
-        <Provider store={store}>
-          <Auth>
-            <InterfaceProvider>
-              <Router history={history}>{children}</Router>
-            </InterfaceProvider>
-          </Auth>
-        </Provider>
-      </ThemeProvider>
-    );
-  };
+  const Wrapper: FC = ({ children }) => (
+    <ThemeProvider theme={theme}>
+      <Provider store={store}>
+        <Auth>
+          <InterfaceProvider>
+            <Router history={history}>{children}</Router>
+          </InterfaceProvider>
+        </Auth>
+      </Provider>
+    </ThemeProvider>
+  );
 
   return rtlRender(ui, { wrapper: Wrapper, ...renderOptions });
 };
@@ -92,6 +89,15 @@ const renderWithRouter = (ui: ReactElement, options?: RenderOptions) =>
 
 const cleanupAfterEach = () => afterEach(cleanup);
 
+const getMathId = (url: string, exp: RegExp) => {
+  const res = url.match(exp);
+  if (res!.length == 2) {
+    return res![1];
+  }
+
+  return 0;
+};
+
 export * from '@testing-library/react';
 
 export {
@@ -100,4 +106,5 @@ export {
   renderWithTheme,
   renderWithRouter,
   cleanupAfterEach,
+  getMathId,
 };

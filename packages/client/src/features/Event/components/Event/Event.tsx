@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState, useMemo } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { createPortal } from 'react-dom';
 import ResponsiveImage from '@beans/responsive-image';
@@ -12,7 +12,6 @@ import ButtonFilter from 'features/ButtonFilter';
 
 import EventHeader from '../EventHeader';
 import { byIdSelector, getOne } from '../../store';
-import { isEventOnAir } from '../../utils';
 
 import { Wrapper, Content, LeftContent, Filters } from './styled';
 
@@ -40,7 +39,8 @@ const filters = [
 
 type Filter = typeof ALL | typeof ARCHIVED;
 
-// TODO: fix data for network and type
+// TODO: filter events by all and archived
+// TODO: Pass events to PostList
 const Event: FC<Props> = ({ id }) => {
   const dispatch = useDispatch();
   const event = useSelector(byIdSelector(id));
@@ -48,8 +48,7 @@ const Event: FC<Props> = ({ id }) => {
   const [filter, setFilter] = useState<Filter>(ALL);
   const { loading } = useStore((state) => state.events);
   const imageWrapperEl = useImageWrapper();
-  //@ts-ignore
-  const isOnAir = useMemo(() => event && isEventOnAir(event), [event]);
+  const isOnAir = true;
 
   useEffect(() => {
     if (event) return;
@@ -73,14 +72,11 @@ const Event: FC<Props> = ({ id }) => {
         createPortal(
           <ResponsiveImage
             key={id}
-            //@ts-ignore
             alt={normalizeImg?.alternativeText}
-            //@ts-ignore
             src={normalizeImg?.url}
             fallbackSizeRatio='57%'
             objectFit='cover'
           />,
-          //@ts-ignore
           imageWrapperEl,
         )}
       <EventHeader

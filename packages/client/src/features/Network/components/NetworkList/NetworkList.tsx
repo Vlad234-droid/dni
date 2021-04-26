@@ -1,5 +1,4 @@
 import { FC, useEffect, useState, useCallback, useMemo } from 'react';
-import Button from '@beans/button';
 import { useSelector } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroller';
 import isEmpty from 'lodash.isempty';
@@ -7,7 +6,8 @@ import isEmpty from 'lodash.isempty';
 import Heading, { Size, Color } from 'features/Heading';
 import useDispatch from 'hooks/useDispatch';
 import useStore from 'hooks/useStore';
-import { FilterPayload, DEFAULT_PAGINATION } from 'utils/storeHelper';
+import { FilterPayload } from 'types/payload';
+import { DEFAULT_PAGINATION } from 'config/constants';
 import { useScrollContainer } from 'context/ScrollContainerContext';
 import List from 'features/List';
 import { useMedia } from 'context/InterfaceContext';
