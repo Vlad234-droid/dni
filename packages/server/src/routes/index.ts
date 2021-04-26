@@ -13,6 +13,10 @@ import {
   deleteEventFromEmployee,
   // notification
   handleHook,
+  // networks
+  getNetworksParticipants,
+  // events
+  getEventsParticipants,
 } from '../controllers';
 
 import { cmsAuth } from '../middlewares/cms-auth';
@@ -32,6 +36,9 @@ api.delete('/employees/networks', deleteNetworkFromEmployee);
 api.get('/employees/:employeeNumber/events', getEventsByEmployeeNumber);
 api.post('/employees/events', addEventToEmployee);
 api.delete('/employees/events', deleteEventFromEmployee);
+
+api.get('/events/participants', getEventsParticipants);
+api.get('/networks/participants', getNetworksParticipants);
 
 api.post('/notifications', cmsAuth, handleHook);
 

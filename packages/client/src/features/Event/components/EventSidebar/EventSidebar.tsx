@@ -81,7 +81,7 @@ const EventSidebar: FC<Props> = ({
       <List>
         {slice(events, 0, MAX_VISIBLE_ITEMS).map((eventItem, index) => {
           // @ts-ignore
-          const { id, title, maxParticipants, image, created_at } = eventItem;
+          const { id, title, maxParticipants, image, startDate } = eventItem;
 
           return !index ? (
             <LargeTile
@@ -95,8 +95,8 @@ const EventSidebar: FC<Props> = ({
               renderAction={() => <EventAction id={id} />}
               // TODO: dont like transformation here - its duplicated everywhere - and is created again and again in lists
               // TODO: transform before save to store
-              meta={isoDateToFormat(created_at, FULL_FORMAT)}
-              link='/events'
+              meta={isoDateToFormat(startDate, FULL_FORMAT)}
+              link={Page.EVENTS}
             />
           ) : (
             <SmallTile
@@ -107,8 +107,8 @@ const EventSidebar: FC<Props> = ({
               image={image}
               isOnAir={isEventOnAir(eventItem)}
               renderAction={() => <EventAction id={id} />}
-              meta={isoDateToFormat(created_at, FULL_FORMAT)}
-              link='/events'
+              meta={isoDateToFormat(startDate, FULL_FORMAT)}
+              link={Page.EVENTS}
             />
           );
         })}

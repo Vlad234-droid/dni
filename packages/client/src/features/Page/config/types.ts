@@ -13,6 +13,7 @@ enum Page {
   NOT_FOUND = '*',
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type PageElement = LazyExoticComponent<FC<any>> | ComponentType | FC<any>;
 
 export { Page };

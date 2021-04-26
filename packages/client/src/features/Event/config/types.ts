@@ -37,6 +37,14 @@ type UploadImgPayload = {
   image: File;
 };
 
+const ALL = 'ALL';
+const THIS_WEEK = 'THIS_WEEK';
+const THIS_MONTH = 'THIS_MONTH';
+
+type Filter = typeof ALL | typeof THIS_WEEK | typeof THIS_MONTH;
+
+export { ALL, THIS_WEEK, THIS_MONTH };
+
 export type {
   State,
   ListResponse,
@@ -45,6 +53,7 @@ export type {
   OnePayload,
   UploadImgPayload,
   OneImageResponse,
+  Filter,
 };
 
 export default Event;

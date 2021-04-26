@@ -37,11 +37,11 @@ const EventAction: FC<Props> = ({ id }) => {
 
   return isJoined ? (
     <Button variant='primary' onClick={() => handleLeave(id)}>
-      Miss out
+      Leave
     </Button>
   ) : (
     <Button variant='primary' onClick={() => handleJoin(id)}>
-      Take part
+      Join
     </Button>
   );
 };

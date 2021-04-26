@@ -5,7 +5,7 @@ import FormGroup from '@beans/form-group';
 type Props = {
   label: string;
   error: string;
-  onChange: (checked: boolean) => any;
+  onChange: (checked: boolean) => null;
 };
 
 const Checkbox = ({ label, error, onChange }: Props) => {

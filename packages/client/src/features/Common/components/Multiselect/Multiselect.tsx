@@ -9,6 +9,7 @@ import FormGroup from '@beans/form-group';
 import { FieldProps } from '../../config/types';
 
 type Options = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   options: Array<Record<string, any>>;
 };
 

@@ -2,9 +2,6 @@ import { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { DateTime, DateObject } from 'luxon';
 
-import useRegisterField from 'hooks/useRegisterField';
-
-import { Registrable } from '../FieldWrapper';
 import DatePicker from '../DatePicker';
 import TimeInput from '../TimeInput';
 

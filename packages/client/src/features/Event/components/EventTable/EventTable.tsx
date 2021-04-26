@@ -89,7 +89,7 @@ const EventTable: FC = () => {
         <>
           <Table styles={styles}>
             <Body zebraStripes={isMobile}>
-              {list!.map(({ id, title, maxParticipants, created_at }) => (
+              {list!.map(({ id, title, maxParticipants, endDate }) => (
                 <Row key={id}>
                   <Cell width='25%'>
                     <TitleWithEllipsis
@@ -101,7 +101,7 @@ const EventTable: FC = () => {
                     </TitleWithEllipsis>
                   </Cell>
                   <Cell width='40%' visible={!isMobile}>
-                    {isoDateToFormat(created_at, FULL_FORMAT)}
+                    {isoDateToFormat(endDate, FULL_FORMAT)}
                   </Cell>
                   <Cell width={isMobile ? '25%' : '15%'}>
                     {maxParticipants} members

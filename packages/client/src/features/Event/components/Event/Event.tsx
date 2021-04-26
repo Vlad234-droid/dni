@@ -45,7 +45,7 @@ const Event: FC<Props> = ({ id }) => {
   const dispatch = useDispatch();
   const event = useSelector(byIdSelector(id));
   const { description, title, image, maxParticipants, startDate } = event || {};
-  const [filter, setFilter] = useState<Filter>(ALL);
+  const [, setFilter] = useState<Filter>(ALL);
   const { loading } = useStore((state) => state.events);
   const imageWrapperEl = useImageWrapper();
   const isOnAir = true;

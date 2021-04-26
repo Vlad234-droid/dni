@@ -16,6 +16,10 @@ export default interface Network extends FormData {
 
 type Names = keyof FormData;
 
-type Filter = 'ALL' | 'YOUR_NETWORKS';
+const ALL = 'ALL';
+const YOUR_NETWORKS = 'YOUR_NETWORKS';
 
+type Filter = typeof ALL | typeof YOUR_NETWORKS;
+
+export { ALL, YOUR_NETWORKS };
 export type { FormData, Names, Filter };
