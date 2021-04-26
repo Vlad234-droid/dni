@@ -6,7 +6,7 @@ import Header from 'features/Header';
 import Menu from 'features/Menu';
 
 const BasePage: FC<ExtraLayoutProps> = (props) => (
-  <div data-testid={Page.NEWS_FEED}>
+  <div data-testid={Page.NETWORK_NEWS}>
     <Layout
       renderHeader={() => <Header />}
       renderLeft={() => <Menu />}

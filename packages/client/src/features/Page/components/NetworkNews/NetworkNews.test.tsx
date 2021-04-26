@@ -4,15 +4,15 @@ import { createMemoryHistory } from 'history';
 
 import { renderWithProviders } from 'utils/testUtils';
 
-import NewsFeed from './NewsFeed';
+import NetworkNews from './NetworkNews';
 
-describe('#News Feed page', () => {
+describe('<NetworkNews /> page', () => {
   const history = createMemoryHistory();
   it('should render center content', () => {
     const { getByTestId } = renderWithProviders(
       <Router history={history}>
         <Route>
-          <NewsFeed />
+          <NetworkNews />
         </Route>
       </Router>,
     );

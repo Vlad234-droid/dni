@@ -6,7 +6,7 @@ enum Page {
   EVENT = 'events/:id',
   NETWORKS = 'networks',
   NETWORK = 'networks/:id',
-  NEWS_FEED = 'news-feed',
+  NETWORK_NEWS = 'network-news',
   REPORTS = 'reports',
   NOT_FOUND = '*',
 }

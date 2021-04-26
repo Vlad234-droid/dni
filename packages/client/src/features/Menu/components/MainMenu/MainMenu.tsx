@@ -16,7 +16,6 @@ const MainMenu: FC = () => {
       ) : (
         <>
           <MenuDesktop />
-          <NetworkUpdates />
           <Links />
         </>
       )}
