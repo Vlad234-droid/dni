@@ -1,1 +1,1 @@
-export { default } from './LargeTile';
+export { default, TEST_ID } from './LargeTile';

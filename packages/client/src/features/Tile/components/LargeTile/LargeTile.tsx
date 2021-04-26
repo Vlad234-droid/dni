@@ -6,6 +6,8 @@ import { StatusLabel, StatusType } from 'features/Common';
 
 import { Wrapper, ActionContainer, StatusContainer } from './styled';
 
+const TEST_ID = 'large-tile';
+
 type Props = {
   id: number;
   title: string;
@@ -30,7 +32,7 @@ const LargeTile: FC<Props> = ({
   isOnAir,
   id,
 }) => (
-  <Wrapper>
+  <Wrapper data-testid={TEST_ID}>
     {isOnAir && (
       <StatusContainer>
         <StatusLabel type={StatusType.SUCCESS}>On-Air</StatusLabel>
@@ -51,5 +53,7 @@ const LargeTile: FC<Props> = ({
     />
   </Wrapper>
 );
+
+export { TEST_ID };
 
 export default LargeTile;

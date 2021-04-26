@@ -9,6 +9,7 @@ import { LargeTile, SmallTile } from 'features/Tile';
 import { FULL_FORMAT, isoDateToFormat } from 'utils/date';
 import { Loading } from 'store/types';
 import { EntityListPayload } from 'types/payload';
+
 import { isEventOnAir } from '../../utils';
 import Event from '../../config/types';
 import EventAction from '../EventAction';
@@ -26,14 +27,23 @@ type Props = {
   events?: Event[];
   loading: Loading;
   loadEvents: (filters: EntityListPayload) => void;
+  loadCount: (filters: EntityListPayload) => void;
+  count: number;
 };
 
-const EventSidebar: FC<Props> = ({ events, loading, loadEvents }) => {
+const EventSidebar: FC<Props> = ({
+  events,
+  count,
+  loading,
+  loadEvents,
+  loadCount,
+}) => {
   // this component depends on time passing, how often should it be updated?
   useEffect(() => {
     if (!isEmpty(events)) return;
 
     loadEvents(FILTERS);
+    loadCount(FILTERS);
   }, [events]);
 
   if (loading == Loading.IDLE) return null;
@@ -62,6 +72,8 @@ const EventSidebar: FC<Props> = ({ events, loading, loadEvents }) => {
     );
   }
 
+  console.log('events', events);
+
   // TODO: remove network data from event, keep only network id
 
   return (
@@ -69,6 +81,7 @@ const EventSidebar: FC<Props> = ({ events, loading, loadEvents }) => {
       <Title>Events</Title>
       <List>
         {slice(events, 0, MAX_VISIBLE_ITEMS).map((eventItem, index) => {
+          // @ts-ignore
           const { id, title, maxParticipants, image, created_at } = eventItem;
 
           return !index ? (
@@ -76,6 +89,7 @@ const EventSidebar: FC<Props> = ({ events, loading, loadEvents }) => {
               key={id}
               id={id}
               title={title}
+              // @ts-ignore
               image={image}
               participants={maxParticipants}
               isOnAir={isEventOnAir(eventItem)}
@@ -90,6 +104,7 @@ const EventSidebar: FC<Props> = ({ events, loading, loadEvents }) => {
               key={id}
               id={id}
               title={title}
+              // @ts-ignore
               image={image}
               isOnAir={isEventOnAir(eventItem)}
               renderAction={() => <EventAction id={id} />}
@@ -99,9 +114,12 @@ const EventSidebar: FC<Props> = ({ events, loading, loadEvents }) => {
           );
         })}
       </List>
-      <Link to={'/events'}>
-        <Button variant='secondary'>All events</Button>
-      </Link>
+      {events &&
+        (count > MAX_VISIBLE_ITEMS || events.length > MAX_VISIBLE_ITEMS) && (
+          <Link to={'/events'}>
+            <Button variant='secondary'>All events</Button>
+          </Link>
+        )}
     </Wrapper>
   );
 };

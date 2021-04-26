@@ -5,6 +5,8 @@ import Tile from 'features/Tile';
 
 import { Wrapper, ActionContainer } from './styled';
 
+const TEST_ID = 'small-tile';
+
 type Props = {
   id: number;
   title: string;
@@ -30,7 +32,7 @@ const SmallTile: FC<Props> = ({
   hideParticipants,
   id,
 }) => (
-  <Wrapper>
+  <Wrapper data-testid={TEST_ID}>
     <Tile
       id={id}
       link={link}
@@ -47,5 +49,7 @@ const SmallTile: FC<Props> = ({
     />
   </Wrapper>
 );
+
+export { TEST_ID };
 
 export default SmallTile;
