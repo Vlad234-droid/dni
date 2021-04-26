@@ -39,20 +39,24 @@ const List: FC<Props> = ({
     //@ts-ignore
     startDate,
     ...rest
-  }: Entity) => ({
-    key: id,
-    id,
-    link,
-    renderAction: () => renderAction(id, participants![id] >= maxParticipants),
-    meta:
-      link === Page.NETWORKS
-        ? undefined
-        : isoDateToFormat(startDate, FULL_FORMAT),
-    participants: participants![id] || 0,
-    maxParticipants: maxParticipants,
-    hideMaxParticipants: hideMaxParticipants,
-    ...rest,
-  });
+  }: Entity) => {
+    const actualParticipants = participants![id] || 0;
+    return {
+      key: id,
+      id,
+      link,
+      renderAction: () =>
+        renderAction(id, actualParticipants >= maxParticipants),
+      meta:
+        link === Page.NETWORKS
+          ? undefined
+          : isoDateToFormat(startDate, FULL_FORMAT),
+      participants: actualParticipants,
+      maxParticipants: maxParticipants,
+      hideMaxParticipants: hideMaxParticipants,
+      ...rest,
+    };
+  };
 
   return (
     <Wrapper>

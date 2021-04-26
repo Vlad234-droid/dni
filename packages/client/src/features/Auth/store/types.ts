@@ -13,8 +13,10 @@ type State = {
   user: DefaultUser | User;
   isLoading: boolean;
   error: Nullable<string>;
-  networkParticipants: Record<number, number>;
-  eventParticipants: Record<number, number>;
+  participants: {
+    networks: Record<number, number>;
+    events: Record<number, number>;
+  };
 };
 
 type UserResponse = DefaultUser | User;

@@ -25,7 +25,9 @@ const EventTable: FC = () => {
   const filters = {
     endDate_lt: new Date(),
   };
-  const { eventParticipants } = useStore((state) => state.auth);
+  const { events: eventParticipants } = useStore(
+    (state) => state.auth.participants,
+  );
 
   const [
     { response: data, isLoading: isEventsLoading },

@@ -9,6 +9,7 @@ import { PostList } from 'features/Post';
 import { useImageWrapper } from 'context';
 import { normalizeImage } from 'utils/content';
 import ButtonFilter from 'features/ButtonFilter';
+import { getEventParticipants } from 'features/Auth/store';
 
 import EventHeader from '../EventHeader';
 import { byIdSelector, getOne } from '../../store';
@@ -47,7 +48,9 @@ const Event: FC<Props> = ({ id }) => {
   const { description, title, image, maxParticipants, startDate } = event || {};
   const [, setFilter] = useState<Filter>(ALL);
   const { loading } = useStore((state) => state.events);
-  const { eventParticipants } = useStore((state) => state.auth);
+  const { events: eventParticipants } = useStore(
+    (state) => state.auth.participants,
+  );
   const imageWrapperEl = useImageWrapper();
   const isOnAir = true;
 
@@ -56,6 +59,10 @@ const Event: FC<Props> = ({ id }) => {
 
     loadEvent(id);
   }, [event, id]);
+
+  useEffect(() => {
+    dispatch(getEventParticipants());
+  }, []);
 
   const loadEvent = (id: number) => dispatch(getOne({ id }));
 

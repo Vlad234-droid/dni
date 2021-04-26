@@ -14,7 +14,9 @@ import NetworkAction from '../NetworkAction';
 
 const NetworkCarousel: FC = () => {
   const [{ response: list }, doFetch] = useFetch<Network[]>([]);
-  const { networkParticipants } = useStore((state) => state.auth);
+  const { networks: networkParticipants } = useStore(
+    (state) => state.auth.participants,
+  );
 
   const [filters] = useState({
     _start: 0,

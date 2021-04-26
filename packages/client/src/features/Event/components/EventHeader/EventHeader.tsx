@@ -60,7 +60,7 @@ const EventHeader: FC<Props> = ({
           )}
         </TitleWrapper>
         <ButtonWrapper>
-          <EventAction id={id} />
+          <EventAction id={id} disabled={participants >= maxParticipants!} />
         </ButtonWrapper>
       </Heading>
       <>

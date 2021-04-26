@@ -16,7 +16,9 @@ import { Wrapper } from './styled';
 
 const EventCarousel: FC = () => {
   const [{ response: list }, doFetch] = useFetch<Event[]>([]);
-  const { eventParticipants } = useStore((state) => state.auth);
+  const { events: eventParticipants } = useStore(
+    (state) => state.auth.participants,
+  );
 
   const [filters] = useState({
     _start: 0,
@@ -51,7 +53,7 @@ const EventCarousel: FC = () => {
               renderAction={() => (
                 <EventAction
                   id={id}
-                  disabled={eventParticipants![id] >= maxParticipants}
+                  disabled={(eventParticipants![id] || 0) >= maxParticipants}
                 />
               )}
               image={normalizeImage(image)}

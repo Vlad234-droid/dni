@@ -9,8 +9,10 @@ const initialState: T.State = {
   user: defaultUserState,
   isLoading: false,
   error: null,
-  networkParticipants: {},
-  eventParticipants: {},
+  participants: {
+    networks: {},
+    events: {},
+  },
 };
 
 const profile = createAsyncThunk<T.UserResponse>(
@@ -92,8 +94,8 @@ const slice = createSlice({
           networks.push(networkId);
           state.user.networks = networks;
         }
-        const participants = state.networkParticipants;
-        state.networkParticipants = {
+        const participants = state.participants.networks;
+        state.participants.networks = {
           ...participants,
           [networkId]: (participants[networkId] || 0) + 1,
         };
@@ -110,8 +112,8 @@ const slice = createSlice({
           networks.splice(networks.indexOf(networkId), 1);
           state.user.networks = networks;
         }
-        const participants = state.networkParticipants;
-        state.networkParticipants = {
+        const participants = state.participants.networks;
+        state.participants.networks = {
           ...participants,
           [networkId]: (participants[networkId] || 1) - 1,
         };
@@ -128,8 +130,8 @@ const slice = createSlice({
           events.push(eventId);
           state.user.events = events;
         }
-        const participants = state.eventParticipants;
-        state.eventParticipants = {
+        const participants = state.participants.events;
+        state.participants.events = {
           ...participants,
           [eventId]: (participants[eventId] || 0) + 1,
         };
@@ -146,8 +148,8 @@ const slice = createSlice({
           events.splice(events.indexOf(eventId), 1);
           state.user.events = events;
         }
-        const participants = state.eventParticipants;
-        state.eventParticipants = {
+        const participants = state.participants.events;
+        state.participants.events = {
           ...participants,
           [eventId]: (participants[eventId] || 1) - 1,
         };
@@ -157,13 +159,13 @@ const slice = createSlice({
       .addCase(getNetworkParticipants.pending, startLoading)
       .addCase(getNetworkParticipants.fulfilled, (state: T.State, action) => {
         const participants = action.payload;
-        state.networkParticipants = participants;
+        state.participants.networks = participants;
         stopLoading(state);
       })
       .addCase(getEventParticipants.pending, startLoading)
       .addCase(getEventParticipants.fulfilled, (state: T.State, action) => {
         const participants = action.payload;
-        state.eventParticipants = participants;
+        state.participants.events = participants;
         stopLoading(state);
       });
   },

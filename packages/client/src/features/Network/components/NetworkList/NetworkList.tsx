@@ -50,7 +50,9 @@ const NetworkList: FC = () => {
   } = useStore((state) => state.networks);
   const list = useSelector(listSelector);
   const hasMore = useMemo(() => list.length < total, [list, total]);
-  const { networkParticipants } = useStore((state) => state.auth);
+  const { networks: networkParticipants } = useStore(
+    (state) => state.auth.participants,
+  );
 
   const loadNetworks = useCallback(
     (page: number) => {

@@ -47,7 +47,9 @@ const EventList: FC = () => {
   const [filter, setFilter] = useState<Filter>(ALL);
   const [filters, setFilters] = useState<FilterPayload>();
 
-  const { eventParticipants } = useStore((state) => state.auth);
+  const { events: eventParticipants } = useStore(
+    (state) => state.auth.participants,
+  );
   const {
     meta: { total },
     loading,
@@ -89,9 +91,7 @@ const EventList: FC = () => {
   }, [filters]);
 
   useEffect(() => {
-    (async () => {
-      await dispatch(getEventParticipants());
-    })();
+    dispatch(getEventParticipants());
   }, []);
 
   useEffect(() => {
