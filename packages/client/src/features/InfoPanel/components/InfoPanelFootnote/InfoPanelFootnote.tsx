@@ -17,7 +17,9 @@ const InfoPanelFootnote: FC<Props> = ({ footnote }) => (
   <Wrapper>
     <Footnote>
       <span>{footnote.title}</span>
-      <Link href={footnote.link}>{footnote.linkText}</Link>
+      <Link href={footnote.link} target='_blank'>
+        {footnote.linkText}
+      </Link>
     </Footnote>
   </Wrapper>
 );

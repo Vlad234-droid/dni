@@ -4,8 +4,15 @@ import Link from '@beans/link';
 
 const Links: FC = () => (
   <Wrapper>
-    <Link href='#'>Colleague Help</Link>
-    <Link href='#'>Terms & Conditions</Link>
+    <Link href='https://colleague-help.ourtesco.com/' target='_blank'>
+      Colleague Help
+    </Link>
+    <Link
+      href='https://www.ourtesco.com/colleague/terms-and-conditions'
+      target='_blank'
+    >
+      Terms & Conditions
+    </Link>
   </Wrapper>
 );
 
