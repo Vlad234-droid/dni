@@ -79,9 +79,6 @@ const EventHeader: FC<Props> = ({
           +{participants} are participating
           <Actions>
             <Button variant='link'>
-              <Icon graphic='bookmark' />
-            </Button>
-            <Button variant='link'>
               <Icon graphic='link' />
             </Button>
           </Actions>
