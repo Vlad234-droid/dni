@@ -44,35 +44,21 @@ const EventHeader: FC<Props> = ({
     <Wrapper>
       <Heading>
         <TitleWrapper>
-          <div>
-            <TitleWithEllipsis
-              maxLines={1}
-              titleHeight={isMobile ? '28px' : '45px'}
-            >
-              {title}
-            </TitleWithEllipsis>
-          </div>
+          <TitleWithEllipsis
+            maxLines={1}
+            titleHeight={isMobile ? '28px' : '45px'}
+          >
+            {title}
+          </TitleWithEllipsis>
           {isOnAir && (
             <StatusWrapper>
               <StatusLabel type={StatusType.SUCCESS}>On-Air</StatusLabel>
             </StatusWrapper>
           )}
-          <ButtonWrapper>
-            <EventAction id={id} />
-          </ButtonWrapper>
         </TitleWrapper>
-        {/*<Actions>*/}
-        {/*  <IconWrapper>*/}
-        {/*    <Button variant='link'>*/}
-        {/*      <Icon graphic='edit' />*/}
-        {/*    </Button>*/}
-        {/*  </IconWrapper>*/}
-        {/*  <IconWrapper>*/}
-        {/*    <Button variant='link'>*/}
-        {/*      <Icon graphic='archive' />*/}
-        {/*    </Button>*/}
-        {/*  </IconWrapper>*/}
-        {/*</Actions>*/}
+        <ButtonWrapper>
+          <EventAction id={id} />
+        </ButtonWrapper>
       </Heading>
       <>
         <EventDate>{isoDateToFormat(startDate, FULL_FORMAT)}</EventDate>
