@@ -8,11 +8,11 @@ import { useMedia } from 'context/InterfaceContext';
 import BasePage from '../BasePage';
 import { Container, Left, Right } from './styled';
 
-const NewsFeed: FC = () => {
+const NetworkNews: FC = () => {
   const { isDesktop } = useMedia();
 
   return (
-    <div data-testid={`${PAGE_PREFIX}${Page.NEWS_FEED}`}>
+    <div data-testid={`${PAGE_PREFIX}${Page.NETWORK_NEWS}`}>
       <BasePage
         renderMain={() => (
           <Container>
@@ -31,4 +31,4 @@ const NewsFeed: FC = () => {
   );
 };
 
-export default NewsFeed;
+export default NetworkNews;

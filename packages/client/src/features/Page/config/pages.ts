@@ -6,7 +6,7 @@ import Event from '../components/Event';
 import About from '../components/About';
 import Networks from '../components/Networks';
 import Network from '../components/Network';
-import NewsFeed from '../components/NewsFeed';
+import NetworkNews from '../components/NetworkNews';
 import NotFound from '../components/NotFound';
 import Reports from '../components/Reports';
 import Profile from '../components/Profile';
@@ -17,7 +17,7 @@ const pages: Record<Page, PageElement> = {
   [Page.EVENT]: Event,
   [Page.NETWORKS]: Networks,
   [Page.NETWORK]: Network,
-  [Page.NEWS_FEED]: NewsFeed,
+  [Page.NETWORK_NEWS]: NetworkNews,
   [Page.REPORTS]: Reports,
   [Page.PROFILE]: Profile,
   [Page.NOT_FOUND]: NotFound,

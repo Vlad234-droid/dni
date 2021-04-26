@@ -8,8 +8,8 @@ import iconEvents from '../assets/icon-events.svg';
 import iconEventsInv from '../assets/icon-events-inv.svg';
 import iconNetworks from '../assets/icon-networks.svg';
 import iconNetworksInv from '../assets/icon-networks-inv.svg';
-import iconNewsFeed from '../assets/icon-news-feed.svg';
-import iconNewsFeedInv from '../assets/icon-news-feed-inv.svg';
+import iconNetworkNews from '../assets/icon-network-news.svg';
+import iconNetworkNewsInv from '../assets/icon-network-news-inv.svg';
 
 const iconsSrc: Record<PageWithIcon, IconSrc> = {
   [Page.EVENTS]: {
@@ -20,21 +20,21 @@ const iconsSrc: Record<PageWithIcon, IconSrc> = {
     default: iconNetworks,
     active: iconNetworksInv,
   },
-  [Page.NEWS_FEED]: {
-    default: iconNewsFeed,
-    active: iconNewsFeedInv,
+  [Page.NETWORK_NEWS]: {
+    default: iconNetworkNews,
+    active: iconNetworkNewsInv,
   },
 };
 
 const menuItems = {
-  [Page.NEWS_FEED]: 'News Feed',
+  [Page.NETWORK_NEWS]: 'Network News',
   [Page.EVENTS]: 'Events',
   [Page.NETWORKS]: 'Networks',
   [Page.REPORTS]: 'Reports',
   [Page.ABOUT]: 'About',
 };
 
-const itemsVisible = [Page.NEWS_FEED, Page.EVENTS, Page.NETWORKS];
+const itemsVisible = [Page.NETWORK_NEWS, Page.EVENTS, Page.NETWORKS];
 
 const menuItemsDesktop = menuItems;
 const menuItemsMobile = {
