@@ -6,14 +6,16 @@ import { TitleWithEllipsis } from '@beans/title-link';
 import isEmpty from 'lodash.isempty';
 
 import { Table, Body, Cell, Row } from 'features/Table';
-import { Wrapper } from './styled';
 import Heading, { Size, Color } from 'features/Heading';
 import { useMedia } from 'context/InterfaceContext';
 import useFetch from 'hooks/useFetch';
 import { DEFAULT_PAGINATION } from 'utils/storeHelper';
-import { Event } from '../../store';
 import { isoDateToFormat, FULL_FORMAT } from 'utils/date';
 import { EmptyContainer } from 'features/Common';
+import { Page } from 'features/Page';
+
+import { Event } from '../../store';
+import { Wrapper } from './styled';
 
 const EventTable: FC = () => {
   const { isMobile } = useMedia();
@@ -90,7 +92,11 @@ const EventTable: FC = () => {
               {list!.map(({ id, title, maxParticipants, created_at }) => (
                 <Row key={id}>
                   <Cell width='25%'>
-                    <TitleWithEllipsis maxLines={1} titleHeight='22px'>
+                    <TitleWithEllipsis
+                      maxLines={1}
+                      titleHeight='22px'
+                      href={`${Page.EVENTS}/${id}`}
+                    >
                       {title}
                     </TitleWithEllipsis>
                   </Cell>

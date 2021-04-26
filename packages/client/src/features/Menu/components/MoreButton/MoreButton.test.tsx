@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { renderWithRouter } from 'utils/testUtils';
+import { Page } from 'features/Page';
 
 import MoreButton from './MoreButton';
 
@@ -9,7 +10,7 @@ describe('<MoreButton />', () => {
     const props = {
       onClick: jest.fn(),
       isOpened: false,
-      pathname: '/networks',
+      pathname: Page.NETWORKS,
     };
 
     it('should render wrapper', () => {
@@ -39,7 +40,7 @@ describe('<MoreButton />', () => {
       const props = {
         onClick: jest.fn(),
         isOpened: false,
-        pathname: '/reports',
+        pathname: Page.REPORTS,
       };
       const { getByText } = renderWithRouter(<MoreButton {...props} />);
 
@@ -50,7 +51,7 @@ describe('<MoreButton />', () => {
       const props = {
         onClick: jest.fn(),
         isOpened: false,
-        pathname: '/networks',
+        pathname: Page.NETWORKS,
       };
       const { getByTestId } = renderWithRouter(<MoreButton {...props} />);
       const style = window.getComputedStyle(getByTestId('menu-more-button'));
@@ -63,7 +64,7 @@ describe('<MoreButton />', () => {
       const props = {
         onClick: jest.fn(),
         isOpened: true,
-        pathname: '/networks',
+        pathname: Page.NETWORKS,
       };
       const { getByTestId } = renderWithRouter(<MoreButton {...props} />);
       const style = window.getComputedStyle(getByTestId('menu-more-button'));
