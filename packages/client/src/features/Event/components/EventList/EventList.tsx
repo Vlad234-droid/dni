@@ -15,8 +15,13 @@ import List from 'features/List';
 import { EmptyContainer } from 'features/Common';
 import { Page } from 'features/Page';
 
-import { getList, listSelector, clear, getCount } from '../../store';
-import { getEventParticipants } from 'features/Auth/store';
+import {
+  getList,
+  listSelector,
+  clear,
+  getCount,
+  getParticipants,
+} from '../../store';
 import { Filter, ALL, THIS_WEEK, THIS_MONTH } from '../../config/types';
 import { Wrapper } from './styled';
 import EventAction from '../EventAction';
@@ -47,10 +52,8 @@ const EventList: FC = () => {
   const [filter, setFilter] = useState<Filter>(ALL);
   const [filters, setFilters] = useState<FilterPayload>();
 
-  const { events: eventParticipants } = useStore(
-    (state) => state.auth.participants,
-  );
   const {
+    participants,
     meta: { total },
     loading,
   } = useStore((state) => state.events);
@@ -91,7 +94,7 @@ const EventList: FC = () => {
   }, [filters]);
 
   useEffect(() => {
-    dispatch(getEventParticipants());
+    dispatch(getParticipants());
   }, []);
 
   useEffect(() => {
@@ -142,7 +145,7 @@ const EventList: FC = () => {
             //@ts-ignore
             items={list}
             hideMaxParticipants={false}
-            participants={eventParticipants}
+            participants={participants}
             isMobile={isMobile}
             renderAction={(id, disabled) => (
               <EventAction id={id} disabled={disabled} />

@@ -14,9 +14,14 @@ import { useMedia } from 'context/InterfaceContext';
 import { EmptyContainer } from 'features/Common';
 import { Page } from 'features/Page';
 
-import { getNetworkParticipants } from 'features/Auth/store';
 import { Filter, ALL, YOUR_NETWORKS } from '../../config/types';
-import { getList, getCount, listSelector, clear } from '../../store';
+import {
+  getList,
+  getCount,
+  listSelector,
+  clear,
+  getParticipants,
+} from '../../store';
 import { Wrapper, ListContainer } from './styled';
 import NetworkAction from '../NetworkAction';
 
@@ -45,14 +50,12 @@ const NetworkList: FC = () => {
   const scrollContainer = useScrollContainer();
 
   const {
+    participants,
     meta: { total },
     isLoading,
   } = useStore((state) => state.networks);
   const list = useSelector(listSelector);
   const hasMore = useMemo(() => list.length < total, [list, total]);
-  const { networks: networkParticipants } = useStore(
-    (state) => state.auth.participants,
-  );
 
   const loadNetworks = useCallback(
     (page: number) => {
@@ -96,9 +99,7 @@ const NetworkList: FC = () => {
   }, [filter]);
 
   useEffect(() => {
-    (async () => {
-      await dispatch(getNetworkParticipants());
-    })();
+    dispatch(getParticipants());
   }, []);
 
   // TODO: add loader component
@@ -132,7 +133,7 @@ const NetworkList: FC = () => {
               // TODO: object is not correct type
               //@ts-ignore
               items={list}
-              participants={networkParticipants}
+              participants={participants}
               isMobile={isMobile}
               renderAction={(id) => <NetworkAction id={id} />}
             />

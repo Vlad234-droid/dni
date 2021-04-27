@@ -5,6 +5,7 @@ import useStore from 'hooks/useStore';
 import useDispatch from 'hooks/useDispatch';
 
 import { joinNetwork, leaveNetwork } from 'features/Auth/store';
+import { joinParticipant, leaveParticipant } from '../../store';
 
 type Props = {
   id: number;
@@ -23,6 +24,7 @@ const NetworkAction: FC<Props> = ({ id, onLeave, onJoin }) => {
     async (networkId: number) => {
       if (employeeNumber) {
         await dispatch(joinNetwork({ employeeNumber, networkId }));
+        dispatch(joinParticipant(networkId));
       }
       onJoin && onJoin();
     },
@@ -33,6 +35,7 @@ const NetworkAction: FC<Props> = ({ id, onLeave, onJoin }) => {
     async (networkId: number) => {
       if (employeeNumber) {
         await dispatch(leaveNetwork({ employeeNumber, networkId }));
+        dispatch(leaveParticipant(networkId));
       }
       onLeave && onLeave();
     },

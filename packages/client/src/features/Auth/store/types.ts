@@ -6,17 +6,11 @@ const JOIN_NETWORK_ACTION = `${ROOT}/joinNetwork`;
 const LEAVE_NETWORK_ACTION = `${ROOT}/leaveNetwork`;
 const JOIN_EVENT_ACTION = `${ROOT}/joinEvent`;
 const LEAVE_EVENT_ACTION = `${ROOT}/leaveEvent`;
-const EVENT_PARTICIPANTS_ACTION = `${ROOT}/eventParticipants`;
-const NETWORK_PARTICIPANTS_ACTION = `${ROOT}/networkParticipants`;
 
 type State = {
   user: DefaultUser | User;
   isLoading: boolean;
   error: Nullable<string>;
-  participants: {
-    networks: Record<number, number>;
-    events: Record<number, number>;
-  };
 };
 
 type UserResponse = DefaultUser | User;
@@ -46,13 +40,6 @@ type ValidationError = {
   path: string[];
 };
 
-type Participant = {
-  id: number;
-  participants: number;
-};
-
-type ParticipantsResponse = Participant[];
-
 export type {
   State,
   UserResponse,
@@ -61,7 +48,6 @@ export type {
   NetworkResponse,
   EventPayload,
   EventResponse,
-  ParticipantsResponse,
 };
 
 export {
@@ -72,6 +58,4 @@ export {
   LEAVE_NETWORK_ACTION,
   JOIN_EVENT_ACTION,
   LEAVE_EVENT_ACTION,
-  EVENT_PARTICIPANTS_ACTION,
-  NETWORK_PARTICIPANTS_ACTION,
 };

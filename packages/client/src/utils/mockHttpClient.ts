@@ -40,13 +40,12 @@ if (process.env.NODE_ENV === 'test') {
   mock.onDelete(Endpoint.USER_EVENTS).reply(200, {
     body: {},
   });
-  mock.onGet(Endpoint.USER_EVENTS_PARTICIPANTS).reply(200, {});
-  mock.onGet(Endpoint.USER_NETWORKS_PARTICIPANTS).reply(200, {});
   // networks
   const networkCRUD = buildNetworkCRUD(COLLECTION_SIZE);
   const oneNetwork = new RegExp(`${Endpoint.NETWORKS}/(\\d+)`);
   mock.onGet(Endpoint.NETWORKS).reply(200, networkCRUD.findAll());
   mock.onGet(Endpoint.NETWORKS_COUNT).reply(200, networkCRUD.count());
+  mock.onGet(Endpoint.NETWORKS_PARTICIPANTS).reply(200, {});
   mock
     .onGet(oneNetwork)
     .reply((config) => [
@@ -58,6 +57,7 @@ if (process.env.NODE_ENV === 'test') {
   const oneEvent = new RegExp(`${Endpoint.EVENTS}/(\\d+)`);
   mock.onGet(Endpoint.EVENTS).reply(200, eventCRUD.findAll());
   mock.onGet(Endpoint.EVENTS_COUNT).reply(200, eventCRUD.count());
+  mock.onGet(Endpoint.EVENTS_PARTICIPANTS).reply(200, {});
   mock
     .onGet(oneEvent)
     .reply((config) => [

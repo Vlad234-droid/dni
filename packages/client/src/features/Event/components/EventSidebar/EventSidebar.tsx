@@ -29,6 +29,7 @@ type Props = {
   loading: Loading;
   loadEvents: (filters: EntityListPayload) => void;
   loadCount: (filters: EntityListPayload) => void;
+  participants?: Record<number, number>;
   count: number;
 };
 
@@ -38,6 +39,7 @@ const EventSidebar: FC<Props> = ({
   loading,
   loadEvents,
   loadCount,
+  participants,
 }) => {
   // this component depends on time passing, how often should it be updated?
   useEffect(() => {
@@ -90,7 +92,9 @@ const EventSidebar: FC<Props> = ({
               title={title}
               // @ts-ignore
               image={image}
-              participants={maxParticipants}
+              participants={participants![id] || 0}
+              maxParticipants={maxParticipants}
+              hideMaxParticipants={false}
               isOnAir={isEventOnAir(eventItem)}
               renderAction={() => <EventAction id={id} />}
               // TODO: dont like transformation here - its duplicated everywhere - and is created again and again in lists

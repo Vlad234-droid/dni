@@ -5,6 +5,7 @@ import useStore from 'hooks/useStore';
 import useDispatch from 'hooks/useDispatch';
 
 import { joinEvent, leaveEvent } from 'features/Auth/store';
+import { joinParticipant, leaveParticipant } from '../../store';
 
 type Props = {
   id: number;
@@ -22,6 +23,7 @@ const EventAction: FC<Props> = ({ id, disabled }) => {
     async (eventId: number) => {
       if (employeeNumber) {
         await dispatch(joinEvent({ employeeNumber, eventId }));
+        dispatch(joinParticipant(eventId));
       }
     },
     [employeeNumber],
@@ -31,6 +33,7 @@ const EventAction: FC<Props> = ({ id, disabled }) => {
     async (eventId: number) => {
       if (employeeNumber) {
         await dispatch(leaveEvent({ employeeNumber, eventId }));
+        dispatch(leaveParticipant(eventId));
       }
     },
     [employeeNumber],

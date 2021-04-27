@@ -60,7 +60,12 @@ const EventHeader: FC<Props> = ({
           )}
         </TitleWrapper>
         <ButtonWrapper>
-          <EventAction id={id} disabled={participants >= maxParticipants!} />
+          <EventAction
+            id={id}
+            disabled={
+              Boolean(maxParticipants) && participants >= maxParticipants!
+            }
+          />
         </ButtonWrapper>
       </Heading>
       <>
@@ -73,7 +78,9 @@ const EventHeader: FC<Props> = ({
             </Button>
           </Actions>
         </Participants>
-        <MaxParticipants>{maxParticipants} max participants</MaxParticipants>
+        {maxParticipants && (
+          <MaxParticipants>{maxParticipants} max participants</MaxParticipants>
+        )}
         <p>{description}</p>
       </>
     </Wrapper>

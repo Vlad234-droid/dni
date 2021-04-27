@@ -9,14 +9,12 @@ import { normalizeImage } from 'utils/content';
 import { EmptyContainer } from 'features/Common';
 import { Page } from 'features/Page';
 
-import { Network } from '../../store';
+import { Network } from '../../config/types';
 import NetworkAction from '../NetworkAction';
 
 const NetworkCarousel: FC = () => {
   const [{ response: list }, doFetch] = useFetch<Network[]>([]);
-  const { networks: networkParticipants } = useStore(
-    (state) => state.auth.participants,
-  );
+  const { participants } = useStore((state) => state.networks);
 
   const [filters] = useState({
     _start: 0,
@@ -41,7 +39,7 @@ const NetworkCarousel: FC = () => {
           id={id}
           key={`networks-${id}`}
           title={title}
-          participants={networkParticipants[id]! || 0}
+          participants={participants[id]! || 0}
           image={normalizeImage(image)}
         />
       ))}

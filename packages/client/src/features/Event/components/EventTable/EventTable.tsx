@@ -25,9 +25,7 @@ const EventTable: FC = () => {
   const filters = {
     endDate_lt: new Date(),
   };
-  const { events: eventParticipants } = useStore(
-    (state) => state.auth.participants,
-  );
+  const { participants } = useStore((state) => state.events);
 
   const [
     { response: data, isLoading: isEventsLoading },
@@ -108,7 +106,7 @@ const EventTable: FC = () => {
                     {isoDateToFormat(endDate, FULL_FORMAT)}
                   </Cell>
                   <Cell width={isMobile ? '25%' : '15%'}>
-                    {eventParticipants[id]! || 0} members
+                    {participants[id]! || 0} members
                   </Cell>
                 </Row>
               ))}

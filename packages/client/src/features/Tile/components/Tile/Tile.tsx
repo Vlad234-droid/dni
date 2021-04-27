@@ -84,7 +84,7 @@ const Tile: FC<Props> = ({
         <TileText>
           <Icon graphic='account' size={'sm'} />
           {participants}
-          {!hideMaxParticipants && ` / ${maxParticipants || 0}`}
+          {!hideMaxParticipants && maxParticipants && ` / ${maxParticipants}`}
           &nbsp; participants
         </TileText>
       )}

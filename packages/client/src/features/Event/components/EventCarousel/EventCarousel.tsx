@@ -16,9 +16,7 @@ import { Wrapper } from './styled';
 
 const EventCarousel: FC = () => {
   const [{ response: list }, doFetch] = useFetch<Event[]>([]);
-  const { events: eventParticipants } = useStore(
-    (state) => state.auth.participants,
-  );
+  const { participants } = useStore((state) => state.events);
 
   const [filters] = useState({
     _start: 0,
@@ -45,7 +43,7 @@ const EventCarousel: FC = () => {
               key={`events-${id}`}
               id={id}
               title={title}
-              participants={eventParticipants![id] || 0}
+              participants={participants![id] || 0}
               maxParticipants={maxParticipants}
               link={Page.EVENTS}
               // TODO: make transformation when data loaded before saving to store
@@ -53,7 +51,10 @@ const EventCarousel: FC = () => {
               renderAction={() => (
                 <EventAction
                   id={id}
-                  disabled={(eventParticipants![id] || 0) >= maxParticipants}
+                  disabled={
+                    Boolean(maxParticipants) &&
+                    (participants![id] || 0) >= maxParticipants
+                  }
                 />
               )}
               image={normalizeImage(image)}

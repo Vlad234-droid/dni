@@ -9,10 +9,9 @@ import { PostList } from 'features/Post';
 import { useImageWrapper } from 'context';
 import { normalizeImage } from 'utils/content';
 import ButtonFilter from 'features/ButtonFilter';
-import { getEventParticipants } from 'features/Auth/store';
 
 import EventHeader from '../EventHeader';
-import { byIdSelector, getOne } from '../../store';
+import { byIdSelector, getOne, getParticipants } from '../../store';
 
 import { Wrapper, Content, LeftContent, Filters } from './styled';
 
@@ -47,10 +46,7 @@ const Event: FC<Props> = ({ id }) => {
   const event = useSelector(byIdSelector(id));
   const { description, title, image, maxParticipants, startDate } = event || {};
   const [, setFilter] = useState<Filter>(ALL);
-  const { loading } = useStore((state) => state.events);
-  const { events: eventParticipants } = useStore(
-    (state) => state.auth.participants,
-  );
+  const { loading, participants } = useStore((state) => state.events);
   const imageWrapperEl = useImageWrapper();
   const isOnAir = true;
 
@@ -61,7 +57,7 @@ const Event: FC<Props> = ({ id }) => {
   }, [event, id]);
 
   useEffect(() => {
-    dispatch(getEventParticipants());
+    dispatch(getParticipants());
   }, []);
 
   const loadEvent = (id: number) => dispatch(getOne({ id }));
@@ -93,7 +89,7 @@ const Event: FC<Props> = ({ id }) => {
         title={title}
         description={description}
         //@ts-ignore
-        participants={eventParticipants[id]! || 0}
+        participants={participants[id]! || 0}
         maxParticipants={maxParticipants}
         //@ts-ignore
         isOnAir={isOnAir}

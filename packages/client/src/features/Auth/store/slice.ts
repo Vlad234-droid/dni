@@ -9,10 +9,6 @@ const initialState: T.State = {
   user: defaultUserState,
   isLoading: false,
   error: null,
-  participants: {
-    networks: {},
-    events: {},
-  },
 };
 
 const profile = createAsyncThunk<T.UserResponse>(
@@ -38,24 +34,6 @@ const joinEvent = createAsyncThunk<T.EventResponse, T.EventPayload>(
 const leaveEvent = createAsyncThunk<T.EventResponse, T.EventPayload>(
   T.LEAVE_EVENT_ACTION,
   async (data) => await API.user.leaveEvent<T.EventResponse>(data),
-);
-
-const getNetworkParticipants = createAsyncThunk<Record<number, number>>(
-  T.NETWORK_PARTICIPANTS_ACTION,
-  async () =>
-    (await API.user.networkParticipants<T.ParticipantsResponse>()).reduce(
-      (acc, p) => ({ ...acc, [p.id]: +p.participants }),
-      {},
-    ),
-);
-
-const getEventParticipants = createAsyncThunk<Record<number, number>>(
-  T.EVENT_PARTICIPANTS_ACTION,
-  async () =>
-    (await API.user.eventParticipants<T.ParticipantsResponse>()).reduce(
-      (acc, p) => ({ ...acc, [p.id]: +p.participants }),
-      {},
-    ),
 );
 
 const slice = createSlice({
@@ -94,12 +72,6 @@ const slice = createSlice({
           networks.push(networkId);
           state.user.networks = networks;
         }
-        const participants = state.participants.networks;
-        state.participants.networks = {
-          ...participants,
-          [networkId]: (participants[networkId] || 0) + 1,
-        };
-
         stopLoading(state);
       })
       .addCase(joinNetwork.rejected, stopLoading)
@@ -112,12 +84,6 @@ const slice = createSlice({
           networks.splice(networks.indexOf(networkId), 1);
           state.user.networks = networks;
         }
-        const participants = state.participants.networks;
-        state.participants.networks = {
-          ...participants,
-          [networkId]: (participants[networkId] || 1) - 1,
-        };
-
         stopLoading(state);
       })
       .addCase(leaveNetwork.rejected, stopLoading)
@@ -130,12 +96,6 @@ const slice = createSlice({
           events.push(eventId);
           state.user.events = events;
         }
-        const participants = state.participants.events;
-        state.participants.events = {
-          ...participants,
-          [eventId]: (participants[eventId] || 0) + 1,
-        };
-
         stopLoading(state);
       })
       .addCase(joinEvent.rejected, stopLoading)
@@ -148,40 +108,14 @@ const slice = createSlice({
           events.splice(events.indexOf(eventId), 1);
           state.user.events = events;
         }
-        const participants = state.participants.events;
-        state.participants.events = {
-          ...participants,
-          [eventId]: (participants[eventId] || 1) - 1,
-        };
         stopLoading(state);
       })
-      .addCase(leaveEvent.rejected, stopLoading)
-      .addCase(getNetworkParticipants.pending, startLoading)
-      .addCase(getNetworkParticipants.fulfilled, (state: T.State, action) => {
-        const participants = action.payload;
-        state.participants.networks = participants;
-        stopLoading(state);
-      })
-      .addCase(getEventParticipants.pending, startLoading)
-      .addCase(getEventParticipants.fulfilled, (state: T.State, action) => {
-        const participants = action.payload;
-        state.participants.events = participants;
-        stopLoading(state);
-      });
+      .addCase(leaveEvent.rejected, stopLoading);
   },
 });
 
 const { clear } = slice.actions;
 
-export {
-  clear,
-  profile,
-  joinNetwork,
-  leaveNetwork,
-  joinEvent,
-  leaveEvent,
-  getNetworkParticipants,
-  getEventParticipants,
-};
+export { clear, profile, joinNetwork, leaveNetwork, joinEvent, leaveEvent };
 
 export default slice.reducer;
