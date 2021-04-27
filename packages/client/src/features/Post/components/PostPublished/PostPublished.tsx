@@ -2,7 +2,6 @@ import React, { FC } from 'react';
 
 import { Post } from '../../config/types';
 import { PostPublishedAttachments } from '../PostAttachments';
-import PostControls from '../PostControls';
 import {
   // PostPublisherAvatar,
   PostPublisherAvatarBox,
@@ -16,7 +15,6 @@ import {
   PostPublishedWrapper,
 } from './styled';
 import { useMedia } from 'context/InterfaceContext';
-import ReadMoreReadLess from 'features/ReadMoreReadLess';
 
 interface PostPublishedProps {
   item: Post;
@@ -25,7 +23,7 @@ interface PostPublishedProps {
 const postPublishedTestId = 'post-published-test-id';
 
 const PostPublished: FC<PostPublishedProps> = ({ item }) => {
-  const { id, title, content, authorName, published_at, attachments } = item;
+  const { title, content, authorName, published_at, attachments } = item;
   const media = useMedia();
 
   return (

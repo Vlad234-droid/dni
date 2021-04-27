@@ -26,14 +26,14 @@ const leaveNetwork = createAsyncThunk<T.NetworkResponse, T.NetworkPayload>(
   async (data) => await API.user.leaveNetwork<T.NetworkResponse>(data),
 );
 
-const takePartEvent = createAsyncThunk<T.EventResponse, T.EventPayload>(
-  T.TAKE_PART_EVENT_ACTION,
-  async (data) => await API.user.takePartEvent<T.EventResponse>(data),
+const joinEvent = createAsyncThunk<T.EventResponse, T.EventPayload>(
+  T.JOIN_EVENT_ACTION,
+  async (data) => await API.user.joinEvent<T.EventResponse>(data),
 );
 
-const missOutEvent = createAsyncThunk<T.EventResponse, T.EventPayload>(
-  T.MISS_OUT_EVENT_ACTION,
-  async (data) => await API.user.missOutEvent<T.EventResponse>(data),
+const leaveEvent = createAsyncThunk<T.EventResponse, T.EventPayload>(
+  T.LEAVE_EVENT_ACTION,
+  async (data) => await API.user.leaveEvent<T.EventResponse>(data),
 );
 
 const slice = createSlice({
@@ -72,7 +72,6 @@ const slice = createSlice({
           networks.push(networkId);
           state.user.networks = networks;
         }
-
         stopLoading(state);
       })
       .addCase(joinNetwork.rejected, stopLoading)
@@ -85,12 +84,11 @@ const slice = createSlice({
           networks.splice(networks.indexOf(networkId), 1);
           state.user.networks = networks;
         }
-
         stopLoading(state);
       })
       .addCase(leaveNetwork.rejected, stopLoading)
-      .addCase(takePartEvent.pending, startLoading)
-      .addCase(takePartEvent.fulfilled, (state: T.State, action) => {
+      .addCase(joinEvent.pending, startLoading)
+      .addCase(joinEvent.fulfilled, (state: T.State, action) => {
         const eventId = +action.payload.body.eventId;
         const events = state.user.events;
 
@@ -98,12 +96,11 @@ const slice = createSlice({
           events.push(eventId);
           state.user.events = events;
         }
-
         stopLoading(state);
       })
-      .addCase(takePartEvent.rejected, stopLoading)
-      .addCase(missOutEvent.pending, startLoading)
-      .addCase(missOutEvent.fulfilled, (state: T.State, action) => {
+      .addCase(joinEvent.rejected, stopLoading)
+      .addCase(leaveEvent.pending, startLoading)
+      .addCase(leaveEvent.fulfilled, (state: T.State, action) => {
         const eventId = +action.payload.body.eventId;
         const events = state.user.events;
 
@@ -111,22 +108,14 @@ const slice = createSlice({
           events.splice(events.indexOf(eventId), 1);
           state.user.events = events;
         }
-
         stopLoading(state);
       })
-      .addCase(missOutEvent.rejected, stopLoading);
+      .addCase(leaveEvent.rejected, stopLoading);
   },
 });
 
 const { clear } = slice.actions;
 
-export {
-  clear,
-  profile,
-  joinNetwork,
-  leaveNetwork,
-  takePartEvent,
-  missOutEvent,
-};
+export { clear, profile, joinNetwork, leaveNetwork, joinEvent, leaveEvent };
 
 export default slice.reducer;

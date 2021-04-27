@@ -1,5 +1,4 @@
 import { ComponentType, LazyExoticComponent, FC } from 'react';
-import List from '../../List';
 
 enum Page {
   ABOUT = '',
@@ -13,6 +12,7 @@ enum Page {
   NOT_FOUND = '*',
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type PageElement = LazyExoticComponent<FC<any>> | ComponentType | FC<any>;
 
 export { Page };

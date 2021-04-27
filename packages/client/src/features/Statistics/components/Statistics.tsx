@@ -5,6 +5,7 @@ import Checkbox from '@beans/checkbox';
 import { Decrease, Increase } from 'features/Common';
 
 type Props = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: Array<any>;
   onChange: (id: string, checked: boolean) => void;
 };

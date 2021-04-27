@@ -17,9 +17,11 @@ type Props = {
     alternativeText: string;
     url: string;
   } | null;
-  renderAction: (id: number) => JSX.Element;
+  renderAction: () => JSX.Element;
   meta?: string;
   isOnAir?: boolean;
+  maxParticipants?: number;
+  hideMaxParticipants?: boolean;
 };
 
 const LargeTile: FC<Props> = ({
@@ -30,6 +32,8 @@ const LargeTile: FC<Props> = ({
   link,
   meta,
   isOnAir,
+  maxParticipants,
+  hideMaxParticipants,
   id,
 }) => (
   <Wrapper data-testid={TEST_ID}>
@@ -41,10 +45,12 @@ const LargeTile: FC<Props> = ({
     <Tile
       id={id}
       link={link}
-      renderAction={() => <ActionContainer>{renderAction(id)}</ActionContainer>}
+      renderAction={() => <ActionContainer>{renderAction()}</ActionContainer>}
       meta={meta}
       title={title}
       participants={participants}
+      maxParticipants={maxParticipants}
+      hideMaxParticipants={hideMaxParticipants}
       image={image}
       orientation={{
         aboveTablet: VERTICAL,

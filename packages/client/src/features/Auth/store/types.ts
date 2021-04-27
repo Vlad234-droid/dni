@@ -4,8 +4,8 @@ const ROOT = 'auth';
 const FETCH_PROFILE_ACTION = `${ROOT}/profile`;
 const JOIN_NETWORK_ACTION = `${ROOT}/joinNetwork`;
 const LEAVE_NETWORK_ACTION = `${ROOT}/leaveNetwork`;
-const TAKE_PART_EVENT_ACTION = `${ROOT}/takePartEvent`;
-const MISS_OUT_EVENT_ACTION = `${ROOT}/missOutEvent`;
+const JOIN_EVENT_ACTION = `${ROOT}/joinEvent`;
+const LEAVE_EVENT_ACTION = `${ROOT}/leaveEvent`;
 
 type State = {
   user: DefaultUser | User;
@@ -56,6 +56,6 @@ export {
   FETCH_PROFILE_ACTION,
   JOIN_NETWORK_ACTION,
   LEAVE_NETWORK_ACTION,
-  TAKE_PART_EVENT_ACTION,
-  MISS_OUT_EVENT_ACTION,
+  JOIN_EVENT_ACTION,
+  LEAVE_EVENT_ACTION,
 };

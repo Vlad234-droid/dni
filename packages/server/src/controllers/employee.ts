@@ -7,6 +7,8 @@ import {
   findEventsBy,
   createEventRelation,
   removeEventRelation,
+  findEventsParticipants,
+  findNetworksParticipants,
 } from '../services';
 import { executeSafe } from '../utils';
 
@@ -80,6 +82,18 @@ const deleteEventFromEmployee = async (req: Request, res: Response) => {
   });
 };
 
+const getEventsParticipants: Middleware = (_, res) => {
+  return executeSafe(res, async () =>
+    res.status(200).json(await findEventsParticipants()),
+  );
+};
+
+const getNetworksParticipants: Middleware = (_, res) => {
+  return executeSafe(res, async () =>
+    res.status(200).json(await findNetworksParticipants()),
+  );
+};
+
 export {
   getProfile,
   getNetworksByEmployeeNumber,
@@ -88,4 +102,6 @@ export {
   getEventsByEmployeeNumber,
   addEventToEmployee,
   deleteEventFromEmployee,
+  getEventsParticipants,
+  getNetworksParticipants,
 };

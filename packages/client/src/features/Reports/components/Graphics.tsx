@@ -15,11 +15,11 @@ enum Period {
 
 type Props = {
   active: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: any;
 };
 
 const Graphics = ({ active, data }: Props) => {
-  console.log(data);
   const [period, setPeriod] = useState<Period>(Period.CURRENT_YEAR);
   const buttonList = useMemo(() => {
     return [

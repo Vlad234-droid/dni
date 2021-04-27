@@ -18,6 +18,7 @@ import {
   EventDate,
   Participants,
   Actions,
+  MaxParticipants,
 } from './styled';
 
 type Props = {
@@ -26,6 +27,7 @@ type Props = {
   description?: string | string[];
   isOnAir?: boolean;
   participants: number;
+  maxParticipants?: number;
   startDate: string;
 };
 
@@ -35,6 +37,7 @@ const EventHeader: FC<Props> = ({
   description,
   isOnAir = false,
   participants,
+  maxParticipants,
   startDate,
 }) => {
   const { isMobile } = useMedia();
@@ -57,19 +60,27 @@ const EventHeader: FC<Props> = ({
           )}
         </TitleWrapper>
         <ButtonWrapper>
-          <EventAction id={id} />
+          <EventAction
+            id={id}
+            disabled={
+              Boolean(maxParticipants) && participants >= maxParticipants!
+            }
+          />
         </ButtonWrapper>
       </Heading>
       <>
         <EventDate>{isoDateToFormat(startDate, FULL_FORMAT)}</EventDate>
         <Participants>
-          +{participants} are participating
+          {participants} are participating
           <Actions>
             <Button variant='link'>
               <Icon graphic='link' />
             </Button>
           </Actions>
         </Participants>
+        {maxParticipants && (
+          <MaxParticipants>{maxParticipants} max participants</MaxParticipants>
+        )}
         <p>{description}</p>
       </>
     </Wrapper>

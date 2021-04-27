@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import Icon from '@beans/icon';
 import isEmpty from 'lodash.isempty';
 
-import Heading, { Size, Color } from 'features/Heading';
+import ButtonFilter from 'features/ButtonFilter';
 import { useMedia } from 'context/InterfaceContext';
 import useStore from 'hooks/useStore';
 import useDispatch from 'hooks/useDispatch';
@@ -15,24 +15,45 @@ import List from 'features/List';
 import { EmptyContainer } from 'features/Common';
 import { Page } from 'features/Page';
 
-import { getList, listSelector, clear, getCount } from '../../store';
+import {
+  getList,
+  listSelector,
+  clear,
+  getCount,
+  getParticipants,
+} from '../../store';
+import { Filter, ALL, THIS_WEEK, THIS_MONTH } from '../../config/types';
 import { Wrapper } from './styled';
 import EventAction from '../EventAction';
 
-type Filter = 'ON_AIR' | 'THIS_MONTH';
+const initialFilters = [
+  {
+    key: ALL,
+    title: 'All',
+    active: true,
+  },
+  {
+    key: THIS_WEEK,
+    title: 'This week',
+    active: false,
+  },
+  {
+    key: THIS_MONTH,
+    title: 'This month',
+    active: false,
+  },
+];
 
-type Props = {
-  filter?: Filter;
-};
-
-const EventList: FC<Props> = ({ filter }) => {
+const EventList: FC = () => {
   const { isMobile } = useMedia();
   const dispatch = useDispatch();
 
   const [page, setPage] = useState<number>(0);
+  const [filter, setFilter] = useState<Filter>(ALL);
   const [filters, setFilters] = useState<FilterPayload>();
 
   const {
+    participants,
     meta: { total },
     loading,
   } = useStore((state) => state.events);
@@ -73,14 +94,26 @@ const EventList: FC<Props> = ({ filter }) => {
   }, [filters]);
 
   useEffect(() => {
+    dispatch(getParticipants());
+  }, []);
+
+  useEffect(() => {
     let where = {};
     switch (filter) {
-      case 'ON_AIR': {
-        const currentDate = new Date();
-        where = { startDate_lte: currentDate, endDate_gte: currentDate };
+      case ALL: {
+        where = {};
         break;
       }
-      case 'THIS_MONTH': {
+      case THIS_WEEK: {
+        const firstDayOfThisMonth = firstDayOf('week').toJSDate();
+        const lastDayOfThisMonth = lastDayOf('week').toJSDate();
+        where = {
+          startDate_gte: firstDayOfThisMonth,
+          startDate_lte: lastDayOfThisMonth,
+        };
+        break;
+      }
+      case THIS_MONTH: {
         const firstDayOfThisMonth = firstDayOf('month').toJSDate();
         const lastDayOfThisMonth = lastDayOf('month').toJSDate();
         where = {
@@ -95,9 +128,10 @@ const EventList: FC<Props> = ({ filter }) => {
 
   return (
     <Wrapper>
-      <Heading size={Size.md} color={Color.black}>
-        New Events
-      </Heading>
+      <ButtonFilter
+        initialFilters={initialFilters}
+        onChange={(key) => setFilter(key as Filter)}
+      />
       {isEmpty(list) ? (
         <EmptyContainer
           description='Unfortunately, we did not find any matches for your request'
@@ -110,9 +144,12 @@ const EventList: FC<Props> = ({ filter }) => {
             // TODO: event is not correct type Event
             //@ts-ignore
             items={list}
-            hideParticipants={true}
+            hideMaxParticipants={false}
+            participants={participants}
             isMobile={isMobile}
-            renderAction={(id) => <EventAction id={id} />}
+            renderAction={(id, disabled) => (
+              <EventAction id={id} disabled={disabled} />
+            )}
           />
           <Button
             disabled={!hasMore || loading === 'pending'}

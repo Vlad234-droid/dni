@@ -1,4 +1,4 @@
-import React, { FC, useState, useRef, ChangeEvent } from 'react';
+import React, { FC, useState, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';

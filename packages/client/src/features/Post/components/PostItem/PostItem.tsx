@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import styled from 'styled-components';
 
-import { Post, PostStatus } from '../../config/types';
+import { Post } from '../../config/types';
 import PostPublished from '../PostPublished';
 import PostArchived from '../PostArchived';
 

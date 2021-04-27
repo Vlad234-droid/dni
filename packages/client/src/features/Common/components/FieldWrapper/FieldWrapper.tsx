@@ -14,9 +14,10 @@ export type Props = {
 };
 
 export type Registrable = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   unregister: (name: string) => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   setValue: <T extends object>(name: string, data: any, config?: T) => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   register: (name?: string) => void | RefObject<any>;
 };
 

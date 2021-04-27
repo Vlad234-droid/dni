@@ -23,7 +23,7 @@ interface PostArchivedProps {
 const postArchivedTestId = 'post-archived-test-id';
 
 const PostArchived: FC<PostArchivedProps> = ({ item }) => {
-  const { id, title, content, authorName, authorEmail } = item;
+  const { title, content, authorName } = item;
   const [isContentVisible, setVisible] = useState(false);
 
   const onPostClick = () => {

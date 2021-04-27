@@ -2,7 +2,7 @@ import React, { FC, HTMLProps } from 'react';
 import Dropdown, { Option } from '@beans/dropdown';
 import FormGroup from '@beans/form-group';
 
-import Wrapper, { Props as WrapperProps, Registrable } from '../FieldWrapper';
+import { Props as WrapperProps, Registrable } from '../FieldWrapper';
 
 type Options = {
   options: Array<string>;

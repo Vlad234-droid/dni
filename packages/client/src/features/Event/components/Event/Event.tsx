@@ -11,7 +11,7 @@ import { normalizeImage } from 'utils/content';
 import ButtonFilter from 'features/ButtonFilter';
 
 import EventHeader from '../EventHeader';
-import { byIdSelector, getOne } from '../../store';
+import { byIdSelector, getOne, getParticipants } from '../../store';
 
 import { Wrapper, Content, LeftContent, Filters } from './styled';
 
@@ -45,8 +45,8 @@ const Event: FC<Props> = ({ id }) => {
   const dispatch = useDispatch();
   const event = useSelector(byIdSelector(id));
   const { description, title, image, maxParticipants, startDate } = event || {};
-  const [filter, setFilter] = useState<Filter>(ALL);
-  const { loading } = useStore((state) => state.events);
+  const [, setFilter] = useState<Filter>(ALL);
+  const { loading, participants } = useStore((state) => state.events);
   const imageWrapperEl = useImageWrapper();
   const isOnAir = true;
 
@@ -55,6 +55,10 @@ const Event: FC<Props> = ({ id }) => {
 
     loadEvent(id);
   }, [event, id]);
+
+  useEffect(() => {
+    dispatch(getParticipants());
+  }, []);
 
   const loadEvent = (id: number) => dispatch(getOne({ id }));
 
@@ -85,7 +89,8 @@ const Event: FC<Props> = ({ id }) => {
         title={title}
         description={description}
         //@ts-ignore
-        participants={maxParticipants}
+        participants={participants[id]! || 0}
+        maxParticipants={maxParticipants}
         //@ts-ignore
         isOnAir={isOnAir}
         //@ts-ignore

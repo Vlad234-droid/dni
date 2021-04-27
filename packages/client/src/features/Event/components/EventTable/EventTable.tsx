@@ -10,6 +10,7 @@ import Heading, { Size, Color } from 'features/Heading';
 import { useMedia } from 'context/InterfaceContext';
 import useFetch from 'hooks/useFetch';
 import { DEFAULT_PAGINATION } from 'config/constants';
+import useStore from 'hooks/useStore';
 import { isoDateToFormat, FULL_FORMAT } from 'utils/date';
 import { EmptyContainer } from 'features/Common';
 import { Page } from 'features/Page';
@@ -24,6 +25,7 @@ const EventTable: FC = () => {
   const filters = {
     endDate_lt: new Date(),
   };
+  const { participants } = useStore((state) => state.events);
 
   const [
     { response: data, isLoading: isEventsLoading },
@@ -89,7 +91,7 @@ const EventTable: FC = () => {
         <>
           <Table styles={styles}>
             <Body zebraStripes={isMobile}>
-              {list!.map(({ id, title, maxParticipants, created_at }) => (
+              {list!.map(({ id, title, endDate }) => (
                 <Row key={id}>
                   <Cell width='25%'>
                     <TitleWithEllipsis
@@ -101,10 +103,10 @@ const EventTable: FC = () => {
                     </TitleWithEllipsis>
                   </Cell>
                   <Cell width='40%' visible={!isMobile}>
-                    {isoDateToFormat(created_at, FULL_FORMAT)}
+                    {isoDateToFormat(endDate, FULL_FORMAT)}
                   </Cell>
                   <Cell width={isMobile ? '25%' : '15%'}>
-                    {maxParticipants} members
+                    {participants[id]! || 0} members
                   </Cell>
                 </Row>
               ))}

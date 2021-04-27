@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroller';
 import isEmpty from 'lodash.isempty';
 
-import Heading, { Size, Color } from 'features/Heading';
+import ButtonFilter from 'features/ButtonFilter';
 import useDispatch from 'hooks/useDispatch';
 import useStore from 'hooks/useStore';
 import { FilterPayload } from 'types/payload';
@@ -14,18 +14,34 @@ import { useMedia } from 'context/InterfaceContext';
 import { EmptyContainer } from 'features/Common';
 import { Page } from 'features/Page';
 
-import { Filter } from '../../config/types';
-import { getList, getCount, listSelector, clear } from '../../store';
+import { Filter, ALL, YOUR_NETWORKS } from '../../config/types';
+import {
+  getList,
+  getCount,
+  listSelector,
+  clear,
+  getParticipants,
+} from '../../store';
 import { Wrapper, ListContainer } from './styled';
 import NetworkAction from '../NetworkAction';
 
-type Props = {
-  filter?: Filter;
-};
+const initialFilters = [
+  {
+    key: ALL,
+    title: 'All',
+    active: true,
+  },
+  {
+    key: YOUR_NETWORKS,
+    title: 'Your networks',
+    active: false,
+  },
+];
 
-const NetworkList: FC<Props> = ({ filter }) => {
+const NetworkList: FC = () => {
   const { isMobile } = useMedia();
   const dispatch = useDispatch();
+  const [filter, setFilter] = useState<Filter>(ALL);
   const [filters, setFilters] = useState<
     FilterPayload & { id_in?: number[] }
   >();
@@ -34,6 +50,7 @@ const NetworkList: FC<Props> = ({ filter }) => {
   const scrollContainer = useScrollContainer();
 
   const {
+    participants,
     meta: { total },
     isLoading,
   } = useStore((state) => state.networks);
@@ -74,21 +91,26 @@ const NetworkList: FC<Props> = ({ filter }) => {
         break;
       }
       case 'YOUR_NETWORKS': {
-        where = { id_in: [...networks, 999] };
+        where = { id_in: [...networks, -1] };
         break;
       }
     }
     setFilters({ ...where });
-  }, [filter, networks]);
+  }, [filter]);
+
+  useEffect(() => {
+    dispatch(getParticipants());
+  }, []);
 
   // TODO: add loader component
   const Loader = <div key='loader'>Loading ...</div>;
 
   return (
     <Wrapper>
-      <Heading size={Size.md} color={Color.black}>
-        New Networks
-      </Heading>
+      <ButtonFilter
+        initialFilters={initialFilters}
+        onChange={(key) => setFilter(key as Filter)}
+      />
       {isEmpty(list) && !hasMore ? (
         <EmptyContainer
           description='Unfortunately, we did not find any matches for your request'
@@ -111,6 +133,7 @@ const NetworkList: FC<Props> = ({ filter }) => {
               // TODO: object is not correct type
               //@ts-ignore
               items={list}
+              participants={participants}
               isMobile={isMobile}
               renderAction={(id) => <NetworkAction id={id} />}
             />

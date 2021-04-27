@@ -9,6 +9,7 @@ type State = {
   loading: Loading;
   error: null | string;
   meta: Meta;
+  participants: Record<number, number>;
 } & EntityState<Event>;
 
 // TODO: #is not it common?
@@ -37,6 +38,21 @@ type UploadImgPayload = {
   image: File;
 };
 
+const ALL = 'ALL';
+const THIS_WEEK = 'THIS_WEEK';
+const THIS_MONTH = 'THIS_MONTH';
+
+type Filter = typeof ALL | typeof THIS_WEEK | typeof THIS_MONTH;
+
+export { ALL, THIS_WEEK, THIS_MONTH };
+
+type Participant = {
+  id: number;
+  participants: number;
+};
+
+type ParticipantsResponse = Participant[];
+
 export type {
   State,
   ListResponse,
@@ -45,6 +61,8 @@ export type {
   OnePayload,
   UploadImgPayload,
   OneImageResponse,
+  Filter,
+  ParticipantsResponse,
 };
 
 export default Event;

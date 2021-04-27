@@ -9,6 +9,7 @@ const formSchema = Yup.object().shape({
   endDate: Yup.date()
     .when(
       'startDate',
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (startDate: Date, schema: any) => startDate && schema.min(startDate),
     )
     .required('End Date is required'),

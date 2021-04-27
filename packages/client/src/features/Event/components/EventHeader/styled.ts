@@ -33,8 +33,11 @@ export const Participants = styled.div`
   align-items: center;
   ${headingXX};
   color: ${({ theme }) => theme.colors.grayscale};
-  margin-bottom: 16px;
   height: 40px;
+`;
+
+export const MaxParticipants = styled(Participants)`
+  margin-bottom: 16px;
 `;
 
 export const Actions = styled.div`

@@ -15,9 +15,6 @@
     "noEmit": true,
     "jsx": "react-jsx",
     "isolatedModules": true,
-    "baseUrl": "./packages",
-    "paths": {
-      "@dni/*": ["packages/*/src"]
-    }
+    "baseUrl": "./packages"
   }
 }

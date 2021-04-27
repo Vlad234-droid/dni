@@ -13,8 +13,9 @@ type Entity = Event | Network;
 type Props = {
   items: Entity[];
   link: string;
-  hideParticipants?: boolean;
-  renderAction: (id: number) => JSX.Element;
+  hideMaxParticipants?: boolean;
+  participants?: Record<number, number>;
+  renderAction: (id: number, disabled: boolean) => JSX.Element;
   isMobile: boolean;
   isLoading?: boolean;
 };
@@ -26,53 +27,54 @@ const List: FC<Props> = ({
   link,
   items,
   renderAction,
-  hideParticipants,
+  hideMaxParticipants,
+  participants,
   isMobile,
   isLoading = false,
-}) => (
-  <Wrapper>
-    {items.map(
-      //@ts-ignore
-      ({ id, maxParticipants, startDate, ...rest }: Entity) =>
+}) => {
+  const propertiesExtractor = ({
+    id,
+    //@ts-ignore
+    maxParticipants,
+    //@ts-ignore
+    startDate,
+    ...rest
+  }: Entity) => {
+    const actualParticipants = participants![id] || 0;
+    return {
+      key: id,
+      id,
+      link,
+      renderAction: () =>
+        renderAction(
+          id,
+          Boolean(maxParticipants) && actualParticipants >= maxParticipants,
+        ),
+      meta:
+        link === Page.NETWORKS
+          ? undefined
+          : isoDateToFormat(startDate, FULL_FORMAT),
+      participants: actualParticipants,
+      maxParticipants: maxParticipants,
+      hideMaxParticipants: hideMaxParticipants,
+      ...rest,
+    };
+  };
+
+  return (
+    <Wrapper>
+      {items.map((entity: Entity) =>
         isMobile ? (
           //@ts-ignore
-          <SmallTile
-            link={link}
-            key={id}
-            id={id}
-            renderAction={renderAction}
-            // TODO: remove hack for networks
-            meta={
-              link === Page.NETWORKS
-                ? undefined
-                : isoDateToFormat(startDate, FULL_FORMAT)
-            }
-            // TODO: remove hack for networks
-            participants={maxParticipants || 300}
-            hideParticipants={hideParticipants}
-            {...rest}
-          />
+          <SmallTile {...propertiesExtractor(entity)} />
         ) : (
           //@ts-ignore
-          <LargeTile
-            link={link}
-            id={id}
-            key={id}
-            renderAction={renderAction}
-            // TODO: remove hack for networks
-            meta={
-              link === Page.NETWORKS
-                ? undefined
-                : isoDateToFormat(startDate, FULL_FORMAT)
-            }
-            // TODO: remove hack for networks
-            participants={maxParticipants || 300}
-            {...rest}
-          />
+          <LargeTile {...propertiesExtractor(entity)} />
         ),
-    )}
-    {isLoading && Loader}
-  </Wrapper>
-);
+      )}
+      {isLoading && Loader}
+    </Wrapper>
+  );
+};
 
 export default List;

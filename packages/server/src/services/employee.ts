@@ -74,6 +74,24 @@ const removeEventRelation = async (employeeNumber: string, eventId: number) => {
   });
 };
 
+const findNetworksParticipants = async () => {
+  return await getRepository(EmployeeNetwork)
+    .createQueryBuilder('en')
+    .select('en.networkId', 'id')
+    .addSelect('COUNT(en.networkId)', 'participants')
+    .groupBy('en.networkId')
+    .getRawMany();
+};
+
+const findEventsParticipants = async () => {
+  return await getRepository(EmployeeEvent)
+    .createQueryBuilder('ee')
+    .select('ee.eventId', 'id')
+    .addSelect('COUNT(ee.eventId)', 'participants')
+    .groupBy('ee.eventId')
+    .getRawMany();
+};
+
 export {
   profileInfoExtractor,
   findNetworksBy,
@@ -82,4 +100,6 @@ export {
   findEventsBy,
   createEventRelation,
   removeEventRelation,
+  findNetworksParticipants,
+  findEventsParticipants,
 };

@@ -1,5 +1,4 @@
 import React, { FC } from 'react';
-import NetworkUpdates from 'features/NetworkUpdates';
 import { useMedia } from 'context/InterfaceContext';
 
 import MenuDesktop from '../MenuDesktop';

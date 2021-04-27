@@ -3,9 +3,10 @@ import { createSelector } from '@reduxjs/toolkit';
 import { RootState } from 'store/rootReducer';
 import { getEntitySelectors } from 'utils/storeHelper';
 
-import { EntityAdapter, Network } from './types';
+import { networksAdapter } from './slice';
+import { Network } from '../config/types';
 
-const networksSelectors = EntityAdapter.getSelectors(
+const networksSelectors = networksAdapter.getSelectors(
   (state: RootState) => state.networks,
 );
 const [selectAll, selectById] = getEntitySelectors(networksSelectors);
