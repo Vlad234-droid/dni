@@ -9,6 +9,8 @@ import { PostList } from 'features/Post';
 import { useImageWrapper } from 'context';
 import { normalizeImage } from 'utils/content';
 import ButtonFilter from 'features/ButtonFilter';
+import { Loading } from 'store/types';
+import { EmptyContainer } from 'features/Common';
 
 import EventHeader from '../EventHeader';
 import { byIdSelector, getOne, getParticipants } from '../../store';
@@ -39,16 +41,14 @@ const filters = [
 
 type Filter = typeof ALL | typeof ARCHIVED;
 
-// TODO: filter events by all and archived
-// TODO: Pass events to PostList
+// TODO: @katia filter events by all and archived
+// TODO: @katia Pass events to PostList
 const Event: FC<Props> = ({ id }) => {
   const dispatch = useDispatch();
   const event = useSelector(byIdSelector(id));
-  const { description, title, image, maxParticipants, startDate } = event || {};
   const [, setFilter] = useState<Filter>(ALL);
   const { loading, participants } = useStore((state) => state.events);
   const imageWrapperEl = useImageWrapper();
-  const isOnAir = true;
 
   useEffect(() => {
     if (event) return;
@@ -56,59 +56,74 @@ const Event: FC<Props> = ({ id }) => {
     loadEvent(id);
   }, [event, id]);
 
+  // TODO: @katia refactor to get participants for current event!!!
+  // if other participants (not related change, the component will be updated too)
   useEffect(() => {
     dispatch(getParticipants());
   }, []);
 
   const loadEvent = (id: number) => dispatch(getOne({ id }));
 
-  if (loading === 'pending') return <div>Loading network data...</div>;
+  if (loading == Loading.IDLE) return null;
 
-  if (loading === 'succeeded' && !event)
-    return <Content>{`There is no event with id ${id}`}</Content>;
+  if (loading === Loading.PENDING) {
+    return (
+      <Wrapper data-testid={TEST_ID}>
+        <div>Loading events...</div>
+      </Wrapper>
+    );
+  }
 
-  const normalizeImg = normalizeImage(image);
+  if (loading === Loading.SUCCEEDED && !event) {
+    return (
+      <Wrapper data-testid={TEST_ID}>
+        <EmptyContainer description={`There is no event with id ${id}`} />
+      </Wrapper>
+    );
+  }
 
-  // TODO: normalize image before save to store
-  return (
-    <Wrapper data-testid={TEST_ID}>
-      {imageWrapperEl &&
-        createPortal(
-          <ResponsiveImage
-            key={id}
-            alt={normalizeImg?.alternativeText}
-            src={normalizeImg?.url}
-            fallbackSizeRatio='57%'
-            objectFit='cover'
-          />,
-          imageWrapperEl,
-        )}
-      <EventHeader
-        id={id}
-        //@ts-ignore
-        title={title}
-        description={description}
-        //@ts-ignore
-        participants={participants[id]! || 0}
-        maxParticipants={maxParticipants}
-        //@ts-ignore
-        isOnAir={isOnAir}
-        //@ts-ignore
-        startDate={startDate}
-      />
-      <Content>
-        <LeftContent>
-          <Filters>
-            <ButtonFilter
-              initialFilters={filters}
-              onChange={(key) => setFilter(key as Filter)}
-            />
-          </Filters>
-          <PostList entityId={id} filter={'BY_EVENT'} />
-        </LeftContent>
-      </Content>
-    </Wrapper>
-  );
+  if (loading === Loading.FAILED) {
+    return (
+      <Wrapper data-testid={TEST_ID}>
+        <div>Here some error</div>
+      </Wrapper>
+    );
+  }
+
+  if (loading === Loading.SUCCEEDED && event) {
+    // TODO: normalize image before save to store
+    const normalizeImg = normalizeImage(event.image);
+
+    return (
+      <Wrapper data-testid={TEST_ID}>
+        {imageWrapperEl &&
+          createPortal(
+            <ResponsiveImage
+              key={id}
+              alt={normalizeImg?.alternativeText}
+              src={normalizeImg?.url}
+              fallbackSizeRatio='57%'
+              objectFit='cover'
+            />,
+            imageWrapperEl,
+          )}
+        <EventHeader event={event} participants={participants[id]! || 0} />
+        <Content>
+          <LeftContent>
+            <Filters>
+              <ButtonFilter
+                initialFilters={filters}
+                onChange={(key) => setFilter(key as Filter)}
+              />
+            </Filters>
+            <PostList entityId={id} filter={'BY_EVENT'} />
+          </LeftContent>
+        </Content>
+      </Wrapper>
+    );
+  }
+
+  return null;
 };
 
 export { TEST_ID };

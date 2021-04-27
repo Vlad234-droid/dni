@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 import Media from 'styles/media';
-import { headingMD, headingSM, headingXX } from 'styles';
+import { headingMD, textSM } from 'styles';
 
 export const Wrapper = styled.div`
   padding: 0 16px 24px;
@@ -12,7 +12,7 @@ export const Wrapper = styled.div`
   `}
 `;
 
-export const Heading = styled.div`
+export const Inner = styled.div`
   display: flex;
   justify-content: space-between;
   margin-bottom: 17px;
@@ -22,30 +22,27 @@ export const StatusWrapper = styled.div`
   margin-right: 33px;
 `;
 
-export const EventDate = styled.div`
-  ${headingSM};
-  margin-bottom: 16px;
-`;
-
-export const Participants = styled.div`
+export const TextIconWrapper = styled.div`
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  ${headingXX};
-  color: ${({ theme }) => theme.colors.grayscale};
-  height: 40px;
-`;
-
-export const MaxParticipants = styled(Participants)`
   margin-bottom: 16px;
+
+  svg {
+    margin-right: 10px;
+  }
+
+  button {
+    margin-left: 16px;
+  }
 `;
 
 export const Actions = styled.div`
   display: flex;
-  align-items: flex-start;
+  align-items: center;
+  justify-content: center;
 
-  & div:not(:last-child) {
-    margin-right: 8px;
+  & button:not(:last-child) {
+    margin-right: 16px;
   }
 `;
 
@@ -68,6 +65,11 @@ export const ButtonWrapper = styled.div`
 export const TitleWrapper = styled.div`
   display: flex;
   align-items: flex-start;
+  flex-direction: column;
+
+  ${Media.tablet`
+    flex-direction: row;
+  `}
 
   h3 {
     margin-right: 24px;
@@ -80,4 +82,8 @@ export const TitleWrapper = styled.div`
       margin-bottom: 0;
     `}
   }
+`;
+
+export const Description = styled.div`
+  ${textSM};
 `;

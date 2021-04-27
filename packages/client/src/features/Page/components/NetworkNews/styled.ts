@@ -4,7 +4,7 @@ import Media from 'styles/media';
 
 export const Container = styled.div`
   padding: 35px 16px 0;
-  height: calc(100vh - 53px);
+  height: calc(100vh - 72px);
   display: grid;
   grid-template-columns: 100% auto;
   grid-template-rows: auto;

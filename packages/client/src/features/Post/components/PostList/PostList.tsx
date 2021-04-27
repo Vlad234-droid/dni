@@ -23,7 +23,7 @@ const PostList: FC<Props> = ({ filter, entityId }) => {
       network_eq?: number;
       event_eq?: number;
     }
-  >();
+  >({ _sort: 'created_at:desc' });
 
   const scrollContainer = useScrollContainer();
 

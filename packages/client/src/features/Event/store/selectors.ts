@@ -15,7 +15,7 @@ const [selectAll, selectById] = getEntitySelectors(eventsSelectors);
 const byIdSelector = (id: Event['id']) =>
   createSelector(
     (state: RootState) => selectById(state, id),
-    (network) => network,
+    (event) => event,
   );
 
 const listSelector = createSelector(selectAll, (events) => events);
