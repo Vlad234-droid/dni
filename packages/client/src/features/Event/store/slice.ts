@@ -124,6 +124,10 @@ const slice = createSlice({
       .addCase(getList.pending, setPending)
       .addCase(getList.fulfilled, (state: T.State, { payload: events }) => {
         eventsAdapter.upsertMany(state, events);
+        const meta = state.meta;
+        state.meta = {
+          ...meta,
+        };
         setSucceeded(state);
       })
       .addCase(getList.rejected, setFailed)

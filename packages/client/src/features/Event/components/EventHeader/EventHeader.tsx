@@ -8,44 +8,33 @@ import { useMedia } from 'context/InterfaceContext';
 import { FULL_FORMAT, isoDateToFormat } from 'utils/date';
 
 import EventAction from '../EventAction';
+import Event from '../../config/types';
+import { isEventOnAir } from '../../utils';
 
 import {
   Wrapper,
-  Heading,
   TitleWrapper,
   StatusWrapper,
   ButtonWrapper,
-  EventDate,
-  Participants,
+  Inner,
+  Description,
+  TextIconWrapper,
   Actions,
-  MaxParticipants,
 } from './styled';
 
 type Props = {
-  id: number;
-  title: string;
-  description?: string | string[];
-  isOnAir?: boolean;
+  event: Event;
   participants: number;
-  maxParticipants?: number;
-  startDate: string;
 };
 
-const EventHeader: FC<Props> = ({
-  id,
-  title,
-  description,
-  isOnAir = false,
-  participants,
-  maxParticipants,
-  startDate,
-}) => {
+const EventHeader: FC<Props> = ({ event, participants }) => {
+  const { id, title, description, maxParticipants, startDate } = event;
   const { isMobile } = useMedia();
+  const isOnAir = isEventOnAir(event);
 
-  // TODO: use commented code to display event actions edit and archive
   return (
     <Wrapper>
-      <Heading>
+      <Inner>
         <TitleWrapper>
           <TitleWithEllipsis
             maxLines={1}
@@ -59,30 +48,40 @@ const EventHeader: FC<Props> = ({
             </StatusWrapper>
           )}
         </TitleWrapper>
-        <ButtonWrapper>
-          <EventAction
-            id={id}
-            disabled={
-              Boolean(maxParticipants) && participants >= maxParticipants!
-            }
-          />
-        </ButtonWrapper>
-      </Heading>
-      <>
-        <EventDate>{isoDateToFormat(startDate, FULL_FORMAT)}</EventDate>
-        <Participants>
-          {participants} are participating
-          <Actions>
+        <Actions>
+          {!isMobile && (
             <Button variant='link'>
               <Icon graphic='link' />
             </Button>
-          </Actions>
-        </Participants>
-        {maxParticipants && (
-          <MaxParticipants>{maxParticipants} max participants</MaxParticipants>
-        )}
+          )}
+          <ButtonWrapper>
+            <EventAction
+              id={id}
+              disabled={
+                Boolean(maxParticipants) && participants >= maxParticipants!
+              }
+            />
+          </ButtonWrapper>
+        </Actions>
+      </Inner>
+      <Description>
+        <TextIconWrapper>
+          <Icon graphic='datePicker' />
+          {isoDateToFormat(startDate, FULL_FORMAT)}
+        </TextIconWrapper>
+        <Inner>
+          <TextIconWrapper>
+            <Icon graphic='account' />
+            {participants} are participating
+            {isMobile && (
+              <Button variant='link'>
+                <Icon graphic='link' />
+              </Button>
+            )}
+          </TextIconWrapper>
+        </Inner>
         <p>{description}</p>
-      </>
+      </Description>
     </Wrapper>
   );
 };
