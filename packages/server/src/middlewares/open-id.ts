@@ -2,8 +2,10 @@ import {
   getOpenidMiddleware,
   identityTokenSwapPlugin,
   userDataPlugin,
+  identityClientScopedTokenPlugin,
 } from '@energon/onelogin';
 import cookieParser from 'cookie-parser';
+import { isPROD } from '../config/env';
 
 import { ProcessConfig } from 'services/config-accessor';
 
@@ -12,6 +14,7 @@ export const openIdConfig = ({
   oidcClientId,
   oidcClientSecret,
   cookieKey,
+  cookieUserKey,
   issuerUrl,
   refreshTokenSecret,
   registeredCallbackUrlPath,
@@ -25,7 +28,14 @@ export const openIdConfig = ({
   groupsWithAccess,
 }: ProcessConfig) => {
   const openIdCookieParser = cookieParser(cookieKey);
-  const isProduction = environment === 'production';
+  const isProduction = isPROD(environment);
+  const identityIdAndSecret = `${identityClientId}:${identityClientSecret}`;
+  const clientScopedToken = (): Middleware => {
+    return identityClientScopedTokenPlugin({
+      identityIdAndSecret,
+      cache: true,
+    });
+  };
   const openId = getOpenidMiddleware({
     clientId: oidcClientId,
     clientSecret: oidcClientSecret,
@@ -37,10 +47,10 @@ export const openIdConfig = ({
     redirectAfterLogoutUrl,
     applicationPath,
     requireIdToken: false,
-    scope: ['openid', 'profile', 'groups'],
+    scope: ['openid', 'profile', 'params', 'groups'],
     plugins: [
       identityTokenSwapPlugin({
-        identityIdAndSecret: `${identityClientId}:${identityClientSecret}`,
+        identityIdAndSecret,
         strategy: 'oidc',
         cookieConfig: {
           cookieName: identityUserScopedTokenCookieName,
@@ -50,14 +60,26 @@ export const openIdConfig = ({
           signed: isProduction,
         },
       }),
+      clientScopedToken(),
       userDataPlugin({
         cookieConfig: {
-          cookieName: 'user-data',
+          cookieName: cookieUserKey,
+          httpOnly: true,
+          secure: false,
+          signed: false,
           cookieShapeResolver: (userInfo) => ({
             ...userInfo,
-            groups: (userInfo.groups || []).filter((group) =>
-              groupsWithAccess.includes(group),
-            ),
+            fullName: userInfo.name,
+            firstName: userInfo.given_name || userInfo.name.split(/\s+/)[0],
+            email: userInfo.preferred_username,
+            params: {
+              ...userInfo.params,
+              employeeNumber: (userInfo.params?.employeeNumber ||
+                userInfo.params?.EmployeeNumber) as string,
+            },
+            groups: (userInfo.groups || []).filter((group) => {
+              return groupsWithAccess.includes(group);
+            }),
           }),
         },
       }),
@@ -67,5 +89,6 @@ export const openIdConfig = ({
   return {
     openId,
     openIdCookieParser,
+    clientScopedToken,
   };
 };

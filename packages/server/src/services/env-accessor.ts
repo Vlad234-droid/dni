@@ -5,6 +5,7 @@ type ProcessEnv = {
   APPLICATION_PATH: string;
   // client
   COOKIE_SESSION_KEY: string;
+  COOKIE_USER_KEY: string;
   // onelogin
   ISSUER_URL: string;
   OIDC_CLIENT_ID: string;
@@ -64,6 +65,7 @@ class EnvAccessor {
       NODE_PORT,
       APPLICATION_PATH,
       COOKIE_SESSION_KEY,
+      COOKIE_USER_KEY,
       OIDC_CLIENT_ID,
       OIDC_CLIENT_SECRET,
       ISSUER_URL,
@@ -84,6 +86,7 @@ class EnvAccessor {
       NODE_PORT,
       APPLICATION_PATH,
       COOKIE_SESSION_KEY,
+      COOKIE_USER_KEY,
       OIDC_CLIENT_ID,
       OIDC_CLIENT_SECRET,
       ISSUER_URL,

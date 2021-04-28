@@ -12,9 +12,9 @@ import {
 } from '../services';
 import { executeSafe } from '../utils';
 
-const getProfile: Middleware = (_, res) => {
+const getProfile: Middleware = (req, res) => {
   return executeSafe(res, async () =>
-    res.status(200).json(await profileInfoExtractor(res)),
+    res.status(200).json(await profileInfoExtractor(req)),
   );
 };
 

@@ -3,6 +3,7 @@ import http from 'http';
 import multer from 'multer';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
+import { isDEV } from './config/env';
 
 import { envAccessor, ConfigAccessor, establishConnection } from './services';
 import { healthCheck, api } from './routes';
@@ -37,20 +38,24 @@ const context = buildContext(config);
 // ws connection
 establishConnection(buildIO(server));
 
-const { openId, openIdCookieParser } = openIdConfig(config);
+const { openId, openIdCookieParser, clientScopedToken } = openIdConfig(config);
 const fakeLogin = fakeLoginConfig(context, config);
 
 openId
   .then((openIdMiddleware) => {
     // middlewares
-    app.use(cookieParser());
     app.use(cors());
     app.use('/', healthCheck);
-    // fake login behavior
-    app.use(fakeLogin);
-    app.use(fakeUserExtractor);
-    // app.use(openIdMiddleware);
-    app.use(openIdCookieParser);
+    if (isDEV(config.environment)) {
+      // fake login behavior
+      app.use(cookieParser());
+      app.use(fakeLogin);
+      app.use(fakeUserExtractor);
+    } else {
+      app.use(openIdCookieParser);
+      app.use(clientScopedToken());
+      app.use(openIdMiddleware);
+    }
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
     app.use('/api/upload', upload.any(), formData);

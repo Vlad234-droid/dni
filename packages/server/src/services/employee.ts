@@ -1,12 +1,11 @@
-import { Response } from 'express';
-import { getOpenIdUserInfo } from '@energon/onelogin';
+import { Request } from 'express';
 import { getRepository, EmployeeEvent, EmployeeNetwork } from '@dni/database';
 
-const profileInfoExtractor = async (res: Response) => {
-  const userInfo = getOpenIdUserInfo(res);
+const profileInfoExtractor = async (req: Request) => {
+  const userInfo = req.cookies[process.env.COOKIE_USER_KEY!] || {};
 
   if (!userInfo) {
-    return res.status(403);
+    return {};
   }
 
   let networks: number[] = [];
