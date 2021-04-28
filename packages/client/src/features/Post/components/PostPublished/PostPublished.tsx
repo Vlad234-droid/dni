@@ -1,36 +1,32 @@
 import React, { FC } from 'react';
 
+import { useMedia } from 'context/InterfaceContext';
+
 import { Post } from '../../config/types';
 import { PostPublishedAttachments } from '../PostAttachments';
 import {
-  // PostPublisherAvatar,
   PostPublisherAvatarBox,
   PostPublisherName,
   PostPublisher,
-  PostPublishDate,
   PostHead,
   PostTitle,
   PostDescription,
   PostContent,
   PostPublishedWrapper,
 } from './styled';
-import { useMedia } from 'context/InterfaceContext';
 
 interface PostPublishedProps {
   item: Post;
 }
 
-const postPublishedTestId = 'post-published-test-id';
+const TEST_ID = 'post-published';
 
 const PostPublished: FC<PostPublishedProps> = ({ item }) => {
-  const { title, content, authorName, published_at, attachments } = item;
+  const { title, content, authorName, attachments } = item;
   const media = useMedia();
 
   return (
-    <PostPublishedWrapper
-      data-testid={postPublishedTestId}
-      isMobile={media.isMobile}
-    >
+    <PostPublishedWrapper data-testid={TEST_ID} isMobile={media.isMobile}>
       <PostHead>
         <PostPublisher>
           <PostPublisherAvatarBox>
@@ -38,9 +34,9 @@ const PostPublished: FC<PostPublishedProps> = ({ item }) => {
           </PostPublisherAvatarBox>
           <PostPublisherName>{`${authorName}`}</PostPublisherName>
         </PostPublisher>
-        <PostPublishDate>
-          {new Date(published_at).toDateString()}
-        </PostPublishDate>
+        {/*<PostPublishDate>*/}
+        {/*  {new Date(published_at).toDateString()}*/}
+        {/*</PostPublishDate>*/}
       </PostHead>
       <PostContent>
         {attachments && attachments.length > 0 && (
@@ -55,4 +51,4 @@ const PostPublished: FC<PostPublishedProps> = ({ item }) => {
 };
 
 export default PostPublished;
-export { postPublishedTestId };
+export { TEST_ID };

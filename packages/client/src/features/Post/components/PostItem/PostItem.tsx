@@ -13,17 +13,17 @@ interface PostItemProps {
   item: Post;
 }
 
-const postItemTestId = 'post-item-test-id';
+const TEST_ID = 'post-item';
 
 const PostItem: FC<PostItemProps> = ({ item }) => {
   const { archived } = item;
 
   return (
-    <PostItemWrapper data-testid={postItemTestId}>
+    <PostItemWrapper data-testid={TEST_ID}>
       {archived ? <PostArchived item={item} /> : <PostPublished item={item} />}
     </PostItemWrapper>
   );
 };
 
 export default PostItem;
-export { postItemTestId };
+export { TEST_ID };

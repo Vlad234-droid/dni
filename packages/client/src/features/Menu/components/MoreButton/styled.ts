@@ -16,6 +16,9 @@ export const Wrapper = styled.div<{ isActive: boolean }>`
   }
 `;
 
-export const Text = styled.div`
-  margin-top: 3px;
+export const IconWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 24px;
 `;
