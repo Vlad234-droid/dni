@@ -3,7 +3,7 @@ import { Entity, PrimaryColumn } from 'typeorm';
 @Entity()
 export class EmployeeEvent {
   @PrimaryColumn()
-  employeeNumber: string;
+  tpxId: string;
 
   @PrimaryColumn()
   eventId: number;

@@ -12,11 +12,11 @@ const profileInfoExtractor = async (res: Response) => {
   let networks: number[] = [];
   let events: number[] = [];
 
-  const employeeNumber = userInfo?.params?.employeeNumber;
+  const tpxId = userInfo?.params?.employeeNumber;
 
-  if (employeeNumber) {
-    networks = (await findNetworksBy(employeeNumber)).map((ne) => ne.networkId);
-    events = (await findEventsBy(employeeNumber)).map((ee) => ee.eventId);
+  if (tpxId) {
+    networks = (await findNetworksBy(tpxId)).map((ne) => ne.networkId);
+    events = (await findEventsBy(tpxId)).map((ee) => ee.eventId);
   }
 
   return {
@@ -28,48 +28,42 @@ const profileInfoExtractor = async (res: Response) => {
   };
 };
 
-const findNetworksBy = async (employeeNumber: string) => {
+const findNetworksBy = async (tpxId: string) => {
   return await getRepository(EmployeeNetwork).find({
-    where: { employeeNumber },
+    where: { tpxId },
   });
 };
 
-const createNetworkRelation = async (
-  employeeNumber: string,
-  networkId: number,
-) => {
+const createNetworkRelation = async (tpxId: string, networkId: number) => {
   await getRepository(EmployeeNetwork).save({
-    employeeNumber,
+    tpxId,
     networkId,
   });
 };
 
-const removeNetworkRelation = async (
-  employeeNumber: string,
-  networkId: number,
-) => {
+const removeNetworkRelation = async (tpxId: string, networkId: number) => {
   await getRepository(EmployeeNetwork).remove({
-    employeeNumber,
+    tpxId,
     networkId,
   });
 };
 
-const findEventsBy = async (employeeNumber: string) => {
+const findEventsBy = async (tpxId: string) => {
   return await getRepository(EmployeeEvent).find({
-    where: { employeeNumber },
+    where: { tpxId },
   });
 };
 
-const createEventRelation = async (employeeNumber: string, eventId: number) => {
+const createEventRelation = async (tpxId: string, eventId: number) => {
   await getRepository(EmployeeEvent).save({
-    employeeNumber,
+    tpxId,
     eventId,
   });
 };
 
-const removeEventRelation = async (employeeNumber: string, eventId: number) => {
+const removeEventRelation = async (tpxId: string, eventId: number) => {
   await getRepository(EmployeeEvent).remove({
-    employeeNumber,
+    tpxId,
     eventId,
   });
 };

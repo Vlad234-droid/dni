@@ -14,8 +14,8 @@ enum EmployeeHistoryEntityType {
 @Entity()
 @Index(['entityType', 'entityId'])
 class EmployeeHistory extends Timestampable {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  uuid: string;
 
   @Column({
     type: 'enum',
