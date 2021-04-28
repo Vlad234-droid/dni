@@ -1,10 +1,7 @@
 import React, { FC, useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 import { createPortal } from 'react-dom';
 import ResponsiveImage from '@beans/responsive-image';
 
-import useDispatch from 'hooks/useDispatch';
-import useStore from 'hooks/useStore';
 import { PostList } from 'features/Post';
 import { useImageWrapper } from 'context';
 import { normalizeImage } from 'utils/content';
@@ -12,8 +9,8 @@ import ButtonFilter from 'features/ButtonFilter';
 import { Loading } from 'store/types';
 import { EmptyContainer } from 'features/Common';
 
+import Event from '../../config/types';
 import EventHeader from '../EventHeader';
-import { byIdSelector, getOne, getParticipants } from '../../store';
 
 import { Wrapper, Content, LeftContent, Filters } from './styled';
 
@@ -21,6 +18,11 @@ const TEST_ID = 'event';
 
 type Props = {
   id: number;
+  loading: Loading;
+  loadEvent: () => void;
+  loadParticipants: () => void;
+  event?: Event;
+  participants: number;
 };
 
 const ALL = 'ALL';
@@ -43,26 +45,30 @@ type Filter = typeof ALL | typeof ARCHIVED;
 
 // TODO: @katia filter events by all and archived
 // TODO: @katia Pass events to PostList
-const Event: FC<Props> = ({ id }) => {
-  const dispatch = useDispatch();
-  const event = useSelector(byIdSelector(id));
+const EventComponent: FC<Props> = ({
+  id,
+  event,
+  loadEvent,
+  loadParticipants,
+  loading,
+  participants,
+}) => {
   const [, setFilter] = useState<Filter>(ALL);
-  const { loading, participants } = useStore((state) => state.events);
   const imageWrapperEl = useImageWrapper();
 
   useEffect(() => {
     if (event) return;
 
-    loadEvent(id);
-  }, [event, id]);
+    loadEvent();
+  }, [event]);
 
   // TODO: @katia refactor to get participants for current event!!!
   // if other participants (not related change, the component will be updated too)
   useEffect(() => {
-    dispatch(getParticipants());
-  }, []);
+    if (participants || participants === 0) return;
 
-  const loadEvent = (id: number) => dispatch(getOne({ id }));
+    loadParticipants();
+  }, []);
 
   if (loading == Loading.IDLE) return null;
 
@@ -99,7 +105,7 @@ const Event: FC<Props> = ({ id }) => {
         {imageWrapperEl &&
           createPortal(
             <ResponsiveImage
-              key={id}
+              key={event.id}
               alt={normalizeImg?.alternativeText}
               src={normalizeImg?.url}
               fallbackSizeRatio='57%'
@@ -107,7 +113,7 @@ const Event: FC<Props> = ({ id }) => {
             />,
             imageWrapperEl,
           )}
-        <EventHeader event={event} participants={participants[id]! || 0} />
+        <EventHeader event={event} participants={participants} />
         <Content>
           <LeftContent>
             <Filters>
@@ -128,4 +134,4 @@ const Event: FC<Props> = ({ id }) => {
 
 export { TEST_ID };
 
-export default Event;
+export default EventComponent;

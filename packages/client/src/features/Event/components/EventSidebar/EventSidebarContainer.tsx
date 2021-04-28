@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC } from 'react';
 import { useSelector } from 'react-redux';
 import useDispatch from 'hooks/useDispatch';
 import useStore from 'hooks/useStore';
@@ -23,12 +23,8 @@ const EventSidebarContainer: FC = () => {
 
   const loadEvents = (filters: EntityListPayload) =>
     dispatch(getEvents(filters));
-
   const loadCount = (filters: EntityListPayload) => dispatch(getCount(filters));
-
-  useEffect(() => {
-    dispatch(getParticipants());
-  }, []);
+  const loadParticipants = () => dispatch(getParticipants());
 
   return (
     <EventSidebar
@@ -38,6 +34,7 @@ const EventSidebarContainer: FC = () => {
       loading={loading}
       loadEvents={loadEvents}
       loadCount={loadCount}
+      loadParticipants={loadParticipants}
     />
   );
 };

@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 import Media from 'styles/media';
-import { headingMD, textSM } from 'styles';
+import { headingMD, textXS } from 'styles';
 
 export const Wrapper = styled.div`
   padding: 0 16px 24px;
@@ -15,11 +15,14 @@ export const Wrapper = styled.div`
 export const Inner = styled.div`
   display: flex;
   justify-content: space-between;
-  margin-bottom: 17px;
+
+  ${Media.tablet`
+     margin-bottom: 16px;
+  `}
 `;
 
 export const StatusWrapper = styled.div`
-  margin-right: 33px;
+  margin-right: 32px;
 `;
 
 export const TextIconWrapper = styled.div`
@@ -85,5 +88,10 @@ export const TitleWrapper = styled.div`
 `;
 
 export const Description = styled.div`
-  ${textSM};
+  ${textXS};
+
+  ${Media.tablet`
+      font-size: 20px;
+      line-height: 24px;
+    `}
 `;
