@@ -54,7 +54,7 @@ const EventSidebar: FC<Props> = ({
     if (!isEmpty(participants)) return;
 
     loadParticipants();
-  });
+  }, [participants]);
 
   if (loading == Loading.IDLE) return null;
 
