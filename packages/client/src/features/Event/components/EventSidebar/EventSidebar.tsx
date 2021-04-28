@@ -29,6 +29,7 @@ type Props = {
   loading: Loading;
   loadEvents: (filters: EntityListPayload) => void;
   loadCount: (filters: EntityListPayload) => void;
+  loadParticipants: () => void;
   participants?: Record<number, number>;
   count: number;
 };
@@ -39,15 +40,21 @@ const EventSidebar: FC<Props> = ({
   loading,
   loadEvents,
   loadCount,
+  loadParticipants,
   participants,
 }) => {
-  // this component depends on time passing, how often should it be updated?
   useEffect(() => {
     if (!isEmpty(events)) return;
 
     loadEvents(FILTERS);
     loadCount(FILTERS);
   }, [events]);
+
+  useEffect(() => {
+    if (!isEmpty(participants)) return;
+
+    loadParticipants();
+  }, []);
 
   if (loading == Loading.IDLE) return null;
 

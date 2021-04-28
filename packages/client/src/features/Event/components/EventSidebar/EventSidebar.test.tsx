@@ -25,6 +25,8 @@ describe('<EventSidebar />', () => {
       loading: Loading.IDLE,
       loadEvents: jest.fn(),
       loadCount: jest.fn(),
+      loadParticipants: jest.fn(),
+      participants: {},
       count: 0,
     };
 
@@ -232,7 +234,7 @@ describe('<EventSidebar />', () => {
     });
   });
 
-  describe('#eseEffect', async () => {
+  describe('#useEffect', async () => {
     afterEach(() => {
       cleanup();
     });
@@ -242,6 +244,8 @@ describe('<EventSidebar />', () => {
       loading: Loading.IDLE,
       loadEvents: jest.fn(),
       loadCount: jest.fn(),
+      loadParticipants: jest.fn(),
+      participants: {},
       count: 0,
     };
 
@@ -256,7 +260,7 @@ describe('<EventSidebar />', () => {
       expect(props.loadCount).toHaveBeenCalledWith(FILTERS);
     });
 
-    it('should not call loadEvents adn loadCount, if not empty events', async () => {
+    it('should not call loadEvents and loadCount, if not empty events', async () => {
       const COLLECTION_SIZE = 4;
       const eventCRUD = buildEventCRUD(COLLECTION_SIZE);
 
@@ -275,6 +279,26 @@ describe('<EventSidebar />', () => {
 
       expect(props.loadEvents).not.toHaveBeenCalled();
       expect(props.loadCount).not.toHaveBeenCalled();
+    });
+
+    it('should call loadParticipants, if empty participants', async () => {
+      await act(async () => {
+        renderWithProviders(<EventSidebar {...props} />);
+      });
+
+      expect(props.loadParticipants).toHaveBeenCalledTimes(1);
+    });
+
+    it('should not call loadParticipants, if !empty participants', async () => {
+      const newProps = {
+        ...props,
+        participants: { 1: 1, 2: 2 },
+      };
+      await act(async () => {
+        renderWithProviders(<EventSidebar {...newProps} />);
+      });
+
+      expect(props.loadParticipants).not.toHaveBeenCalled();
     });
   });
 });

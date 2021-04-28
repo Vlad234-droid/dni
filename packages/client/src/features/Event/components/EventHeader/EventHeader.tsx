@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useMemo } from 'react';
 import { TitleWithEllipsis } from '@beans/title-link';
 import Button from '@beans/button';
 import Icon from '@beans/icon';
@@ -32,6 +32,11 @@ const EventHeader: FC<Props> = ({ event, participants }) => {
   const { isMobile } = useMedia();
   const isOnAir = isEventOnAir(event);
 
+  const memoizedDisabledAction = useMemo(
+    () => Boolean(maxParticipants) && participants >= maxParticipants!,
+    [participants],
+  );
+
   return (
     <Wrapper>
       <Inner>
@@ -55,12 +60,7 @@ const EventHeader: FC<Props> = ({ event, participants }) => {
             </Button>
           )}
           <ButtonWrapper>
-            <EventAction
-              id={id}
-              disabled={
-                Boolean(maxParticipants) && participants >= maxParticipants!
-              }
-            />
+            <EventAction id={id} disabled={memoizedDisabledAction} />
           </ButtonWrapper>
         </Actions>
       </Inner>

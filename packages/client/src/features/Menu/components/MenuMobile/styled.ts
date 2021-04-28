@@ -19,7 +19,7 @@ export const ItemsList = styled.div<{ amount: number }>`
 `;
 
 export const Item = styled.div`
-  padding: 8px 4px 0;
+  padding: 8px 3px 0;
   text-align: center;
 `;
 

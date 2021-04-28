@@ -1,1 +1,2 @@
-export { default, TEST_ID } from './Event';
+export { default } from './EventContainer';
+export { TEST_ID } from './Event';
