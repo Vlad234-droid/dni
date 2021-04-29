@@ -4,8 +4,8 @@ import Media from 'styles/media';
 export const Wrapper = styled.div`
   overflow: hidden;
   position: fixed;
-  bottom: 60px;
-  top: 53px;
+  bottom: 53px;
+  top: 52px;
   background: ${({ theme }) => theme.colors.background.dark};
   width: 100%;
   z-index: 999;

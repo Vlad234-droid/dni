@@ -71,6 +71,8 @@ export const MainContainer = styled.div.attrs({
 `;
 
 export const Content = styled.div`
+  height: 100%;
+
   ${Media.large_tablet`
      max-width: 1066px;
   `}

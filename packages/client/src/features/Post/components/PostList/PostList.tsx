@@ -5,7 +5,7 @@ import InfiniteScroll from 'react-infinite-scroller';
 import useDispatch from 'hooks/useDispatch';
 import useStore from 'hooks/useStore';
 import { FilterPayload } from 'types/payload';
-import { DEFAULT_PAGINATION } from 'config/constants';
+import { DEFAULT_PAGINATION, DEFAULT_FILTERS } from 'config/constants';
 import { useScrollContainer } from 'context/ScrollContainerContext';
 import { Filter } from '../../config/types';
 import { getList, getCount, listSelector, clear } from '../../store';
@@ -31,6 +31,7 @@ const PostList: FC<Props> = ({ filter, entityId }) => {
     meta: { total },
     isLoading,
   } = useStore((state) => state.posts);
+  const { networks = [] } = useStore((state) => state.auth.user);
   const posts = useSelector(listSelector);
   const hasMore = useMemo(() => posts.length < total, [posts, total]);
 
@@ -43,6 +44,7 @@ const PostList: FC<Props> = ({ filter, entityId }) => {
             ...{
               ...DEFAULT_PAGINATION,
               _start: page * DEFAULT_PAGINATION._limit,
+              network_in: [...networks, -1],
             },
           }),
         );

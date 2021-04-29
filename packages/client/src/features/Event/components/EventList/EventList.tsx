@@ -77,7 +77,7 @@ const EventList: FC = () => {
         );
       }
     },
-    [filters, hasMore, loading],
+    [filters, hasMore, loading, networks],
   );
 
   useEffect(() => {
