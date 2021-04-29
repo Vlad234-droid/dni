@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 
+import Media from 'styles/media';
+
 export const Navigation = styled.nav`
   height: 100%;
   display: flex;
@@ -19,8 +21,13 @@ export const ItemsList = styled.div<{ amount: number }>`
 `;
 
 export const Item = styled.div`
-  padding: 8px 3px 0;
+  font-size: 10px;
+  padding: 8px 4px 0;
   text-align: center;
+
+  ${Media.large_phone`
+    font-size: 14px;
+  `}
 `;
 
 export const IconWrapper = styled.div`

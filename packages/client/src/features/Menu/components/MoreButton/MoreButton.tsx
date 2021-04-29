@@ -2,7 +2,7 @@ import React, { FC, useMemo } from 'react';
 import Icon from '@beans/icon';
 
 import { Item } from '../MenuMobile/styled';
-import { Wrapper, Text } from './styled';
+import { Wrapper, IconWrapper } from './styled';
 import { isHiddenItemActive, getMoreButtonText } from '../../utils';
 
 type Props = {
@@ -25,8 +25,10 @@ const MoreButton: FC<Props> = ({ onClick, isOpened, pathname }) => {
       isActive={isActive}
     >
       <Item>
-        <Icon graphic={'actions'} size='sm' />
-        <Text>{moreButtonText}</Text>
+        <IconWrapper>
+          <Icon graphic={'actions'} size='sm' />
+        </IconWrapper>
+        <div>{moreButtonText}</div>
       </Item>
     </Wrapper>
   );

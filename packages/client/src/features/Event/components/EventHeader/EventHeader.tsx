@@ -28,9 +28,9 @@ type Props = {
 };
 
 const EventHeader: FC<Props> = ({ event, participants }) => {
-  const { id, title, description, maxParticipants, startDate } = event;
+  const { id, title, description, maxParticipants, startDate, endDate } = event;
   const { isMobile } = useMedia();
-  const isOnAir = isEventOnAir(event);
+  const isOnAir = isEventOnAir(startDate, endDate);
 
   const memoizedDisabledAction = useMemo(
     () => Boolean(maxParticipants) && participants >= maxParticipants!,
@@ -49,7 +49,9 @@ const EventHeader: FC<Props> = ({ event, participants }) => {
           </TitleWithEllipsis>
           {isOnAir && (
             <StatusWrapper>
-              <StatusLabel type={StatusType.SUCCESS}>On-Air</StatusLabel>
+              <StatusLabel type={StatusType.SUCCESS} small>
+                On-Air
+              </StatusLabel>
             </StatusWrapper>
           )}
         </TitleWrapper>
@@ -72,7 +74,10 @@ const EventHeader: FC<Props> = ({ event, participants }) => {
         <Inner>
           <TextIconWrapper>
             <Icon graphic='account' />
-            {participants} are participating
+            <span>
+              {participants} are participating.{' '}
+              {maxParticipants && `${maxParticipants} is maximum capacity.`}
+            </span>
             {isMobile && (
               <Button variant='link'>
                 <Icon graphic='link' />

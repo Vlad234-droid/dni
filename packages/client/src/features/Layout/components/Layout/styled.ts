@@ -10,7 +10,7 @@ type Props = HTMLProps<HTMLDivElement>;
 export const Wrapper = styled.div<Props>`
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: 53px 1fr 53px;
+  grid-template-rows: 53px 1fr 52px;
   grid-template-areas: 'header' 'main' 'left';
   height: 100vh;
 
@@ -71,6 +71,8 @@ export const MainContainer = styled.div.attrs({
 `;
 
 export const Content = styled.div`
+  height: 100%;
+
   ${Media.large_tablet`
      max-width: 1066px;
   `}

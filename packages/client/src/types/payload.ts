@@ -8,7 +8,7 @@ type FilterPayload = {
   _where?: object;
 
   // sorting
-  _sort?: 'created_at:desc' | 'created_at:asc';
+  _sort?: string;
 };
 
 type EntityListPayload = FilterPayload & PaginationPayload;

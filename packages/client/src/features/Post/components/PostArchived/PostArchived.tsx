@@ -1,5 +1,7 @@
 import { FC, useState } from 'react';
 
+import { useMedia } from 'context/InterfaceContext';
+
 import { Post } from '../../config/types';
 import {
   PostPublisherAvatarBox,
@@ -14,13 +16,12 @@ import {
   PostContent,
   PostArchivedWrapper,
 } from './styled';
-import { useMedia } from 'context/InterfaceContext';
 
 interface PostArchivedProps {
   item: Post;
 }
 
-const postArchivedTestId = 'post-archived-test-id';
+const TEST_ID = 'post-archived';
 
 const PostArchived: FC<PostArchivedProps> = ({ item }) => {
   const { title, content, authorName } = item;
@@ -35,7 +36,7 @@ const PostArchived: FC<PostArchivedProps> = ({ item }) => {
   return (
     <PostArchivedWrapper
       onClick={onPostClick}
-      data-testid={postArchivedTestId}
+      data-testid={TEST_ID}
       isMobile={media.isMobile}
     >
       <PostHead>
@@ -60,4 +61,4 @@ const PostArchived: FC<PostArchivedProps> = ({ item }) => {
 };
 
 export default PostArchived;
-export { postArchivedTestId };
+export { TEST_ID };

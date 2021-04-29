@@ -10,7 +10,7 @@ import useStore from 'hooks/useStore';
 import useDispatch from 'hooks/useDispatch';
 import { firstDayOf, lastDayOf } from 'utils/date';
 import { FilterPayload } from 'types/payload';
-import { DEFAULT_PAGINATION } from 'config/constants';
+import { DEFAULT_PAGINATION, DEFAULT_FILTERS } from 'config/constants';
 import List from 'features/List';
 import { EmptyContainer } from 'features/Common';
 import { Page } from 'features/Page';
@@ -57,6 +57,7 @@ const EventList: FC = () => {
     meta: { total },
     loading,
   } = useStore((state) => state.events);
+  const { networks = [] } = useStore((state) => state.auth.user);
   const list = useSelector(listSelector);
   const hasMore = useMemo(() => list.length < total, [list, total]);
 
@@ -68,13 +69,15 @@ const EventList: FC = () => {
             ...filters,
             ...{
               ...DEFAULT_PAGINATION,
+              ...DEFAULT_FILTERS,
               _start: page * DEFAULT_PAGINATION._limit,
+              network_in: [...networks, -1],
             },
           }),
         );
       }
     },
-    [filters, hasMore, loading],
+    [filters, hasMore, loading, networks],
   );
 
   useEffect(() => {

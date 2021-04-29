@@ -2,8 +2,9 @@ import React, { FC } from 'react';
 import { HORIZONTAL } from '@beans/constants';
 
 import Tile from 'features/Tile';
+import { StatusLabel, StatusType } from 'features/Common';
 
-import { Wrapper, ActionContainer } from './styled';
+import { Wrapper, ActionContainer, StatusContainer } from './styled';
 
 const TEST_ID = 'small-tile';
 
@@ -21,6 +22,7 @@ type Props = {
   isOnAir?: boolean;
   maxParticipants?: number;
   hideMaxParticipants?: boolean;
+  imageHeight?: string;
 };
 
 const SmallTile: FC<Props> = ({
@@ -33,8 +35,15 @@ const SmallTile: FC<Props> = ({
   maxParticipants,
   hideMaxParticipants,
   id,
+  isOnAir,
+  imageHeight = '165px',
 }) => (
   <Wrapper data-testid={TEST_ID}>
+    {isOnAir && (
+      <StatusContainer>
+        <StatusLabel type={StatusType.SUCCESS} small />
+      </StatusContainer>
+    )}
     <Tile
       id={id}
       link={link}
@@ -49,6 +58,7 @@ const SmallTile: FC<Props> = ({
         aboveTablet: HORIZONTAL,
         belowTablet: HORIZONTAL,
       }}
+      imageHeight={imageHeight}
     />
   </Wrapper>
 );

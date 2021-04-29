@@ -10,7 +10,13 @@ import BaseTile from '@beans/base-tile';
 import { normalizeImage } from 'utils/content';
 
 import Description from '../Description';
-import { DescriptionContainer, TileText, TileMeta } from './styled';
+import {
+  Wrapper,
+  DescriptionContainer,
+  TileText,
+  TileMeta,
+  ImageWrapper,
+} from './styled';
 
 type Props = {
   id: number;
@@ -31,6 +37,7 @@ type Props = {
     aboveTablet: typeof HORIZONTAL | typeof VERTICAL;
     belowTablet: typeof HORIZONTAL | typeof VERTICAL;
   };
+  imageHeight: string;
 };
 
 const Tile: FC<Props> = ({
@@ -46,50 +53,54 @@ const Tile: FC<Props> = ({
   maxParticipants,
   hideMaxParticipants = false,
   id,
+  imageHeight,
 }) => {
+  // TODO: could it be rendered without image?
   // TODO move image normalization to action when loading images?
   //@ts-ignore
   const memoizedImage = useMemo(() => normalizeImage(image), [image]);
 
   return (
-    <BaseTile
-      href={`${link}/${id}`}
-      orientation={orientation}
-      responsiveImage={
-        <ResponsiveImage
-          alt={memoizedImage?.alternativeText}
-          src={memoizedImage?.url}
-          fallbackSizeRatio='57%'
-          minHeight='116px'
-          maxHeight='116px'
-          maxWidth='100%'
-          objectFit='cover'
-        />
-      }
-      title={
-        <TitleWithEllipsis maxLines={1} titleHeight='30px'>
-          {title}
-        </TitleWithEllipsis>
-      }
-    >
-      {description && (
-        <DescriptionContainer descriptionHeight={`${descriptionHeight}px`}>
-          <WindowResize>
-            <Description ellipse>{description}</Description>
-          </WindowResize>
-        </DescriptionContainer>
-      )}
-      {meta && <TileMeta>{meta}</TileMeta>}
-      {isNumber(participants) && (
-        <TileText>
-          <Icon graphic='account' size={'sm'} />
-          {participants}
-          {!hideMaxParticipants && maxParticipants && ` / ${maxParticipants}`}
-          &nbsp; participants
-        </TileText>
-      )}
-      {renderAction()}
-    </BaseTile>
+    <Wrapper>
+      <BaseTile
+        href={`${link}/${id}`}
+        orientation={orientation}
+        responsiveImage={
+          <ResponsiveImage
+            alt={memoizedImage?.alternativeText}
+            src={memoizedImage?.url}
+            fallbackSizeRatio='57%'
+            minHeight='116px'
+            maxHeight={imageHeight}
+            maxWidth='100%'
+            objectFit='contain'
+          />
+        }
+        title={
+          <TitleWithEllipsis maxLines={1} titleHeight='30px'>
+            {title}
+          </TitleWithEllipsis>
+        }
+      >
+        {description && (
+          <DescriptionContainer descriptionHeight={`${descriptionHeight}px`}>
+            <WindowResize>
+              <Description ellipse>{description}</Description>
+            </WindowResize>
+          </DescriptionContainer>
+        )}
+        {meta && <TileMeta>{meta}</TileMeta>}
+        {isNumber(participants) && (
+          <TileText>
+            <Icon graphic='account' size={'sm'} />
+            {participants}
+            {!hideMaxParticipants && maxParticipants && ` / ${maxParticipants}`}
+            &nbsp; participants
+          </TileText>
+        )}
+        {renderAction()}
+      </BaseTile>
+    </Wrapper>
   );
 };
 
