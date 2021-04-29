@@ -14,7 +14,7 @@ import { executeSafe } from '../utils';
 
 const getProfile: Middleware = (req, res) => {
   return executeSafe(res, async () =>
-    res.status(200).json(await profileInfoExtractor(req)),
+    res.status(200).json(await profileInfoExtractor(req, res)),
   );
 };
 

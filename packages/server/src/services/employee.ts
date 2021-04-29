@@ -1,8 +1,10 @@
-import { Request } from 'express';
+import { Request, Response } from 'express';
+import { getOpenIdUserInfo } from '@energon/onelogin';
 import { getRepository, EmployeeEvent, EmployeeNetwork } from '@dni/database';
 
-const profileInfoExtractor = async (req: Request) => {
-  const userInfo = req.cookies[process.env.COOKIE_USER_KEY!] || {};
+const profileInfoExtractor = async (req: Request, res: Response) => {
+  const userInfo =
+    getOpenIdUserInfo(res) || req.cookies[process.env.COOKIE_USER_KEY!] || {};
 
   if (!userInfo) {
     return {};

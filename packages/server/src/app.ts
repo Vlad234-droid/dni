@@ -46,7 +46,7 @@ openId
     // middlewares
     app.use(cors());
     app.use('/', healthCheck);
-    if (isDEV(config.environment)) {
+    if (isDEV(config.environment) || !config.withOneLogin) {
       // fake login behavior
       app.use(cookieParser());
       app.use(fakeLogin);

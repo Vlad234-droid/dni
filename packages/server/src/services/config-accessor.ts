@@ -15,6 +15,7 @@ type ProcessConfig = {
   oidcClientSecret: string;
   issuerUrl: string;
   refreshTokenSecret: string;
+  withOneLogin: boolean;
   registeredCallbackUrlPath: string;
   registeredCallbackUrlRoot: string;
   redirectAfterLogoutUrl: string;
@@ -46,6 +47,7 @@ class ConfigAccessor {
       COOKIE_USER_KEY: cookieUserKey,
       ISSUER_URL: issuerUrl,
       REFRESH_TOKEN_SECRET: refreshTokenSecret,
+      WITH_ONE_LOGIN: withOneLogin,
       REGISTERED_CALLBACK_URL_PATH: registeredCallbackUrlPath,
       REGISTERED_CALLBACK_URL_ROOT: registeredCallbackUrlRoot,
       REDIRECT_AFTER_LOGOUT_URL: redirectAfterLogoutUrl,
@@ -69,6 +71,7 @@ class ConfigAccessor {
       cookieUserKey,
       issuerUrl,
       refreshTokenSecret,
+      withOneLogin: withOneLogin == 'true',
       registeredCallbackUrlPath,
       registeredCallbackUrlRoot,
       redirectAfterLogoutUrl,
