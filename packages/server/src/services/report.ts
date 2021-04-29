@@ -27,9 +27,9 @@ const getReportBy = async (
                   as (select date_trunc(params.groupBy, params.start_date)::date                    period_date, eh.entity_id,
                              sum(case eh.action when 'JOIN' then 1 when 'LEAVE' then -1 else 0 end) member_count
                       from params,
-                           dni.employee_history eh
+                           employee_history eh
                       where eh.created_at:: date < params.start_date
-             and eh.entity_type = upper (params.entity_type)::dni.employee_history_entity_type_enum
+             and eh.entity_type = upper (params.entity_type)::employee_history_entity_type_enum
              and eh.entity_id = ANY (params.entity_ids)
          group by params.groupBy,
              params.start_date,
@@ -41,10 +41,10 @@ const getReportBy = async (
              case eh.action when 'LEAVE' then 1 else 0 end leave_count,
              case eh.action when 'JOIN' then 1 when 'LEAVE' then -1 else 0 end member_count
          from params,
-             dni.employee_history eh
+             employee_history eh
          where eh.created_at:: date between params.start_date
            and params.end_date
-           and eh.entity_type = upper (params.entity_type)::dni.employee_history_entity_type_enum
+           and eh.entity_type = upper (params.entity_type)::employee_history_entity_type_enum
            and eh.entity_id = ANY (params.entity_ids)
          union all
          select si.period_date,
