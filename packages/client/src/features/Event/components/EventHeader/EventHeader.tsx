@@ -74,7 +74,10 @@ const EventHeader: FC<Props> = ({ event, participants }) => {
         <Inner>
           <TextIconWrapper>
             <Icon graphic='account' />
-            {participants} are participating
+            <span>
+              {participants} are participating.{' '}
+              {maxParticipants && `${maxParticipants} is maximum capacity.`}
+            </span>
             {isMobile && (
               <Button variant='link'>
                 <Icon graphic='link' />
