@@ -9,6 +9,7 @@ export const Wrapper = styled.div`
 
   & .beans-base-tile__panel-container {
     padding: 0;
+    justify-content: flex-end;
   }
 
   & .beans-icon__svg {

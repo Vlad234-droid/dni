@@ -21,7 +21,7 @@ type Props = {
   isOnAir?: boolean;
   maxParticipants?: number;
   hideMaxParticipants?: boolean;
-  maxHeight?: string;
+  imageHeight?: string;
 };
 
 const SmallTile: FC<Props> = ({
@@ -34,7 +34,7 @@ const SmallTile: FC<Props> = ({
   maxParticipants,
   hideMaxParticipants,
   id,
-  maxHeight = '165px',
+  imageHeight = '165px',
 }) => (
   <Wrapper data-testid={TEST_ID}>
     <Tile
@@ -51,7 +51,7 @@ const SmallTile: FC<Props> = ({
         aboveTablet: HORIZONTAL,
         belowTablet: HORIZONTAL,
       }}
-      maxHeight={maxHeight}
+      imageHeight={imageHeight}
     />
   </Wrapper>
 );
