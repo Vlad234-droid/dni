@@ -126,6 +126,7 @@ const EventSidebar: FC<Props> = ({
               renderAction={() => <EventAction id={id} />}
               meta={isoDateToFormat(startDate, FULL_FORMAT)}
               link={Page.EVENTS}
+              maxHeight='136px'
             />
           );
         })}

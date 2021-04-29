@@ -56,6 +56,7 @@ const LargeTile: FC<Props> = ({
         aboveTablet: VERTICAL,
         belowTablet: VERTICAL,
       }}
+      maxHeight='276px'
     />
   </Wrapper>
 );

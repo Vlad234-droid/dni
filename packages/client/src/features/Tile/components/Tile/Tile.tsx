@@ -31,6 +31,7 @@ type Props = {
     aboveTablet: typeof HORIZONTAL | typeof VERTICAL;
     belowTablet: typeof HORIZONTAL | typeof VERTICAL;
   };
+  maxHeight: string;
 };
 
 const Tile: FC<Props> = ({
@@ -46,6 +47,7 @@ const Tile: FC<Props> = ({
   maxParticipants,
   hideMaxParticipants = false,
   id,
+  maxHeight,
 }) => {
   // TODO move image normalization to action when loading images?
   //@ts-ignore
@@ -61,9 +63,9 @@ const Tile: FC<Props> = ({
           src={memoizedImage?.url}
           fallbackSizeRatio='57%'
           minHeight='116px'
-          maxHeight='116px'
+          maxHeight={maxHeight}
           maxWidth='100%'
-          objectFit='cover'
+          objectFit='contain'
         />
       }
       title={
