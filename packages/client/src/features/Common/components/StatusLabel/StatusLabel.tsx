@@ -3,7 +3,6 @@ import styled from 'styled-components';
 
 import { headingXX } from 'styles';
 import Icon from '@beans/icon';
-import Button from '@beans/button';
 
 enum StatusType {
   SUCCESS = 'success',
