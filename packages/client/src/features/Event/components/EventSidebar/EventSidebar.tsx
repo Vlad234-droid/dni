@@ -115,6 +115,7 @@ const EventSidebar: FC<Props> = ({
               // TODO: transform before save to store
               meta={isoDateToFormat(startDate, FULL_FORMAT)}
               link={Page.EVENTS}
+              maxHeight='unset'
             />
           ) : (
             <SmallTile
