@@ -55,6 +55,7 @@ const Tile: FC<Props> = ({
   id,
   imageHeight,
 }) => {
+  // TODO: could it be rendered without image?
   // TODO move image normalization to action when loading images?
   //@ts-ignore
   const memoizedImage = useMemo(() => normalizeImage(image), [image]);

@@ -23,7 +23,6 @@ const MAX_VISIBLE_ITEMS = 3;
 export const FILTERS = {
   _start: 0,
   _limit: MAX_VISIBLE_ITEMS,
-  network_in: [],
 };
 
 type Props = {
@@ -98,7 +97,14 @@ const EventSidebar: FC<Props> = ({
       <Title>Events</Title>
       <List>
         {slice(events, 0, MAX_VISIBLE_ITEMS).map((eventItem, index) => {
-          const { id, title, maxParticipants, image, startDate } = eventItem;
+          const {
+            id,
+            title,
+            maxParticipants,
+            image,
+            startDate,
+            endDate,
+          } = eventItem;
 
           return !index ? (
             <LargeTile
@@ -109,7 +115,7 @@ const EventSidebar: FC<Props> = ({
               participants={participants![id] || 0}
               maxParticipants={maxParticipants}
               hideMaxParticipants={false}
-              isOnAir={isEventOnAir(eventItem)}
+              isOnAir={isEventOnAir(startDate, endDate)}
               renderAction={() => <EventAction id={id} />}
               // TODO: dont like transformation here - its duplicated everywhere - and is created again and again in lists
               // TODO: transform before save to store
@@ -123,7 +129,7 @@ const EventSidebar: FC<Props> = ({
               id={id}
               title={title}
               image={image}
-              isOnAir={isEventOnAir(eventItem)}
+              isOnAir={isEventOnAir(startDate, endDate)}
               renderAction={() => <EventAction id={id} />}
               meta={isoDateToFormat(startDate, FULL_FORMAT)}
               link={Page.EVENTS}
