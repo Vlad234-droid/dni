@@ -2,6 +2,8 @@ import React, { FC } from 'react';
 import styled from 'styled-components';
 
 import { headingXX } from 'styles';
+import Icon from '@beans/icon';
+import Button from '@beans/button';
 
 enum StatusType {
   SUCCESS = 'success',
@@ -11,12 +13,18 @@ enum StatusType {
 
 type Props = {
   type: StatusType;
+  small?: boolean;
 };
 
 const Wrapper = styled.div<Props>`
-  border-radius: 20px;
-  padding: 5px 10px;
-  background: ${({ theme, type }) => theme.colors[type]};
+  border-radius: ${({ small }) => (small ? 'none' : '20px')};
+  padding: ${({ small }) => (small ? '0' : '5px 10px')};
+  background: ${({ theme, type, small }) =>
+    small ? 'transparent' : theme.colors[type]};
+
+  circle {
+    fill: ${({ theme, type }) => theme.colors[type]};
+  }
 `;
 
 const Content = styled.span`
@@ -34,9 +42,9 @@ const Content = styled.span`
   }
 `;
 
-const StatusLabel: FC<Props> = ({ children, type }) => (
-  <Wrapper type={type} data-testid='status-label'>
-    <Content>{children}</Content>
+const StatusLabel: FC<Props> = ({ children, type, small = false }) => (
+  <Wrapper type={type} small={small} data-testid='status-label'>
+    {small ? <Icon graphic='indicator' /> : <Content>{children}</Content>}
   </Wrapper>
 );
 

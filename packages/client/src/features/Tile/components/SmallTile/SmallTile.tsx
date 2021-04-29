@@ -2,8 +2,9 @@ import React, { FC } from 'react';
 import { HORIZONTAL } from '@beans/constants';
 
 import Tile from 'features/Tile';
+import { StatusLabel, StatusType } from 'features/Common';
 
-import { Wrapper, ActionContainer } from './styled';
+import { Wrapper, ActionContainer, StatusContainer } from './styled';
 
 const TEST_ID = 'small-tile';
 
@@ -35,8 +36,14 @@ const SmallTile: FC<Props> = ({
   hideMaxParticipants,
   id,
   maxHeight = '165px',
+  isOnAir,
 }) => (
   <Wrapper data-testid={TEST_ID}>
+    {isOnAir && (
+      <StatusContainer>
+        <StatusLabel type={StatusType.SUCCESS} small />
+      </StatusContainer>
+    )}
     <Tile
       id={id}
       link={link}

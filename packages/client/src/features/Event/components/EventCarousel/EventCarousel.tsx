@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import isEmpty from 'lodash.isempty';
 
 import Carousel from 'features/Carousel';
@@ -10,6 +10,7 @@ import { isoDateToFormat, FULL_FORMAT } from 'utils/date';
 import { EmptyContainer } from 'features/Common';
 import { Page } from 'features/Page';
 
+import { isEventOnAir } from '../../utils';
 import EventAction from '../EventAction';
 import Event from '../../config/types';
 import { Wrapper } from './styled';
@@ -38,28 +39,31 @@ const EventCarousel: FC = () => {
         <EmptyContainer description='Nothing to show' />
       ) : (
         <Carousel itemWidth='278px' id='event-carousel'>
-          {list!.map(({ id, title, maxParticipants, image, startDate }) => (
-            <LargeTile
-              key={`events-${id}`}
-              id={id}
-              title={title}
-              participants={participants![id] || 0}
-              maxParticipants={maxParticipants}
-              link={Page.EVENTS}
-              // TODO: make transformation when data loaded before saving to store
-              meta={isoDateToFormat(startDate, FULL_FORMAT)}
-              renderAction={() => (
-                <EventAction
-                  id={id}
-                  disabled={
-                    Boolean(maxParticipants) &&
-                    (participants![id] || 0) >= maxParticipants
-                  }
-                />
-              )}
-              image={normalizeImage(image)}
-            />
-          ))}
+          {list!.map(
+            ({ id, title, maxParticipants, image, startDate, endDate }) => (
+              <LargeTile
+                key={`events-${id}`}
+                id={id}
+                title={title}
+                participants={participants![id] || 0}
+                maxParticipants={maxParticipants}
+                link={Page.EVENTS}
+                // TODO: make transformation when data loaded before saving to store
+                meta={isoDateToFormat(startDate, FULL_FORMAT)}
+                isOnAir={isEventOnAir(startDate, endDate)}
+                renderAction={() => (
+                  <EventAction
+                    id={id}
+                    disabled={
+                      Boolean(maxParticipants) &&
+                      (participants![id] || 0) >= maxParticipants
+                    }
+                  />
+                )}
+                image={normalizeImage(image)}
+              />
+            ),
+          )}
         </Carousel>
       )}
     </Wrapper>

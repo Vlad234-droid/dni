@@ -7,6 +7,7 @@ import Network from 'features/Network';
 import { Page } from 'features/Page';
 
 import { Wrapper } from './styled';
+import { isEventOnAir } from '../Event/utils';
 
 type Entity = Event | Network;
 
@@ -38,6 +39,8 @@ const List: FC<Props> = ({
     maxParticipants,
     //@ts-ignore
     startDate,
+    //@ts-ignore
+    endDate,
     ...rest
   }: Entity) => {
     const actualParticipants = participants![id] || 0;
@@ -57,6 +60,7 @@ const List: FC<Props> = ({
       participants: actualParticipants,
       maxParticipants: maxParticipants,
       hideMaxParticipants: hideMaxParticipants,
+      isOnAir: link === Page.EVENTS && isEventOnAir(startDate, endDate),
       ...rest,
     };
   };
