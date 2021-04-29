@@ -3,7 +3,7 @@ import { TitleWithEllipsis } from '@beans/title-link';
 import Button from '@beans/button';
 import Icon from '@beans/icon';
 
-import { StatusLabel, StatusType } from 'features/Common';
+import { StatusLabel, StatusType, CopyLink } from 'features/Common';
 import { useMedia } from 'context/InterfaceContext';
 import { FULL_FORMAT, isoDateToFormat } from 'utils/date';
 
@@ -54,11 +54,7 @@ const EventHeader: FC<Props> = ({ event, participants }) => {
           )}
         </TitleWrapper>
         <Actions>
-          {!isMobile && (
-            <Button variant='link'>
-              <Icon graphic='link' />
-            </Button>
-          )}
+          {!isMobile && <CopyLink />}
           <ButtonWrapper>
             <EventAction id={id} disabled={memoizedDisabledAction} />
           </ButtonWrapper>
@@ -73,11 +69,7 @@ const EventHeader: FC<Props> = ({ event, participants }) => {
           <TextIconWrapper>
             <Icon graphic='account' />
             {participants} are participating
-            {isMobile && (
-              <Button variant='link'>
-                <Icon graphic='link' />
-              </Button>
-            )}
+            {isMobile && <CopyLink />}
           </TextIconWrapper>
         </Inner>
         <p>{description}</p>

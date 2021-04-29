@@ -16,4 +16,5 @@ export { default as Checkbox } from './components/Checkbox';
 export { default as Decrease } from './components/Decrease';
 export { default as Increase } from './components/Increase';
 export { default as EmptyContainer } from './components/EmptyContainer';
+export { default as CopyLink } from './components/CopyLink';
 export { FieldWrapper } from './styled';

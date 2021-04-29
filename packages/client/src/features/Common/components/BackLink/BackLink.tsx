@@ -6,6 +6,7 @@ import Icon from '@beans/icon';
 type Props = {
   to: string;
 };
+
 const BackLink = ({ to }: Props) => (
   <Link to={to}>
     <Button inverse>
