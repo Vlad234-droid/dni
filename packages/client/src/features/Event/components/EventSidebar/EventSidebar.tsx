@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import Button from '@beans/button';
 import slice from 'lodash.slice';
@@ -10,6 +10,7 @@ import { FULL_FORMAT, isoDateToFormat } from 'utils/date';
 import { Loading } from 'store/types';
 import { EntityListPayload } from 'types/payload';
 import { Page } from 'features/Page';
+import { DEFAULT_FILTERS } from 'config/constants';
 
 import { isEventOnAir } from '../../utils';
 import Event from '../../config/types';
@@ -32,6 +33,7 @@ type Props = {
   loadParticipants: () => void;
   participants?: Record<number, number>;
   count: number;
+  networks: number[];
 };
 
 const EventSidebar: FC<Props> = ({
@@ -42,13 +44,21 @@ const EventSidebar: FC<Props> = ({
   loadCount,
   loadParticipants,
   participants,
+  networks,
 }) => {
+  const [filters] = useState<EntityListPayload>({
+    ...FILTERS,
+    ...DEFAULT_FILTERS,
+    // @ts-ignore
+    network_in: [...networks, -1],
+  });
+
   useEffect(() => {
     if (!isEmpty(events)) return;
 
-    loadEvents(FILTERS);
-    loadCount(FILTERS);
-  }, [events]);
+    loadEvents(filters);
+    loadCount(filters);
+  }, [events, filters]);
 
   useEffect(() => {
     if (!isEmpty(participants)) return;
@@ -82,14 +92,11 @@ const EventSidebar: FC<Props> = ({
     );
   }
 
-  // TODO: remove network data from event, keep only network id
-
   return (
     <Wrapper data-testid={TEST_ID}>
       <Title>Events</Title>
       <List>
         {slice(events, 0, MAX_VISIBLE_ITEMS).map((eventItem, index) => {
-          // @ts-ignore
           const {
             id,
             title,
@@ -104,7 +111,6 @@ const EventSidebar: FC<Props> = ({
               key={id}
               id={id}
               title={title}
-              // @ts-ignore
               image={image}
               participants={participants![id] || 0}
               maxParticipants={maxParticipants}
@@ -115,19 +121,19 @@ const EventSidebar: FC<Props> = ({
               // TODO: transform before save to store
               meta={isoDateToFormat(startDate, FULL_FORMAT)}
               link={Page.EVENTS}
+              imageHeight='unset'
             />
           ) : (
             <SmallTile
               key={id}
               id={id}
               title={title}
-              // @ts-ignore
               image={image}
               isOnAir={isEventOnAir(startDate, endDate)}
               renderAction={() => <EventAction id={id} />}
               meta={isoDateToFormat(startDate, FULL_FORMAT)}
               link={Page.EVENTS}
-              maxHeight='136px'
+              imageHeight='136px'
             />
           );
         })}
