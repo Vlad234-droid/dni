@@ -4,6 +4,8 @@ import { BaseElement } from '@beans/foundation';
 import { textXS } from 'styles';
 
 export const Wrapper = styled.div`
+  position: relative;
+
   & .beans-base-tile__panel-container {
     padding: 4px 16px 0;
   }
@@ -55,4 +57,11 @@ export const ActionContainer = styled(BaseElement)`
   & > button {
     width: 100%;
   }
+`;
+
+export const StatusContainer = styled.div`
+  position: absolute;
+  z-index: 10;
+  top: 10px;
+  left: 10px;
 `;

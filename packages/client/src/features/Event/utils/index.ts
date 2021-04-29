@@ -1,12 +1,7 @@
 import { DateTime } from 'luxon';
 
-import Event from '../config/types';
-
-export const isEventOnAir = (event: Event) => {
+export const isEventOnAir = (startDate: string, endDate: string) => {
   const now = DateTime.now();
 
-  return (
-    DateTime.fromISO(event.startDate) < now &&
-    DateTime.fromISO(event.endDate) > now
-  );
+  return DateTime.fromISO(startDate) < now && DateTime.fromISO(endDate) > now;
 };
