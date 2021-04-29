@@ -7,6 +7,7 @@ import { DateTime } from 'luxon';
 import { cleanup, act, renderWithProviders } from 'utils/testUtils';
 import { Loading } from 'store/types';
 import { LARGE_TILE_TEST_ID, SMALL_TILE_TEST_ID } from 'features/Tile';
+import { DEFAULT_FILTERS } from 'config/constants';
 
 import EventSidebar, { TEST_ID, FILTERS } from './EventSidebar';
 
@@ -28,6 +29,7 @@ describe('<EventSidebar />', () => {
       loadParticipants: jest.fn(),
       participants: {},
       count: 0,
+      networks: [1, 2],
     };
 
     it('should not render wrapper, if loading is not started', () => {
@@ -247,17 +249,24 @@ describe('<EventSidebar />', () => {
       loadParticipants: jest.fn(),
       participants: {},
       count: 0,
+      networks: [1, 2],
     };
 
-    it('should call loadEvents adn loadCount, if empty events', async () => {
+    const filters = {
+      ...FILTERS,
+      ...DEFAULT_FILTERS,
+      network_in: [...props.networks, -1],
+    };
+
+    it('should call loadEvents and loadCount, if empty events', async () => {
       await act(async () => {
         renderWithProviders(<EventSidebar {...props} />);
       });
 
       expect(props.loadEvents).toHaveBeenCalledTimes(1);
-      expect(props.loadEvents).toHaveBeenCalledWith(FILTERS);
+      expect(props.loadEvents).toHaveBeenCalledWith(filters);
       expect(props.loadCount).toHaveBeenCalledTimes(1);
-      expect(props.loadCount).toHaveBeenCalledWith(FILTERS);
+      expect(props.loadCount).toHaveBeenCalledWith(filters);
     });
 
     it('should not call loadEvents and loadCount, if not empty events', async () => {

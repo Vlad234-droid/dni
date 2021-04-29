@@ -1,6 +1,6 @@
 import { KEY_CODES as BEANS_KEY_CODES } from '@beans/date-input';
 
-import { PaginationPayload } from 'types/payload';
+import { PaginationPayload, FilterPayload } from 'types/payload';
 
 export enum ViewportSize {
   PHONE = 320,
@@ -29,4 +29,8 @@ export const DEFAULT_META = {
 export const DEFAULT_PAGINATION: PaginationPayload = {
   _start: 0,
   _limit: 10,
+};
+
+export const DEFAULT_FILTERS: FilterPayload = {
+  _sort: 'startDate:ASC',
 };
