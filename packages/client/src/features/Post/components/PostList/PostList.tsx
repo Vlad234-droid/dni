@@ -1,15 +1,19 @@
 import { FC, useEffect, useState, useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroller';
+import isEmpty from 'lodash.isempty';
 
 import useDispatch from 'hooks/useDispatch';
 import useStore from 'hooks/useStore';
 import { FilterPayload } from 'types/payload';
+import { EmptyContainer } from 'features/Common';
 import { DEFAULT_PAGINATION, DEFAULT_FILTERS } from 'config/constants';
 import { useScrollContainer } from 'context/ScrollContainerContext';
+
 import { Filter } from '../../config/types';
 import { getList, getCount, listSelector, clear } from '../../store';
 import PostItem from '../PostItem';
+import { FILTERS } from '../../../Event/components/EventSidebar/EventSidebar';
 
 type Props = {
   filter?: Filter;
@@ -18,15 +22,7 @@ type Props = {
 
 const PostList: FC<Props> = ({ filter, entityId }) => {
   const dispatch = useDispatch();
-  const [filters, setFilters] = useState<
-    FilterPayload & {
-      network_eq?: number;
-      event_eq?: number;
-    }
-  >({ _sort: 'created_at:desc' });
-
   const scrollContainer = useScrollContainer();
-
   const {
     meta: { total },
     isLoading,
@@ -35,18 +31,25 @@ const PostList: FC<Props> = ({ filter, entityId }) => {
   const posts = useSelector(listSelector);
   const hasMore = useMemo(() => posts.length < total, [posts, total]);
 
+  const [filters, setFilters] = useState<
+    FilterPayload & {
+      network_eq?: number;
+      event_eq?: number;
+      network_in: number[];
+    }
+  >({
+    ...FILTERS,
+    ...DEFAULT_PAGINATION,
+    _sort: 'created_at:desc',
+    network_in: [...networks, -1],
+  });
+
   const loadPosts = useCallback(
     (page: number) => {
       if (filters && hasMore && !isLoading) {
         dispatch(
-          getList({
-            ...filters,
-            ...{
-              ...DEFAULT_PAGINATION,
-              _start: page * DEFAULT_PAGINATION._limit,
-              network_in: [...networks, -1],
-            },
-          }),
+          // @ts-ignore
+          getList({ ...filters, _start: page * DEFAULT_PAGINATION._limit }),
         );
       }
     },
@@ -95,9 +98,13 @@ const PostList: FC<Props> = ({ filter, entityId }) => {
       getScrollParent={() => scrollContainer!.current}
       useWindow={false}
     >
-      {posts.map((post) => {
-        return <PostItem key={post.id} item={post} />;
-      })}
+      {isEmpty(posts) ? (
+        <EmptyContainer description='Unfortunately, we did not find any matches for your request' />
+      ) : (
+        posts.map((post) => {
+          return <PostItem key={post.id} item={post} />;
+        })
+      )}
     </InfiniteScroll>
   );
 };

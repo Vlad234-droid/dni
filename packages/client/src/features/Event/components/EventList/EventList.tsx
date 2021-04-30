@@ -25,6 +25,7 @@ import {
 import { Filter, ALL, THIS_WEEK, THIS_MONTH } from '../../config/types';
 import { Wrapper } from './styled';
 import EventAction from '../EventAction';
+import { FILTERS } from '../EventSidebar/EventSidebar';
 
 const initialFilters = [
   {
@@ -50,7 +51,6 @@ const EventList: FC = () => {
 
   const [page, setPage] = useState<number>(0);
   const [filter, setFilter] = useState<Filter>(ALL);
-  const [filters, setFilters] = useState<FilterPayload>();
 
   const {
     participants,
@@ -61,19 +61,20 @@ const EventList: FC = () => {
   const list = useSelector(listSelector);
   const hasMore = useMemo(() => list.length < total, [list, total]);
 
+  const [filters, setFilters] = useState<FilterPayload>({
+    ...FILTERS,
+    ...DEFAULT_PAGINATION,
+    ...DEFAULT_FILTERS,
+    // @ts-ignore
+    network_in: [...networks, -1],
+  });
+
   const loadEvents = useCallback(
     (page: number) => {
       if (filters && hasMore && !(loading === 'pending')) {
         dispatch(
-          getList({
-            ...filters,
-            ...{
-              ...DEFAULT_PAGINATION,
-              ...DEFAULT_FILTERS,
-              _start: page * DEFAULT_PAGINATION._limit,
-              network_in: [...networks, -1],
-            },
-          }),
+          // @ts-ignore
+          getList({ ...filters, _start: page * DEFAULT_PAGINATION._limit }),
         );
       }
     },
