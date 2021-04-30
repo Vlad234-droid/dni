@@ -9,11 +9,13 @@ type ProcessConfig = {
   uploadSize: number;
   // client
   cookieKey: string;
+  cookieUserKey: string;
   // onelogin
   oidcClientId: string;
   oidcClientSecret: string;
   issuerUrl: string;
   refreshTokenSecret: string;
+  withOneLogin: boolean;
   registeredCallbackUrlPath: string;
   registeredCallbackUrlRoot: string;
   redirectAfterLogoutUrl: string;
@@ -42,8 +44,10 @@ class ConfigAccessor {
       OIDC_CLIENT_ID: oidcClientId,
       OIDC_CLIENT_SECRET: oidcClientSecret,
       COOKIE_SESSION_KEY: cookieKey,
+      COOKIE_USER_KEY: cookieUserKey,
       ISSUER_URL: issuerUrl,
       REFRESH_TOKEN_SECRET: refreshTokenSecret,
+      WITH_ONE_LOGIN: withOneLogin,
       REGISTERED_CALLBACK_URL_PATH: registeredCallbackUrlPath,
       REGISTERED_CALLBACK_URL_ROOT: registeredCallbackUrlRoot,
       REDIRECT_AFTER_LOGOUT_URL: redirectAfterLogoutUrl,
@@ -64,8 +68,10 @@ class ConfigAccessor {
       oidcClientId,
       oidcClientSecret,
       cookieKey,
+      cookieUserKey,
       issuerUrl,
       refreshTokenSecret,
+      withOneLogin: withOneLogin == 'true',
       registeredCallbackUrlPath,
       registeredCallbackUrlRoot,
       redirectAfterLogoutUrl,

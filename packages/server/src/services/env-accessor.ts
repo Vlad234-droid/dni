@@ -5,6 +5,7 @@ type ProcessEnv = {
   APPLICATION_PATH: string;
   // client
   COOKIE_SESSION_KEY: string;
+  COOKIE_USER_KEY: string;
   // onelogin
   ISSUER_URL: string;
   OIDC_CLIENT_ID: string;
@@ -13,6 +14,7 @@ type ProcessEnv = {
   REGISTERED_CALLBACK_URL_PATH: string;
   REDIRECT_AFTER_LOGOUT_URL: string;
   REFRESH_TOKEN_SECRET: string;
+  WITH_ONE_LOGIN: string;
   // identity
   IDENTITY_CLIENT_ID: string;
   IDENTITY_CLIENT_SECRET: string;
@@ -64,6 +66,7 @@ class EnvAccessor {
       NODE_PORT,
       APPLICATION_PATH,
       COOKIE_SESSION_KEY,
+      COOKIE_USER_KEY,
       OIDC_CLIENT_ID,
       OIDC_CLIENT_SECRET,
       ISSUER_URL,
@@ -71,6 +74,7 @@ class EnvAccessor {
       REGISTERED_CALLBACK_URL_PATH,
       REDIRECT_AFTER_LOGOUT_URL,
       REFRESH_TOKEN_SECRET,
+      WITH_ONE_LOGIN,
       IDENTITY_CLIENT_ID,
       IDENTITY_CLIENT_SECRET,
       IDENTITY_USER_SCOPED_TOKEN_COOKIE_SECRET,
@@ -84,6 +88,7 @@ class EnvAccessor {
       NODE_PORT,
       APPLICATION_PATH,
       COOKIE_SESSION_KEY,
+      COOKIE_USER_KEY,
       OIDC_CLIENT_ID,
       OIDC_CLIENT_SECRET,
       ISSUER_URL,
@@ -91,6 +96,7 @@ class EnvAccessor {
       REGISTERED_CALLBACK_URL_PATH,
       REDIRECT_AFTER_LOGOUT_URL,
       REFRESH_TOKEN_SECRET,
+      WITH_ONE_LOGIN,
       IDENTITY_CLIENT_ID,
       IDENTITY_CLIENT_SECRET,
       IDENTITY_USER_SCOPED_TOKEN_COOKIE_SECRET,

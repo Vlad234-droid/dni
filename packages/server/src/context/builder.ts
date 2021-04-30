@@ -1,4 +1,3 @@
-import { ApiEnv } from '@energon-connectors/core';
 import {
   getIdentityData,
   getUserData,
@@ -15,6 +14,7 @@ import {
 import { ExtendedSessionData, getExtendedSessionData } from './session-data';
 import { addCustomLog, markApiCall } from '@energon/splunk-logger';
 import { ProcessConfig } from 'services/config-accessor';
+import { getAppEnv } from '../config/env';
 
 export type ColleagueContextConfig = ConfirmitConfig;
 export type ColleagueSessionData = BasicUserData &
@@ -47,24 +47,7 @@ export const buildContext: (
     return token;
   },
 
-  apiEnv: () => {
-    switch (config.environment) {
-      case 'dev-local':
-      case 'ppe':
-      case 'sit':
-        return ApiEnv.ppe();
-
-      case 'beta':
-      case 'prod':
-      case 'production':
-        return ApiEnv.prod();
-
-      case 'dev-local-mock':
-      case 'dev':
-      default:
-        return ApiEnv.local(config.mockServerUrl);
-    }
-  },
+  apiEnv: () => getAppEnv(config.environment, config.mockServerUrl),
 
   markApiCall: markApiCall(res),
 
