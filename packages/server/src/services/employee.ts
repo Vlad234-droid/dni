@@ -7,7 +7,7 @@ const profileInfoExtractor = async (req: Request, res: Response) => {
     getOpenIdUserInfo(res) || req.cookies[process.env.COOKIE_USER_KEY!] || {};
 
   if (!userInfo) {
-    return {};
+    return res.status(403);
   }
 
   let networks: number[] = [];
