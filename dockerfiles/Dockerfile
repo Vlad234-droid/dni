@@ -16,7 +16,9 @@ COPY ./packages ./packages
 
 ARG BUILD_ENV_PARAM
 ENV BUILD_ENV_PARAM=$BUILD_ENV_PARAM
-RUN yarn ws:db migration:run
+
+#RUN yarn ws:db migration:run
+
 RUN yarn build:dev
 
 CMD yarn run:dev
