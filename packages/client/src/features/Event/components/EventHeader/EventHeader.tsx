@@ -49,9 +49,7 @@ const EventHeader: FC<Props> = ({ event, participants }) => {
           </TitleWithEllipsis>
           {isOnAir && (
             <StatusWrapper>
-              <StatusLabel type={StatusType.SUCCESS} small>
-                On-Air
-              </StatusLabel>
+              <StatusLabel type={StatusType.SUCCESS}>On-Air</StatusLabel>
             </StatusWrapper>
           )}
         </TitleWrapper>
