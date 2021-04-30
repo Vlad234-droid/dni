@@ -1,5 +1,5 @@
-import { DefaultNamingStrategy, NamingStrategyInterface } from 'typeorm';
-import { snakeCase } from 'typeorm/util/StringUtils';
+import { DefaultNamingStrategy, NamingStrategyInterface, Table } from 'typeorm';
+import { snakeCase, shorten } from 'typeorm/util/StringUtils';
 
 export class SnakeNamingStrategy
   extends DefaultNamingStrategy
@@ -66,5 +66,24 @@ export class SnakeNamingStrategy
 
   eagerJoinRelationAlias(alias: string, propertyPath: string): string {
     return this.toSnakeCase([alias, propertyPath.replace('.', '_')], '__');
+  }
+
+  primaryKeyName(tableOrName: Table | string) {
+    const table = tableOrName instanceof Table ? tableOrName.name : tableOrName;
+    const tableName = table.split('.').pop();
+
+    return `${tableName}_pk`;
+  }
+
+  indexName(tableOrName: Table | string, columnNames: string[]) {
+    const table = tableOrName instanceof Table ? tableOrName.name : tableOrName;
+    const tableName = table.split('.').pop();
+    const columnsSnakeCase = columnNames.join('_');
+    const shortColumnsSnakeCase = shorten(columnsSnakeCase, {
+      separator: '_',
+      segmentLength: 3,
+    });
+
+    return `${tableName}_${shortColumnsSnakeCase}_idx`;
   }
 }

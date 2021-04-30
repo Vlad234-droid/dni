@@ -1,6 +1,7 @@
 import path from 'path';
 import { SnakeNamingStrategy, getPackageDistFolder } from './src/utils';
 import dotenv from 'dotenv';
+
 dotenv.config();
 
 const {
@@ -15,13 +16,12 @@ const {
 } = process.env;
 
 const root = getPackageDistFolder('@dni/database', ['', '']);
-
-const ENTITIES_DIR = `${root}/entities`;
-const SUBSCRIBERS_DIR = `${root}/subscribers`;
-const MIGRATIONS_DIR = `${root}/migrations`;
-const SCHEMAS_DIR = `${root}/schemas`;
-
-const buildPathWithExt = (dir: string, ext = '*.ts') => path.join(dir, ext);
+const buildPath = (...paths: string[]) => path.join(...paths);
+const buildPathWithExt = (dir: string, ext = '*.ts') => buildPath(dir, ext);
+const ENTITIES_DIR = buildPath(root, 'entities');
+const SUBSCRIBERS_DIR = buildPath(root, 'subscribers');
+const MIGRATIONS_DIR = buildPath('src', 'migrations');
+const SCHEMAS_DIR = buildPath(root, 'schemas');
 
 export default {
   type: TYPEORM_TYPE,

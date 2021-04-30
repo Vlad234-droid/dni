@@ -7,7 +7,7 @@ import {
 import { getPackageDistFolder } from './package';
 
 const connectionOptionsReader = new ConnectionOptionsReader({
-  root: getPackageDistFolder('@dni/database', ['/src', '']),
+  root: getPackageDistFolder('@dni/database', ['src', '']),
 });
 
 let connectionOptions: ConnectionOptions;

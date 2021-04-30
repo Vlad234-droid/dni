@@ -17,6 +17,8 @@ import {
   getNetworksParticipants,
   // events
   getEventsParticipants,
+  //report
+  getReportByFilters,
 } from '../controllers';
 
 import { cmsAuth } from '../middlewares/cms-auth';
@@ -41,5 +43,7 @@ api.get('/events/participants', getEventsParticipants);
 api.get('/networks/participants', getNetworksParticipants);
 
 api.post('/notifications', cmsAuth, handleHook);
+
+api.post('/reports/time-periods', getReportByFilters);
 
 export { healthCheck, api };
