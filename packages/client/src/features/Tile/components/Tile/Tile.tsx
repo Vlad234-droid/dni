@@ -10,13 +10,7 @@ import BaseTile from '@beans/base-tile';
 import { normalizeImage } from 'utils/content';
 
 import Description from '../Description';
-import {
-  Wrapper,
-  DescriptionContainer,
-  TileText,
-  TileMeta,
-  ImageWrapper,
-} from './styled';
+import { Wrapper, DescriptionContainer, TileText, TileMeta } from './styled';
 
 type Props = {
   id: number;

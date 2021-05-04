@@ -19,6 +19,7 @@ import {
   getEventsParticipants,
   //report
   getReportByFilters,
+  printPDF,
 } from '../controllers';
 
 import { cmsAuth } from '../middlewares/cms-auth';
@@ -45,5 +46,6 @@ api.get('/networks/participants', getNetworksParticipants);
 api.post('/notifications', cmsAuth, handleHook);
 
 api.post('/reports/time-periods', getReportByFilters);
+api.post('/reports/print-pdf', printPDF);
 
 export { healthCheck, api };
