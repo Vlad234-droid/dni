@@ -9,7 +9,6 @@ enum Period {
   CURRENT_YEAR,
   LAST_MONTH,
   LAST_WEEK,
-  TODAY,
   PICK_PERIOD,
 }
 
@@ -34,10 +33,6 @@ const Graphics = ({ active, data }: Props) => {
       {
         title: 'Last week',
         action: () => setPeriod(Period.LAST_WEEK),
-      },
-      {
-        title: 'Today',
-        action: () => setPeriod(Period.TODAY),
       },
       {
         title: 'Pick period',

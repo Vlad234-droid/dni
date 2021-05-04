@@ -23,6 +23,9 @@ export enum Endpoint {
   // posts
   POSTS = '/posts',
   POSTS_COUNT = '/posts/count',
+  // report
+  REPORT_TIME_PERIODS = '/reports/time-periods',
+  REPORT_PRINT_PDF = '/reports/print-pdf',
   // common
   COMMON_UPLOAD = '/upload',
 }
@@ -73,5 +76,13 @@ export default (httpClient: AxiosInstance) => ({
     create: <T>(data: T) => httpClient.post<T>(Endpoint.POSTS, data),
     count: <T>(data: Config = {}) =>
       httpClient.get<T>(Endpoint.POSTS_COUNT, { params: data }),
+  },
+  report: {
+    timePeriods: <T>(data: Config = {}) =>
+      httpClient.get<T>(Endpoint.REPORT_TIME_PERIODS, { params: data }),
+    printPdf: <T>(data: T) =>
+      httpClient.post<Blob>(Endpoint.REPORT_PRINT_PDF, data, {
+        responseType: 'blob',
+      }),
   },
 });

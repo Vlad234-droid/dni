@@ -45,7 +45,7 @@ api.get('/networks/participants', getNetworksParticipants);
 
 api.post('/notifications', cmsAuth, handleHook);
 
-api.post('/reports/time-periods', getReportByFilters);
+api.get('/reports/time-periods', getReportByFilters);
 api.post('/reports/print-pdf', printPDF);
 
 export { healthCheck, api };
