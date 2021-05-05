@@ -7,7 +7,7 @@ import useDispatch from 'hooks/useDispatch';
 import useStore from 'hooks/useStore';
 import { FilterPayload } from 'types/payload';
 import { EmptyContainer } from 'features/Common';
-import { DEFAULT_PAGINATION, DEFAULT_FILTERS } from 'config/constants';
+import { DEFAULT_PAGINATION } from 'config/constants';
 import { useScrollContainer } from 'context/ScrollContainerContext';
 
 import { Filter } from '../../config/types';

@@ -1,3 +1,4 @@
+import { useCallback, useEffect } from 'react';
 import styled from 'styled-components';
 import {
   AreaChart,
@@ -10,6 +11,7 @@ import {
 import Button from '@beans/button';
 import Icon from '@beans/icon';
 
+import useFetch from 'hooks/useFetch';
 import { useMedia } from 'context/InterfaceContext';
 
 export type Data = {
@@ -23,17 +25,34 @@ type Props = {
 
 const Chart = ({ data, type }: Props) => {
   const { isDesktop, isTablet } = useMedia();
+
+  const [{ response, isLoading }, doFetch] = useFetch<Blob>();
+
+  useEffect(() => {
+    if (response && !isLoading) {
+      const file = window.URL.createObjectURL(response);
+      window.open(file, '_blank');
+    }
+  }, [response, isLoading]);
+
+  const openPDF = useCallback(() => {
+    doFetch(
+      (api) =>
+        api.report.printPdf({
+          page: window.location.href,
+          format: 'a4',
+          landscape: true,
+        }),
+      (res) => res,
+    );
+  }, []);
+
   return (
     <div>
       <ButtonWrapper>
         <div>
           <Button>
-            <Icon graphic='link' />
-          </Button>
-        </div>
-        <div>
-          <Button>
-            <Icon graphic='download' />
+            <Icon graphic='download' onClick={openPDF} />
           </Button>
         </div>
       </ButtonWrapper>

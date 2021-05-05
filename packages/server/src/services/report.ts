@@ -7,8 +7,9 @@ const getReportBy = async (
   from: string,
   to: string,
 ) => {
-  return await getManager().connection.query(
-    `with params as (select $1 as entity_type,
+  return (
+    await getManager().connection.query(
+      `with params as (select $1 as entity_type,
                                 $2::int[] as entity_ids, $3 as groupBy,
                                 $4::date  as start_date, $5::date    as end_date),
               periods as (SELECT distinct date_trunc(params.groupBy, t.period) ::date period_date
@@ -123,8 +124,9 @@ const getReportBy = async (
                                  'metadata', (select tij.metadata from total_info_json tij))
         from period_info pi
         `,
-    [entityType, entityIds, groupBy, from, to],
-  );
+      [entityType, entityIds, groupBy, from, to],
+    )
+  )[0].json_build_object;
 };
 
 export { getReportBy };
