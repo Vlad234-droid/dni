@@ -1,31 +1,23 @@
-import { FC, useEffect, useState, useCallback, useMemo } from 'react';
+import React, { FC, useEffect, useMemo } from 'react';
 import Button from '@beans/button';
-import { useSelector } from 'react-redux';
 import Icon from '@beans/icon';
 import isEmpty from 'lodash.isempty';
 
 import ButtonFilter from 'features/ButtonFilter';
 import { useMedia } from 'context/InterfaceContext';
-import useStore from 'hooks/useStore';
-import useDispatch from 'hooks/useDispatch';
-import { firstDayOf, lastDayOf } from 'utils/date';
-import { FilterPayload } from 'types/payload';
+import { EntityListPayload } from 'types/payload';
 import { DEFAULT_PAGINATION, DEFAULT_FILTERS } from 'config/constants';
 import List from 'features/List';
 import { EmptyContainer } from 'features/Common';
 import { Page } from 'features/Page';
+import { Loading } from 'store/types';
 
-import {
-  getList,
-  listSelector,
-  clear,
-  getCount,
-  getParticipants,
-} from '../../store';
-import { Filter, ALL, THIS_WEEK, THIS_MONTH } from '../../config/types';
-import { Wrapper } from './styled';
+import Event, { Filter, ALL, THIS_WEEK, THIS_MONTH } from '../../config/types';
 import EventAction from '../EventAction';
-import { FILTERS } from '../EventSidebar/EventSidebar';
+import { getPayloadWhere } from '../../utils';
+import { Wrapper } from './styled';
+
+const TEST_ID = 'events-list';
 
 const initialFilters = [
   {
@@ -45,126 +37,123 @@ const initialFilters = [
   },
 ];
 
-const EventList: FC = () => {
+type Props = {
+  events?: Event[];
+  loading: Loading;
+  loadEvents: (filters: EntityListPayload) => void;
+  loadCount: (filters: EntityListPayload) => void;
+  loadParticipants: () => void;
+  participants?: Record<number, number>;
+  total: number;
+  networks: number[];
+  page: number;
+  onPageChange: () => void;
+  filter: Filter;
+  onFilterChange: (filter: Filter) => void;
+};
+
+const EventList: FC<Props> = ({
+  events,
+  total,
+  loading,
+  loadEvents,
+  loadCount,
+  loadParticipants,
+  participants,
+  networks,
+  page,
+  onPageChange,
+  filter,
+  onFilterChange,
+}) => {
   const { isMobile } = useMedia();
-  const dispatch = useDispatch();
 
-  const [page, setPage] = useState<number>(0);
-  const [filter, setFilter] = useState<Filter>(ALL);
-
-  const {
-    participants,
-    meta: { total },
-    loading,
-  } = useStore((state) => state.events);
-  const { networks = [] } = useStore((state) => state.auth.user);
-  const list = useSelector(listSelector);
-  const hasMore = useMemo(() => list.length < total, [list, total]);
-
-  const [filters, setFilters] = useState<FilterPayload>({
-    ...FILTERS,
-    ...DEFAULT_PAGINATION,
-    ...DEFAULT_FILTERS,
-    // @ts-ignore
-    network_in: [...networks, -1],
-  });
-
-  const loadEvents = useCallback(
-    (page: number) => {
-      if (filters && hasMore && !(loading === 'pending')) {
-        dispatch(
-          // @ts-ignore
-          getList({ ...filters, _start: page * DEFAULT_PAGINATION._limit }),
-        );
-      }
-    },
-    [filters, hasMore, loading, networks],
-  );
+  const hasMore = useMemo(() => events && events.length < total, [
+    events,
+    total,
+  ]);
 
   useEffect(() => {
-    if (filters && hasMore) {
-      loadEvents(page);
+    // TODO: move to avoid unnecessary reassignment
+    const filters = {
+      ...DEFAULT_FILTERS,
+      network_in: [...networks, -1],
+      _where: getPayloadWhere(filter),
+    };
+
+    if (!total) {
+      //@ts-ignore
+      loadCount(filters);
     }
-  }, [filters, page, hasMore]);
+
+    //@ts-ignore
+    loadEvents({ ...filters, _start: page * DEFAULT_PAGINATION._limit });
+  }, [networks, hasMore, page, total, filter]);
 
   useEffect(() => {
-    (async () => {
-      if (filters) {
-        await dispatch(clear());
-        setPage(0);
-        await dispatch(getCount(filters));
-      }
-    })();
-  }, [filters]);
+    if (!isEmpty(participants)) return;
 
-  useEffect(() => {
-    dispatch(getParticipants());
+    loadParticipants();
   }, []);
 
-  useEffect(() => {
-    let where = {};
-    switch (filter) {
-      case ALL: {
-        where = {};
-        break;
-      }
-      case THIS_WEEK: {
-        const firstDayOfThisMonth = firstDayOf('week').toJSDate();
-        const lastDayOfThisMonth = lastDayOf('week').toJSDate();
-        where = {
-          startDate_gte: firstDayOfThisMonth,
-          startDate_lte: lastDayOfThisMonth,
-        };
-        break;
-      }
-      case THIS_MONTH: {
-        const firstDayOfThisMonth = firstDayOf('month').toJSDate();
-        const lastDayOfThisMonth = lastDayOf('month').toJSDate();
-        where = {
-          startDate_gte: firstDayOfThisMonth,
-          startDate_lte: lastDayOfThisMonth,
-        };
-        break;
-      }
-    }
-    setFilters(where);
-  }, [filter]);
+  if (loading == Loading.IDLE) return null;
+
+  if (loading === Loading.PENDING && isEmpty(events)) {
+    return (
+      <Wrapper data-testid={TEST_ID}>
+        <div>Loading events...</div>
+      </Wrapper>
+    );
+  }
+
+  // TODO: fix case loading is set faster than events actually loaded
+  if (loading === Loading.SUCCEEDED && isEmpty(events)) {
+    return (
+      <Wrapper data-testid={TEST_ID}>
+        <EmptyContainer
+          description='Unfortunately, we did not find any matches for your request'
+          explanation='Please change your filtering criteria to try again.'
+        />
+      </Wrapper>
+    );
+  }
+
+  if (loading === Loading.FAILED) {
+    return (
+      <Wrapper data-testid={TEST_ID}>
+        <div>Here some error</div>
+      </Wrapper>
+    );
+  }
 
   return (
     <Wrapper>
       <ButtonFilter
         initialFilters={initialFilters}
-        onChange={(key) => setFilter(key as Filter)}
+        onChange={(key) => onFilterChange(key as Filter)}
       />
-      {isEmpty(list) ? (
-        <EmptyContainer
-          description='Unfortunately, we did not find any matches for your request'
-          explanation='Please change your filtering criteria to try again.'
+      <>
+        <List
+          link={Page.EVENTS}
+          // TODO: event is not correct type Event
+          //@ts-ignore
+          items={events}
+          hideMaxParticipants={false}
+          participants={participants}
+          isMobile={isMobile}
+          renderAction={(id, disabled) => (
+            <EventAction id={id} disabled={disabled} />
+          )}
         />
-      ) : (
-        <>
-          <List
-            link={Page.EVENTS}
-            // TODO: event is not correct type Event
-            //@ts-ignore
-            items={list}
-            hideMaxParticipants={false}
-            participants={participants}
-            isMobile={isMobile}
-            renderAction={(id, disabled) => (
-              <EventAction id={id} disabled={disabled} />
-            )}
-          />
-          <Button
-            disabled={!hasMore || loading === 'pending'}
-            variant='secondary'
-            onClick={() => setPage(page + 1)}
-          >
-            More New Events
-            <Icon graphic='expand' size='xx' />
-          </Button>
-        </>
-      )}
+        <Button
+          disabled={!hasMore || loading === 'pending'}
+          variant='secondary'
+          onClick={onPageChange}
+        >
+          More New Events
+          <Icon graphic='expand' size='xx' />
+        </Button>
+      </>
     </Wrapper>
   );
 };

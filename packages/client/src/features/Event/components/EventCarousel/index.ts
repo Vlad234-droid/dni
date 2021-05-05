@@ -1,1 +1,1 @@
-export { default } from './EventCarousel';
+export { default } from './EventCarouselContainer';
