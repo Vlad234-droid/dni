@@ -77,8 +77,8 @@ const EventList: FC<Props> = ({
     // TODO: move to avoid unnecessary reassignment
     const filters = {
       ...DEFAULT_FILTERS,
+      ...getPayloadWhere(filter),
       network_in: [...networks, -1],
-      _where: getPayloadWhere(filter),
     };
 
     if (!total) {
