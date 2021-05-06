@@ -1,7 +1,12 @@
 import { defineAPI } from '@energon/rest-api-definition';
 
 import { Network, NetworkApiParams, NetworkBody } from './types';
-import { buildApiConsumer, buildParams } from '../utils';
+import {
+  buildApiConsumer,
+  buildParams,
+  buildFetchClient,
+  buildFetchParams,
+} from '../utils';
 import { DniCmsApiContext, ApiInput } from '../types';
 
 export const cmsNetworksApiDef = defineAPI((endpoint) => ({
@@ -46,16 +51,25 @@ export const cmsNetworksApiDef = defineAPI((endpoint) => ({
 
 export const cmsNetworksApiConnector = (ctx: DniCmsApiContext) => {
   const apiConsumer = buildApiConsumer(ctx, cmsNetworksApiDef);
+  const fetchClient = buildFetchClient(ctx);
 
   return {
     getNetwork: async ({ params, tenantkey }: ApiInput<NetworkApiParams>) =>
       apiConsumer.getNetwork(buildParams(params, tenantkey)),
 
     getNetworks: ({ params, tenantkey }: ApiInput<NetworkApiParams>) =>
-      apiConsumer.getNetworks(buildParams(params, tenantkey)),
+      fetchClient<Network[]>(
+        cmsNetworksApiDef.getNetworks,
+        params,
+        buildFetchParams(tenantkey),
+      ),
 
     getNetworksCount: ({ params, tenantkey }: ApiInput<NetworkApiParams>) =>
-      apiConsumer.getNetworksCount(buildParams(params, tenantkey)),
+      fetchClient<number>(
+        cmsNetworksApiDef.getNetworksCount,
+        params,
+        buildFetchParams(tenantkey),
+      ),
 
     postNetwork: async ({
       params,

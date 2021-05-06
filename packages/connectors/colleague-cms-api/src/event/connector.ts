@@ -1,7 +1,12 @@
 import { defineAPI } from '@energon/rest-api-definition';
 
 import { Event, EventApiParams, EventBody } from './types';
-import { buildApiConsumer, buildParams } from '../utils';
+import {
+  buildApiConsumer,
+  buildParams,
+  buildFetchClient,
+  buildFetchParams,
+} from '../utils';
 import { DniCmsApiContext, ApiInput } from '../types';
 
 export const cmsEventsApiDef = defineAPI((endpoint) => ({
@@ -46,16 +51,25 @@ export const cmsEventsApiDef = defineAPI((endpoint) => ({
 
 export const cmsEventsApiConnector = (ctx: DniCmsApiContext) => {
   const apiConsumer = buildApiConsumer(ctx, cmsEventsApiDef);
+  const fetchClient = buildFetchClient(ctx);
 
   return {
     getEvent: async ({ params, tenantkey }: ApiInput<EventApiParams>) =>
       apiConsumer.getEvent(buildParams(params, tenantkey)),
 
     getEvents: ({ params, tenantkey }: ApiInput<EventApiParams>) =>
-      apiConsumer.getEvents(buildParams(params, tenantkey)),
+      fetchClient<Event[]>(
+        cmsEventsApiDef.getEvents,
+        params,
+        buildFetchParams(tenantkey),
+      ),
 
     getEventsCount: ({ params, tenantkey }: ApiInput<EventApiParams>) =>
-      apiConsumer.getEventsCount(buildParams(params, tenantkey)),
+      fetchClient<number>(
+        cmsEventsApiDef.getEventsCount,
+        params,
+        buildFetchParams(tenantkey),
+      ),
 
     postEvent: async ({
       params,

@@ -1,7 +1,12 @@
 import { defineAPI } from '@energon/rest-api-definition';
 
 import { Post, PostApiParams, PostBody } from './types';
-import { buildApiConsumer, buildParams } from '../utils';
+import {
+  buildApiConsumer,
+  buildParams,
+  buildFetchClient,
+  buildFetchParams,
+} from '../utils';
 import { DniCmsApiContext, ApiInput } from '../types';
 
 export const cmsPostsApiDef = defineAPI((endpoint) => ({
@@ -46,16 +51,25 @@ export const cmsPostsApiDef = defineAPI((endpoint) => ({
 
 export const cmsPostsApiConnector = (ctx: DniCmsApiContext) => {
   const apiConsumer = buildApiConsumer(ctx, cmsPostsApiDef);
+  const fetchClient = buildFetchClient(ctx);
 
   return {
     getPost: async ({ params, tenantkey }: ApiInput<PostApiParams>) =>
       apiConsumer.getPost(buildParams(params, tenantkey)),
 
     getPosts: ({ params, tenantkey }: ApiInput<PostApiParams>) =>
-      apiConsumer.getPosts(buildParams(params, tenantkey)),
+      fetchClient<Post[]>(
+        cmsPostsApiDef.getPosts,
+        params,
+        buildFetchParams(tenantkey),
+      ),
 
     getPostsCount: ({ params, tenantkey }: ApiInput<PostApiParams>) =>
-      apiConsumer.getPostsCount(buildParams(params, tenantkey)),
+      fetchClient<number>(
+        cmsPostsApiDef.getPostsCount,
+        params,
+        buildFetchParams(tenantkey),
+      ),
 
     postPost: async ({
       params,

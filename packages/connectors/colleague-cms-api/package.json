@@ -6,6 +6,11 @@
     "@energon-connectors/core": "^0.7.6",
     "@energon/fetch-client": "^0.10.1",
     "@energon/rest-api-consumer": "^0.6.1",
-    "@energon/rest-api-definition": "^0.4.1"
+    "@energon/rest-api-definition": "^0.4.1",
+    "lodash.merge": "^4.6.2",
+    "qs": "^6.10.1"
+  },
+  "devDependencies": {
+    "@types/lodash.merge": "^4.6.6"
   }
 }
