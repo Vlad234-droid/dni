@@ -17,8 +17,9 @@ type ApiInput<T, U = unknown> = {
 };
 
 type BaseApiParams = {
-  // filter _where doesn't support right now
-  _where?: string;
+  // filter _where
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  _where?: any;
 
   // pagination
   _start?: string;

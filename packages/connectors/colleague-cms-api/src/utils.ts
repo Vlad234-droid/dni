@@ -1,6 +1,11 @@
 import { fetchClient, resolveBaseUrl } from '@energon-connectors/core';
 import { createApiConsumer } from '@energon/rest-api-consumer';
-import { ApiDefinition } from '@energon/rest-api-definition';
+import {
+  ApiDefinition,
+  EndpointDefinition,
+} from '@energon/rest-api-definition';
+import qs from 'qs';
+import merge from 'lodash.merge';
 
 import { DNI_CMS_API_URLS } from './config';
 import { DniCmsApiContext } from './types';
@@ -20,9 +25,7 @@ const buildClient = (ctx: DniCmsApiContext) => {
     Auth: () => `Bearer ${ctx.identityClientToken()}`,
   };
 
-  const client = fetchClient(baseUrl, headers, ctx);
-
-  return client;
+  return fetchClient(baseUrl, headers, ctx);
 };
 
 const buildParams = <T, U = unknown>(
@@ -36,4 +39,48 @@ const buildParams = <T, U = unknown>(
   body,
 });
 
-export { buildApiConsumer, buildParams, buildClient };
+const buildFetchParams = <U = unknown>(
+  tenantkey: string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  body: U = undefined as any,
+  fetchParams = {},
+) =>
+  merge(
+    {
+      headers: { tenantkey },
+      body,
+    },
+    fetchParams,
+  );
+
+const buildFetchClient = (ctx: DniCmsApiContext) => {
+  const client = buildClient(ctx);
+
+  return <T, U = unknown>(
+    def: EndpointDefinition,
+    qsParams: U,
+    fetchParams = {},
+  ) => {
+    const { path: defPath, method } = def;
+
+    const queryString = qs.stringify(qsParams);
+
+    const path = queryString ? `${defPath}?${queryString}` : defPath;
+
+    return client
+      .fetch<T>(path, {
+        method,
+        ...fetchParams,
+      })
+      .then((r) => r.json())
+      .then((r) => ({ data: r as T }));
+  };
+};
+
+export {
+  buildApiConsumer,
+  buildParams,
+  buildClient,
+  buildFetchParams,
+  buildFetchClient,
+};
