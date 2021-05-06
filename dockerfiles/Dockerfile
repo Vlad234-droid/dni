@@ -19,8 +19,8 @@ ENV BUILD_ENV_PARAM=$BUILD_ENV_PARAM
 
 #RUN yarn ws:db migration:run
 
-RUN yarn build:prod
+RUN yarn build:dev
 
-CMD yarn run:prod
+CMD yarn run:dev
 
 EXPOSE 9000
