@@ -10,6 +10,12 @@ import {
 import { DniCmsApiContext, ApiInput } from '../types';
 
 export const cmsPostsApiDef = defineAPI((endpoint) => ({
+  getPostsCount: endpoint
+    .get('/posts/count')
+    .params<PostApiParams>()
+    .response<number>()
+    .build(),
+
   getPost: endpoint
     .get('/posts/:id')
     .params<Pick<PostApiParams, 'id'>>()
@@ -20,12 +26,6 @@ export const cmsPostsApiDef = defineAPI((endpoint) => ({
     .get('/posts')
     .params<PostApiParams>()
     .response<Post[]>()
-    .build(),
-
-  getPostsCount: endpoint
-    .get('/posts/count')
-    .params<PostApiParams>()
-    .response<number>()
     .build(),
 
   postPost: endpoint

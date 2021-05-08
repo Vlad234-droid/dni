@@ -11,8 +11,10 @@ import { DEFAULT_PAGINATION } from 'config/constants';
 import { useScrollContainer } from 'context/ScrollContainerContext';
 import List from 'features/List';
 import { useMedia } from 'context/InterfaceContext';
-import { EmptyContainer } from 'features/Common';
+import { EmptyContainer, Spinner } from 'features/Common';
 import { Page } from 'features/Page';
+import { Loading } from 'store/types';
+import { RootState } from 'store/rootReducer';
 
 import { Filter, ALL, YOUR_NETWORKS } from '../../config/types';
 import {
@@ -24,6 +26,8 @@ import {
 } from '../../store';
 import { Wrapper, ListContainer } from './styled';
 import NetworkAction from '../NetworkAction';
+
+const TEST_ID = 'networks-list';
 
 const initialFilters = [
   {
@@ -52,26 +56,27 @@ const NetworkList: FC = () => {
   const {
     participants,
     meta: { total },
-    isLoading,
+    loading,
   } = useStore((state) => state.networks);
-  const list = useSelector(listSelector);
+  const list = useSelector((state: RootState) => listSelector(state, filters));
   const hasMore = useMemo(() => list.length < total, [list, total]);
+
+  const isLoading = useMemo(() => loading === Loading.PENDING, [loading]);
 
   const loadNetworks = useCallback(
     (page: number) => {
-      if (filters && hasMore && !isLoading) {
+      const next = page * DEFAULT_PAGINATION._limit;
+      if (filters && hasMore && !isLoading && next <= total) {
         dispatch(
           getList({
             ...filters,
-            ...{
-              ...DEFAULT_PAGINATION,
-              _start: page * DEFAULT_PAGINATION._limit,
-            },
+            ...DEFAULT_PAGINATION,
+            _start: next,
           }),
         );
       }
     },
-    [filters, hasMore, isLoading],
+    [filters, hasMore, isLoading, total],
   );
 
   useEffect(() => {
@@ -84,34 +89,38 @@ const NetworkList: FC = () => {
   }, [filters]);
 
   useEffect(() => {
-    let where;
-    switch (filter) {
-      case 'ALL': {
-        where = undefined;
-        break;
-      }
-      case 'YOUR_NETWORKS': {
-        where = { id_in: [...networks, -1] };
-        break;
-      }
+    if (filter == YOUR_NETWORKS) {
+      setFilters({ id_in: [...networks, -1] });
     }
-    setFilters({ ...where });
+  }, [filter, networks]);
+
+  useEffect(() => {
+    if (filter == ALL) {
+      setFilters({});
+    }
   }, [filter]);
 
   useEffect(() => {
     dispatch(getParticipants());
   }, []);
 
-  // TODO: add loader component
-  const Loader = <div key='loader'>Loading ...</div>;
+  if (loading == Loading.IDLE) return null;
+
+  if (loading === Loading.FAILED) {
+    return (
+      <Wrapper data-testid={TEST_ID}>
+        <div>Here some error</div>
+      </Wrapper>
+    );
+  }
 
   return (
-    <Wrapper>
+    <Wrapper data-testid={TEST_ID}>
       <ButtonFilter
         initialFilters={initialFilters}
         onChange={(key) => setFilter(key as Filter)}
       />
-      {isEmpty(list) && !hasMore ? (
+      {!isLoading && isEmpty(list) && !hasMore ? (
         <EmptyContainer
           description='Unfortunately, we did not find any matches for your request'
           explanation='Please change your filtering criteria to try again.'
@@ -123,7 +132,7 @@ const NetworkList: FC = () => {
             loadMore={loadNetworks}
             hasMore={!isLoading && hasMore}
             pageStart={-1}
-            loader={Loader}
+            loader={<Spinner key={0} height='200px' />}
             threshold={0}
             getScrollParent={() => scrollContainer!.current}
             useWindow={false}

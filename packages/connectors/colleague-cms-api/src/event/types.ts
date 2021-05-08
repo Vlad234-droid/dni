@@ -11,7 +11,7 @@ type Event = {
   surveryUrl?: string;
   description: string;
   slug: string;
-  image?: File | null;
+  image?: File;
 } & BaseType;
 
 type EventApiParams = {

@@ -1,71 +1,60 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC } from 'react';
 import isEmpty from 'lodash.isempty';
 
 import Carousel from 'features/Carousel';
 import { LargeTile } from 'features/Tile';
-import useFetch from 'hooks/useFetch';
-import useStore from 'hooks/useStore';
-import { normalizeImage } from 'utils/content';
-import { isoDateToFormat, FULL_FORMAT } from 'utils/date';
-import { EmptyContainer } from 'features/Common';
+import { EmptyContainer, Spinner } from 'features/Common';
 import { Page } from 'features/Page';
 
-import { isEventOnAir } from '../../utils';
+import { isEventOnAir, isActionDisabled } from '../../utils';
 import EventAction from '../EventAction';
 import Event from '../../config/types';
 import { Wrapper } from './styled';
 
-const EventCarousel: FC = () => {
-  const [{ response: list }, doFetch] = useFetch<Event[]>([]);
-  const { participants } = useStore((state) => state.events);
+const TEST_ID = 'events-carousel';
 
-  const [filters] = useState({
-    _start: 0,
-    _limit: 5,
-    _sort: 'startDate:ASC',
-    startDate_gte: new Date(),
-  });
+type Props = {
+  events: Event[];
+  isLoading: boolean;
+  participants?: Record<number, number>;
+};
 
-  useEffect(() => {
-    doFetch(
-      (api) => api.events.fetchAll(filters),
-      (res) => res,
-    );
-  }, [filters]);
-
-  return (
-    <Wrapper>
-      {isEmpty(list) ? (
-        <EmptyContainer description='Nothing to show' />
-      ) : (
-        <Carousel itemWidth='278px' id='event-carousel'>
-          {list!.map(
-            ({ id, title, maxParticipants, image, startDate, endDate }) => (
-              <LargeTile
-                key={`events-${id}`}
-                id={id}
-                title={title}
-                participants={participants![id] || 0}
-                maxParticipants={maxParticipants}
-                link={Page.EVENTS}
-                // TODO: make transformation when data loaded before saving to store
-                meta={isoDateToFormat(startDate, FULL_FORMAT)}
-                isOnAir={isEventOnAir(startDate, endDate)}
-                renderAction={() => (
-                  <EventAction
-                    id={id}
-                    disabled={
-                      Boolean(maxParticipants) &&
-                      (participants![id] || 0) >= maxParticipants
-                    }
-                  />
-                )}
-                image={normalizeImage(image)}
-              />
-            ),
-          )}
-        </Carousel>
-      )}
+// events are not loaded as they are loaded for EventsList and EventCarousel is only used there
+const EventCarousel: FC<Props> = ({ events, isLoading, participants }) => {
+  return isLoading ? (
+    <Spinner height='300px' />
+  ) : !isLoading && isEmpty(events) ? (
+    <Wrapper data-testid={TEST_ID}>
+      <EmptyContainer description='You have no events' />
+    </Wrapper>
+  ) : (
+    <Wrapper data-testid={TEST_ID}>
+      <Carousel itemWidth='278px' id='event-carousel'>
+        {events.map(
+          ({ id, title, maxParticipants, image, startDate, endDate }) => (
+            <LargeTile
+              key={id}
+              id={id}
+              title={title}
+              participants={participants![id] || 0}
+              maxParticipants={maxParticipants}
+              link={Page.EVENTS}
+              meta={startDate}
+              isOnAir={isEventOnAir(startDate, endDate)}
+              renderAction={() => (
+                <EventAction
+                  id={id}
+                  disabled={isActionDisabled(
+                    participants![id],
+                    maxParticipants,
+                  )}
+                />
+              )}
+              image={image}
+            />
+          ),
+        )}
+      </Carousel>
     </Wrapper>
   );
 };

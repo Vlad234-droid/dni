@@ -2,7 +2,6 @@ import React, { FC } from 'react';
 import ResponsiveImage from '@beans/responsive-image';
 import { Organization } from '@dni-connectors/colleague-cms-api';
 
-import { normalizeImage } from 'utils/content';
 import styled from 'styled-components';
 import Media from 'styles/media';
 
@@ -13,17 +12,14 @@ type Props = {
 const NetworkPartnersList: FC<Props> = ({ partners }) => (
   <Wrapper>
     {partners.map(({ id, image }) => {
-      // TODO: keep image normalized in store when loaded data
-      const normalizedImage = normalizeImage(image);
-
       // dont show partner if there is no image for it?
-      if (!normalizedImage) return null;
+      if (!image) return null;
 
       return (
         <div key={id}>
           <ResponsiveImage
-            alt={normalizedImage.alternativeText}
-            src={normalizedImage.url}
+            alt={image.alternativeText}
+            src={image.url}
             fallbackSizeRatio='57%'
             maxWidth='170px'
             objectFit='contain'

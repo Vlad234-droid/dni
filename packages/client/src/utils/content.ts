@@ -10,6 +10,7 @@ const normalizeImage = (image: File | null | undefined) => {
   }
 
   return {
+    ...image,
     alternativeText: image.alternativeText,
     url: buildAbsolutePath(image.url),
   };

@@ -1,12 +1,13 @@
 import React, { FC, useCallback } from 'react';
 
 import { Page, PAGE_PREFIX } from 'features/Page';
-import BasePage from '../BasePage';
-import PageHeader from '../PageHeader';
-import PageWrapper from '../PageWrapper';
 import Heading, { Size, Color } from 'features/Heading';
 import { useMedia } from 'context/InterfaceContext';
 import { EventCarousel, EventList, EventTable } from 'features/Event';
+
+import BasePage from '../BasePage';
+import PageHeader from '../PageHeader';
+import PageWrapper from '../PageWrapper';
 
 const TEST_ID = 'container-events';
 

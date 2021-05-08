@@ -1,14 +1,14 @@
-import React, { FC, useEffect, useCallback, useState } from 'react';
+import React, { FC, useEffect, useCallback, useState, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { createPortal } from 'react-dom';
 import ResponsiveImage from '@beans/responsive-image';
+import { Loading } from 'store/types';
 
 import useDispatch from 'hooks/useDispatch';
 import useStore from 'hooks/useStore';
 import InfoPanel, { InfoPanelType } from 'features/InfoPanel';
-import { PostList } from 'features/Post';
+import { PostList, BY_NETWORK } from 'features/Post';
 import { useImageWrapper } from 'context';
-import { normalizeImage } from 'utils/content';
 
 import { byIdSelector, getOne } from '../../store';
 import { Wrapper, Content, LeftContent, RightContent } from './styled';
@@ -30,8 +30,10 @@ const Network: FC<Props> = ({ id }) => {
   const isJoined = networks.includes(+id);
   const [showInfoPanel, setShowInfoPanel] = useState(true);
   const [infoPanelType, setInfoPanelType] = useState(InfoPanelType.INFO);
-  const { isLoading } = useStore((state) => state.networks);
+  const { loading } = useStore((state) => state.networks);
   const imageWrapperEl = useImageWrapper();
+
+  const isLoading = useMemo(() => loading === Loading.PENDING, [loading]);
 
   useEffect(() => {
     if (network) return;
@@ -67,9 +69,9 @@ const Network: FC<Props> = ({ id }) => {
           <ResponsiveImage
             key={id}
             //@ts-ignore
-            alt={normalizeImage(image).alternativeText}
+            alt={image?.alternativeText}
             //@ts-ignore
-            src={normalizeImage(image).url}
+            src={image?.url}
             fallbackSizeRatio='57%'
             objectFit='cover'
           />,
@@ -102,7 +104,7 @@ const Network: FC<Props> = ({ id }) => {
       )}
       <Content>
         <LeftContent>
-          <PostList entityId={id} filter={'BY_NETWORK'} />
+          <PostList entityId={id} filter={BY_NETWORK} />
         </LeftContent>
         <RightContent>
           <NetworkPartners

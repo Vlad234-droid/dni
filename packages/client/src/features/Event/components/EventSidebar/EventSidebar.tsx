@@ -1,18 +1,16 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Button from '@beans/button';
-import slice from 'lodash.slice';
 import isEmpty from 'lodash.isempty';
 
-import { EmptyContainer } from 'features/Common';
+import { EmptyContainer, Spinner } from 'features/Common';
 import { LargeTile, SmallTile } from 'features/Tile';
-import { FULL_FORMAT, isoDateToFormat } from 'utils/date';
 import { Loading } from 'store/types';
 import { EntityListPayload } from 'types/payload';
 import { Page } from 'features/Page';
 import { DEFAULT_FILTERS } from 'config/constants';
 
-import { isEventOnAir } from '../../utils';
+import { isActionDisabled, isEventOnAir } from '../../utils';
 import Event from '../../config/types';
 import EventAction from '../EventAction';
 
@@ -23,22 +21,24 @@ const MAX_VISIBLE_ITEMS = 3;
 export const FILTERS = {
   _start: 0,
   _limit: MAX_VISIBLE_ITEMS,
+  _sort: 'startDate:ASC',
+  startDate_gte: new Date(),
 };
 
 type Props = {
-  events?: Event[];
+  events: Event[];
   loading: Loading;
   loadEvents: (filters: EntityListPayload) => void;
   loadCount: (filters: EntityListPayload) => void;
   loadParticipants: () => void;
   participants?: Record<number, number>;
-  count: number;
+  total: number;
   networks: number[];
 };
 
 const EventSidebar: FC<Props> = ({
   events,
-  count,
+  total,
   loading,
   loadEvents,
   loadCount,
@@ -46,19 +46,17 @@ const EventSidebar: FC<Props> = ({
   participants,
   networks,
 }) => {
-  const [filters] = useState<EntityListPayload>({
-    ...FILTERS,
-    ...DEFAULT_FILTERS,
-    // @ts-ignore
-    network_in: [...networks, -1],
-  });
-
   useEffect(() => {
-    if (!isEmpty(events)) return;
+    // TODO: move to avoid unnecessary reassignment
+    const filters = {
+      ...FILTERS,
+      ...DEFAULT_FILTERS,
+      network_in: [...networks, -1],
+    };
 
     loadEvents(filters);
     loadCount(filters);
-  }, [events, filters]);
+  }, [networks]);
 
   useEffect(() => {
     if (!isEmpty(participants)) return;
@@ -71,11 +69,12 @@ const EventSidebar: FC<Props> = ({
   if (loading === Loading.PENDING) {
     return (
       <Wrapper data-testid={TEST_ID}>
-        <div>Loading events...</div>
+        <Spinner height='300px' />
       </Wrapper>
     );
   }
 
+  // TODO: fix case loading is set faster than events actually loaded
   if (loading === Loading.SUCCEEDED && isEmpty(events)) {
     return (
       <Wrapper data-testid={TEST_ID}>
@@ -96,7 +95,7 @@ const EventSidebar: FC<Props> = ({
     <Wrapper data-testid={TEST_ID}>
       <Title>Events</Title>
       <List>
-        {slice(events, 0, MAX_VISIBLE_ITEMS).map((eventItem, index) => {
+        {events.map((eventItem, index) => {
           const {
             id,
             title,
@@ -116,10 +115,16 @@ const EventSidebar: FC<Props> = ({
               maxParticipants={maxParticipants}
               hideMaxParticipants={false}
               isOnAir={isEventOnAir(startDate, endDate)}
-              renderAction={() => <EventAction id={id} />}
-              // TODO: dont like transformation here - its duplicated everywhere - and is created again and again in lists
-              // TODO: transform before save to store
-              meta={isoDateToFormat(startDate, FULL_FORMAT)}
+              renderAction={() => (
+                <EventAction
+                  id={id}
+                  disabled={isActionDisabled(
+                    participants![id],
+                    maxParticipants,
+                  )}
+                />
+              )}
+              meta={startDate}
               link={Page.EVENTS}
               imageHeight='unset'
             />
@@ -130,8 +135,16 @@ const EventSidebar: FC<Props> = ({
               title={title}
               image={image}
               isOnAir={isEventOnAir(startDate, endDate)}
-              renderAction={() => <EventAction id={id} />}
-              meta={isoDateToFormat(startDate, FULL_FORMAT)}
+              renderAction={() => (
+                <EventAction
+                  id={id}
+                  disabled={isActionDisabled(
+                    participants![id],
+                    maxParticipants,
+                  )}
+                />
+              )}
+              meta={startDate}
               link={Page.EVENTS}
               imageHeight='136px'
             />
@@ -139,7 +152,7 @@ const EventSidebar: FC<Props> = ({
         })}
       </List>
       {events &&
-        (count > MAX_VISIBLE_ITEMS || events.length > MAX_VISIBLE_ITEMS) && (
+        (total > MAX_VISIBLE_ITEMS || events.length > MAX_VISIBLE_ITEMS) && (
           <Link to={Page.EVENTS}>
             <Button variant='secondary'>All events</Button>
           </Link>

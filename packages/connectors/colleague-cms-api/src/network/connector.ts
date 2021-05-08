@@ -10,6 +10,12 @@ import {
 import { DniCmsApiContext, ApiInput } from '../types';
 
 export const cmsNetworksApiDef = defineAPI((endpoint) => ({
+  getNetworksCount: endpoint
+    .get('/networks/count')
+    .params<NetworkApiParams>()
+    .response<number>()
+    .build(),
+
   getNetwork: endpoint
     .get('/networks/:id')
     .params<Pick<NetworkApiParams, 'id'>>()
@@ -20,12 +26,6 @@ export const cmsNetworksApiDef = defineAPI((endpoint) => ({
     .get('/networks')
     .params<NetworkApiParams>()
     .response<Network[]>()
-    .build(),
-
-  getNetworksCount: endpoint
-    .get('/networks/count')
-    .params<NetworkApiParams>()
-    .response<number>()
     .build(),
 
   postNetwork: endpoint
