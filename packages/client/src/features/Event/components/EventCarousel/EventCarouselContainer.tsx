@@ -1,19 +1,30 @@
-import React, { FC } from 'react';
-import { useSelector } from 'react-redux';
+import React, { FC, useState } from 'react';
 import useStore from 'hooks/useStore';
 
 import EventCarousel from './EventCarousel';
-import { listSelector as eventsSelector } from '../../store';
+import useFetchEvents from '../../hooks/useFetchEvents';
+
+const MAX_VISIBLE_ITEMS = 5;
 
 const EventCarouselContainer: FC = () => {
-  const events = useSelector(eventsSelector);
-  const { participants, loading } = useStore((state) => state.events);
+  const { participants } = useStore((state) => state.events);
+  const { networks = [] } = useStore((state) => state.auth.user);
+
+  const [filters] = useState({
+    _start: 0,
+    _limit: MAX_VISIBLE_ITEMS,
+    _sort: 'startDate:ASC',
+    startDate_gte: new Date(),
+    network_in: [...networks, -1],
+  });
+
+  const [isLoading, list] = useFetchEvents(filters);
 
   return (
     <EventCarousel
-      events={events}
+      events={list!}
       participants={participants}
-      loading={loading}
+      isLoading={isLoading}
     />
   );
 };

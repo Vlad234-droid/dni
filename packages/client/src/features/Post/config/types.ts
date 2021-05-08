@@ -20,7 +20,11 @@ type Attachment = {
   width: number;
 };
 
-type Filter = 'ALL' | 'BY_EVENT' | 'BY_NETWORK';
+const ALL = 'ALL';
+const BY_EVENT = 'BY_EVENT';
+const BY_NETWORK = 'BY_NETWORK';
 
-export { PostStatus };
+type Filter = typeof ALL | typeof BY_NETWORK | typeof BY_EVENT;
+
+export { PostStatus, ALL, BY_EVENT, BY_NETWORK };
 export type { Post, Filter, Attachment };

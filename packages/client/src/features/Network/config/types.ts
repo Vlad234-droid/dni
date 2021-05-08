@@ -1,5 +1,6 @@
 import { EntityState } from '@reduxjs/toolkit';
 import { Network } from '@dni-connectors/colleague-cms-api';
+import { Loading } from 'store/types';
 
 interface FormData {
   image?: File;
@@ -20,7 +21,7 @@ type Participant = {
 type ParticipantsResponse = Participant[];
 
 type State = {
-  isLoading: boolean;
+  loading: Loading;
   error: null | string;
   meta: Meta;
   participants: Record<number, number>;
@@ -47,6 +48,10 @@ const YOUR_NETWORKS = 'YOUR_NETWORKS';
 
 type Filter = typeof ALL | typeof YOUR_NETWORKS;
 
+interface Filters {
+  id_in?: number[];
+}
+
 export { ALL, YOUR_NETWORKS };
 export type {
   State,
@@ -59,6 +64,7 @@ export type {
   Names,
   Filter,
   ParticipantsResponse,
+  Filters,
 };
 
 export default Network;

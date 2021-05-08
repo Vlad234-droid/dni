@@ -1,4 +1,4 @@
-import React, { FC, useMemo } from 'react';
+import React, { FC } from 'react';
 import isNumber from 'lodash.isnumber';
 import Icon from '@beans/icon';
 import { WindowResize } from '@beans/helpers';
@@ -6,8 +6,6 @@ import ResponsiveImage from '@beans/responsive-image';
 import { TitleWithEllipsis } from '@beans/title-link';
 import { HORIZONTAL, VERTICAL } from '@beans/constants';
 import BaseTile from '@beans/base-tile';
-
-import { normalizeImage } from 'utils/content';
 
 import Description from '../Description';
 import { Wrapper, DescriptionContainer, TileText, TileMeta } from './styled';
@@ -49,11 +47,6 @@ const Tile: FC<Props> = ({
   id,
   imageHeight,
 }) => {
-  // TODO: could it be rendered without image?
-  // TODO move image normalization to action when loading images?
-  //@ts-ignore
-  const memoizedImage = useMemo(() => normalizeImage(image), [image]);
-
   return (
     <Wrapper>
       <BaseTile
@@ -61,8 +54,8 @@ const Tile: FC<Props> = ({
         orientation={orientation}
         responsiveImage={
           <ResponsiveImage
-            alt={memoizedImage?.alternativeText}
-            src={memoizedImage?.url}
+            alt={image?.alternativeText}
+            src={image?.url}
             fallbackSizeRatio='57%'
             minHeight='116px'
             maxHeight={imageHeight}

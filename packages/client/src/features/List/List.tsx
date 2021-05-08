@@ -1,6 +1,5 @@
 import React, { FC } from 'react';
 
-import { FULL_FORMAT, isoDateToFormat } from 'utils/date';
 import { SmallTile, LargeTile } from 'features/Tile';
 import Event from 'features/Event';
 import Network from 'features/Network';
@@ -53,10 +52,7 @@ const List: FC<Props> = ({
           id,
           Boolean(maxParticipants) && actualParticipants >= maxParticipants,
         ),
-      meta:
-        link === Page.NETWORKS
-          ? undefined
-          : isoDateToFormat(startDate, FULL_FORMAT),
+      meta: link === Page.NETWORKS ? undefined : startDate,
       participants: actualParticipants,
       maxParticipants: maxParticipants,
       hideMaxParticipants: hideMaxParticipants,

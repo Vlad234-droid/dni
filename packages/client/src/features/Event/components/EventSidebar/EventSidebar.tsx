@@ -1,12 +1,10 @@
 import React, { FC, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Button from '@beans/button';
-import slice from 'lodash.slice';
 import isEmpty from 'lodash.isempty';
 
-import { EmptyContainer } from 'features/Common';
+import { EmptyContainer, Spinner } from 'features/Common';
 import { LargeTile, SmallTile } from 'features/Tile';
-import { FULL_FORMAT, isoDateToFormat } from 'utils/date';
 import { Loading } from 'store/types';
 import { EntityListPayload } from 'types/payload';
 import { Page } from 'features/Page';
@@ -23,10 +21,12 @@ const MAX_VISIBLE_ITEMS = 3;
 export const FILTERS = {
   _start: 0,
   _limit: MAX_VISIBLE_ITEMS,
+  _sort: 'startDate:ASC',
+  startDate_gte: new Date(),
 };
 
 type Props = {
-  events?: Event[];
+  events: Event[];
   loading: Loading;
   loadEvents: (filters: EntityListPayload) => void;
   loadCount: (filters: EntityListPayload) => void;
@@ -47,8 +47,6 @@ const EventSidebar: FC<Props> = ({
   networks,
 }) => {
   useEffect(() => {
-    if (!isEmpty(events)) return;
-
     // TODO: move to avoid unnecessary reassignment
     const filters = {
       ...FILTERS,
@@ -58,7 +56,7 @@ const EventSidebar: FC<Props> = ({
 
     loadEvents(filters);
     loadCount(filters);
-  }, [events, networks]);
+  }, [networks]);
 
   useEffect(() => {
     if (!isEmpty(participants)) return;
@@ -71,7 +69,7 @@ const EventSidebar: FC<Props> = ({
   if (loading === Loading.PENDING) {
     return (
       <Wrapper data-testid={TEST_ID}>
-        <div>Loading events...</div>
+        <Spinner height='300px' />
       </Wrapper>
     );
   }
@@ -97,7 +95,7 @@ const EventSidebar: FC<Props> = ({
     <Wrapper data-testid={TEST_ID}>
       <Title>Events</Title>
       <List>
-        {slice(events, 0, MAX_VISIBLE_ITEMS).map((eventItem, index) => {
+        {events.map((eventItem, index) => {
           const {
             id,
             title,
@@ -126,9 +124,7 @@ const EventSidebar: FC<Props> = ({
                   )}
                 />
               )}
-              // TODO: dont like transformation here - its duplicated everywhere - and is created again and again in lists
-              // TODO: transform before save to store
-              meta={isoDateToFormat(startDate, FULL_FORMAT)}
+              meta={startDate}
               link={Page.EVENTS}
               imageHeight='unset'
             />
@@ -148,7 +144,7 @@ const EventSidebar: FC<Props> = ({
                   )}
                 />
               )}
-              meta={isoDateToFormat(startDate, FULL_FORMAT)}
+              meta={startDate}
               link={Page.EVENTS}
               imageHeight='136px'
             />

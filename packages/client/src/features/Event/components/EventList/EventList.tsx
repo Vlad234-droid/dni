@@ -8,7 +8,7 @@ import { useMedia } from 'context/InterfaceContext';
 import { EntityListPayload } from 'types/payload';
 import { DEFAULT_PAGINATION, DEFAULT_FILTERS } from 'config/constants';
 import List from 'features/List';
-import { EmptyContainer } from 'features/Common';
+import { EmptyContainer, Spinner } from 'features/Common';
 import { Page } from 'features/Page';
 import { Loading } from 'store/types';
 
@@ -43,6 +43,7 @@ type Props = {
   loadEvents: (filters: EntityListPayload) => void;
   loadCount: (filters: EntityListPayload) => void;
   loadParticipants: () => void;
+  handleClear: () => void;
   participants?: Record<number, number>;
   total: number;
   networks: number[];
@@ -59,6 +60,7 @@ const EventList: FC<Props> = ({
   loadEvents,
   loadCount,
   loadParticipants,
+  handleClear,
   participants,
   networks,
   page,
@@ -73,9 +75,12 @@ const EventList: FC<Props> = ({
     total,
   ]);
 
+  const isLoading = useMemo(() => loading === Loading.PENDING, [loading]);
+
   useEffect(() => {
     // TODO: move to avoid unnecessary reassignment
     const filters = {
+      ...DEFAULT_PAGINATION,
       ...DEFAULT_FILTERS,
       ...getPayloadWhere(filter),
       network_in: [...networks, -1],
@@ -91,32 +96,16 @@ const EventList: FC<Props> = ({
   }, [networks, hasMore, page, total, filter]);
 
   useEffect(() => {
+    handleClear();
+  }, [filter]);
+
+  useEffect(() => {
     if (!isEmpty(participants)) return;
 
     loadParticipants();
   }, []);
 
   if (loading == Loading.IDLE) return null;
-
-  if (loading === Loading.PENDING && isEmpty(events)) {
-    return (
-      <Wrapper data-testid={TEST_ID}>
-        <div>Loading events...</div>
-      </Wrapper>
-    );
-  }
-
-  // TODO: fix case loading is set faster than events actually loaded
-  if (loading === Loading.SUCCEEDED && isEmpty(events)) {
-    return (
-      <Wrapper data-testid={TEST_ID}>
-        <EmptyContainer
-          description='Unfortunately, we did not find any matches for your request'
-          explanation='Please change your filtering criteria to try again.'
-        />
-      </Wrapper>
-    );
-  }
 
   if (loading === Loading.FAILED) {
     return (
@@ -132,28 +121,36 @@ const EventList: FC<Props> = ({
         initialFilters={initialFilters}
         onChange={(key) => onFilterChange(key as Filter)}
       />
-      <>
-        <List
-          link={Page.EVENTS}
-          // TODO: event is not correct type Event
-          //@ts-ignore
-          items={events}
-          hideMaxParticipants={false}
-          participants={participants}
-          isMobile={isMobile}
-          renderAction={(id, disabled) => (
-            <EventAction id={id} disabled={disabled} />
-          )}
+      {!isLoading && isEmpty(events) && !hasMore ? (
+        <EmptyContainer
+          description='Unfortunately, we did not find any matches for your request'
+          explanation='Please change your filtering criteria to try again.'
         />
-        <Button
-          disabled={!hasMore || loading === 'pending'}
-          variant='secondary'
-          onClick={onPageChange}
-        >
-          More New Events
-          <Icon graphic='expand' size='xx' />
-        </Button>
-      </>
+      ) : (
+        <>
+          <List
+            link={Page.EVENTS}
+            // TODO: event is not correct type Event
+            //@ts-ignore
+            items={events}
+            hideMaxParticipants={false}
+            participants={participants}
+            isMobile={isMobile}
+            renderAction={(id, disabled) => (
+              <EventAction id={id} disabled={disabled} />
+            )}
+          />
+          {isLoading && <Spinner />}
+          <Button
+            disabled={!hasMore || loading === 'pending'}
+            variant='secondary'
+            onClick={onPageChange}
+          >
+            More New Events
+            <Icon graphic='expand' size='xx' />
+          </Button>
+        </>
+      )}
     </Wrapper>
   );
 };

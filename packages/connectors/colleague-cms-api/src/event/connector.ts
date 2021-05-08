@@ -10,6 +10,12 @@ import {
 import { DniCmsApiContext, ApiInput } from '../types';
 
 export const cmsEventsApiDef = defineAPI((endpoint) => ({
+  getEventsCount: endpoint
+    .get('/events/count')
+    .params<EventApiParams>()
+    .response<number>()
+    .build(),
+
   getEvent: endpoint
     .get('/events/:id')
     .params<Pick<EventApiParams, 'id'>>()
@@ -20,12 +26,6 @@ export const cmsEventsApiDef = defineAPI((endpoint) => ({
     .get('/events')
     .params<EventApiParams>()
     .response<Event[]>()
-    .build(),
-
-  getEventsCount: endpoint
-    .get('/events/count')
-    .params<EventApiParams>()
-    .response<number>()
     .build(),
 
   postEvent: endpoint

@@ -7,7 +7,6 @@ import ResponsiveImage from '@beans/responsive-image';
 import { headingSM } from 'styles';
 import { useMedia } from 'context/InterfaceContext';
 import Carousel from 'features/Carousel';
-import { normalizeImage } from 'utils/content';
 
 import NetworkPartnersList from './NetworkPartnersList';
 
@@ -27,10 +26,8 @@ const NetworkPartners: FC<Props> = ({ email, partners }) => {
           {partners.map(({ image, id }) => (
             <ResponsiveImage
               key={id}
-              //@ts-ignore
-              alt={normalizeImage(image).alternativeText}
-              //@ts-ignore
-              src={normalizeImage(image).url}
+              alt={image?.alternativeText}
+              src={image?.url}
               fallbackSizeRatio='57%'
               maxWidth='170px'
               objectFit='contain'

@@ -8,6 +8,7 @@ import EventList from './EventList';
 import {
   getList as getEvents,
   getCount,
+  clear,
   listSelector as eventsSelector,
   getParticipants,
   Filter,
@@ -31,6 +32,7 @@ const EventSidebarContainer: FC = () => {
   const loadEvents = (filters: EntityListPayload) =>
     dispatch(getEvents(filters));
   const loadCount = (filters: EntityListPayload) => dispatch(getCount(filters));
+  const handleClear = () => dispatch(clear());
   const loadParticipants = () => dispatch(getParticipants());
 
   const handlePageChange = () => setPage(page + 1);
@@ -45,6 +47,7 @@ const EventSidebarContainer: FC = () => {
       networks={networks}
       loadEvents={loadEvents}
       loadCount={loadCount}
+      handleClear={handleClear}
       loadParticipants={loadParticipants}
       page={page}
       onPageChange={handlePageChange}

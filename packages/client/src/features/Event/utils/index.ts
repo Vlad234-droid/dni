@@ -23,7 +23,9 @@ export const getPayloadWhere = (filter: Filter) => {
   let where = {};
   switch (filter) {
     case ALL: {
-      where = {};
+      where = {
+        startDate_gte: new Date(),
+      };
       break;
     }
     case THIS_WEEK: {

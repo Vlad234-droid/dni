@@ -2,12 +2,11 @@ import React, { FC, useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import ResponsiveImage from '@beans/responsive-image';
 
-import { PostList } from 'features/Post';
+import { PostList, BY_EVENT } from 'features/Post';
 import { useImageWrapper } from 'context';
-import { normalizeImage } from 'utils/content';
 import ButtonFilter from 'features/ButtonFilter';
 import { Loading } from 'store/types';
-import { EmptyContainer } from 'features/Common';
+import { EmptyContainer, Spinner } from 'features/Common';
 
 import Event from '../../config/types';
 import EventHeader from '../EventHeader';
@@ -53,7 +52,7 @@ const EventComponent: FC<Props> = ({
   loading,
   participants,
 }) => {
-  const [, setFilter] = useState<Filter>(ALL);
+  const [filter, setFilter] = useState<Filter>(ALL);
   const imageWrapperEl = useImageWrapper();
 
   useEffect(() => {
@@ -75,7 +74,7 @@ const EventComponent: FC<Props> = ({
   if (loading === Loading.PENDING) {
     return (
       <Wrapper data-testid={TEST_ID}>
-        <div>Loading events...</div>
+        <Spinner height='300px' />
       </Wrapper>
     );
   }
@@ -97,17 +96,14 @@ const EventComponent: FC<Props> = ({
   }
 
   if (loading === Loading.SUCCEEDED && event) {
-    // TODO: normalize image before save to store
-    const normalizeImg = normalizeImage(event.image);
-
     return (
       <Wrapper data-testid={TEST_ID}>
         {imageWrapperEl &&
           createPortal(
             <ResponsiveImage
               key={event.id}
-              alt={normalizeImg?.alternativeText}
-              src={normalizeImg?.url}
+              alt={event.image?.alternativeText}
+              src={event.image?.url}
               fallbackSizeRatio='57%'
               objectFit='cover'
             />,
@@ -122,7 +118,11 @@ const EventComponent: FC<Props> = ({
                 onChange={(key) => setFilter(key as Filter)}
               />
             </Filters>
-            <PostList entityId={id} filter={'BY_EVENT'} />
+            <PostList
+              entityId={id}
+              filter={BY_EVENT}
+              isArchived={filter === ARCHIVED}
+            />
           </LeftContent>
         </Content>
       </Wrapper>

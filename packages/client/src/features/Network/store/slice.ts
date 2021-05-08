@@ -10,11 +10,12 @@ import { DEFAULT_META } from 'config/constants';
 
 import Network, * as T from '../config/types';
 import * as A from './actionTypes';
+import { Loading } from 'store/types';
 
 const networksAdapter = createEntityAdapter<Network>();
 
 const initialState: T.State = networksAdapter.getInitialState({
-  isLoading: false,
+  loading: Loading.IDLE,
   error: null,
   meta: DEFAULT_META,
   participants: {},
@@ -77,15 +78,20 @@ const slice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    const startLoading = (state: T.State) => {
-      state.isLoading = true;
+    const setPending = (state: T.State) => {
+      state.loading = Loading.PENDING;
     };
-    const stopLoading = (state: T.State) => {
-      state.isLoading = false;
+
+    const setSucceeded = (state: T.State) => {
+      state.loading = Loading.SUCCEEDED;
+    };
+
+    const setFailed = (state: T.State) => {
+      state.loading = Loading.FAILED;
     };
 
     builder
-      .addCase(getCount.pending, startLoading)
+      .addCase(getCount.pending, setPending)
       .addCase(getCount.fulfilled, (state: T.State, action) => {
         const total = action.payload;
         const meta = state.meta;
@@ -93,9 +99,9 @@ const slice = createSlice({
           ...meta,
           total,
         };
-        stopLoading(state);
+        setSucceeded(state);
       })
-      .addCase(getList.pending, startLoading)
+      .addCase(getList.pending, setPending)
       .addCase(getList.fulfilled, (state: T.State, action) => {
         const data = action.payload;
         networksAdapter.upsertMany(state, data);
@@ -104,27 +110,27 @@ const slice = createSlice({
           ...meta,
         };
 
-        stopLoading(state);
+        setSucceeded(state);
       })
-      .addCase(getList.rejected, stopLoading)
-      .addCase(getOne.pending, startLoading)
+      .addCase(getList.rejected, setFailed)
+      .addCase(getOne.pending, setPending)
       .addCase(getOne.fulfilled, (state: T.State, action) => {
         networksAdapter.upsertOne(state, action.payload);
-        stopLoading(state);
+        setSucceeded(state);
       })
-      .addCase(getOne.rejected, stopLoading)
-      .addCase(createOne.pending, startLoading)
+      .addCase(getOne.rejected, setFailed)
+      .addCase(createOne.pending, setPending)
       .addCase(createOne.fulfilled, (state: T.State, action) => {
         networksAdapter.upsertOne(state, action.payload);
-        stopLoading(state);
+        setSucceeded(state);
       })
-      .addCase(createOne.rejected, stopLoading)
-      .addCase(getParticipants.pending, startLoading)
+      .addCase(createOne.rejected, setFailed)
+      .addCase(getParticipants.pending, setPending)
       .addCase(getParticipants.fulfilled, (state: T.State, action) => {
         state.participants = action.payload;
-        stopLoading(state);
+        setSucceeded(state);
       })
-      .addCase(getParticipants.rejected, stopLoading);
+      .addCase(getParticipants.rejected, setFailed);
   },
 });
 
