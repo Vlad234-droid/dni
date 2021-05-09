@@ -3,6 +3,7 @@ import React, { FC } from 'react';
 import { useMedia } from 'context/InterfaceContext';
 
 import { Post } from '../../config/types';
+import { RichTextRenderer } from 'features/Common';
 import { PostPublishedAttachments } from '../PostAttachments';
 import {
   PostPublisherAvatarBox,
@@ -43,7 +44,9 @@ const PostPublished: FC<PostPublishedProps> = ({ item }) => {
           <PostPublishedAttachments attachments={attachments} />
         )}
         <PostTitle>{title}</PostTitle>
-        <PostDescription>{content}</PostDescription>
+        <PostDescription>
+          <RichTextRenderer source={content} />
+        </PostDescription>
         {/* <PostControls id={id} emotions={emotions} /> */}
       </PostContent>
     </PostPublishedWrapper>

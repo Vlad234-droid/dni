@@ -1,6 +1,7 @@
 import React, { FC, useState } from 'react';
 import useStore from 'hooks/useStore';
 
+import { addDuration } from 'utils/date';
 import EventCarousel from './EventCarousel';
 import useFetchEvents from '../../hooks/useFetchEvents';
 
@@ -15,6 +16,7 @@ const EventCarouselContainer: FC = () => {
     _limit: MAX_VISIBLE_ITEMS,
     _sort: 'startDate:ASC',
     startDate_gte: new Date(),
+    startDate_lte: addDuration({ weeks: 2 }),
     network_in: [...networks, -1],
   });
 
