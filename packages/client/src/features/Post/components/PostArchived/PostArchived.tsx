@@ -3,6 +3,7 @@ import { FC, useState } from 'react';
 import { useMedia } from 'context/InterfaceContext';
 
 import { Post } from '../../config/types';
+import { RichTextRenderer } from 'features/Common';
 import {
   PostPublisherAvatarBox,
   PostPublisherName,
@@ -53,7 +54,9 @@ const PostArchived: FC<PostArchivedProps> = ({ item }) => {
       {isContentVisible && (
         <PostContent>
           {title && <PostTitle>{title}</PostTitle>}
-          <PostDescription>{content}</PostDescription>
+          <PostDescription>
+            <RichTextRenderer source={content} />
+          </PostDescription>
         </PostContent>
       )}
     </PostArchivedWrapper>

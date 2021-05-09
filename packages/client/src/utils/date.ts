@@ -1,4 +1,4 @@
-import { DateTime, DurationUnit } from 'luxon';
+import { DateTime, DurationUnit, DurationObject } from 'luxon';
 
 const DATE_FORMAT = 'yyyy-MM-dd';
 const TIME_FORMAT = 'HH:mm';
@@ -17,11 +17,15 @@ const firstDayOf = (duration: DurationUnit) =>
 
 const lastDayOf = (duration: DurationUnit) => DateTime.local().endOf(duration);
 
+const addDuration = (duration: DurationObject) =>
+  DateTime.local().plus(duration).toJSDate();
+
 export {
   dateToFormat,
   isoDateToFormat,
   firstDayOf,
   lastDayOf,
+  addDuration,
   DATE_FORMAT,
   TIME_FORMAT,
   DATE_TIME_FORMAT,
