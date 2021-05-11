@@ -1,0 +1,50 @@
+{
+  "app": {
+    "name": "diversity-and-inclusion"
+  },
+  "build": {
+    "dockerFileDirectory": "./dockerfiles/Dockerfile",
+    "args": {
+      "NODE_ENV": {
+        "type": "plain",
+        "value": "development"
+      },
+      "NPM_ACCESS_TOKEN": {
+        "type": "secret",
+        "name": "TODO_npm_access_token"
+      }
+    }
+  },
+  "deployment": {
+    "envs": {
+      "NODE_ENV": {
+        "type": "plain",
+        "value": "development"
+      },
+      "POSTGRES_DB": {
+        "type": "plain",
+        "value": "di_database"
+      },
+      "DATABASE_PORT": {
+        "type": "plain",
+        "value": "5432"
+      },
+      "DATABASE_HOST": {
+        "type": "plain",
+        "value": "euw-dev-213-dai-dipostgres.postgres.database.azure.com"
+      },
+      "POSTGRES_SSL_ENABLED": {
+        "type": "plain",
+        "value": "true"
+      },
+      "POSTGRES_USER": {
+        "type": "secret",
+        "name": "postgres_user"
+      },
+      "POSTGRES_PASSWORD": {
+        "type": "secret",
+        "name": "postgres_password"
+      }
+    }
+  }
+}
