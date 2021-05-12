@@ -17,9 +17,11 @@ import { Wrapper } from './styled';
 
 const EventTable: FC = () => {
   const { isMobile } = useMedia();
+  const { networks = [] } = useStore((state) => state.auth.user);
   const [page, setPage] = useState<number>(0);
   const filters = {
     endDate_lt: new Date(),
+    network_in: [...networks, -1],
   };
   const { participants } = useStore((state) => state.events);
   const [isLoading, list, hasMore] = useFetchEvents(filters, page, true);
@@ -30,7 +32,7 @@ const EventTable: FC = () => {
         Past Events
       </Heading>
       {isEmpty(list) ? (
-        <EmptyContainer description="You don't have any past events" />
+        <EmptyContainer description='You have no past events' />
       ) : (
         <>
           <Table styles={styles}>
