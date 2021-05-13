@@ -1,7 +1,7 @@
 const ContentExample = () => <>Content example</>;
 const ContentErrorEntity = () => <>Something went wrong</>;
 const ContentSuccessEntity = () => <>Entity successfully created</>;
-const ContentSuccessCopyLink = () => <>Link successfully copied</>;
+const ContentSuccessCopyLink = () => <>Link copied to clipboard</>;
 
 export {
   ContentExample,

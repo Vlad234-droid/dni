@@ -3,6 +3,7 @@ import { TitleWithEllipsis } from '@beans/title-link';
 import Icon from '@beans/icon';
 
 import { StatusLabel, StatusType, CopyLink } from 'features/Common';
+
 import { useMedia } from 'context/InterfaceContext';
 
 import EventAction from '../EventAction';
