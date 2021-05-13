@@ -3,6 +3,7 @@ import React, { FC } from 'react';
 import { useMedia } from 'context/InterfaceContext';
 
 import { RichTextRenderer, CopyLink } from 'features/Common';
+import { Page } from 'features/Page';
 
 import { Post } from '../../config/types';
 import { PostPublishedAttachments } from '../PostAttachments';
@@ -16,7 +17,6 @@ import {
   PostContent,
   PostPublishedWrapper,
 } from './styled';
-import { Page } from '../../../Page';
 
 interface PostPublishedProps {
   item: Post;

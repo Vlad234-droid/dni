@@ -13,7 +13,7 @@ const Wrapper = styled.div`
 const Description = styled.div`
   ${textSM};
   margin-top: 30px;
-  color: ${({ theme }) => theme.colors.warning} !important;
+  color: ${({ theme }) => theme.colors.warning};
 `;
 
 const Explanation = styled.div`
