@@ -28,7 +28,6 @@ describe('<EventSidebar />', () => {
       loadCount: jest.fn(),
       loadParticipants: jest.fn(),
       participants: {},
-      count: 0,
       networks: [1, 2],
     };
 
@@ -45,12 +44,13 @@ describe('<EventSidebar />', () => {
         ...props,
         loading: Loading.PENDING,
       };
-      const { queryByTestId, getByText } = renderWithProviders(
+
+      const { queryByTestId } = renderWithProviders(
         <EventSidebar {...newProps} />,
       );
 
       expect(queryByTestId(TEST_ID)).toBeInTheDocument();
-      expect(getByText('Loading events...')).toBeInTheDocument();
+      expect(queryByTestId('spinner')).toBeInTheDocument();
     });
 
     it('should render failed state, if loading is failed', () => {
@@ -97,15 +97,12 @@ describe('<EventSidebar />', () => {
         queryByTestId,
         queryAllByTestId,
         queryByText,
-      } = renderWithProviders(
-        // @ts-ignore
-        <EventSidebar {...newProps} />,
-      );
+      } = renderWithProviders(<EventSidebar {...newProps} />);
 
       expect(queryByTestId(TEST_ID)).toBeInTheDocument();
       expect(queryAllByTestId(LARGE_TILE_TEST_ID)).toHaveLength(1);
       expect(queryAllByTestId(SMALL_TILE_TEST_ID)).toHaveLength(0);
-      expect(queryByText('All events')).not.toBeInTheDocument();
+      expect(queryByText('All events')).toBeInTheDocument();
     });
 
     it('should render 1 large and 1 small tiles, if 2 events in the list', () => {
@@ -124,15 +121,12 @@ describe('<EventSidebar />', () => {
         queryByTestId,
         queryAllByTestId,
         queryByText,
-      } = renderWithProviders(
-        // @ts-ignore
-        <EventSidebar {...newProps} />,
-      );
+      } = renderWithProviders(<EventSidebar {...newProps} />);
 
       expect(queryByTestId(TEST_ID)).toBeInTheDocument();
       expect(queryAllByTestId(LARGE_TILE_TEST_ID)).toHaveLength(1);
       expect(queryAllByTestId(SMALL_TILE_TEST_ID)).toHaveLength(1);
-      expect(queryByText('All events')).not.toBeInTheDocument();
+      expect(queryByText('All events')).toBeInTheDocument();
     });
 
     it('should render 1 large and 2 small tiles, if 3 events in the list', () => {
@@ -151,62 +145,11 @@ describe('<EventSidebar />', () => {
         queryByTestId,
         queryAllByTestId,
         queryByText,
-      } = renderWithProviders(
-        // @ts-ignore
-        <EventSidebar {...newProps} />,
-      );
+      } = renderWithProviders(<EventSidebar {...newProps} />);
 
       expect(queryByTestId(TEST_ID)).toBeInTheDocument();
       expect(queryAllByTestId(LARGE_TILE_TEST_ID)).toHaveLength(1);
       expect(queryAllByTestId(SMALL_TILE_TEST_ID)).toHaveLength(2);
-      expect(queryByText('All events')).not.toBeInTheDocument();
-    });
-
-    it('should render 1 large, 2 small tiles and All events button, if more than 3 events in the list', () => {
-      const COLLECTION_SIZE = 4;
-      const eventCRUD = buildEventCRUD(COLLECTION_SIZE);
-
-      const events = eventCRUD.findAll();
-
-      const newProps = {
-        ...props,
-        loading: Loading.SUCCEEDED,
-        events,
-      };
-
-      const {
-        queryByTestId,
-        queryAllByTestId,
-        queryByText,
-      } = renderWithProviders(
-        // @ts-ignore
-        <EventSidebar {...newProps} />,
-      );
-
-      expect(queryByTestId(TEST_ID)).toBeInTheDocument();
-      expect(queryAllByTestId(LARGE_TILE_TEST_ID)).toHaveLength(1);
-      expect(queryAllByTestId(SMALL_TILE_TEST_ID)).toHaveLength(2);
-      expect(queryByText('All events')).toBeInTheDocument();
-    });
-
-    it('should render All events button, if count > 3 and events are no more than 3', () => {
-      const COLLECTION_SIZE = 3;
-      const eventCRUD = buildEventCRUD(COLLECTION_SIZE);
-
-      const events = eventCRUD.findAll();
-
-      const newProps = {
-        ...props,
-        loading: Loading.SUCCEEDED,
-        events,
-        count: 4,
-      };
-
-      const { queryByText } = renderWithProviders(
-        // @ts-ignore
-        <EventSidebar {...newProps} />,
-      );
-
       expect(queryByText('All events')).toBeInTheDocument();
     });
 
@@ -228,7 +171,6 @@ describe('<EventSidebar />', () => {
       };
 
       const { queryByText } = renderWithProviders(
-        // @ts-ignore
         <EventSidebar {...newProps} />,
       );
 
@@ -248,7 +190,7 @@ describe('<EventSidebar />', () => {
       loadCount: jest.fn(),
       loadParticipants: jest.fn(),
       participants: {},
-      count: 0,
+      total: 0,
       networks: [1, 2],
     };
 
@@ -267,27 +209,6 @@ describe('<EventSidebar />', () => {
       expect(props.loadEvents).toHaveBeenCalledWith(filters);
       expect(props.loadCount).toHaveBeenCalledTimes(1);
       expect(props.loadCount).toHaveBeenCalledWith(filters);
-    });
-
-    it('should not call loadEvents and loadCount, if not empty events', async () => {
-      const COLLECTION_SIZE = 4;
-      const eventCRUD = buildEventCRUD(COLLECTION_SIZE);
-
-      const events = eventCRUD.findAll();
-
-      const newProps = {
-        ...props,
-        loading: Loading.SUCCEEDED,
-        events,
-      };
-
-      await act(async () => {
-        // @ts-ignore
-        renderWithProviders(<EventSidebar {...newProps} />);
-      });
-
-      expect(props.loadEvents).not.toHaveBeenCalled();
-      expect(props.loadCount).not.toHaveBeenCalled();
     });
 
     it('should call loadParticipants, if empty participants', async () => {

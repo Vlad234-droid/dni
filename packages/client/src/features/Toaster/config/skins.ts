@@ -3,6 +3,7 @@ import {
   ContentExample,
   ContentSuccessEntity,
   ContentErrorEntity,
+  ContentSuccessCopyLink,
 } from '../components/ToasterSkinContent';
 
 const skins: Record<
@@ -34,6 +35,12 @@ const skins: Record<
     variant: ToastVariant.ERROR,
     title: 'Error',
     Content: ContentErrorEntity,
+    timeout: 5000,
+  },
+  [ToastSkin.LINK_COPY_SUCCESS]: {
+    variant: ToastVariant.SUCCESS,
+    title: 'Success',
+    Content: ContentSuccessCopyLink,
     timeout: 5000,
   },
 };

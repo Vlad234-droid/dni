@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 
 import { Page, PAGE_PREFIX } from 'features/Page';
-import { PostList, ALL } from 'features/Post';
+import { PostList, PostSingle } from 'features/Post';
 import { EventSidebar } from 'features/Event';
 import { useMedia } from 'context/InterfaceContext';
 
@@ -10,6 +10,7 @@ import { Container, Left, Right } from './styled';
 
 const NetworkNews: FC = () => {
   const { isDesktop } = useMedia();
+  const postId = Number(window.location.pathname.split('/').pop());
 
   return (
     <div data-testid={`${PAGE_PREFIX}${Page.NETWORK_NEWS}`}>
@@ -17,10 +18,10 @@ const NetworkNews: FC = () => {
         renderMain={() => (
           <Container>
             <Left data-testid='container_feeds'>
-              <PostList filter={ALL} />
+              {postId ? <PostSingle postId={postId} /> : <PostList />}
             </Left>
             {isDesktop && (
-              <Right>
+              <Right data-testid='container_sidebar'>
                 <EventSidebar />
               </Right>
             )}

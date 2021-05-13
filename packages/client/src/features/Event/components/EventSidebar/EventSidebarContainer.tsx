@@ -15,11 +15,7 @@ import {
 const EventSidebarContainer: FC = () => {
   const dispatch = useDispatch();
   const events = useSelector(eventsSelector);
-  const {
-    participants,
-    loading,
-    meta: { total },
-  } = useStore((state) => state.events);
+  const { participants, loading } = useStore((state) => state.events);
   const { networks = [] } = useStore((state) => state.auth.user);
 
   const loadEvents = (filters: EntityListPayload) =>
@@ -29,7 +25,6 @@ const EventSidebarContainer: FC = () => {
 
   return (
     <EventSidebar
-      total={total}
       events={events}
       participants={participants}
       loading={loading}

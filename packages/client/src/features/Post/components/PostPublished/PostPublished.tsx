@@ -2,8 +2,9 @@ import React, { FC } from 'react';
 
 import { useMedia } from 'context/InterfaceContext';
 
+import { RichTextRenderer, CopyLink } from 'features/Common';
+
 import { Post } from '../../config/types';
-import { RichTextRenderer } from 'features/Common';
 import { PostPublishedAttachments } from '../PostAttachments';
 import {
   PostPublisherAvatarBox,
@@ -15,6 +16,7 @@ import {
   PostContent,
   PostPublishedWrapper,
 } from './styled';
+import { Page } from '../../../Page';
 
 interface PostPublishedProps {
   item: Post;
@@ -23,7 +25,7 @@ interface PostPublishedProps {
 const TEST_ID = 'post-published';
 
 const PostPublished: FC<PostPublishedProps> = ({ item }) => {
-  const { title, content, authorName, attachments } = item;
+  const { title, content, authorName, attachments, id } = item;
   const media = useMedia();
 
   return (
@@ -47,7 +49,8 @@ const PostPublished: FC<PostPublishedProps> = ({ item }) => {
         <PostDescription>
           <RichTextRenderer source={content} />
         </PostDescription>
-        {/* <PostControls id={id} emotions={emotions} /> */}
+        <CopyLink pathname={`/${Page.NETWORK_NEWS}/${id}`} />
+        {/*<PostControls id={id} emotions={emotions} /> */}
       </PostContent>
     </PostPublishedWrapper>
   );

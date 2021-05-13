@@ -1,6 +1,5 @@
 import React, { FC } from 'react';
 import styled from 'styled-components';
-
 import BeanSpinner from '@beans/spinner';
 import { XX, XS, SM, XL } from '@beans/constants';
 
