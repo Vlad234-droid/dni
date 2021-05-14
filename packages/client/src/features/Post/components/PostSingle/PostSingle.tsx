@@ -40,46 +40,10 @@ const PostSingle: FC<Props> = ({
       );
     }
 
-    const { network, event, archived } = post;
-
-    if (archived)
+    if (post.archived)
       return <EmptyContainer description='Post has been archived' />;
 
-    if (!network && !event) return <PostItem item={post} />;
-
-    if (event && events) {
-      return events.includes(event.id) ? (
-        <PostItem item={post} />
-      ) : (
-        <EmptyContainer
-          description={
-            <div>
-              Post is not available. Please join Event{' '}
-              <Link href={`/${Page.EVENTS}/${event.id}`}>{event.title}</Link>{' '}
-              first
-            </div>
-          }
-        />
-      );
-    }
-
-    if (network && networks) {
-      return networks.includes(network.id) ? (
-        <PostItem item={post} />
-      ) : (
-        <EmptyContainer
-          description={
-            <div>
-              Post is not available. Please join Network{' '}
-              <Link href={`/${Page.NETWORKS}/${network.id}`}>
-                {network.title}
-              </Link>{' '}
-              first
-            </div>
-          }
-        />
-      );
-    }
+    return <PostItem item={post} />;
   }, [post, networks, events, isLoading]);
 
   return (
