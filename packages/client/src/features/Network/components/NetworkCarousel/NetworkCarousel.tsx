@@ -5,7 +5,6 @@ import useFetch from 'hooks/useFetch';
 import useStore from 'hooks/useStore';
 import { EmptyContainer, Spinner } from 'features/Common';
 import { Page } from 'features/Page';
-import { useMedia } from 'context/InterfaceContext';
 import List from 'features/List';
 
 import { Network } from '../../config/types';
@@ -13,7 +12,6 @@ import { serializer } from '../../store';
 import NetworkAction from '../NetworkAction';
 
 const NetworkCarousel: FC = () => {
-  const { isMobile } = useMedia();
   const [{ response: list, isLoading }, doFetch] = useFetch<Network[]>([]);
   const { participants } = useStore((state) => state.networks);
 
@@ -40,7 +38,6 @@ const NetworkCarousel: FC = () => {
       //@ts-ignore
       items={list}
       participants={participants}
-      isMobile={isMobile}
       renderAction={(id) => <NetworkAction id={id} />}
     />
   );

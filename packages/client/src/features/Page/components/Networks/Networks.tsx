@@ -24,7 +24,7 @@ const Networks: FC = () => {
             )}
           />
           <PageWrapper>
-            {/*<NetworkCarousel />*/}
+            <NetworkCarousel />
             <NetworkList />
           </PageWrapper>
         </div>

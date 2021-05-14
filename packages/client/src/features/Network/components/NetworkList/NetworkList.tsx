@@ -10,7 +10,6 @@ import { FilterPayload } from 'types/payload';
 import { DEFAULT_PAGINATION } from 'config/constants';
 import { useScrollContainer } from 'context/ScrollContainerContext';
 import List from 'features/List';
-import { useMedia } from 'context/InterfaceContext';
 import { EmptyContainer, Spinner } from 'features/Common';
 import { Page } from 'features/Page';
 import { Loading } from 'store/types';
@@ -43,9 +42,8 @@ const initialFilters = [
 ];
 
 const NetworkList: FC = () => {
-  const { isMobile } = useMedia();
   const dispatch = useDispatch();
-  const { networks = [] } = useStore((state) => state.auth.user);
+  const { networks } = useStore((state) => state.auth.user);
   const [filter, setFilter] = useState<Filter>(YOUR_NETWORKS);
   const [filters, setFilters] = useState<
     FilterPayload & { id_in?: number[] }
@@ -89,8 +87,8 @@ const NetworkList: FC = () => {
   }, [filters]);
 
   useEffect(() => {
-    if (filter == YOUR_NETWORKS && !isEmpty(networks)) {
-      setFilters({ id_in: [...networks, -1] });
+    if (filter == YOUR_NETWORKS) {
+      setFilters({ id_in: [...(networks || []), -1] });
     }
 
     if (filter == ALL) {
@@ -118,7 +116,7 @@ const NetworkList: FC = () => {
         initialFilters={initialFilters}
         onChange={(key) => setFilter(key as Filter)}
       />
-      {loading === Loading.PENDING && <Spinner />}
+      {isLoading && <Spinner />}
       {loading == Loading.SUCCEEDED && isEmpty(list) && !hasMore ? (
         <EmptyContainer
           description='Unfortunately, we did not find any matches for your request'
@@ -141,7 +139,6 @@ const NetworkList: FC = () => {
               //@ts-ignore
               items={list}
               participants={participants}
-              isMobile={isMobile}
               renderAction={(id) => <NetworkAction id={id} />}
             />
           </InfiniteScroll>

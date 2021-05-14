@@ -7,6 +7,7 @@ import { Page } from 'features/Page';
 
 import { Wrapper } from './styled';
 import { isEventOnAir } from '../Event/utils';
+import { useMedia } from '../../context/InterfaceContext';
 
 type Entity = Event | Network;
 
@@ -16,12 +17,7 @@ type Props = {
   hideMaxParticipants?: boolean;
   participants?: Record<number, number>;
   renderAction: (id: number, disabled: boolean) => JSX.Element;
-  isMobile: boolean;
-  isLoading?: boolean;
 };
-
-// TODO: add loader component
-const Loader = <div key='loader'>Loading ...</div>;
 
 const List: FC<Props> = ({
   link,
@@ -29,9 +25,8 @@ const List: FC<Props> = ({
   renderAction,
   hideMaxParticipants,
   participants,
-  isMobile,
-  isLoading = false,
 }) => {
+  const { isMobile } = useMedia();
   const propertiesExtractor = ({
     id,
     //@ts-ignore
@@ -72,7 +67,6 @@ const List: FC<Props> = ({
           <LargeTile {...propertiesExtractor(entity)} />
         ),
       )}
-      {isLoading && Loader}
     </Wrapper>
   );
 };
