@@ -40,6 +40,7 @@
     "@beans/icon": "^18.2.2",
     "@beans/input": "^18.2.3",
     "@beans/link": "^18.2.2",
+    "@beans/modal": "^18.5.1",
     "@beans/multiselect-dropdown": "^18.2.4",
     "@beans/notification": "^18.4.0",
     "@beans/responsive-image": "^18.2.3",

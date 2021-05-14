@@ -4,7 +4,6 @@ import Icon from '@beans/icon';
 import isEmpty from 'lodash.isempty';
 
 import ButtonFilter from 'features/ButtonFilter';
-import { useMedia } from 'context/InterfaceContext';
 import { EntityListPayload } from 'types/payload';
 import { DEFAULT_PAGINATION, DEFAULT_FILTERS } from 'config/constants';
 import List from 'features/List';
@@ -68,8 +67,6 @@ const EventList: FC<Props> = ({
   filter,
   onFilterChange,
 }) => {
-  const { isMobile } = useMedia();
-
   const hasMore = useMemo(() => events && events.length < total, [
     events,
     total,
@@ -135,7 +132,6 @@ const EventList: FC<Props> = ({
             items={events}
             hideMaxParticipants={false}
             participants={participants}
-            isMobile={isMobile}
             renderAction={(id, disabled) => (
               <EventAction id={id} disabled={disabled} />
             )}

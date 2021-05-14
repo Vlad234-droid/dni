@@ -10,7 +10,6 @@ import { FilterPayload } from 'types/payload';
 import { DEFAULT_PAGINATION } from 'config/constants';
 import { useScrollContainer } from 'context/ScrollContainerContext';
 import List from 'features/List';
-import { useMedia } from 'context/InterfaceContext';
 import { EmptyContainer, Spinner } from 'features/Common';
 import { Page } from 'features/Page';
 import { Loading } from 'store/types';
@@ -31,25 +30,24 @@ const TEST_ID = 'networks-list';
 
 const initialFilters = [
   {
-    key: ALL,
-    title: 'All',
+    key: YOUR_NETWORKS,
+    title: 'Your networks',
     active: true,
   },
   {
-    key: YOUR_NETWORKS,
-    title: 'Your networks',
+    key: ALL,
+    title: 'All',
     active: false,
   },
 ];
 
 const NetworkList: FC = () => {
-  const { isMobile } = useMedia();
   const dispatch = useDispatch();
-  const [filter, setFilter] = useState<Filter>(ALL);
+  const { networks } = useStore((state) => state.auth.user);
+  const [filter, setFilter] = useState<Filter>(YOUR_NETWORKS);
   const [filters, setFilters] = useState<
     FilterPayload & { id_in?: number[] }
   >();
-  const { networks = [] } = useStore((state) => state.auth.user);
 
   const scrollContainer = useScrollContainer();
 
@@ -90,15 +88,13 @@ const NetworkList: FC = () => {
 
   useEffect(() => {
     if (filter == YOUR_NETWORKS) {
-      setFilters({ id_in: [...networks, -1] });
+      setFilters({ id_in: [...(networks || []), -1] });
     }
-  }, [filter, networks]);
 
-  useEffect(() => {
     if (filter == ALL) {
       setFilters({});
     }
-  }, [filter]);
+  }, [filter, networks]);
 
   useEffect(() => {
     dispatch(getParticipants());
@@ -120,7 +116,8 @@ const NetworkList: FC = () => {
         initialFilters={initialFilters}
         onChange={(key) => setFilter(key as Filter)}
       />
-      {!isLoading && isEmpty(list) && !hasMore ? (
+      {isLoading && <Spinner />}
+      {loading == Loading.SUCCEEDED && isEmpty(list) && !hasMore ? (
         <EmptyContainer
           description='Unfortunately, we did not find any matches for your request'
           explanation='Please change your filtering criteria to try again.'
@@ -139,11 +136,9 @@ const NetworkList: FC = () => {
           >
             <List
               link={Page.NETWORKS}
-              // TODO: object is not correct type
               //@ts-ignore
               items={list}
               participants={participants}
-              isMobile={isMobile}
               renderAction={(id) => <NetworkAction id={id} />}
             />
           </InfiniteScroll>
