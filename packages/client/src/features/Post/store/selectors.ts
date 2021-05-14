@@ -11,10 +11,11 @@ const networksSelectors = EntityAdapter.getSelectors(
 
 const [entitySelectors, entitySelector] = getEntitySelectors(networksSelectors);
 
-const byIdSelector = createSelector(
-  (state: RootState, id: Post['id']) => entitySelector(state, id),
-  (post) => post,
-);
+const byIdSelector = (id: Post['id']) =>
+  createSelector(
+    (state: RootState) => entitySelector(state, id),
+    (post) => post,
+  );
 
 const listSelector = createSelector(entitySelectors, (posts) => posts);
 

@@ -8,6 +8,7 @@ const routes = [
   Page.NETWORKS,
   Page.NETWORK,
   Page.NETWORK_NEWS,
+  Page.NETWORK_POST,
   Page.REPORTS,
   Page.PROFILE,
   Page.NOT_FOUND,

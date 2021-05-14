@@ -18,6 +18,7 @@ const pages: Record<Page, PageElement> = {
   [Page.NETWORKS]: Networks,
   [Page.NETWORK]: Network,
   [Page.NETWORK_NEWS]: NetworkNews,
+  [Page.NETWORK_POST]: NetworkNews,
   [Page.REPORTS]: Reports,
   [Page.PROFILE]: Profile,
   [Page.NOT_FOUND]: NotFound,

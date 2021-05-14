@@ -1,4 +1,4 @@
-import { FC, useEffect, useState, useCallback, useMemo } from 'react';
+import React, { FC, useEffect, useState, useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroller';
 import isEmpty from 'lodash.isempty';
@@ -29,6 +29,7 @@ const PostList: FC<Props> = ({ entityId, filter = ALL, isArchived }) => {
   } = useStore((state) => state.posts);
   const { networks, events } = useStore((state) => state.auth.user);
   const posts = useSelector(listSelector);
+
   const hasMore = useMemo(() => posts.length < total, [posts, total]);
 
   const [filters, setFilters] = useState<
@@ -116,9 +117,9 @@ const PostList: FC<Props> = ({ entityId, filter = ALL, isArchived }) => {
       getScrollParent={() => scrollContainer!.current}
       useWindow={false}
     >
-      {posts.map((post) => {
-        return <PostItem key={post.id} item={post} />;
-      })}
+      {posts.map((post) => (
+        <PostItem key={post.id} item={post} />
+      ))}
     </InfiniteScroll>
   );
 };

@@ -3,21 +3,21 @@ import styled from 'styled-components';
 
 const Wrapper = styled.div`
   padding: 30px 20px;
-  widht: 100%;
+  width: 100%;
   display: flex;
   flex-direction: column;
-  justity-content: center;
+  justify-content: center;
   align-items: center;
 `;
 
-const Description = styled.p`
-  ${textSM}
+const Description = styled.div`
+  ${textSM};
   margin-top: 30px;
   color: ${({ theme }) => theme.colors.warning};
 `;
 
-const Explanation = styled.p`
-  ${textXX}
+const Explanation = styled.div`
+  ${textXX};
   margin-top: 10px;
   color: ${({ theme }) => theme.colors.text.dark};
 `;

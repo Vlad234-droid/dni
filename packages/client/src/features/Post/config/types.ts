@@ -1,4 +1,3 @@
-// import { Network } from 'features/Network';
 import { Post } from '@dni-connectors/colleague-cms-api';
 
 enum PostStatus {

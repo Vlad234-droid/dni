@@ -18,5 +18,6 @@ export { default as Increase } from './components/Increase';
 export { default as EmptyContainer } from './components/EmptyContainer';
 export { default as Spinner } from './components/Spinner';
 export { default as Link } from './components/Link';
+export { default as CopyLink } from './components/CopyLink';
 export { default as RichTextRenderer } from './components/RichTextRenderer';
 export { FieldWrapper } from './styled';

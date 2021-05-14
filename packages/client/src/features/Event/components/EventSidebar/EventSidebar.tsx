@@ -32,13 +32,11 @@ type Props = {
   loadCount: (filters: EntityListPayload) => void;
   loadParticipants: () => void;
   participants?: Record<number, number>;
-  total: number;
   networks: number[];
 };
 
 const EventSidebar: FC<Props> = ({
   events,
-  total,
   loading,
   loadEvents,
   loadCount,
@@ -47,7 +45,6 @@ const EventSidebar: FC<Props> = ({
   networks,
 }) => {
   useEffect(() => {
-    // TODO: move to avoid unnecessary reassignment
     const filters = {
       ...FILTERS,
       ...DEFAULT_FILTERS,
@@ -151,12 +148,11 @@ const EventSidebar: FC<Props> = ({
           );
         })}
       </List>
-      {events &&
-        (total > MAX_VISIBLE_ITEMS || events.length > MAX_VISIBLE_ITEMS) && (
-          <Link to={Page.EVENTS}>
-            <Button variant='secondary'>All events</Button>
-          </Link>
-        )}
+      {events && (
+        <Link to={Page.EVENTS}>
+          <Button variant='secondary'>All events</Button>
+        </Link>
+      )}
     </Wrapper>
   );
 };

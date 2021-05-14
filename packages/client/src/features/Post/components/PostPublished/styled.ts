@@ -48,7 +48,7 @@ const PostTitle = styled.h2`
 `;
 
 const PostDescription = styled.div`
-  margin: 0;
+  margin: 0 0 24px;
   padding-top: 8px;
   font-size: 16px;
   line-height: 24px;
