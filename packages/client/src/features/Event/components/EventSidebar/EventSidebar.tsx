@@ -22,7 +22,7 @@ export const FILTERS = {
   _start: 0,
   _limit: MAX_VISIBLE_ITEMS,
   _sort: 'startDate:ASC',
-  startDate_gte: new Date(),
+  endDate_gte: new Date(),
 };
 
 type Props = {
