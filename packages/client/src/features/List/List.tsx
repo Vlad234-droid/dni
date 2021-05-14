@@ -38,6 +38,7 @@ const List: FC<Props> = ({
     ...rest
   }: Entity) => {
     const actualParticipants = participants![id] || 0;
+
     return {
       key: id,
       id,
