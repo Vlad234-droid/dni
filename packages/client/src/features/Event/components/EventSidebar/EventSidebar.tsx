@@ -22,7 +22,7 @@ export const FILTERS = {
   _start: 0,
   _limit: MAX_VISIBLE_ITEMS,
   _sort: 'startDate:ASC',
-  startDate_gte: new Date(),
+  endDate_gte: new Date(),
 };
 
 type Props = {
@@ -30,9 +30,10 @@ type Props = {
   loading: Loading;
   loadEvents: (filters: EntityListPayload) => void;
   loadCount: (filters: EntityListPayload) => void;
+  handleClear: () => void;
   loadParticipants: () => void;
   participants?: Record<number, number>;
-  networks: number[];
+  networks?: number[];
 };
 
 const EventSidebar: FC<Props> = ({
@@ -43,12 +44,15 @@ const EventSidebar: FC<Props> = ({
   loadParticipants,
   participants,
   networks,
+  handleClear,
 }) => {
   useEffect(() => {
+    handleClear();
+
     const filters = {
       ...FILTERS,
       ...DEFAULT_FILTERS,
-      network_in: [...networks, -1],
+      network_in: [...(networks || []), -1],
     };
 
     loadEvents(filters);

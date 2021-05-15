@@ -10,14 +10,16 @@ import {
   getCount,
   listSelector as eventsSelector,
   getParticipants,
+  clear,
 } from '../../store';
 
 const EventSidebarContainer: FC = () => {
   const dispatch = useDispatch();
   const events = useSelector(eventsSelector);
   const { participants, loading } = useStore((state) => state.events);
-  const { networks = [] } = useStore((state) => state.auth.user);
+  const { networks } = useStore((state) => state.auth.user);
 
+  const handleClear = () => dispatch(clear());
   const loadEvents = (filters: EntityListPayload) =>
     dispatch(getEvents(filters));
   const loadCount = (filters: EntityListPayload) => dispatch(getCount(filters));
@@ -31,6 +33,7 @@ const EventSidebarContainer: FC = () => {
       loadEvents={loadEvents}
       loadCount={loadCount}
       loadParticipants={loadParticipants}
+      handleClear={handleClear}
       networks={networks}
     />
   );

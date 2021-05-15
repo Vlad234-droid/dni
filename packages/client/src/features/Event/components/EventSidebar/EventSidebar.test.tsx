@@ -27,6 +27,7 @@ describe('<EventSidebar />', () => {
       loadEvents: jest.fn(),
       loadCount: jest.fn(),
       loadParticipants: jest.fn(),
+      handleClear: jest.fn(),
       participants: {},
       networks: [1, 2],
     };
@@ -153,7 +154,7 @@ describe('<EventSidebar />', () => {
       expect(queryByText('All events')).toBeInTheDocument();
     });
 
-    it('should render On-Air, if event is happening now', () => {
+    fit('should render On-Air, if event is happening now', () => {
       const COLLECTION_SIZE = 1;
       const eventCRUD = buildEventCRUD(COLLECTION_SIZE);
 
@@ -189,6 +190,7 @@ describe('<EventSidebar />', () => {
       loadEvents: jest.fn(),
       loadCount: jest.fn(),
       loadParticipants: jest.fn(),
+      handleClear: jest.fn(),
       participants: {},
       total: 0,
       networks: [1, 2],
@@ -200,11 +202,12 @@ describe('<EventSidebar />', () => {
       network_in: [...props.networks, -1],
     };
 
-    it('should call loadEvents and loadCount, if empty events', async () => {
+    it('should call handleClear, loadEvents and loadCount', async () => {
       await act(async () => {
         renderWithProviders(<EventSidebar {...props} />);
       });
 
+      expect(props.handleClear).toHaveBeenCalledTimes(1);
       expect(props.loadEvents).toHaveBeenCalledTimes(1);
       expect(props.loadEvents).toHaveBeenCalledWith(filters);
       expect(props.loadCount).toHaveBeenCalledTimes(1);

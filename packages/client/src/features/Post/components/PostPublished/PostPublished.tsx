@@ -16,6 +16,7 @@ import {
   PostDescription,
   PostContent,
   PostPublishedWrapper,
+  PostPublishDate,
 } from './styled';
 
 interface PostPublishedProps {
@@ -25,7 +26,7 @@ interface PostPublishedProps {
 const TEST_ID = 'post-published';
 
 const PostPublished: FC<PostPublishedProps> = ({ item }) => {
-  const { title, content, authorName, attachments, id } = item;
+  const { title, content, authorName, attachments, id, published_at } = item;
   const media = useMedia();
 
   return (
@@ -37,9 +38,9 @@ const PostPublished: FC<PostPublishedProps> = ({ item }) => {
           </PostPublisherAvatarBox>
           <PostPublisherName>{`${authorName}`}</PostPublisherName>
         </PostPublisher>
-        {/*<PostPublishDate>*/}
-        {/*  {new Date(published_at).toDateString()}*/}
-        {/*</PostPublishDate>*/}
+        <PostPublishDate>
+          {new Date(published_at).toDateString()}
+        </PostPublishDate>
       </PostHead>
       <PostContent>
         {attachments && attachments.length > 0 && (
