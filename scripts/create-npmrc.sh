@@ -7,6 +7,6 @@ if [ -f ~/.npmrc ]; then
 fi
 
 echo registry=https://registry.npmjs.org/ >> ~/.npmrc
-echo //nexus.ourtesco.com/repository/colleague-ui/:_authToken=$NPM_ACCESS_TOKEN >> ~/.npmrc
+echo //nexus.ourtesco.com/repository/colleague-ui/:_auth=$NPM_ACCESS_TOKEN >> ~/.npmrc
 echo //nexus.ourtesco.com/repository/colleague-ui-private/:_auth=$NPM_ACCESS_TOKEN >> ~/.npmrc
 echo //nexus.ourtesco.com/repository/online-web-group/:_auth=$NPM_ACCESS_TOKEN >> ~/.npmrc
