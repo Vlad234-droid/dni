@@ -2,7 +2,7 @@ import React, { FC, useEffect, useCallback, useState, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { createPortal } from 'react-dom';
 import ResponsiveImage from '@beans/responsive-image';
-import { Loading } from 'store/types';
+import Loading from 'types/loading';
 
 import useDispatch from 'hooks/useDispatch';
 import useStore from 'hooks/useStore';

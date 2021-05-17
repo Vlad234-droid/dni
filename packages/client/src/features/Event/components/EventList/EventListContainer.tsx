@@ -12,8 +12,13 @@ import {
   listSelector as eventsSelector,
   getParticipants,
   Filter,
-  ALL,
 } from '../../store';
+import { ALL } from '../../config/contstants';
+import {
+  DEFAULT_FILTERS,
+  DEFAULT_PAGINATION,
+} from '../../../../config/constants';
+import { getPayloadWhere } from '../../utils';
 
 const EventSidebarContainer: FC = () => {
   const dispatch = useDispatch();
@@ -24,7 +29,7 @@ const EventSidebarContainer: FC = () => {
     loading,
     meta: { total },
   } = useStore((state) => state.events);
-  const { networks = [] } = useStore((state) => state.auth.user);
+  const { networks } = useStore((state) => state.auth.user);
 
   const [page, setPage] = useState<number>(0);
   const [filter, setFilter] = useState<Filter>(ALL);

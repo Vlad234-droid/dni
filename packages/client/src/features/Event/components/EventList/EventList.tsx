@@ -1,17 +1,18 @@
-import React, { FC, useEffect, useMemo } from 'react';
+import React, { FC, useCallback, useEffect, useMemo } from 'react';
 import Button from '@beans/button';
 import Icon from '@beans/icon';
 import isEmpty from 'lodash.isempty';
 
 import ButtonFilter from 'features/ButtonFilter';
 import { EntityListPayload } from 'types/payload';
-import { DEFAULT_PAGINATION, DEFAULT_FILTERS } from 'config/constants';
+import { DEFAULT_FILTERS, DEFAULT_PAGINATION } from 'config/constants';
 import List from 'features/List';
 import { EmptyContainer, Spinner } from 'features/Common';
 import { Page } from 'features/Page';
-import { Loading } from 'store/types';
+import Loading from 'types/loading';
 
-import Event, { Filter, ALL, THIS_WEEK, THIS_MONTH } from '../../config/types';
+import Event, { Filter } from '../../config/types';
+import { ALL, THIS_MONTH, THIS_WEEK } from '../../config/contstants';
 import EventAction from '../EventAction';
 import { getPayloadWhere } from '../../utils';
 import { Wrapper } from './styled';
@@ -45,7 +46,7 @@ type Props = {
   handleClear: () => void;
   participants?: Record<number, number>;
   total: number;
-  networks: number[];
+  networks?: number[];
   page: number;
   onPageChange: () => void;
   filter: Filter;
@@ -67,42 +68,43 @@ const EventList: FC<Props> = ({
   filter,
   onFilterChange,
 }) => {
+  const isLoading = useMemo(
+    () => loading !== Loading.SUCCEEDED && loading !== Loading.FAILED,
+    [loading],
+  );
   const hasMore = useMemo(() => events && events.length < total, [
     events,
     total,
   ]);
+  const filters = {
+    ...DEFAULT_PAGINATION,
+    ...DEFAULT_FILTERS,
+    ...getPayloadWhere(filter),
+    network_in: [...(networks || []), -1],
+  };
 
-  const isLoading = useMemo(() => loading === Loading.PENDING, [loading]);
+  const handleFilterChange = useCallback((filter: Filter) => {
+    onFilterChange(filter);
+
+    loadEvents({
+      ...filters,
+      ...getPayloadWhere(filter),
+      _start: page * DEFAULT_PAGINATION._limit,
+    });
+  }, []);
 
   useEffect(() => {
-    // TODO: move to avoid unnecessary reassignment
-    const filters = {
-      ...DEFAULT_PAGINATION,
-      ...DEFAULT_FILTERS,
-      ...getPayloadWhere(filter),
-      network_in: [...networks, -1],
-    };
-
-    if (!total) {
-      //@ts-ignore
-      loadCount(filters);
-    }
-
-    //@ts-ignore
+    loadCount(filters);
     loadEvents({ ...filters, _start: page * DEFAULT_PAGINATION._limit });
-  }, [networks, hasMore, page, total, filter]);
+  }, [networks, page]);
 
   useEffect(() => {
     handleClear();
   }, [filter]);
 
   useEffect(() => {
-    if (!isEmpty(participants)) return;
-
     loadParticipants();
   }, []);
-
-  if (loading == Loading.IDLE) return null;
 
   if (loading === Loading.FAILED) {
     return (
@@ -116,9 +118,10 @@ const EventList: FC<Props> = ({
     <Wrapper>
       <ButtonFilter
         initialFilters={initialFilters}
-        onChange={(key) => onFilterChange(key as Filter)}
+        onChange={(key) => handleFilterChange(key as Filter)}
       />
-      {!isLoading && isEmpty(events) && !hasMore ? (
+      {isEmpty(events) && isLoading && <Spinner height='500px' />}
+      {loading === Loading.SUCCEEDED && isEmpty(events) && !hasMore ? (
         <EmptyContainer
           description='Unfortunately, we did not find any matches for your request'
           explanation='Please change your filtering criteria to try again.'
@@ -127,7 +130,6 @@ const EventList: FC<Props> = ({
         <>
           <List
             link={Page.EVENTS}
-            // TODO: event is not correct type Event
             //@ts-ignore
             items={events}
             hideMaxParticipants={false}
@@ -136,15 +138,17 @@ const EventList: FC<Props> = ({
               <EventAction id={id} disabled={disabled} />
             )}
           />
-          {isLoading && <Spinner />}
-          <Button
-            disabled={!hasMore || loading === 'pending'}
-            variant='secondary'
-            onClick={onPageChange}
-          >
-            More New Events
-            <Icon graphic='expand' size='xx' />
-          </Button>
+          {!isEmpty(events) && isLoading && <Spinner />}
+          {!isEmpty(events) && (
+            <Button
+              disabled={!hasMore || isLoading}
+              variant='secondary'
+              onClick={onPageChange}
+            >
+              More New Events
+              <Icon graphic='expand' size='xx' />
+            </Button>
+          )}
         </>
       )}
     </Wrapper>

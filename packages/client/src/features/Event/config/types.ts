@@ -1,26 +1,33 @@
 import { Event } from '@dni-connectors/colleague-cms-api';
-
 import { EntityState } from '@reduxjs/toolkit';
 
-import { Loading } from 'store/types';
+import Loading from 'types/loading';
 
-// TODO: #is not it common?
+import { ALL, THIS_WEEK, THIS_MONTH } from './contstants';
+
 type State = {
+  data: any;
   loading: Loading;
   error: null | string;
   meta: Meta;
-  participants: Record<number, number>;
+  participants: Participants;
 } & EntityState<Event>;
 
-// TODO: #is not it common?
 type Meta = {
+  loading: Loading;
+  error: null | string;
   count: number;
   total: number;
   page: number;
   pageCount: number;
 };
 
-// TODO: #why general names?
+type Participants = {
+  loading: Loading;
+  error: null | string;
+  data: Record<number, number>;
+};
+
 type ListResponse = Array<Event>;
 
 type OneResponse = Event;
@@ -32,19 +39,12 @@ type OnePayload = {
 
 type SetOnePayload = Event;
 
-// TODO: #common?
 type UploadImgPayload = {
   id: number;
   image: File;
 };
 
-const ALL = 'ALL';
-const THIS_WEEK = 'THIS_WEEK';
-const THIS_MONTH = 'THIS_MONTH';
-
 type Filter = typeof ALL | typeof THIS_WEEK | typeof THIS_MONTH;
-
-export { ALL, THIS_WEEK, THIS_MONTH };
 
 type Participant = {
   id: number;

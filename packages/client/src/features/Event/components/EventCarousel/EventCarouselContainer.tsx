@@ -20,13 +20,13 @@ const EventCarouselContainer: FC = () => {
     network_in: [...networks, -1],
   });
 
-  const [isLoading, list] = useFetchEvents(filters);
+  const [loading, list] = useFetchEvents(filters);
 
   return (
     <EventCarousel
       events={list!}
       participants={participants}
-      isLoading={isLoading}
+      loading={loading}
     />
   );
 };

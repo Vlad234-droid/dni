@@ -4,8 +4,9 @@ import { BaseElement } from '@beans/foundation';
 import { textSM } from 'styles';
 import Media from 'styles/media';
 
-export const Wrapper = styled.div`
+export const Wrapper = styled.div<{ height?: string }>`
   position: relative;
+  height: ${({ height }) => height || 'unset'};
 
   & .beans-base-tile__panel-container {
     padding: 0;

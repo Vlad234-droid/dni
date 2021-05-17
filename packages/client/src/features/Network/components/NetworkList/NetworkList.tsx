@@ -1,4 +1,4 @@
-import { FC, useEffect, useState, useCallback, useMemo } from 'react';
+import React, { FC, useEffect, useState, useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroller';
 import isEmpty from 'lodash.isempty';
@@ -12,7 +12,7 @@ import { useScrollContainer } from 'context/ScrollContainerContext';
 import List from 'features/List';
 import { EmptyContainer, Spinner } from 'features/Common';
 import { Page } from 'features/Page';
-import { Loading } from 'store/types';
+import Loading from 'types/loading';
 import { RootState } from 'store/rootReducer';
 
 import { Filter, ALL, YOUR_NETWORKS } from '../../config/types';
@@ -56,15 +56,22 @@ const NetworkList: FC = () => {
     meta: { total },
     loading,
   } = useStore((state) => state.networks);
-  const list = useSelector((state: RootState) => listSelector(state, filters));
-  const hasMore = useMemo(() => list.length < total, [list, total]);
-
-  const isLoading = useMemo(() => loading === Loading.PENDING, [loading]);
+  const networksList = useSelector((state: RootState) =>
+    listSelector(state, filters),
+  );
+  const hasMore = useMemo(() => networksList.length < total, [
+    networksList,
+    total,
+  ]);
+  const isLoading = useMemo(
+    () => loading !== Loading.SUCCEEDED && loading !== Loading.FAILED,
+    [loading],
+  );
 
   const loadNetworks = useCallback(
     (page: number) => {
       const next = page * DEFAULT_PAGINATION._limit;
-      if (filters && hasMore && !isLoading && next <= total) {
+      if (filters && hasMore && next <= total) {
         dispatch(
           getList({
             ...filters,
@@ -100,8 +107,6 @@ const NetworkList: FC = () => {
     dispatch(getParticipants());
   }, []);
 
-  if (loading == Loading.IDLE) return null;
-
   if (loading === Loading.FAILED) {
     return (
       <Wrapper data-testid={TEST_ID}>
@@ -110,14 +115,16 @@ const NetworkList: FC = () => {
     );
   }
 
+  // TODO: handle case, when filter is changed before data is loaded
+
   return (
     <Wrapper data-testid={TEST_ID}>
       <ButtonFilter
         initialFilters={initialFilters}
         onChange={(key) => setFilter(key as Filter)}
       />
-      {isLoading && <Spinner />}
-      {loading == Loading.SUCCEEDED && isEmpty(list) && !hasMore ? (
+      {isEmpty(networksList) && isLoading && <Spinner height='500px' />}
+      {loading == Loading.SUCCEEDED && isEmpty(networksList) && !hasMore ? (
         <EmptyContainer
           description='Unfortunately, we did not find any matches for your request'
           explanation='Please change your filtering criteria to try again.'
@@ -127,9 +134,8 @@ const NetworkList: FC = () => {
           <InfiniteScroll
             key={filter} // unique key for unmount when switch filter
             loadMore={loadNetworks}
-            hasMore={!isLoading && hasMore}
+            hasMore={hasMore}
             pageStart={-1}
-            loader={<Spinner key={0} height='200px' />}
             threshold={0}
             getScrollParent={() => scrollContainer!.current}
             useWindow={false}
@@ -137,11 +143,12 @@ const NetworkList: FC = () => {
             <List
               link={Page.NETWORKS}
               //@ts-ignore
-              items={list}
+              items={networksList}
               participants={participants}
               renderAction={(id) => <NetworkAction id={id} />}
             />
           </InfiniteScroll>
+          {!isEmpty(networksList) && isLoading && <Spinner />}
         </ListContainer>
       )}
     </Wrapper>

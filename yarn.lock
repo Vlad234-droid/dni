@@ -1589,6 +1589,17 @@
     "@beans/link" "^18.0.0"
     "@beans/selectors" "^18.0.0"
 
+"@beans/modal@^18.5.1":
+  version "18.5.1"
+  resolved "https://nexus.ourtesco.com/repository/online-web-group/@beans/modal/-/modal-18.5.1.tgz#4510413df2c3173ddb5b6ac72ff5a074fbc1b91e"
+  integrity sha512-TViGUoDRTDHbERs0ooSZA7XhDOs3B6vhu86wsSbMLi8J5jQS6H/Lv9Qqmxa/JIoQfdEtYMz1iBYR2jpqIvBkOg==
+  dependencies:
+    "@beans/foundation" "^18.0.0"
+    "@beans/helpers" "^18.0.0"
+    "@beans/link" "^18.0.0"
+    "@beans/portal" "^18.0.0"
+    "@beans/selectors" "^18.0.0"
+
 "@beans/multiselect-dropdown@^18.2.4":
   version "18.4.0"
   resolved "https://nexus.ourtesco.com/repository/online-web-group/@beans/multiselect-dropdown/-/multiselect-dropdown-18.4.0.tgz#4e5241c9218cc706946405d353dba93b1d49f678"
@@ -1613,6 +1624,14 @@
     "@beans/icon" "^18.0.0"
     "@beans/selectors" "^18.0.0"
     "@beans/typography" "^18.0.0"
+
+"@beans/portal@^18.0.0":
+  version "18.4.1"
+  resolved "https://nexus.ourtesco.com/repository/online-web-group/@beans/portal/-/portal-18.4.1.tgz#bf0a40c0b26f9aa6fa36f521e0aeea299713a736"
+  integrity sha512-Km0kpPzZvTeSTrqe2Tat6MQOGX6nJnRLxBcbJHmxHC96Mmd5qlvjvo99g79Cz5brPsks1dzKYXGFx//jSIfq3w==
+  dependencies:
+    "@beans/foundation" "^18.0.0"
+    "@beans/selectors" "^18.0.0"
 
 "@beans/responsive-image@^18.2.3":
   version "18.3.0"

@@ -1,6 +1,6 @@
-import { useState, useEffect, useRef, Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 
-// utils
+import Loading from 'types/loading';
 import API from 'utils/api';
 
 type Config = {
@@ -19,7 +19,7 @@ interface ResponseHandler<T, R = T> {
 
 type Response<T, R> = [
   {
-    isLoading: boolean;
+    loading: Loading;
     response: R | null;
     error: string | null;
     setResponse: Dispatch<SetStateAction<R | null>>;
@@ -28,7 +28,7 @@ type Response<T, R> = [
 ];
 
 function useFetch<T, R = T>(initialValue: R | null = null): Response<T, R> {
-  const [isLoading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(Loading.IDLE);
   const [error, setError] = useState(null);
   const [response, setResponse] = useState<R | null>(initialValue);
   const executer = useRef<ExecHandler<T>>();
@@ -42,26 +42,31 @@ function useFetch<T, R = T>(initialValue: R | null = null): Response<T, R> {
     executer.current = exec;
     responseHandler.current = res;
 
-    setLoading(true);
+    setLoading(Loading.PENDING);
   };
 
   useEffect(() => {
     (async () => {
-      if (isLoading && responseHandler.current && executer.current) {
+      if (
+        loading === Loading.PENDING &&
+        responseHandler.current &&
+        executer.current
+      ) {
         try {
           const response = await executer.current(API);
           setResponse(responseHandler.current(response));
         } catch (error) {
-          console.log('Somthing going wrong!', error);
+          console.log('Something going wrong!', error);
           setError(error);
+          setLoading(Loading.FAILED);
         } finally {
-          setLoading(false);
+          setLoading(Loading.SUCCEEDED);
         }
       }
     })();
-  }, [isLoading]);
+  }, [loading]);
 
-  return [{ isLoading, response, error, setResponse }, doFetch];
+  return [{ loading, response, error, setResponse }, doFetch];
 }
 
 export default useFetch;

@@ -22,12 +22,15 @@ const Auth: FC = ({ children }) => {
     fetchUserAction();
   }, [fetchUserAction]);
 
+  // TODO: remove in future
+  if (user.role === 'guest') return null;
+
   return (
     <AuthProvider
       value={{
         authenticated: isAuthenticated,
         user: user,
-        fethUser: fetchUserAction,
+        fetchUser: fetchUserAction,
       }}
     >
       {children}

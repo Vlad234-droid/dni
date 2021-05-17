@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 import {
   AreaChart,
@@ -13,6 +13,8 @@ import Icon from '@beans/icon';
 
 import useFetch from 'hooks/useFetch';
 import { useMedia } from 'context/InterfaceContext';
+import Loading from 'types/loading';
+import { Spinner } from 'features/Common';
 
 export type Data = {
   elements: Record<string, Record<'color', string>>;
@@ -26,7 +28,8 @@ type Props = {
 const Chart = ({ data, type }: Props) => {
   const { isDesktop, isTablet } = useMedia();
 
-  const [{ response, isLoading }, doFetch] = useFetch<Blob>();
+  const [{ response, loading }, doFetch] = useFetch<Blob>();
+  const isLoading = useMemo(() => loading === Loading.PENDING, [loading]);
 
   useEffect(() => {
     if (response && !isLoading) {
@@ -46,6 +49,8 @@ const Chart = ({ data, type }: Props) => {
       (res) => res,
     );
   }, []);
+
+  if (loading === Loading.PENDING) return <Spinner height='300px' />;
 
   return (
     <div>

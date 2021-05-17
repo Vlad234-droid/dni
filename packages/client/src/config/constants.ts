@@ -1,6 +1,7 @@
 import { KEY_CODES as BEANS_KEY_CODES } from '@beans/date-input';
 
 import { PaginationPayload, FilterPayload } from 'types/payload';
+import Loading from 'types/loading';
 
 export enum ViewportSize {
   PHONE = 320,
@@ -19,11 +20,19 @@ export const KEY_CODES: Record<string, number> = {
 };
 
 export const DEFAULT_META = {
+  loading: Loading.IDLE,
+  error: null,
   count: 0,
   total: 0,
   unread: 0,
   page: 1,
   pageCount: 1,
+};
+
+export const DEFAULT_PARTICIPANTS = {
+  loading: Loading.IDLE,
+  error: null,
+  data: {},
 };
 
 export const DEFAULT_PAGINATION: PaginationPayload = {

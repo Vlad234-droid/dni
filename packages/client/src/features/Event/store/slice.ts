@@ -6,8 +6,8 @@ import {
 
 import API from 'utils/api';
 import { FilterPayload, PaginationPayload } from 'types/payload';
-import { DEFAULT_META } from 'config/constants';
-import { Loading } from 'store/types';
+import { DEFAULT_META, DEFAULT_PARTICIPANTS } from 'config/constants';
+import Loading from 'types/loading';
 
 import Event, * as T from '../config/types';
 import * as A from './actionTypes';
@@ -15,10 +15,11 @@ import * as A from './actionTypes';
 const eventsAdapter = createEntityAdapter<Event>();
 
 const initialState: T.State = eventsAdapter.getInitialState({
+  data: {},
   loading: Loading.IDLE,
   error: null,
   meta: DEFAULT_META,
-  participants: {},
+  participants: DEFAULT_PARTICIPANTS,
 });
 
 const getList = createAsyncThunk<
@@ -84,14 +85,20 @@ const slice = createSlice({
       const participants = state.participants;
       state.participants = {
         ...participants,
-        [eventId]: (participants[eventId] || 0) + 1,
+        data: {
+          ...participants.data,
+          [eventId]: (participants.data[eventId] || 0) + 1,
+        },
       };
     },
     leaveParticipant(state, { payload: eventId }) {
       const participants = state.participants;
       state.participants = {
         ...participants,
-        [eventId]: (participants[eventId] || 1) - 1,
+        data: {
+          ...participants.data,
+          [eventId]: (participants.data[eventId] || 1) - 1,
+        },
       };
     },
   },
@@ -110,17 +117,20 @@ const slice = createSlice({
     };
 
     builder
-      .addCase(getCount.pending, setPending)
-      // TODO: #action is not typed?
+      .addCase(getCount.pending, (state: T.State) => {
+        state.meta.loading = Loading.PENDING;
+      })
       .addCase(getCount.fulfilled, (state: T.State, { payload: total }) => {
         const meta = state.meta;
         state.meta = {
           ...meta,
           total,
+          loading: Loading.SUCCEEDED,
         };
-        setSucceeded(state);
       })
-      // TODO: #rejected is not handled?
+      .addCase(getCount.rejected, (state: T.State) => {
+        state.meta.loading = Loading.FAILED;
+      })
       .addCase(getList.pending, setPending)
       .addCase(getList.fulfilled, (state: T.State, { payload: events }) => {
         eventsAdapter.upsertMany(state, events);
@@ -142,6 +152,7 @@ const slice = createSlice({
         eventsAdapter.upsertOne(state, event);
         setSucceeded(state);
       })
+      .addCase(createOne.rejected, setFailed)
       .addCase(uploadImage.pending, setPending)
       .addCase(uploadImage.fulfilled, (state: T.State, { payload }) => {
         eventsAdapter.updateOne(state, {
@@ -151,12 +162,17 @@ const slice = createSlice({
         setSucceeded(state);
       })
       .addCase(uploadImage.rejected, setFailed)
-      .addCase(getParticipants.pending, setPending)
-      .addCase(getParticipants.fulfilled, (state: T.State, action) => {
-        state.participants = action.payload;
-        setSucceeded(state);
+      .addCase(getParticipants.pending, (state: T.State) => {
+        state.participants.loading = Loading.PENDING;
       })
-      .addCase(getParticipants.rejected, setFailed);
+      .addCase(getParticipants.fulfilled, (state: T.State, action) => {
+        state.participants.data = action.payload;
+        state.participants.loading = Loading.SUCCEEDED;
+      })
+      .addCase(getParticipants.rejected, (state: T.State) => {
+        state.participants.loading = Loading.FAILED;
+      })
+      .addDefaultCase((state) => state);
   },
 });
 
