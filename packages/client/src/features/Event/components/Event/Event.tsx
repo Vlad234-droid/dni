@@ -76,10 +76,18 @@ const EventComponent: FC<Props> = ({
     );
   }
 
+  if (!event && loading === Loading.SUCCEEDED) {
+    return (
+      <Wrapper data-testid={TEST_ID}>
+        <EmptyContainer description={`There is no event with id ${id}`} />
+      </Wrapper>
+    );
+  }
+
   return (
     <Wrapper data-testid={TEST_ID}>
       {!event && isLoading && <Spinner height='500px' />}
-      {loading === Loading.SUCCEEDED && event ? (
+      {loading === Loading.SUCCEEDED && event && (
         <>
           {imageWrapperEl &&
             createPortal(
@@ -109,8 +117,6 @@ const EventComponent: FC<Props> = ({
             </LeftContent>
           </Content>
         </>
-      ) : (
-        <EmptyContainer description={`There is no event with id ${id}`} />
       )}
     </Wrapper>
   );

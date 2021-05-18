@@ -7,10 +7,10 @@ import {
 import API from 'utils/api';
 import { FilterPayload, PaginationPayload } from 'types/payload';
 import { DEFAULT_META, DEFAULT_PARTICIPANTS } from 'config/constants';
+import Loading from 'types/loading';
 
 import Network, * as T from '../config/types';
 import * as A from './actionTypes';
-import Loading from 'types/loading';
 
 const networksAdapter = createEntityAdapter<Network>();
 
@@ -82,6 +82,9 @@ const slice = createSlice({
         },
       };
     },
+    setLoading(state, { payload: loading }) {
+      state.loading = loading;
+    },
   },
   extraReducers: (builder) => {
     const setPending = (state: T.State) => {
@@ -150,7 +153,7 @@ const slice = createSlice({
   },
 });
 
-const { clear, joinParticipant, leaveParticipant } = slice.actions;
+const { clear, joinParticipant, leaveParticipant, setLoading } = slice.actions;
 
 export {
   networksAdapter,
@@ -162,6 +165,7 @@ export {
   getParticipants,
   joinParticipant,
   leaveParticipant,
+  setLoading,
 };
 
 export default slice.reducer;

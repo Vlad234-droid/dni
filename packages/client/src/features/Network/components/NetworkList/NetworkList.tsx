@@ -22,6 +22,7 @@ import {
   listSelector,
   clear,
   getParticipants,
+  setLoading,
 } from '../../store';
 import { Wrapper, ListContainer } from './styled';
 import NetworkAction from '../NetworkAction';
@@ -45,9 +46,9 @@ const NetworkList: FC = () => {
   const dispatch = useDispatch();
   const { networks } = useStore((state) => state.auth.user);
   const [filter, setFilter] = useState<Filter>(YOUR_NETWORKS);
-  const [filters, setFilters] = useState<
-    FilterPayload & { id_in?: number[] }
-  >();
+  const [filters, setFilters] = useState<FilterPayload & { id_in?: number[] }>({
+    id_in: [...(networks || []), -1],
+  });
 
   const scrollContainer = useScrollContainer();
 
@@ -71,7 +72,7 @@ const NetworkList: FC = () => {
   const loadNetworks = useCallback(
     (page: number) => {
       const next = page * DEFAULT_PAGINATION._limit;
-      if (filters && hasMore && next <= total) {
+      if (next <= total) {
         dispatch(
           getList({
             ...filters,
@@ -81,8 +82,22 @@ const NetworkList: FC = () => {
         );
       }
     },
-    [filters, hasMore, isLoading, total],
+    [total],
   );
+
+  const handleFilterChange = useCallback((filter: Filter) => {
+    dispatch(setLoading(Loading.PENDING));
+
+    if (filter == YOUR_NETWORKS) {
+      setFilters({ id_in: [...(networks || []), -1] });
+    }
+
+    if (filter == ALL) {
+      setFilters({});
+    }
+
+    setFilter(filter);
+  }, []);
 
   useEffect(() => {
     (async () => {
@@ -92,16 +107,6 @@ const NetworkList: FC = () => {
       }
     })();
   }, [filters]);
-
-  useEffect(() => {
-    if (filter == YOUR_NETWORKS) {
-      setFilters({ id_in: [...(networks || []), -1] });
-    }
-
-    if (filter == ALL) {
-      setFilters({});
-    }
-  }, [filter, networks]);
 
   useEffect(() => {
     dispatch(getParticipants());
@@ -121,7 +126,7 @@ const NetworkList: FC = () => {
     <Wrapper data-testid={TEST_ID}>
       <ButtonFilter
         initialFilters={initialFilters}
-        onChange={(key) => setFilter(key as Filter)}
+        onChange={(key) => handleFilterChange(key as Filter)}
       />
       {isEmpty(networksList) && isLoading && <Spinner height='500px' />}
       {loading == Loading.SUCCEEDED && isEmpty(networksList) && !hasMore ? (
