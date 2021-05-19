@@ -30,7 +30,6 @@ const EventComponent: FC<Props> = ({
   loading,
   participants,
 }) => {
-  // const [filter, setFilter] = useState<Filter>(ALL);
   const imageWrapperEl = useImageWrapper();
   const isLoading = useMemo(
     () => loading !== Loading.SUCCEEDED && loading !== Loading.FAILED,

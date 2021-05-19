@@ -14,7 +14,6 @@ type Props = {
 const PostSingleContainer: FC<Props> = ({ postId }) => {
   const dispatch = useDispatch();
   const { loading } = useStore((state) => state.posts);
-  console.log('postId', postId);
   const post = useSelector(byIdSelector(postId));
 
   const loadPost = (id: number) => dispatch(getOne({ id }));

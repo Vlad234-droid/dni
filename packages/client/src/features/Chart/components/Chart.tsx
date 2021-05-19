@@ -29,7 +29,10 @@ const Chart = ({ data, type }: Props) => {
   const { isDesktop, isTablet } = useMedia();
 
   const [{ response, loading }, doFetch] = useFetch<Blob>();
-  const isLoading = useMemo(() => loading === Loading.PENDING, [loading]);
+  const isLoading = useMemo(
+    () => loading !== Loading.SUCCEEDED && loading !== Loading.FAILED,
+    [loading],
+  );
 
   useEffect(() => {
     if (response && !isLoading) {
@@ -50,7 +53,7 @@ const Chart = ({ data, type }: Props) => {
     );
   }, []);
 
-  if (loading === Loading.PENDING) return <Spinner height='300px' />;
+  if (isLoading) return <Spinner height='300px' />;
 
   return (
     <div>

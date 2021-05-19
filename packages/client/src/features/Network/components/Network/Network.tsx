@@ -9,12 +9,12 @@ import useStore from 'hooks/useStore';
 import InfoPanel, { InfoPanelType } from 'features/InfoPanel';
 import { PostList, BY_NETWORK } from 'features/Post';
 import { useImageWrapper } from 'context';
+import { EmptyContainer, Spinner } from 'features/Common';
 
 import { byIdSelector, getOne } from '../../store';
-import { Wrapper, Content, LeftContent, RightContent } from './styled';
 import NetworkPartners from './NetworkPartners';
 import NetworkHeader from './NetworkHeader';
-import { EmptyContainer, Spinner } from '../../../Common';
+import { Wrapper, Content, LeftContent, RightContent } from './styled';
 
 const TEST_ID = 'network';
 
