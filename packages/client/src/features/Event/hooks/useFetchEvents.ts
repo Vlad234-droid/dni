@@ -43,8 +43,8 @@ export default function useFetchEvents(
     [hasMore, loading],
   );
 
-  // here, when count is 0 load events are not called
   useEffect(() => {
+    // when count is 0 load events is not not called - set loading to SUCCEEDED
     if (countLoading == Loading.SUCCEEDED && !hasMore) {
       setLoading(countLoading);
     }
