@@ -39,6 +39,7 @@ function useFetch<T, R = T>(initialValue: R | null = null): Response<T, R> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     res: ResponseHandler<T, R> = (res) => res as any,
   ) => {
+    console.log('doFetch');
     executer.current = exec;
     responseHandler.current = res;
 
