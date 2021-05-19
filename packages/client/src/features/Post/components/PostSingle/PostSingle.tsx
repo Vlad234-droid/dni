@@ -18,7 +18,6 @@ type Props = {
 };
 
 const PostSingle: FC<Props> = ({ postId, loadPost, loading, post }) => {
-  console.log('post', post, loading);
   const isLoading = useMemo(
     () => loading !== Loading.SUCCEEDED && loading !== Loading.FAILED,
     [loading],
