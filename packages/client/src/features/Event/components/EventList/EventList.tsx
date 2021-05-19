@@ -121,7 +121,7 @@ const EventList: FC<Props> = ({
         onChange={(key) => handleFilterChange(key as Filter)}
       />
       {isEmpty(events) && isLoading && <Spinner height='500px' />}
-      {loading === Loading.SUCCEEDED && isEmpty(events) && !hasMore ? (
+      {loading === Loading.SUCCEEDED && isEmpty(events) ? (
         <EmptyContainer
           description='Unfortunately, we did not find any matches for your request'
           explanation='Please change your filtering criteria to try again.'

@@ -82,9 +82,6 @@ const slice = createSlice({
         },
       };
     },
-    setLoading(state, { payload: loading }) {
-      state.loading = loading;
-    },
   },
   extraReducers: (builder) => {
     const setPending = (state: T.State) => {
@@ -153,7 +150,7 @@ const slice = createSlice({
   },
 });
 
-const { clear, joinParticipant, leaveParticipant, setLoading } = slice.actions;
+const { clear, joinParticipant, leaveParticipant } = slice.actions;
 
 export {
   networksAdapter,
@@ -165,7 +162,6 @@ export {
   getParticipants,
   joinParticipant,
   leaveParticipant,
-  setLoading,
 };
 
 export default slice.reducer;

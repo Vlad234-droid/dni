@@ -2,6 +2,7 @@ import React, { FC, useEffect, useState, useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroller';
 import isEmpty from 'lodash.isempty';
+import Omit from 'lodash.omit';
 
 import useDispatch from 'hooks/useDispatch';
 import useStore from 'hooks/useStore';
@@ -9,45 +10,84 @@ import { FilterPayload } from 'types/payload';
 import { EmptyContainer, Spinner } from 'features/Common';
 import { DEFAULT_PAGINATION } from 'config/constants';
 import { useScrollContainer } from 'context/ScrollContainerContext';
+import Loading from 'types/loading';
+import ButtonFilter from 'features/ButtonFilter';
 
-import { Filter, ALL, BY_EVENT, BY_NETWORK } from '../../config/types';
+import { Filter } from '../../config/types';
+import { ALL, ARCHIVED } from '../../config/constants';
 import { getList, getCount, listSelector, clear } from '../../store';
+import { getAllFilterPayload, getFilterPayload } from '../../utils';
 import PostItem from '../PostItem';
+import { FiltersContainer } from './styled';
 
 type Props = {
   filter?: Filter;
   entityId?: number;
-  isArchived?: boolean;
 };
 
-const PostList: FC<Props> = ({ entityId, filter = ALL, isArchived }) => {
+const byEventFilters = [
+  {
+    key: ALL,
+    title: 'All Posts',
+    active: true,
+  },
+  {
+    key: ARCHIVED,
+    title: 'Archived',
+    active: false,
+  },
+];
+
+type Filters = FilterPayload & {
+  network_eq?: number;
+  event_eq?: number;
+  network_in?: number[];
+  _publicationState?: string;
+  archived?: boolean;
+};
+type ByEntityFilter = typeof ALL | typeof ARCHIVED;
+
+const PostList: FC<Props> = ({ entityId, filter = ALL }) => {
   const dispatch = useDispatch();
   const scrollContainer = useScrollContainer();
   const {
     meta: { total },
-    isLoading,
+    loading,
   } = useStore((state) => state.posts);
   const { networks, events } = useStore((state) => state.auth.user);
   const posts = useSelector(listSelector);
-
   const hasMore = useMemo(() => posts.length < total, [posts, total]);
-
-  const [filters, setFilters] = useState<
-    FilterPayload & {
-      network_eq?: number;
-      event_eq?: number;
-      network_in?: number[];
-      _publicationState?: string;
-      archived?: boolean;
-    }
-  >();
+  const isLoading = useMemo(
+    () => loading !== Loading.SUCCEEDED && loading !== Loading.FAILED,
+    [loading],
+  );
+  const [byEntityFilter, setByEntityFilter] = useState<ByEntityFilter>(ALL);
+  const [filters, setFilters] = useState<Filters>(
+    filter == ALL
+      ? getAllFilterPayload(networks, events)
+      : getFilterPayload(filter, entityId),
+  );
 
   const loadPosts = useCallback(
+    (filters: Filters) => {
+      dispatch(
+        getList({
+          _sort: 'created_at:desc',
+          ...filters,
+          ...DEFAULT_PAGINATION,
+          _start: 0,
+        }),
+      );
+    },
+    [filters],
+  );
+
+  const loadMorePosts = useCallback(
     (page: number) => {
       const next = page * DEFAULT_PAGINATION._limit;
-      if (filters && hasMore && !isLoading && next <= total) {
+
+      if (!(loading === Loading.PENDING) && hasMore && next <= total) {
         dispatch(
-          // @ts-ignore
           getList({
             _sort: 'created_at:desc',
             ...filters,
@@ -57,70 +97,75 @@ const PostList: FC<Props> = ({ entityId, filter = ALL, isArchived }) => {
         );
       }
     },
-    [filters, hasMore, isLoading, total],
+    [filters, hasMore, loading, total],
+  );
+
+  const handleByEventFilterChange = useCallback(
+    (filter: ByEntityFilter) => {
+      let updatedFilters;
+
+      switch (filter) {
+        case ARCHIVED: {
+          updatedFilters = { ...filters, archived: true };
+          break;
+        }
+        case ALL: {
+          updatedFilters = Omit({ ...filters }, ['archived']);
+          break;
+        }
+      }
+
+      loadPosts(updatedFilters);
+      setFilters(updatedFilters);
+      setByEntityFilter(filter);
+    },
+    [filters],
   );
 
   useEffect(() => {
-    if (filters) {
-      dispatch(getCount(filters));
-      dispatch(clear());
-    }
+    (async () => {
+      await dispatch(clear());
+      await dispatch(getCount(filters));
+    })();
   }, [filters]);
 
   useEffect(() => {
-    if (![BY_NETWORK, BY_EVENT].includes(filter)) {
-      return;
-    }
+    loadPosts(filters);
+  }, []);
 
-    let where;
-    switch (filter) {
-      case BY_EVENT: {
-        where = { event_eq: entityId, archived: isArchived };
-        break;
-      }
-      case BY_NETWORK: {
-        where = { network_eq: entityId };
-        break;
-      }
-    }
-    setFilters({ ...filters, ...where });
-  }, [filter, entityId, isArchived]);
+  if (loading === Loading.FAILED) return <div>Here some error</div>;
 
-  useEffect(() => {
-    if (filter != ALL) {
-      return;
-    }
-
-    setFilters({
-      _publicationState: 'preview',
-      _where: {
-        _or: [
-          { event_null: true, network_null: true }, // public posts
-          { network_in: networks }, // posts for networks to which the user is subscribed
-          { event_in: events }, // posts for events to which the user is subscribed
-          { event_in: events, network_in: networks }, // posts for events and networks to which the user is subscribed
-        ],
-      },
-    });
-  }, [filter, events, networks]);
-
-  return !isLoading && isEmpty(posts) && !hasMore ? (
-    <EmptyContainer description='Unfortunately, we did not find any matches for your request' />
-  ) : (
-    <InfiniteScroll
-      key={JSON.stringify(filters)} // unique key for unmount when switch filter
-      loadMore={loadPosts}
-      hasMore={!isLoading && hasMore}
-      pageStart={-1}
-      loader={<Spinner key={0} height='200px' />}
-      threshold={0}
-      getScrollParent={() => scrollContainer!.current}
-      useWindow={false}
-    >
-      {posts.map((post) => (
-        <PostItem key={post.id} item={post} />
-      ))}
-    </InfiniteScroll>
+  return (
+    <>
+      {filter !== ALL && (
+        <FiltersContainer>
+          <ButtonFilter
+            initialFilters={byEventFilters}
+            onChange={(key) => handleByEventFilterChange(key as ByEntityFilter)}
+          />
+        </FiltersContainer>
+      )}
+      {isEmpty(posts) && isLoading && <Spinner height='500px' />}
+      {loading == Loading.SUCCEEDED && isEmpty(posts) ? (
+        <EmptyContainer description='Unfortunately, we did not find any matches for your request' />
+      ) : (
+        <>
+          <InfiniteScroll
+            initialLoad={false}
+            key={`${filter}-${byEntityFilter}`} // unique key for unmount when switch filter
+            loadMore={loadMorePosts}
+            hasMore={hasMore && !(loading === Loading.PENDING)}
+            threshold={100}
+            getScrollParent={() => scrollContainer!.current}
+            useWindow={false}
+          >
+            {posts.map((post) => (
+              <PostItem key={post.id} item={post} />
+            ))}
+          </InfiniteScroll>
+        </>
+      )}
+    </>
   );
 };
 

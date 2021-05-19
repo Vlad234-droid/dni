@@ -6,7 +6,7 @@ import Loading from 'types/loading';
 import { ALL, THIS_WEEK, THIS_MONTH } from './contstants';
 
 type State = {
-  data: any;
+  data: Event | {};
   loading: Loading;
   error: null | string;
   meta: Meta;

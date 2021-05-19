@@ -1,16 +1,15 @@
-import React, { FC, useEffect, useMemo, useState } from 'react';
+import React, { FC, useEffect, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import ResponsiveImage from '@beans/responsive-image';
 
 import { PostList, BY_EVENT } from 'features/Post';
 import { useImageWrapper } from 'context';
-import ButtonFilter from 'features/ButtonFilter';
 import Loading from 'types/loading';
 import { EmptyContainer, Spinner } from 'features/Common';
 
 import Event from '../../config/types';
 import EventHeader from '../EventHeader';
-import { Wrapper, Content, LeftContent, Filters } from './styled';
+import { Wrapper, Content, LeftContent } from './styled';
 
 const TEST_ID = 'event';
 
@@ -23,24 +22,6 @@ type Props = {
   participants: number;
 };
 
-const ALL = 'ALL';
-const ARCHIVED = 'ARCHIVED';
-
-const filters = [
-  {
-    key: ALL,
-    title: 'All Posts',
-    active: true,
-  },
-  {
-    key: ARCHIVED,
-    title: 'Archived',
-    active: false,
-  },
-];
-
-type Filter = typeof ALL | typeof ARCHIVED;
-
 const EventComponent: FC<Props> = ({
   id,
   event,
@@ -49,7 +30,7 @@ const EventComponent: FC<Props> = ({
   loading,
   participants,
 }) => {
-  const [filter, setFilter] = useState<Filter>(ALL);
+  // const [filter, setFilter] = useState<Filter>(ALL);
   const imageWrapperEl = useImageWrapper();
   const isLoading = useMemo(
     () => loading !== Loading.SUCCEEDED && loading !== Loading.FAILED,
@@ -103,17 +84,7 @@ const EventComponent: FC<Props> = ({
           <EventHeader event={event} participants={participants} />
           <Content>
             <LeftContent>
-              <Filters>
-                <ButtonFilter
-                  initialFilters={filters}
-                  onChange={(key) => setFilter(key as Filter)}
-                />
-              </Filters>
-              <PostList
-                entityId={id}
-                filter={BY_EVENT}
-                isArchived={filter === ARCHIVED}
-              />
+              <PostList entityId={id} filter={BY_EVENT} />
             </LeftContent>
           </Content>
         </>

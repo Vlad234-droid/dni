@@ -1,7 +1,8 @@
 import React, { FC, useState } from 'react';
-import useStore from 'hooks/useStore';
 
+import useStore from 'hooks/useStore';
 import { addDuration } from 'utils/date';
+
 import EventCarousel from './EventCarousel';
 import useFetchEvents from '../../hooks/useFetchEvents';
 

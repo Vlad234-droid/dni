@@ -22,10 +22,9 @@ import {
   listSelector,
   clear,
   getParticipants,
-  setLoading,
 } from '../../store';
-import { Wrapper, ListContainer } from './styled';
 import NetworkAction from '../NetworkAction';
+import { Wrapper, ListContainer } from './styled';
 
 const TEST_ID = 'networks-list';
 
@@ -42,11 +41,13 @@ const initialFilters = [
   },
 ];
 
+type Filters = FilterPayload & { id_in?: number[] };
+
 const NetworkList: FC = () => {
   const dispatch = useDispatch();
   const { networks } = useStore((state) => state.auth.user);
   const [filter, setFilter] = useState<Filter>(YOUR_NETWORKS);
-  const [filters, setFilters] = useState<FilterPayload & { id_in?: number[] }>({
+  const [filters, setFilters] = useState<Filters>({
     id_in: [...(networks || []), -1],
   });
 
@@ -57,8 +58,10 @@ const NetworkList: FC = () => {
     meta: { total },
     loading,
   } = useStore((state) => state.networks);
+  // TODO: there is network id, which doest loads the item with this id
+  // TODO: when fixed, can avoid condition and simply pass the list of networks to selector
   const networksList = useSelector((state: RootState) =>
-    listSelector(state, filters),
+    listSelector(state, filter === ALL ? undefined : networks),
   );
   const hasMore = useMemo(() => networksList.length < total, [
     networksList,
@@ -70,9 +73,27 @@ const NetworkList: FC = () => {
   );
 
   const loadNetworks = useCallback(
+    (filters: Filters) => {
+      dispatch(
+        getList({
+          ...filters,
+          ...DEFAULT_PAGINATION,
+          _start: 0,
+        }),
+      );
+    },
+    [filters],
+  );
+
+  const loadMoreNetworks = useCallback(
     (page: number) => {
       const next = page * DEFAULT_PAGINATION._limit;
-      if (next <= total) {
+      if (
+        !(loading === Loading.PENDING) &&
+        filters &&
+        hasMore &&
+        next <= total
+      ) {
         dispatch(
           getList({
             ...filters,
@@ -82,33 +103,40 @@ const NetworkList: FC = () => {
         );
       }
     },
-    [total],
+    [filters, hasMore, isLoading, total],
   );
 
-  const handleFilterChange = useCallback((filter: Filter) => {
-    dispatch(setLoading(Loading.PENDING));
+  const handleFilterChange = useCallback(
+    (filter: Filter) => {
+      let filters;
 
-    if (filter == YOUR_NETWORKS) {
-      setFilters({ id_in: [...(networks || []), -1] });
-    }
+      switch (filter) {
+        case YOUR_NETWORKS: {
+          filters = { id_in: [...(networks || []), -1] };
+          break;
+        }
+        case ALL: {
+          filters = {};
+          break;
+        }
+      }
 
-    if (filter == ALL) {
-      setFilters({});
-    }
-
-    setFilter(filter);
-  }, []);
+      loadNetworks(filters);
+      setFilters(filters);
+      setFilter(filter);
+    },
+    [networks],
+  );
 
   useEffect(() => {
     (async () => {
-      if (filters) {
-        await dispatch(clear());
-        await dispatch(getCount(filters));
-      }
+      await dispatch(clear());
+      await dispatch(getCount(filters));
     })();
   }, [filters]);
 
   useEffect(() => {
+    loadNetworks(filters);
     dispatch(getParticipants());
   }, []);
 
@@ -129,7 +157,7 @@ const NetworkList: FC = () => {
         onChange={(key) => handleFilterChange(key as Filter)}
       />
       {isEmpty(networksList) && isLoading && <Spinner height='500px' />}
-      {loading == Loading.SUCCEEDED && isEmpty(networksList) && !hasMore ? (
+      {loading == Loading.SUCCEEDED && isEmpty(networksList) ? (
         <EmptyContainer
           description='Unfortunately, we did not find any matches for your request'
           explanation='Please change your filtering criteria to try again.'
@@ -137,11 +165,11 @@ const NetworkList: FC = () => {
       ) : (
         <ListContainer>
           <InfiniteScroll
+            initialLoad={false}
             key={filter} // unique key for unmount when switch filter
-            loadMore={loadNetworks}
-            hasMore={hasMore}
-            pageStart={-1}
-            threshold={0}
+            loadMore={loadMoreNetworks}
+            hasMore={!(loading === Loading.PENDING) && hasMore}
+            threshold={100}
             getScrollParent={() => scrollContainer!.current}
             useWindow={false}
           >
@@ -153,7 +181,6 @@ const NetworkList: FC = () => {
               renderAction={(id) => <NetworkAction id={id} />}
             />
           </InfiniteScroll>
-          {!isEmpty(networksList) && isLoading && <Spinner />}
         </ListContainer>
       )}
     </Wrapper>
