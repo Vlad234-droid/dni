@@ -27,7 +27,7 @@ const EventContainer: FC<Props> = ({ id }) => {
       id={id}
       event={event}
       loading={loading}
-      participants={participants![id] || 0}
+      participants={participants!.data![id] || 0}
       loadEvent={loadEvent}
       loadParticipants={loadParticipants}
     />

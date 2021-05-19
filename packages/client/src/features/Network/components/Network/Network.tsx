@@ -2,18 +2,19 @@ import React, { FC, useEffect, useCallback, useState, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { createPortal } from 'react-dom';
 import ResponsiveImage from '@beans/responsive-image';
-import { Loading } from 'store/types';
+import Loading from 'types/loading';
 
 import useDispatch from 'hooks/useDispatch';
 import useStore from 'hooks/useStore';
 import InfoPanel, { InfoPanelType } from 'features/InfoPanel';
 import { PostList, BY_NETWORK } from 'features/Post';
 import { useImageWrapper } from 'context';
+import { EmptyContainer, Spinner } from 'features/Common';
 
 import { byIdSelector, getOne } from '../../store';
-import { Wrapper, Content, LeftContent, RightContent } from './styled';
 import NetworkPartners from './NetworkPartners';
 import NetworkHeader from './NetworkHeader';
+import { Wrapper, Content, LeftContent, RightContent } from './styled';
 
 const TEST_ID = 'network';
 
@@ -21,7 +22,6 @@ type Props = {
   id: number;
 };
 
-// TODO: fix data for network and type
 const Network: FC<Props> = ({ id }) => {
   const dispatch = useDispatch();
   const network = useSelector(byIdSelector(id));
@@ -32,8 +32,10 @@ const Network: FC<Props> = ({ id }) => {
   const [infoPanelType, setInfoPanelType] = useState(InfoPanelType.INFO);
   const { loading } = useStore((state) => state.networks);
   const imageWrapperEl = useImageWrapper();
-
-  const isLoading = useMemo(() => loading === Loading.PENDING, [loading]);
+  const isLoading = useMemo(
+    () => loading !== Loading.SUCCEEDED && loading !== Loading.FAILED,
+    [loading],
+  );
 
   useEffect(() => {
     if (network) return;
@@ -56,65 +58,80 @@ const Network: FC<Props> = ({ id }) => {
     setShowInfoPanel(false);
   }, [showInfoPanel]);
 
-  if (!network && !isLoading)
-    return <Content>{`There is no network with id ${id}`}</Content>;
+  if (loading === Loading.FAILED) {
+    return (
+      <Wrapper data-testid={TEST_ID}>
+        <div>Here some error</div>
+      </Wrapper>
+    );
+  }
 
-  if (isLoading) return <Content>Loading network data...</Content>;
+  if (!network && loading === Loading.SUCCEEDED) {
+    return (
+      <Wrapper data-testid={TEST_ID}>
+        <EmptyContainer description={`There is no network with id ${id}`} />
+      </Wrapper>
+    );
+  }
 
-  // TODO: normalize image before save to store
   return (
     <Wrapper data-testid={TEST_ID}>
-      {imageWrapperEl &&
-        createPortal(
-          <ResponsiveImage
-            key={id}
+      {!network && isLoading && <Spinner height='500px' />}
+      {network && loading === Loading.SUCCEEDED && (
+        <>
+          {imageWrapperEl &&
+            createPortal(
+              <ResponsiveImage
+                key={id}
+                alt={image?.alternativeText}
+                src={image?.url}
+                fallbackSizeRatio='57%'
+                objectFit='cover'
+              />,
+              imageWrapperEl,
+            )}
+          <NetworkHeader
+            id={id}
             //@ts-ignore
-            alt={image?.alternativeText}
-            //@ts-ignore
-            src={image?.url}
-            fallbackSizeRatio='57%'
-            objectFit='cover'
-          />,
-          imageWrapperEl,
-        )}
-      <NetworkHeader
-        id={id}
-        //@ts-ignore
-        title={title}
-        //@ts-ignore
-        email={contact}
-        onLeave={handleLeave}
-        onJoin={handleJoin}
-      />
-      {showInfoPanel && (
-        <InfoPanel
-          type={infoPanelType}
-          infoLink='/'
-          title={isJoined ? 'You have joined the Network!' : `Join ${title}`}
-          //@ts-ignore
-          content={
-            isJoined
-              ? [
-                  'Just to know you better, please fill “This is me” survey. Your personal information won’t be disclosed.',
-                ]
-              : [description]
-          }
-          onClose={isJoined ? handleCloseInfoPanel : undefined}
-        />
-      )}
-      <Content>
-        <LeftContent>
-          <PostList entityId={id} filter={BY_NETWORK} />
-        </LeftContent>
-        <RightContent>
-          <NetworkPartners
-            //@ts-ignore
-            partners={partners}
+            title={title}
             //@ts-ignore
             email={contact}
+            onLeave={handleLeave}
+            onJoin={handleJoin}
           />
-        </RightContent>
-      </Content>
+          {showInfoPanel && (
+            <InfoPanel
+              type={infoPanelType}
+              infoLink='/'
+              title={
+                isJoined ? 'You have joined the Network!' : `Join ${title}`
+              }
+              //@ts-ignore
+              content={
+                isJoined
+                  ? [
+                      'Just to know you better, please fill “This is me” survey. Your personal information won’t be disclosed.',
+                    ]
+                  : [description]
+              }
+              onClose={isJoined ? handleCloseInfoPanel : undefined}
+            />
+          )}
+          <Content>
+            <LeftContent>
+              <PostList entityId={id} filter={BY_NETWORK} />
+            </LeftContent>
+            <RightContent>
+              <NetworkPartners
+                //@ts-ignore
+                partners={partners}
+                //@ts-ignore
+                email={contact}
+              />
+            </RightContent>
+          </Content>
+        </>
+      )}
     </Wrapper>
   );
 };

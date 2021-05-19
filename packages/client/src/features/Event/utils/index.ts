@@ -2,7 +2,8 @@ import { DateTime } from 'luxon';
 
 import { firstDayOf, lastDayOf, FULL_FORMAT } from 'utils/date';
 
-import { Filter, ALL, THIS_MONTH, THIS_WEEK } from '../config/types';
+import { Filter } from '../config/types';
+import { ALL, THIS_MONTH, THIS_WEEK } from '../config/contstants';
 
 export const isEventOnAir = (startDate: string, endDate: string) => {
   const now = DateTime.now();

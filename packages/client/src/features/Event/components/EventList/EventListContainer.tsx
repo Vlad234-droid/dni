@@ -4,7 +4,6 @@ import useDispatch from 'hooks/useDispatch';
 import useStore from 'hooks/useStore';
 import { EntityListPayload } from 'types/payload';
 
-import EventList from './EventList';
 import {
   getList as getEvents,
   getCount,
@@ -12,19 +11,19 @@ import {
   listSelector as eventsSelector,
   getParticipants,
   Filter,
-  ALL,
 } from '../../store';
+import { ALL } from '../../config/contstants';
+import EventList from './EventList';
 
 const EventSidebarContainer: FC = () => {
   const dispatch = useDispatch();
-  // TODO: select events by active filter
   const events = useSelector(eventsSelector);
   const {
     participants,
     loading,
     meta: { total },
   } = useStore((state) => state.events);
-  const { networks = [] } = useStore((state) => state.auth.user);
+  const { networks } = useStore((state) => state.auth.user);
 
   const [page, setPage] = useState<number>(0);
   const [filter, setFilter] = useState<Filter>(ALL);

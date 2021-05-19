@@ -1,37 +1,28 @@
-import { useMemo, useEffect, useState, useCallback } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+
 import useFetch from 'hooks/useFetch';
+import { DEFAULT_PAGINATION } from 'config/constants';
+import Loading from 'types/loading';
 
 import Event from '../config/types';
 import { serializer } from '../store';
-import { DEFAULT_PAGINATION } from 'config/constants';
 
 export default function useFetchEvents(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   filters: Record<string, any>,
   page = 0,
   isInitial = true,
-): [boolean, Event[], boolean] {
+): [Loading, Event[], boolean] {
   const [list, setList] = useState<Event[]>([]);
 
-  const [
-    { response: data, isLoading: isEventsLoading },
-    doFetchEvents,
-  ] = useFetch<Event[]>([]);
-  const [
-    { response: total, isLoading: isEventsCoutnLoading },
-    doFetchEventsCount,
-  ] = useFetch<number>(0);
-
-  const isLoading = useMemo(() => isEventsLoading || isEventsCoutnLoading, [
-    isEventsLoading,
-    isEventsCoutnLoading,
-  ]);
+  const [{ response: data, loading }, doFetchEvents] = useFetch<Event[]>([]);
+  const [{ response: total }, doFetchEventsCount] = useFetch<number>(0);
 
   const hasMore = useMemo(() => list!.length < total!, [list, total]);
 
   const loadEvents = useCallback(
     (page: number) => {
-      if (hasMore && !isEventsLoading) {
+      if (hasMore && loading !== Loading.PENDING) {
         doFetchEvents(
           (api) =>
             api.events.fetchAll({
@@ -43,7 +34,7 @@ export default function useFetchEvents(
         );
       }
     },
-    [hasMore, isEventsLoading],
+    [hasMore, loading],
   );
 
   useEffect(() => {
@@ -63,5 +54,5 @@ export default function useFetchEvents(
     );
   }, []);
 
-  return [isLoading, list, hasMore];
+  return [loading, list, hasMore];
 }

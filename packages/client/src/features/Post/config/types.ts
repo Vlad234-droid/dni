@@ -1,5 +1,7 @@
 import { Post } from '@dni-connectors/colleague-cms-api';
 
+import { ALL, BY_EVENT, BY_NETWORK } from './constants';
+
 enum PostStatus {
   PUBLISHED = 'published',
   ARCHIVED = 'archived',
@@ -19,11 +21,7 @@ type Attachment = {
   width: number;
 };
 
-const ALL = 'ALL';
-const BY_EVENT = 'BY_EVENT';
-const BY_NETWORK = 'BY_NETWORK';
-
 type Filter = typeof ALL | typeof BY_NETWORK | typeof BY_EVENT;
 
-export { PostStatus, ALL, BY_EVENT, BY_NETWORK };
+export { PostStatus };
 export type { Post, Filter, Attachment };

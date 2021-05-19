@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 import { useSelector } from 'react-redux';
+
 import useDispatch from 'hooks/useDispatch';
 import useStore from 'hooks/useStore';
 import { EntityListPayload } from 'types/payload';
@@ -7,7 +8,6 @@ import { EntityListPayload } from 'types/payload';
 import EventSidebar from './EventSidebar';
 import {
   getList as getEvents,
-  getCount,
   listSelector as eventsSelector,
   getParticipants,
   clear,
@@ -22,7 +22,6 @@ const EventSidebarContainer: FC = () => {
   const handleClear = () => dispatch(clear());
   const loadEvents = (filters: EntityListPayload) =>
     dispatch(getEvents(filters));
-  const loadCount = (filters: EntityListPayload) => dispatch(getCount(filters));
   const loadParticipants = () => dispatch(getParticipants());
 
   return (
@@ -31,7 +30,6 @@ const EventSidebarContainer: FC = () => {
       participants={participants}
       loading={loading}
       loadEvents={loadEvents}
-      loadCount={loadCount}
       loadParticipants={loadParticipants}
       handleClear={handleClear}
       networks={networks}

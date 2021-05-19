@@ -27,6 +27,7 @@ export const Container = styled.div`
 
 export const Left = styled.div`
   grid-area: left;
+  margin-bottom: 56px;
 
   ${Media.tablet`
     margin-right: 32px;

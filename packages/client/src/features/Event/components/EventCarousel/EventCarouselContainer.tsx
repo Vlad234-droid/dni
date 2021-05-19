@@ -1,7 +1,8 @@
 import React, { FC, useState } from 'react';
-import useStore from 'hooks/useStore';
 
+import useStore from 'hooks/useStore';
 import { addDuration } from 'utils/date';
+
 import EventCarousel from './EventCarousel';
 import useFetchEvents from '../../hooks/useFetchEvents';
 
@@ -20,13 +21,13 @@ const EventCarouselContainer: FC = () => {
     network_in: [...networks, -1],
   });
 
-  const [isLoading, list] = useFetchEvents(filters);
+  const [loading, list] = useFetchEvents(filters);
 
   return (
     <EventCarousel
       events={list!}
       participants={participants}
-      isLoading={isLoading}
+      loading={loading}
     />
   );
 };

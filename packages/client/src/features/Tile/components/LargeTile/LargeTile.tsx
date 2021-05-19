@@ -23,6 +23,7 @@ type Props = {
   maxParticipants?: number;
   hideMaxParticipants?: boolean;
   imageHeight?: string;
+  wrapperHeight?: string;
 };
 
 const LargeTile: FC<Props> = ({
@@ -37,8 +38,9 @@ const LargeTile: FC<Props> = ({
   hideMaxParticipants,
   id,
   imageHeight = '276px',
+  wrapperHeight,
 }) => (
-  <Wrapper data-testid={TEST_ID}>
+  <Wrapper data-testid={TEST_ID} height={wrapperHeight}>
     {isOnAir && (
       <StatusContainer>
         <StatusLabel type={StatusType.SUCCESS}>On-Air</StatusLabel>

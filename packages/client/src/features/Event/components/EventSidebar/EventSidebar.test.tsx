@@ -4,8 +4,9 @@ import axios from 'axios';
 import { buildEventCRUD } from '@dni/mock-server/src/crud';
 import { DateTime } from 'luxon';
 
+import { isoDateToFormat, FULL_FORMAT } from 'utils/date';
 import { cleanup, act, renderWithProviders } from 'utils/testUtils';
-import { Loading } from 'store/types';
+import Loading from 'types/loading';
 import { LARGE_TILE_TEST_ID, SMALL_TILE_TEST_ID } from 'features/Tile';
 import { DEFAULT_FILTERS } from 'config/constants';
 
@@ -154,15 +155,21 @@ describe('<EventSidebar />', () => {
       expect(queryByText('All events')).toBeInTheDocument();
     });
 
-    fit('should render On-Air, if event is happening now', () => {
+    it('should render On-Air, if event is happening now', () => {
       const COLLECTION_SIZE = 1;
       const eventCRUD = buildEventCRUD(COLLECTION_SIZE);
 
       const events = eventCRUD.findAll();
       const OnAirEvent = {
         ...events[0],
-        startDate: DateTime.now().minus({ days: 1 }).toISO(),
-        endDate: DateTime.now().plus({ days: 2 }).toISO(),
+        startDate: isoDateToFormat(
+          DateTime.now().minus({ days: 1 }).toISO(),
+          FULL_FORMAT,
+        ),
+        endDate: isoDateToFormat(
+          DateTime.now().plus({ days: 2 }).toISO(),
+          FULL_FORMAT,
+        ),
       };
 
       const newProps = {
@@ -202,7 +209,7 @@ describe('<EventSidebar />', () => {
       network_in: [...props.networks, -1],
     };
 
-    it('should call handleClear, loadEvents and loadCount', async () => {
+    it('should call handleClear, loadEvents', async () => {
       await act(async () => {
         renderWithProviders(<EventSidebar {...props} />);
       });
@@ -210,8 +217,6 @@ describe('<EventSidebar />', () => {
       expect(props.handleClear).toHaveBeenCalledTimes(1);
       expect(props.loadEvents).toHaveBeenCalledTimes(1);
       expect(props.loadEvents).toHaveBeenCalledWith(filters);
-      expect(props.loadCount).toHaveBeenCalledTimes(1);
-      expect(props.loadCount).toHaveBeenCalledWith(filters);
     });
 
     it('should call loadParticipants, if empty participants', async () => {
@@ -220,18 +225,6 @@ describe('<EventSidebar />', () => {
       });
 
       expect(props.loadParticipants).toHaveBeenCalledTimes(1);
-    });
-
-    it('should not call loadParticipants, if !empty participants', async () => {
-      const newProps = {
-        ...props,
-        participants: { 1: 1, 2: 2 },
-      };
-      await act(async () => {
-        renderWithProviders(<EventSidebar {...newProps} />);
-      });
-
-      expect(props.loadParticipants).not.toHaveBeenCalled();
     });
   });
 });
