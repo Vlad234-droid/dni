@@ -15,8 +15,14 @@ export default function useFetchEvents(
 ): [Loading, Event[], boolean] {
   const [list, setList] = useState<Event[]>([]);
 
-  const [{ response: data, loading }, doFetchEvents] = useFetch<Event[]>([]);
-  const [{ response: total }, doFetchEventsCount] = useFetch<number>(0);
+  const [{ response: data, loading: eventsLoading }, doFetchEvents] = useFetch<
+    Event[]
+  >([]);
+  const [
+    { response: total, loading: countLoading },
+    doFetchEventsCount,
+  ] = useFetch<number>(0);
+  const [loading, setLoading] = useState<Loading>(eventsLoading);
 
   const hasMore = useMemo(() => list!.length < total!, [list, total]);
 
@@ -37,11 +43,16 @@ export default function useFetchEvents(
     [hasMore, loading],
   );
 
+  // here, when count is 0 load events are not called
   useEffect(() => {
+    if (countLoading == Loading.SUCCEEDED && !hasMore) {
+      setLoading(countLoading);
+    }
+
     if (isInitial && hasMore) {
       loadEvents(page);
     }
-  }, [page, hasMore, isInitial]);
+  }, [page, hasMore, isInitial, countLoading]);
 
   useEffect(() => {
     setList(list.concat(data!));

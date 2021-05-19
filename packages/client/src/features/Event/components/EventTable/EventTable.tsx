@@ -38,7 +38,7 @@ const EventTable: FC = () => {
       </Heading>
       {isEmpty(events) && isLoading && <Spinner height='500px' />}
       {loading === Loading.SUCCEEDED && isEmpty(events) ? (
-        <EmptyContainer description='You have no past events' />
+        <EmptyContainer description='You have no Past Events' />
       ) : (
         <>
           <Table styles={styles}>
