@@ -127,6 +127,7 @@ const NetworkList: FC = () => {
   );
 
   // TODO: how not to reload Your Networks on networks change
+  // loading on networks change (when joined/left from other components on the page)
   useEffect(() => {
     if (filter != ALL) {
       const updatedFilters = { id_in: [...(networks || []), -1] };
@@ -143,6 +144,7 @@ const NetworkList: FC = () => {
     })();
   }, [filters]);
 
+  // initial loading
   useEffect(() => {
     loadNetworks(filters);
     dispatch(getParticipants());
