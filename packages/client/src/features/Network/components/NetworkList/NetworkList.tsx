@@ -58,8 +58,6 @@ const NetworkList: FC = () => {
     meta: { total },
     loading,
   } = useStore((state) => state.networks);
-  // TODO: there is network id, which doest loads the item with this id
-  // TODO: when fixed, can avoid condition and simply pass the list of networks to selector
   const networksList = useSelector((state: RootState) =>
     listSelector(state, filter === ALL ? undefined : networks),
   );
@@ -128,6 +126,17 @@ const NetworkList: FC = () => {
     [networks],
   );
 
+  // TODO: how not to reload Your Networks on networks change
+  // loading on networks change (when joined/left from other components on the page)
+  useEffect(() => {
+    if (filter != ALL) {
+      const updatedFilters = { id_in: [...(networks || []), -1] };
+
+      setFilters(updatedFilters);
+      loadNetworks(updatedFilters);
+    }
+  }, [networks, filter]);
+
   useEffect(() => {
     (async () => {
       await dispatch(clear());
@@ -135,6 +144,7 @@ const NetworkList: FC = () => {
     })();
   }, [filters]);
 
+  // initial loading
   useEffect(() => {
     loadNetworks(filters);
     dispatch(getParticipants());

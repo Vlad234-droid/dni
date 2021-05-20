@@ -12,6 +12,7 @@ type Props = {
 const Statistics = ({ data, onChange }: Props) => {
   const handleChangeItem = (e: ChangeEvent<HTMLInputElement>) =>
     onChange(e.target.id, e.target.checked);
+
   return (
     <Table>
       <tbody>

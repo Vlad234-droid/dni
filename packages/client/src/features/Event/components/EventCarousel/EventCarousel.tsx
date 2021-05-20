@@ -31,7 +31,7 @@ const EventCarousel: FC<Props> = ({ events, loading, participants }) => {
     <Wrapper data-testid={TEST_ID}>
       {isLoading && <Spinner height={CONTENT_HEIGHT} />}
       {loading === Loading.SUCCEEDED && isEmpty(events) ? (
-        <EmptyContainer description='You have no events' />
+        <EmptyContainer description='You have no Upcoming Events' />
       ) : (
         <Carousel itemWidth='278px' id='event-carousel'>
           {events.map(
