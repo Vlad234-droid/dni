@@ -18,7 +18,7 @@ export enum Endpoint {
   NETWORKS_PARTICIPANTS = '/networks/participants',
   // events
   EVENTS = '/events',
-  EVENTS_COUNT = '/events/count',
+  EVENTS_COUNT = '/events/countf',
   EVENTS_PARTICIPANTS = '/events/participants',
   // posts
   POSTS = '/posts',

@@ -28,47 +28,52 @@ const EventCarousel: FC<Props> = ({ events, loading, participants, error }) => {
     [loading],
   );
 
-  return (
-    <Wrapper data-testid={TEST_ID}>
-      {isLoading && <Spinner height={CONTENT_HEIGHT} />}
-      {error && (
+  const memoizedContent = useMemo(() => {
+    if (error)
+      return (
         <ErrorWrapper>
           <Error errorData={{ title: error }} />
         </ErrorWrapper>
-      )}
-      {loading === Loading.SUCCEEDED && isEmpty(events) ? (
-        <EmptyContainer description='You have no events' />
-      ) : (
-        <Carousel itemWidth='278px' id='event-carousel'>
-          {events.map(
-            ({ id, title, maxParticipants, image, startDate, endDate }) => (
-              <LargeTile
-                key={id}
-                id={id}
-                title={title}
-                participants={participants![id] || 0}
-                maxParticipants={maxParticipants}
-                link={Page.EVENTS}
-                meta={startDate}
-                isOnAir={isEventOnAir(startDate, endDate)}
-                wrapperHeight={CONTENT_HEIGHT}
-                renderAction={() => (
-                  <EventAction
-                    id={id}
-                    disabled={isActionDisabled(
-                      participants![id],
-                      maxParticipants,
-                    )}
-                  />
-                )}
-                image={image}
-              />
-            ),
-          )}
-        </Carousel>
-      )}
-    </Wrapper>
-  );
+      );
+
+    if (isLoading && isEmpty(events))
+      return <Spinner height={CONTENT_HEIGHT} />;
+
+    if (loading === Loading.SUCCEEDED && isEmpty(events))
+      return <EmptyContainer description='You have no events' />;
+
+    return (
+      <Carousel itemWidth='278px' id='event-carousel'>
+        {events.map(
+          ({ id, title, maxParticipants, image, startDate, endDate }) => (
+            <LargeTile
+              key={id}
+              id={id}
+              title={title}
+              participants={participants![id] || 0}
+              maxParticipants={maxParticipants}
+              link={Page.EVENTS}
+              meta={startDate}
+              isOnAir={isEventOnAir(startDate, endDate)}
+              wrapperHeight={CONTENT_HEIGHT}
+              renderAction={() => (
+                <EventAction
+                  id={id}
+                  disabled={isActionDisabled(
+                    participants![id],
+                    maxParticipants,
+                  )}
+                />
+              )}
+              image={image}
+            />
+          ),
+        )}
+      </Carousel>
+    );
+  }, [error, loading, events, participants]);
+
+  return <Wrapper data-testid={TEST_ID}>{memoizedContent}</Wrapper>;
 };
 
 export default EventCarousel;
