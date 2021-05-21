@@ -15,9 +15,11 @@ import { byIdSelector, getOne } from '../../store';
 import NetworkPartners from './NetworkPartners';
 import NetworkHeader from './NetworkHeader';
 import { Wrapper, Content, LeftContent, RightContent } from './styled';
-import * as net from 'net';
 
 const TEST_ID = 'network';
+const ERROR_TITLE = 'Request ID not found';
+const ERROR_MESSAGE =
+  'We can not find the network ID you are looking for, please try again.';
 
 type Props = {
   id: number;
@@ -60,7 +62,10 @@ const Network: FC<Props> = ({ id }) => {
   }, [showInfoPanel]);
 
   const memoizedContent = useMemo(() => {
-    if (error) return <Error errorData={{ title: error }} />;
+    if (error)
+      return (
+        <Error errorData={{ title: ERROR_TITLE, message: ERROR_MESSAGE }} />
+      );
 
     if (!network && isLoading) return <Spinner height='500px' />;
 
