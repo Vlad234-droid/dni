@@ -1,9 +1,12 @@
 export const defaultConfig = {
+  appName: 'DiversityAndInclusion',
+  defaultRole: 'Employee',
   port: 8000,
   uploadSize: 50, // MB
   groupsWithAccess: [
-    // TODO: groups will be described here
-    'GG-XX-GlobalDev-Dni Admin',
-    'GG-XX-TescoGlobal-Dni Admin UK Colleague Clubcard Support',
+    'GG-UK-TescoGlobal-DiversityAndInclusion-Admin',
+    'GG-UK-TescoGlobal-DiversityAndInclusion-ContentManager',
+    'GG-UK-TescoGlobal-DiversityAndInclusion-PPE-Admin',
+    'GG-UK-TescoGlobal-DiversityAndInclusion-PPE-ContentManager',
   ],
 };

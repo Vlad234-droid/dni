@@ -11,10 +11,10 @@ import {
 import Button from '@beans/button';
 import Icon from '@beans/icon';
 
+import { Spinner } from 'features/Common';
 import useFetch from 'hooks/useFetch';
 import { useMedia } from 'context/InterfaceContext';
 import Loading from 'types/loading';
-import { Spinner } from 'features/Common';
 
 export type Data = {
   elements: Record<string, Record<'color', string>>;

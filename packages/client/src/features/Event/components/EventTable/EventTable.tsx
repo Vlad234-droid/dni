@@ -15,6 +15,7 @@ import Loading from 'types/loading';
 import { DEFAULT_FILTERS } from 'config/constants';
 
 import useFetchEvents from '../../hooks/useFetchEvents';
+import { getPayloadWhere } from '../../utils';
 import { Wrapper } from './styled';
 
 const TEST_ID = 'events-table';
@@ -25,9 +26,9 @@ const EventTable: FC = () => {
   const [page, setPage] = useState<number>(0);
   const { participants } = useStore((state) => state.events);
   const filters = {
+    ...getPayloadWhere(networks),
     ...DEFAULT_FILTERS,
     endDate_lt: new Date(),
-    network_in: [...(networks || []), -1],
   };
   const [loading, events, hasMore, listError, countError] = useFetchEvents(
     filters,

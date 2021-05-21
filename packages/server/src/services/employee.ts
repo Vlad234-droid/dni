@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { getOpenIdUserInfo } from '@energon/onelogin';
 import { getRepository, EmployeeEvent, EmployeeNetwork } from '@dni/database';
+import { defaultConfig } from '../config/default';
 
 const profileInfoExtractor = async (req: Request, res: Response) => {
   const userInfo =
@@ -22,8 +23,7 @@ const profileInfoExtractor = async (req: Request, res: Response) => {
 
   return {
     ...userInfo,
-    // TODO: add role based on some params
-    role: 'employee',
+    roles: [...(userInfo.roles || []), defaultConfig.defaultRole],
     networks,
     events,
   };

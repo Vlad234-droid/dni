@@ -1,3 +1,5 @@
+import { isDEV } from '../config/env';
+
 type ProcessEnv = {
   // general
   NODE_ENV: string;
@@ -21,7 +23,7 @@ type ProcessEnv = {
   IDENTITY_USER_SCOPED_TOKEN_COOKIE_SECRET: string;
   IDENTITY_USER_SCOPED_TOKEN_COOKIE_NAME: string;
   // mock
-  MOCK_SERVER_URL: string;
+  MOCK_SERVER_URL?: string;
   // confirmit
   CONFIRMIT_PASSWORD: string;
 };
@@ -101,8 +103,12 @@ class EnvAccessor {
       IDENTITY_CLIENT_SECRET,
       IDENTITY_USER_SCOPED_TOKEN_COOKIE_SECRET,
       IDENTITY_USER_SCOPED_TOKEN_COOKIE_NAME,
-      MOCK_SERVER_URL,
       CONFIRMIT_PASSWORD,
+      ...(isDEV(NODE_ENV)
+        ? {
+            MOCK_SERVER_URL,
+          }
+        : undefined),
     };
   }
 }
