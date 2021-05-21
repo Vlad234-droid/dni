@@ -14,7 +14,7 @@ import Loading from 'types/loading';
 import Event, { Filter } from '../../config/types';
 import { ALL, THIS_MONTH, THIS_WEEK } from '../../config/contstants';
 import EventAction from '../EventAction';
-import { getPayloadWhere } from '../../utils';
+import { getPayloadPeriod, getPayloadWhere } from '../../utils';
 import { Wrapper } from './styled';
 
 const TEST_ID = 'events-list';
@@ -79,8 +79,8 @@ const EventList: FC<Props> = ({
   const filters = {
     ...DEFAULT_PAGINATION,
     ...DEFAULT_FILTERS,
-    ...getPayloadWhere(filter),
-    network_in: [...(networks || []), -1],
+    ...getPayloadWhere(networks),
+    ...getPayloadPeriod(filter),
   };
 
   const handleFilterChange = useCallback((filter: Filter) => {
@@ -88,7 +88,7 @@ const EventList: FC<Props> = ({
 
     loadEvents({
       ...filters,
-      ...getPayloadWhere(filter),
+      ...getPayloadPeriod(filter),
       _start: page * DEFAULT_PAGINATION._limit,
     });
   }, []);
