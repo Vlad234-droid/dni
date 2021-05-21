@@ -47,7 +47,7 @@ export const buildContext: (
     return token;
   },
 
-  apiEnv: () => getAppEnv(config.environment, config.mockServerUrl),
+  apiEnv: () => getAppEnv(config.environment, config.mockServerUrl!),
 
   markApiCall: markApiCall(res),
 
