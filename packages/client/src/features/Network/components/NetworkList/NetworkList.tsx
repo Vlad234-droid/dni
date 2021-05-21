@@ -59,8 +59,6 @@ const NetworkList: FC = () => {
     loading,
     error: listError,
   } = useStore((state) => state.networks);
-  // TODO: there is network id, which doest loads the item with this id
-  // TODO: when fixed, can avoid condition and simply pass the list of networks to selector
   const networksList = useSelector((state: RootState) =>
     listSelector(state, filter === ALL ? undefined : networks),
   );

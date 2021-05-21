@@ -14,7 +14,7 @@ export enum Endpoint {
   USER_EVENTS = '/employees/events',
   // networks
   NETWORKS = '/networks',
-  NETWORKS_COUNT = '/networks/codunt',
+  NETWORKS_COUNT = '/networks/count',
   NETWORKS_PARTICIPANTS = '/networks/participants',
   // events
   EVENTS = '/events',
