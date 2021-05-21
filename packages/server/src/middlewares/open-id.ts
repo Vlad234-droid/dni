@@ -26,6 +26,7 @@ export const openIdConfig = ({
   identityUserScopedTokenCookieSecret,
   identityUserScopedTokenCookieName,
   groupsWithAccess,
+  appName,
 }: ProcessConfig) => {
   const openIdCookieParser = cookieParser(cookieKey);
   const isProduction = isPROD(environment);
@@ -36,6 +37,7 @@ export const openIdConfig = ({
       cache: true,
     });
   };
+  const regExp = new RegExp(`.*${appName}-(PPE-)?`);
   const openId = getOpenidMiddleware({
     clientId: oidcClientId,
     clientSecret: oidcClientSecret,
@@ -67,20 +69,31 @@ export const openIdConfig = ({
           httpOnly: true,
           secure: false,
           signed: false,
-          cookieShapeResolver: (userInfo) => ({
-            ...userInfo,
-            fullName: userInfo.name,
-            firstName: userInfo.given_name || userInfo.name.split(/\s+/)[0],
-            email: userInfo.preferred_username,
-            params: {
-              ...userInfo.params,
-              employeeNumber: (userInfo.params?.employeeNumber ||
-                userInfo.params?.EmployeeNumber) as string,
-            },
-            groups: (userInfo.groups || []).filter((group) => {
-              return groupsWithAccess.includes(group);
-            }),
-          }),
+          cookieShapeResolver: (userInfo) => {
+            const userData = {
+              ...userInfo,
+              fullName: userInfo.name,
+              firstName: userInfo.given_name || userInfo.name.split(/\s+/)[0],
+              email: userInfo.preferred_username,
+              params: {
+                ...userInfo.params,
+                employeeNumber: (userInfo.params?.employeeNumber ||
+                  userInfo.params?.EmployeeNumber) as string,
+              },
+              groups: (Array.isArray(userInfo.groups)
+                ? userInfo.groups
+                : ((userInfo.groups as unknown) as string).split(',') || []
+              )
+                .filter(Boolean)
+                .filter((group) => groupsWithAccess.includes(group)),
+            };
+            return {
+              ...userData,
+              roles: userData.groups.map((group: string) =>
+                group.replace(regExp, ''),
+              ),
+            };
+          },
         },
       }),
     ],

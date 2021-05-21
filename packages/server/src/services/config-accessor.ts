@@ -3,6 +3,7 @@ import { defaultConfig } from '../config/default';
 
 type ProcessConfig = {
   // general
+  appName: string;
   environment: string;
   port: string;
   applicationPath: string;
@@ -27,7 +28,7 @@ type ProcessConfig = {
   // default
   groupsWithAccess: string[];
   // mock
-  mockServerUrl: string;
+  mockServerUrl?: string;
   // confirmit
   confirmitPassword: string;
 };
