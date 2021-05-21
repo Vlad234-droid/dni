@@ -108,20 +108,13 @@ const EventList: FC<Props> = ({
     loadParticipants();
   }, []);
 
-  if (error) {
-    return (
-      <Wrapper data-testid={TEST_ID}>
-        <Error errorData={{ title: error }} />
-      </Wrapper>
-    );
-  }
-
   return (
     <Wrapper>
       <ButtonFilter
         initialFilters={initialFilters}
         onChange={(key) => handleFilterChange(key as Filter)}
       />
+      {error && <Error errorData={{ title: error }} />}
       {isEmpty(events) && isLoading && <Spinner height='500px' />}
       {loading === Loading.SUCCEEDED && isEmpty(events) ? (
         <EmptyContainer

@@ -10,7 +10,7 @@ import Loading from 'types/loading';
 import { isEventOnAir, isActionDisabled } from '../../utils';
 import EventAction from '../EventAction';
 import Event from '../../config/types';
-import { Wrapper } from './styled';
+import { Wrapper, ErrorWrapper } from './styled';
 
 const CONTENT_HEIGHT = '483px';
 const TEST_ID = 'events-carousel';
@@ -28,17 +28,14 @@ const EventCarousel: FC<Props> = ({ events, loading, participants, error }) => {
     [loading],
   );
 
-  if (error) {
-    return (
-      <Wrapper data-testid={TEST_ID}>
-        <Error errorData={{ title: error }} />
-      </Wrapper>
-    );
-  }
-
   return (
     <Wrapper data-testid={TEST_ID}>
       {isLoading && <Spinner height={CONTENT_HEIGHT} />}
+      {error && (
+        <ErrorWrapper>
+          <Error errorData={{ title: error }} />
+        </ErrorWrapper>
+      )}
       {loading === Loading.SUCCEEDED && isEmpty(events) ? (
         <EmptyContainer description='You have no events' />
       ) : (

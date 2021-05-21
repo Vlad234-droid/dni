@@ -55,12 +55,11 @@ function useFetch<T, R = T>(initialValue: R | null = null): Response<T, R> {
         try {
           const response = await executer.current(API);
           setResponse(responseHandler.current(response));
+          setLoading(Loading.SUCCEEDED);
         } catch (error) {
           console.log('error', error);
           setError(error.message);
           setLoading(Loading.FAILED);
-        } finally {
-          setLoading(Loading.SUCCEEDED);
         }
       }
     })();
