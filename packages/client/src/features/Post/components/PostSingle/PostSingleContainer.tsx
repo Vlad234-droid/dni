@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 
 import useDispatch from 'hooks/useDispatch';
@@ -13,7 +13,7 @@ type Props = {
 
 const PostSingleContainer: FC<Props> = ({ postId }) => {
   const dispatch = useDispatch();
-  const { loading } = useStore((state) => state.posts);
+  const { loading, error } = useStore((state) => state.posts);
   const post = useSelector(byIdSelector(postId));
 
   const loadPost = (id: number) => dispatch(getOne({ id }));
@@ -24,6 +24,7 @@ const PostSingleContainer: FC<Props> = ({ postId }) => {
       loadPost={loadPost}
       post={post}
       postId={postId}
+      error={error}
     />
   );
 };

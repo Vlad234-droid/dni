@@ -23,6 +23,10 @@ type Props = {
   error?: string;
 };
 
+const ERROR_TITLE = 'Request ID not found';
+const ERROR_MESSAGE =
+  'We can not find the event ID you are looking for, please try again.';
+
 const EventComponent: FC<Props> = ({
   id,
   event,
@@ -50,48 +54,41 @@ const EventComponent: FC<Props> = ({
     loadParticipants();
   }, []);
 
-  if (error) {
-    return (
-      <Wrapper data-testid={TEST_ID}>
-        <Error errorData={{ title: error }} />
-      </Wrapper>
-    );
-  }
+  const memoizedContent = useMemo(() => {
+    if (error)
+      return (
+        <Error errorData={{ title: ERROR_TITLE, message: ERROR_MESSAGE }} />
+      );
 
-  if (!event && loading === Loading.SUCCEEDED) {
-    return (
-      <Wrapper data-testid={TEST_ID}>
-        <EmptyContainer description={`There is no event with id ${id}`} />
-      </Wrapper>
-    );
-  }
+    if (!event && isLoading) return <Spinner height='500px' />;
 
-  return (
-    <Wrapper data-testid={TEST_ID}>
-      {!event && isLoading && <Spinner height='500px' />}
-      {loading === Loading.SUCCEEDED && event && (
-        <>
-          {imageWrapperEl &&
-            createPortal(
-              <ResponsiveImage
-                key={event.id}
-                alt={event.image?.alternativeText}
-                src={event.image?.url}
-                fallbackSizeRatio='57%'
-                objectFit='cover'
-              />,
-              imageWrapperEl,
-            )}
-          <EventHeader event={event} participants={participants} />
-          <Content>
-            <LeftContent>
-              <PostList entityId={id} filter={BY_EVENT} />
-            </LeftContent>
-          </Content>
-        </>
-      )}
-    </Wrapper>
-  );
+    if (!event && loading === Loading.SUCCEEDED)
+      return <EmptyContainer description={`There is no event with id ${id}`} />;
+
+    return (
+      <>
+        {imageWrapperEl &&
+          createPortal(
+            <ResponsiveImage
+              key={event!.id}
+              alt={event!.image?.alternativeText}
+              src={event!.image?.url}
+              fallbackSizeRatio='57%'
+              objectFit='cover'
+            />,
+            imageWrapperEl,
+          )}
+        <EventHeader event={event!} participants={participants} />
+        <Content>
+          <LeftContent>
+            <PostList entityId={id} filter={BY_EVENT} />
+          </LeftContent>
+        </Content>
+      </>
+    );
+  }, [error, event, loading, participants]);
+
+  return <Wrapper data-testid={TEST_ID}>{memoizedContent}</Wrapper>;
 };
 
 export { TEST_ID };

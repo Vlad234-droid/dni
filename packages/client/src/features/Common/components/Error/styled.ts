@@ -1,23 +1,29 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 import Media from 'styles/media';
 import { headingXS, textXS } from 'styles';
 
-export const Wrapper = styled.div`
+export const Wrapper = styled.div<{
+  fullWidth: boolean;
+}>`
   margin-top: 48px;
   padding: 0 12px;
   display: flex;
   flex-direction: column;
   align-items: center;
 
-  ${Media.tablet`
-     display: block;
-     width: 90%;
-     margin: 64px auto 0;
+  ${({ fullWidth }) => css`
+    ${Media.tablet`
+      display: block;
+      margin: 64px auto 0;
+      width: ${fullWidth ? '100%' : '90%'}
+    `}
   `}
 
-  ${Media.desktop`
-     width: 70%;
+  ${({ fullWidth }) => css`
+    ${Media.desktop`
+      width: ${fullWidth ? '100%' : '70%'}
+    `}
   `}
 `;
 

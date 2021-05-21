@@ -65,21 +65,16 @@ const EventSidebar: FC<Props> = ({
     loadParticipants();
   }, []);
 
-  if (error) {
-    return (
-      <Wrapper data-testid={TEST_ID}>
-        <Error errorData={{ title: error }} />
-      </Wrapper>
-    );
-  }
+  const memoizedContent = useMemo(() => {
+    if (error) return <Error errorData={{ title: error }} fullWidth />;
 
-  return (
-    <Wrapper data-testid={TEST_ID}>
-      <Title>Events</Title>
-      {isEmpty(events) && isLoading && <Spinner height='500px' />}
-      {loading === Loading.SUCCEEDED && isEmpty(events) ? (
-        <EmptyContainer description='You have no events' />
-      ) : (
+    if (isEmpty(events) && isLoading) return <Spinner height='500px' />;
+
+    if (loading === Loading.SUCCEEDED && isEmpty(events))
+      return <EmptyContainer description='You have no events' />;
+
+    return (
+      <>
         <List>
           {events.map((eventItem, index) => {
             const {
@@ -137,12 +132,17 @@ const EventSidebar: FC<Props> = ({
             );
           })}
         </List>
-      )}
-      {!isEmpty(events) && (
         <Link to={Page.EVENTS}>
           <Button variant='secondary'>All events</Button>
         </Link>
-      )}
+      </>
+    );
+  }, [error, loading, events, participants]);
+
+  return (
+    <Wrapper data-testid={TEST_ID}>
+      <Title>Events</Title>
+      {memoizedContent}
     </Wrapper>
   );
 };

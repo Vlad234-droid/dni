@@ -1,9 +1,9 @@
-import { FC, useEffect, useMemo, useState } from 'react';
+import React, { FC, useEffect, useMemo, useState } from 'react';
 import isEmpty from 'lodash.isempty';
 
 import useFetch from 'hooks/useFetch';
 import useStore from 'hooks/useStore';
-import { EmptyContainer, Spinner } from 'features/Common';
+import { EmptyContainer, Error, Spinner } from 'features/Common';
 import { Page } from 'features/Page';
 import List from 'features/List';
 import Loading from 'types/loading';
@@ -14,7 +14,9 @@ import NetworkAction from '../NetworkAction';
 import { Wrapper } from './styled';
 
 const NetworkCarousel: FC = () => {
-  const [{ response: networks, loading }, doFetch] = useFetch<Network[]>([]);
+  const [{ response: networks, loading, error }, doFetch] = useFetch<Network[]>(
+    [],
+  );
   const { participants } = useStore((state) => state.networks);
   const isLoading = useMemo(
     () => loading !== Loading.SUCCEEDED && loading !== Loading.FAILED,
@@ -32,13 +34,15 @@ const NetworkCarousel: FC = () => {
     );
   }, [filters]);
 
-  if (isLoading) return <Spinner height='300px' />;
+  const memoizedContent = useMemo(() => {
+    if (error) return <Error errorData={{ title: error }} />;
 
-  if (loading === Loading.SUCCEEDED && isEmpty(networks))
-    return <EmptyContainer description='Nothing to show' />;
+    if (isLoading) return <Spinner height='300px' />;
 
-  return (
-    <Wrapper>
+    if (loading === Loading.SUCCEEDED && isEmpty(networks))
+      return <EmptyContainer description='Nothing to show' />;
+
+    return (
       <List
         link={Page.NETWORKS}
         //@ts-ignore
@@ -46,8 +50,10 @@ const NetworkCarousel: FC = () => {
         participants={participants}
         renderAction={(id) => <NetworkAction id={id} />}
       />
-    </Wrapper>
-  );
+    );
+  }, [networks, participants, loading, error]);
+
+  return <Wrapper>{memoizedContent}</Wrapper>;
 };
 
 export default NetworkCarousel;

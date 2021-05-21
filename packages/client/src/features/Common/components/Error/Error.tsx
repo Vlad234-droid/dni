@@ -21,13 +21,18 @@ type Props = {
     message?: string;
   };
   showButton?: boolean;
+  fullWidth?: boolean;
 };
 
 const DEFAULT_TITLE = 'Something went wrong';
 const DEFAULT_MESSAGE = 'Please, try again.';
 
-const Error: FC<Props> = ({ errorData, showButton = false }) => (
-  <Wrapper data-testid='not-found'>
+const Error: FC<Props> = ({
+  errorData,
+  showButton = false,
+  fullWidth = false,
+}) => (
+  <Wrapper fullWidth={fullWidth} data-testid='not-found'>
     <Container>
       <IconWrapper>
         <Icon
