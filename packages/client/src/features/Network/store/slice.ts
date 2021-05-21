@@ -16,7 +16,7 @@ const networksAdapter = createEntityAdapter<Network>();
 
 const initialState: T.State = networksAdapter.getInitialState({
   loading: Loading.IDLE,
-  error: null,
+  error: undefined,
   meta: DEFAULT_META,
   participants: DEFAULT_PARTICIPANTS,
 });

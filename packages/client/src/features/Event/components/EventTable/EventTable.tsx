@@ -9,12 +9,15 @@ import { Table, Body, Cell, Row } from 'features/Table';
 import Heading, { Size, Color } from 'features/Heading';
 import { useMedia } from 'context/InterfaceContext';
 import useStore from 'hooks/useStore';
-import { EmptyContainer, Spinner } from 'features/Common';
+import { EmptyContainer, Error, Spinner } from 'features/Common';
 import { Page } from 'features/Page';
 import Loading from 'types/loading';
+import { DEFAULT_FILTERS } from 'config/constants';
 
 import useFetchEvents from '../../hooks/useFetchEvents';
 import { Wrapper } from './styled';
+
+const TEST_ID = 'events-table';
 
 const EventTable: FC = () => {
   const { isMobile } = useMedia();
@@ -22,23 +25,40 @@ const EventTable: FC = () => {
   const [page, setPage] = useState<number>(0);
   const { participants } = useStore((state) => state.events);
   const filters = {
+    ...DEFAULT_FILTERS,
     endDate_lt: new Date(),
     network_in: [...(networks || []), -1],
   };
-  const [loading, events, hasMore] = useFetchEvents(filters, page);
+  const [loading, events, hasMore, listError, countError] = useFetchEvents(
+    filters,
+    page,
+  );
   const isLoading = useMemo(
     () => loading !== Loading.SUCCEEDED && loading !== Loading.FAILED,
     [loading],
   );
+  const error = useMemo(() => listError || countError || participants.error, [
+    participants,
+    listError,
+    countError,
+  ]);
+
+  if (error) {
+    return (
+      <Wrapper data-testid={TEST_ID}>
+        <Error errorData={{ title: error }} />
+      </Wrapper>
+    );
+  }
 
   return (
-    <Wrapper>
+    <Wrapper data-testid={TEST_ID}>
       <Heading size={Size.md} color={Color.black}>
         Past Events
       </Heading>
       {isEmpty(events) && isLoading && <Spinner height='500px' />}
       {loading === Loading.SUCCEEDED && isEmpty(events) ? (
-        <EmptyContainer description='You have no Past Events' />
+        <EmptyContainer description='You have no past events' />
       ) : (
         <>
           <Table styles={styles}>

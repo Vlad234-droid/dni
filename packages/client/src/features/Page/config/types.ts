@@ -10,7 +10,7 @@ enum Page {
   NETWORK_POST = 'network-news/:id',
   REPORTS = 'reports',
   PROFILE = 'profile',
-  NOT_FOUND = '*',
+  NOT_FOUND = '404',
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

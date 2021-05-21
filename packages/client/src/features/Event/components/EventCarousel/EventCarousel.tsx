@@ -3,7 +3,7 @@ import isEmpty from 'lodash.isempty';
 
 import Carousel from 'features/Carousel';
 import { LargeTile } from 'features/Tile';
-import { EmptyContainer, Spinner } from 'features/Common';
+import { EmptyContainer, Error, Spinner } from 'features/Common';
 import { Page } from 'features/Page';
 import Loading from 'types/loading';
 
@@ -19,19 +19,28 @@ type Props = {
   events: Event[];
   loading: Loading;
   participants?: Record<number, number>;
+  error?: string;
 };
 
-const EventCarousel: FC<Props> = ({ events, loading, participants }) => {
+const EventCarousel: FC<Props> = ({ events, loading, participants, error }) => {
   const isLoading = useMemo(
     () => loading !== Loading.SUCCEEDED && loading !== Loading.FAILED,
     [loading],
   );
 
+  if (error) {
+    return (
+      <Wrapper data-testid={TEST_ID}>
+        <Error errorData={{ title: error }} />
+      </Wrapper>
+    );
+  }
+
   return (
     <Wrapper data-testid={TEST_ID}>
       {isLoading && <Spinner height={CONTENT_HEIGHT} />}
       {loading === Loading.SUCCEEDED && isEmpty(events) ? (
-        <EmptyContainer description='You have no Upcoming Events' />
+        <EmptyContainer description='You have no events' />
       ) : (
         <Carousel itemWidth='278px' id='event-carousel'>
           {events.map(

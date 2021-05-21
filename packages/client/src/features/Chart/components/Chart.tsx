@@ -53,6 +53,8 @@ const Chart = ({ data, type }: Props) => {
     );
   }, []);
 
+  if (isLoading) return <Spinner height='300px' />;
+
   return (
     <div>
       <ButtonWrapper>

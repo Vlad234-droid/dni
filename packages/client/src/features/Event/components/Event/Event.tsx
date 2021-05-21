@@ -2,14 +2,14 @@ import React, { FC, useEffect, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import ResponsiveImage from '@beans/responsive-image';
 
-import { PostList, BY_EVENT } from 'features/Post';
+import { BY_EVENT, PostList } from 'features/Post';
 import { useImageWrapper } from 'context';
 import Loading from 'types/loading';
-import { EmptyContainer, Spinner } from 'features/Common';
+import { EmptyContainer, Error, Spinner } from 'features/Common';
 
 import Event from '../../config/types';
 import EventHeader from '../EventHeader';
-import { Wrapper, Content, LeftContent } from './styled';
+import { Content, LeftContent, Wrapper } from './styled';
 
 const TEST_ID = 'event';
 
@@ -20,6 +20,7 @@ type Props = {
   loadParticipants: () => void;
   event?: Event;
   participants: number;
+  error?: string;
 };
 
 const EventComponent: FC<Props> = ({
@@ -29,6 +30,7 @@ const EventComponent: FC<Props> = ({
   loadParticipants,
   loading,
   participants,
+  error,
 }) => {
   const imageWrapperEl = useImageWrapper();
   const isLoading = useMemo(
@@ -48,10 +50,10 @@ const EventComponent: FC<Props> = ({
     loadParticipants();
   }, []);
 
-  if (loading === Loading.FAILED) {
+  if (error) {
     return (
       <Wrapper data-testid={TEST_ID}>
-        <div>Here some error</div>
+        <Error errorData={{ title: error }} />
       </Wrapper>
     );
   }

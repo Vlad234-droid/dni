@@ -12,17 +12,17 @@ export default function useFetchEvents(
   filters: Record<string, any>,
   page = 0,
   isInitial = true,
-): [Loading, Event[], boolean] {
+): [Loading, Event[], boolean, string?, string?] {
   const [list, setList] = useState<Event[]>([]);
 
-  const [{ response: data, loading: eventsLoading }, doFetchEvents] = useFetch<
-    Event[]
-  >([]);
   const [
-    { response: total, loading: countLoading },
+    { response: data, loading, error: listError },
+    doFetchEvents,
+  ] = useFetch<Event[]>([]);
+  const [
+    { response: total, error: countError },
     doFetchEventsCount,
   ] = useFetch<number>(0);
-  const [loading, setLoading] = useState<Loading>(eventsLoading);
 
   const hasMore = useMemo(() => list!.length < total!, [list, total]);
 
@@ -44,15 +44,10 @@ export default function useFetchEvents(
   );
 
   useEffect(() => {
-    // when count is 0 load events is not not called - set loading to SUCCEEDED
-    if (countLoading == Loading.SUCCEEDED && !hasMore) {
-      setLoading(countLoading);
-    }
-
     if (isInitial && hasMore) {
       loadEvents(page);
     }
-  }, [page, hasMore, isInitial, countLoading]);
+  }, [page, hasMore, isInitial]);
 
   useEffect(() => {
     setList(list.concat(data!));
@@ -65,5 +60,5 @@ export default function useFetchEvents(
     );
   }, []);
 
-  return [loading, list, hasMore];
+  return [loading, list, hasMore, listError, countError];
 }

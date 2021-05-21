@@ -6,13 +6,11 @@ import Icon from '@beans/icon';
 type Props = {
   pathname?: string;
   showNotification: () => void;
-  hideNotification: () => void;
 };
 
 const CopyLink: FC<Props> = ({
   pathname = window.location.pathname,
   showNotification,
-  hideNotification,
 }) => {
   const handleClick = useCallback(() => {
     const host = window.location.host;
@@ -20,8 +18,7 @@ const CopyLink: FC<Props> = ({
 
     copy(url);
 
-    hideNotification();
-    setTimeout(showNotification, 100);
+    showNotification();
   }, []);
 
   return (

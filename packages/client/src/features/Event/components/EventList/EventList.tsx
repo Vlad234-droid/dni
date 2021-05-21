@@ -7,7 +7,7 @@ import ButtonFilter from 'features/ButtonFilter';
 import { EntityListPayload } from 'types/payload';
 import { DEFAULT_FILTERS, DEFAULT_PAGINATION } from 'config/constants';
 import List from 'features/List';
-import { EmptyContainer, Spinner } from 'features/Common';
+import { EmptyContainer, Error, Spinner } from 'features/Common';
 import { Page } from 'features/Page';
 import Loading from 'types/loading';
 
@@ -51,6 +51,7 @@ type Props = {
   onPageChange: () => void;
   filter: Filter;
   onFilterChange: (filter: Filter) => void;
+  error?: string;
 };
 
 const EventList: FC<Props> = ({
@@ -67,6 +68,7 @@ const EventList: FC<Props> = ({
   onPageChange,
   filter,
   onFilterChange,
+  error,
 }) => {
   const isLoading = useMemo(
     () => loading !== Loading.SUCCEEDED && loading !== Loading.FAILED,
@@ -106,10 +108,10 @@ const EventList: FC<Props> = ({
     loadParticipants();
   }, []);
 
-  if (loading === Loading.FAILED) {
+  if (error) {
     return (
       <Wrapper data-testid={TEST_ID}>
-        <div>Here some error</div>
+        <Error errorData={{ title: error }} />
       </Wrapper>
     );
   }

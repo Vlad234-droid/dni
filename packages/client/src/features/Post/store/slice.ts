@@ -9,7 +9,7 @@ import * as T from './types';
 
 const initialState: T.State = T.EntityAdapter.getInitialState({
   loading: Loading.IDLE,
-  error: null,
+  error: undefined,
   meta: DEFAULT_META,
 });
 
