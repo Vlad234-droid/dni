@@ -21,6 +21,9 @@ const pages: Record<Page, PageElement> = {
   [Page.NETWORK_POST]: NetworkNews,
   [Page.REPORTS]: Reports,
   [Page.PROFILE]: Profile,
+  [Page.UNAUTHORIZED]: NotFound,
+  [Page.FORBIDDEN]: NotFound,
+  [Page.SERVER_ERROR]: NotFound,
   [Page.NOT_FOUND]: NotFound,
 };
 

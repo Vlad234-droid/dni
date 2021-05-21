@@ -10,6 +10,9 @@ enum Page {
   NETWORK_POST = 'network-news/:id',
   REPORTS = 'reports',
   PROFILE = 'profile',
+  UNAUTHORIZED = '401',
+  FORBIDDEN = '403',
+  SERVER_ERROR = '500',
   NOT_FOUND = '*',
 }
 
