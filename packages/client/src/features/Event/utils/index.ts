@@ -23,7 +23,18 @@ export const isActionDisabled = (
   return (participants || 0) >= maxParticipants;
 };
 
-export const getPayloadWhere = (filter: Filter) => {
+export const getPayloadWhere = (networks?: number[]) => ({
+  _publicationState: 'preview',
+  published_at_null: false,
+  _where: {
+    _or: [
+      { network_null: true }, // public events
+      { network_in: networks }, // events for networks to which the user is subscribed
+    ],
+  },
+});
+
+export const getPayloadPeriod = (filter: Filter) => {
   let where = {};
   switch (filter) {
     case ALL: {

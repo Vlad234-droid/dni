@@ -8,8 +8,8 @@ import { Page } from 'features/Page';
 import Loading from 'types/loading';
 
 import { isEventOnAir, isActionDisabled } from '../../utils';
-import EventAction from '../EventAction';
 import Event from '../../config/types';
+import EventAction from '../EventAction';
 import { Wrapper } from './styled';
 
 const CONTENT_HEIGHT = '483px';

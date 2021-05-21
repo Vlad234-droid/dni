@@ -24,10 +24,8 @@ const EventSidebarContainer: FC = () => {
     meta: { total },
   } = useStore((state) => state.events);
   const { networks } = useStore((state) => state.auth.user);
-
   const [page, setPage] = useState<number>(0);
   const [filter, setFilter] = useState<Filter>(ALL);
-
   const loadEvents = (filters: EntityListPayload) =>
     dispatch(getEvents(filters));
   const loadCount = (filters: EntityListPayload) => dispatch(getCount(filters));

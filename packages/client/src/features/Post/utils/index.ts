@@ -26,6 +26,7 @@ const cutString = ({
 
 const getAllFilterPayload = (networks?: number[], events?: number[]) => ({
   _publicationState: 'preview',
+  published_at_null: false,
   _where: {
     _or: [
       { event_null: true, network_null: true }, // public posts
