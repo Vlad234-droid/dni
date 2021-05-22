@@ -20,4 +20,5 @@ export { default as Spinner } from './components/Spinner';
 export { default as Link } from './components/Link';
 export { default as CopyLink } from './components/CopyLink';
 export { default as RichTextRenderer } from './components/RichTextRenderer';
+export { default as TitleWithEllipsis } from './components/TitleWithEllipsis';
 export { FieldWrapper } from './styled';

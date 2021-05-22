@@ -48,7 +48,6 @@
     "@beans/spinner": "^18.4.0",
     "@beans/textarea": "^18.2.2",
     "@beans/theme": "^18.2.1",
-    "@beans/title-link": "^18.2.3",
     "@beans/typography": "^18.2.3",
     "@dni-connectors/colleague-cms-api": "1.0.0",
     "@dni/mock-server": "1.0.0",

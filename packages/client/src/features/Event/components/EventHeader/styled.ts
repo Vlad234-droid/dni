@@ -66,23 +66,22 @@ export const ButtonWrapper = styled.div`
 `;
 
 export const TitleWrapper = styled.div`
+  overflow: hidden;
   display: flex;
-  align-items: flex-start;
-  flex-direction: column;
+  align-items: center;
+  margin-bottom: 16px;
 
   ${Media.tablet`
-    flex-direction: row;
+    margin-bottom: 0;
   `}
 
-  h3 {
+  h5 {
     margin-right: 24px;
-    margin-bottom: 4px;
     ${headingMD};
 
     ${Media.tablet`
       font-size: 32px;
       line-height: 45px;
-      margin-bottom: 0;
     `}
   }
 `;

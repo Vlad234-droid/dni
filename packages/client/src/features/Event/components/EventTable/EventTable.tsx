@@ -2,14 +2,13 @@ import React, { FC, useMemo, useState } from 'react';
 import Button from '@beans/button';
 import Icon from '@beans/icon';
 import { css } from 'styled-components';
-import { TitleWithEllipsis } from '@beans/title-link';
 import isEmpty from 'lodash.isempty';
 
 import { Table, Body, Cell, Row } from 'features/Table';
 import Heading, { Size, Color } from 'features/Heading';
 import { useMedia } from 'context/InterfaceContext';
 import useStore from 'hooks/useStore';
-import { EmptyContainer, Spinner } from 'features/Common';
+import { EmptyContainer, Spinner, TitleWithEllipsis } from 'features/Common';
 import { Page } from 'features/Page';
 import Loading from 'types/loading';
 import { DEFAULT_FILTERS } from 'config/constants';
@@ -50,9 +49,8 @@ const EventTable: FC = () => {
                 <Row key={id}>
                   <Cell width='25%'>
                     <TitleWithEllipsis
-                      maxLines={1}
-                      titleHeight='22px'
                       href={`${Page.EVENTS}/${id}`}
+                      titleHeight='30px'
                     >
                       {title}
                     </TitleWithEllipsis>

@@ -1,12 +1,11 @@
 import React, { FC } from 'react';
 import styled from 'styled-components';
-import { TitleWithEllipsis } from '@beans/title-link';
 import Link from '@beans/link';
 
 import Media from 'styles/media';
 import { useMedia } from 'context/InterfaceContext';
 import { headingMD } from 'styles';
-import { CopyLink } from 'features/Common';
+import { CopyLink, TitleWithEllipsis } from 'features/Common';
 
 import NetworkAction from '../NetworkAction';
 
@@ -25,10 +24,7 @@ const NetworkHeader: FC<Props> = ({ id, title, email, onLeave, onJoin }) => {
   return (
     <Wrapper>
       <TitleWrapper>
-        <TitleWithEllipsis
-          maxLines={1}
-          titleHeight={isMobile ? '28px' : '45px'}
-        >
+        <TitleWithEllipsis titleHeight={isMobile ? '28px' : '45px'}>
           {title}
         </TitleWithEllipsis>
         {isMobile && <CopyLink />}
@@ -71,6 +67,7 @@ export const ButtonWrapper = styled.div`
 `;
 
 export const TitleWrapper = styled.div`
+  overflow: hidden;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -80,7 +77,7 @@ export const TitleWrapper = styled.div`
     margin-bottom: 0;
   `}
 
-  h3 {
+  h5 {
     margin-right: 24px;
     ${headingMD};
 
