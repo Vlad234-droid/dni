@@ -1,8 +1,6 @@
 import { createGlobalStyle } from 'styled-components';
 import { Theme } from '@beans/types';
 
-import Media from 'styles/media';
-
 // describe app global styles here
 export default createGlobalStyle<{
   theme: Theme;
