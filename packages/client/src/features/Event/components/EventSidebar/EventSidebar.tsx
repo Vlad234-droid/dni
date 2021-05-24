@@ -54,8 +54,6 @@ const EventSidebar: FC<Props> = ({
     ...DEFAULT_FILTERS,
   };
 
-  console.log('filters', filters);
-
   useEffect(() => {
     handleClear();
 

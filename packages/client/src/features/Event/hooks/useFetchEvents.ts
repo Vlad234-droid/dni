@@ -25,8 +25,6 @@ export default function useFetchEvents(
     doFetchEventsCount,
   ] = useFetch<number>(0);
 
-  console.log('total', total);
-
   const hasMore = useMemo(() => list!.length < total!, [list, total]);
 
   const loadEvents = useCallback(

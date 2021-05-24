@@ -3,12 +3,12 @@ import React, { FC, useMemo, useState } from 'react';
 import useStore from 'hooks/useStore';
 import { addDuration } from 'utils/date';
 import { DEFAULT_FILTERS } from 'config/constants';
+import useDispatch from 'hooks/useDispatch';
 
 import { getPayloadWhere } from '../../utils';
 import useFetchEvents from '../../hooks/useFetchEvents';
 import EventCarousel from './EventCarousel';
 import { getParticipants } from '../../store';
-import useDispatch from '../../../../hooks/useDispatch';
 
 const MAX_VISIBLE_ITEMS = 5;
 
