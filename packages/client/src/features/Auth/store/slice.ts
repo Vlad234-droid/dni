@@ -2,13 +2,14 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
 import { defaultUserState } from 'features/User';
 import API from 'utils/api';
+import Loading from 'types/loading';
 
 import * as T from './types';
 
 const initialState: T.State = {
   user: defaultUserState,
-  isLoading: false,
-  error: null,
+  loading: Loading.IDLE,
+  error: undefined,
 };
 
 const profile = createAsyncThunk<T.UserResponse>(
@@ -45,25 +46,33 @@ const slice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    const startLoading = (state: T.State) => {
-      state.isLoading = true;
+    const setPending = (state: T.State) => {
+      state.loading = Loading.PENDING;
+      state.error = undefined;
     };
-    const stopLoading = (state: T.State) => {
-      state.isLoading = false;
+
+    const setSucceeded = (state: T.State) => {
+      state.loading = Loading.SUCCEEDED;
     };
+
+    const setFailed = (state: T.State, payload: any) => {
+      state.loading = Loading.FAILED;
+      state.error = payload.error.message;
+    };
+
     const handleAuthentication = (
       state: T.State,
       { payload: user }: { payload: T.UserResponse },
     ) => {
       state.user = user;
-      stopLoading(state);
+      setSucceeded(state);
     };
 
     builder
-      .addCase(profile.pending, startLoading)
+      .addCase(profile.pending, setPending)
       .addCase(profile.fulfilled, handleAuthentication)
-      .addCase(profile.rejected, stopLoading)
-      .addCase(joinNetwork.pending, startLoading)
+      .addCase(profile.rejected, setFailed)
+      .addCase(joinNetwork.pending, setPending)
       .addCase(joinNetwork.fulfilled, (state: T.State, action) => {
         const networkId = +action.payload.body.networkId;
         const networks = state.user.networks;
@@ -72,10 +81,10 @@ const slice = createSlice({
           networks.push(networkId);
           state.user.networks = networks;
         }
-        stopLoading(state);
+        setSucceeded(state);
       })
-      .addCase(joinNetwork.rejected, stopLoading)
-      .addCase(leaveNetwork.pending, startLoading)
+      .addCase(joinNetwork.rejected, setFailed)
+      .addCase(leaveNetwork.pending, setPending)
       .addCase(leaveNetwork.fulfilled, (state: T.State, action) => {
         const networkId = +action.payload.body.networkId;
         const networks = state.user.networks;
@@ -84,10 +93,10 @@ const slice = createSlice({
           networks.splice(networks.indexOf(networkId), 1);
           state.user.networks = networks;
         }
-        stopLoading(state);
+        setSucceeded(state);
       })
-      .addCase(leaveNetwork.rejected, stopLoading)
-      .addCase(joinEvent.pending, startLoading)
+      .addCase(leaveNetwork.rejected, setFailed)
+      .addCase(joinEvent.pending, setPending)
       .addCase(joinEvent.fulfilled, (state: T.State, action) => {
         const eventId = +action.payload.body.eventId;
         const events = state.user.events;
@@ -96,10 +105,10 @@ const slice = createSlice({
           events.push(eventId);
           state.user.events = events;
         }
-        stopLoading(state);
+        setSucceeded(state);
       })
-      .addCase(joinEvent.rejected, stopLoading)
-      .addCase(leaveEvent.pending, startLoading)
+      .addCase(joinEvent.rejected, setFailed)
+      .addCase(leaveEvent.pending, setPending)
       .addCase(leaveEvent.fulfilled, (state: T.State, action) => {
         const eventId = +action.payload.body.eventId;
         const events = state.user.events;
@@ -108,9 +117,9 @@ const slice = createSlice({
           events.splice(events.indexOf(eventId), 1);
           state.user.events = events;
         }
-        stopLoading(state);
+        setSucceeded(state);
       })
-      .addCase(leaveEvent.rejected, stopLoading);
+      .addCase(leaveEvent.rejected, setFailed);
   },
 });
 
