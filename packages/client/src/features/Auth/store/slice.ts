@@ -10,6 +10,10 @@ const initialState: T.State = {
   user: defaultUserState,
   loading: Loading.IDLE,
   error: undefined,
+  networkLoading: Loading.IDLE,
+  networkError: undefined,
+  eventLoading: Loading.IDLE,
+  eventError: undefined,
 };
 
 const profile = createAsyncThunk<T.UserResponse>(
@@ -72,7 +76,10 @@ const slice = createSlice({
       .addCase(profile.pending, setPending)
       .addCase(profile.fulfilled, handleAuthentication)
       .addCase(profile.rejected, setFailed)
-      .addCase(joinNetwork.pending, setPending)
+      .addCase(joinNetwork.pending, (state: T.State) => {
+        state.networkLoading = Loading.PENDING;
+        state.networkError = undefined;
+      })
       .addCase(joinNetwork.fulfilled, (state: T.State, action) => {
         const networkId = +action.payload.body.networkId;
         const networks = state.user.networks;
@@ -81,10 +88,16 @@ const slice = createSlice({
           networks.push(networkId);
           state.user.networks = networks;
         }
-        setSucceeded(state);
+        state.networkLoading = Loading.SUCCEEDED;
       })
-      .addCase(joinNetwork.rejected, setFailed)
-      .addCase(leaveNetwork.pending, setPending)
+      .addCase(joinNetwork.rejected, (state: T.State, payload) => {
+        state.networkLoading = Loading.FAILED;
+        state.networkError = payload.error.message;
+      })
+      .addCase(leaveNetwork.pending, (state: T.State) => {
+        state.networkLoading = Loading.PENDING;
+        state.networkError = undefined;
+      })
       .addCase(leaveNetwork.fulfilled, (state: T.State, action) => {
         const networkId = +action.payload.body.networkId;
         const networks = state.user.networks;
@@ -93,10 +106,16 @@ const slice = createSlice({
           networks.splice(networks.indexOf(networkId), 1);
           state.user.networks = networks;
         }
-        setSucceeded(state);
+        state.networkLoading = Loading.SUCCEEDED;
       })
-      .addCase(leaveNetwork.rejected, setFailed)
-      .addCase(joinEvent.pending, setPending)
+      .addCase(leaveNetwork.rejected, (state: T.State, payload) => {
+        state.networkLoading = Loading.FAILED;
+        state.networkError = payload.error.message;
+      })
+      .addCase(joinEvent.pending, (state: T.State) => {
+        state.eventLoading = Loading.PENDING;
+        state.eventError = undefined;
+      })
       .addCase(joinEvent.fulfilled, (state: T.State, action) => {
         const eventId = +action.payload.body.eventId;
         const events = state.user.events;
@@ -105,10 +124,16 @@ const slice = createSlice({
           events.push(eventId);
           state.user.events = events;
         }
-        setSucceeded(state);
+        state.eventLoading = Loading.SUCCEEDED;
       })
-      .addCase(joinEvent.rejected, setFailed)
-      .addCase(leaveEvent.pending, setPending)
+      .addCase(joinEvent.rejected, (state: T.State, payload) => {
+        state.eventLoading = Loading.FAILED;
+        state.eventError = payload.error.message;
+      })
+      .addCase(leaveEvent.pending, (state: T.State) => {
+        state.eventLoading = Loading.PENDING;
+        state.eventError = undefined;
+      })
       .addCase(leaveEvent.fulfilled, (state: T.State, action) => {
         const eventId = +action.payload.body.eventId;
         const events = state.user.events;
@@ -117,9 +142,12 @@ const slice = createSlice({
           events.splice(events.indexOf(eventId), 1);
           state.user.events = events;
         }
-        setSucceeded(state);
+        state.eventLoading = Loading.SUCCEEDED;
       })
-      .addCase(leaveEvent.rejected, setFailed);
+      .addCase(leaveEvent.rejected, (state: T.State, payload) => {
+        state.eventLoading = Loading.FAILED;
+        state.eventError = payload.error.message;
+      });
   },
 });
 

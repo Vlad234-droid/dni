@@ -12,6 +12,10 @@ type State = {
   user: DefaultUser | User;
   loading: Loading;
   error?: string;
+  networkLoading: Loading;
+  networkError?: string;
+  eventLoading: Loading;
+  eventError?: string;
 };
 
 type UserResponse = DefaultUser | User;
