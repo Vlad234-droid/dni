@@ -128,6 +128,13 @@ const NetworkList: FC = () => {
     [networks],
   );
 
+  // initial load
+  useEffect(() => {
+    loadNetworks(filters);
+    dispatch(getParticipants());
+  }, []);
+
+  // TODO: move to handleFilterChange?
   useEffect(() => {
     (async () => {
       await dispatch(clear());
@@ -135,10 +142,18 @@ const NetworkList: FC = () => {
     })();
   }, [filters]);
 
+  // load on networks change, if filtered by your networks
   useEffect(() => {
-    loadNetworks(filters);
-    dispatch(getParticipants());
-  }, []);
+    if (filter !== ALL) {
+      const filters = {
+        id_in: [...(networks || []), -1],
+      };
+
+      //@ts-ignore
+      dispatch(getCount(filters));
+      loadNetworks(filters);
+    }
+  }, [networks]);
 
   const memoizedContent = useMemo(() => {
     if (error) return <Error errorData={{ title: error }} />;

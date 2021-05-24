@@ -21,7 +21,7 @@ export default function useFetchEvents(
     setLoading,
   ] = useFetch<Event[]>([]);
   const [
-    { response: total, error: countError },
+    { response: total, loading: countLoading, error: countError },
     doFetchEventsCount,
   ] = useFetch<number>(0);
 
@@ -45,15 +45,17 @@ export default function useFetchEvents(
   );
 
   useEffect(() => {
-    // total === 0 request is not performed
-    if (total === 0) {
-      setLoading(Loading.SUCCEEDED);
-    }
-
     if (isInitial && hasMore) {
       loadEvents(page);
     }
   }, [page, total, isInitial]);
+
+  useEffect(() => {
+    // if total === 0 request is not performed --> set succeeded to display empty container
+    if (countLoading == Loading.SUCCEEDED && total === 0) {
+      setLoading(Loading.SUCCEEDED);
+    }
+  }, [total, countLoading]);
 
   useEffect(() => {
     setList(list.concat(data!));

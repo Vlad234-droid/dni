@@ -63,6 +63,7 @@ export type {
   OneImageResponse,
   Filter,
   ParticipantsResponse,
+  Participants,
 };
 
 export default Event;
