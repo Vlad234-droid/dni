@@ -138,7 +138,13 @@ const NetworkList: FC = () => {
   useEffect(() => {
     loadNetworks(filters);
     dispatch(getParticipants());
-  }, []);
+  }, [filters]);
+
+  useEffect(() => {
+    setFilters({
+      id_in: [...(networks || []), -1],
+    });
+  }, [networks]);
 
   const memoizedContent = useMemo(() => {
     if (error) return <Error errorData={{ title: error }} />;
