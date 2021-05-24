@@ -11,6 +11,9 @@ const routes = [
   Page.NETWORK_POST,
   Page.REPORTS,
   Page.PROFILE,
+  Page.UNAUTHORIZED,
+  Page.FORBIDDEN,
+  Page.SERVER_ERROR,
   Page.NOT_FOUND,
 ].map((element) => buildRoute(element));
 
