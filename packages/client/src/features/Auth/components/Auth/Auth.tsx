@@ -2,6 +2,7 @@ import React, { FC, useEffect, useCallback, useMemo } from 'react';
 
 import useStore from 'hooks/useStore';
 import useDispatch from 'hooks/useDispatch';
+import { Spinner } from 'features/Common';
 
 import { FetchUserAction } from '../../config/types';
 import { profile, State as AuthState } from '../../store';
@@ -23,7 +24,8 @@ const Auth: FC = ({ children }) => {
   }, [fetchUserAction]);
 
   // TODO: remove in future
-  if (user.role === 'guest') return null;
+  // to avoid requests when networks ids are not loaded and display content before role is reassigned
+  if (user.role === 'guest') return <Spinner height='1000px' />;
 
   return (
     <AuthProvider

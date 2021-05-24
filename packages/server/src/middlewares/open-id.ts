@@ -82,7 +82,8 @@ export const openIdConfig = ({
               },
               groups: (Array.isArray(userInfo.groups)
                 ? userInfo.groups
-                : ((userInfo.groups as unknown) as string).split(',') || []
+                : (((userInfo.groups as unknown) as string) || '').split(',') ||
+                  []
               )
                 .filter(Boolean)
                 .filter((group) => groupsWithAccess.includes(group)),

@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useMemo, useState } from 'react';
 
 import useStore from 'hooks/useStore';
 import { addDuration } from 'utils/date';
@@ -22,14 +22,20 @@ const EventCarouselContainer: FC = () => {
     endDate_gte: new Date(),
     startDate_lte: addDuration({ weeks: 2 }),
   });
-
-  const [loading, list] = useFetchEvents(filters);
+  const [loading, list, hasMore, listError, countError] = useFetchEvents(
+    filters,
+  );
+  const errorMessage = useMemo(
+    () => listError || countError || participants.error,
+    [participants, listError, countError],
+  );
 
   return (
     <EventCarousel
       events={list!}
       participants={participants}
       loading={loading}
+      error={errorMessage}
     />
   );
 };

@@ -6,4 +6,8 @@ const Wrapper = styled.div`
   }
 `;
 
-export { Wrapper };
+const ErrorWrapper = styled.div`
+  padding: 0 32px;
+`;
+
+export { Wrapper, ErrorWrapper };

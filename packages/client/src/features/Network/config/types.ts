@@ -22,14 +22,14 @@ type ParticipantsResponse = Participant[];
 
 type State = {
   loading: Loading;
-  error: null | string;
+  error?: string;
   meta: Meta;
   participants: Participants;
 } & EntityState<Network>;
 
 type Meta = {
   loading: Loading;
-  error: null | string;
+  error?: string;
   count: number;
   total: number;
   page: number;
@@ -37,7 +37,7 @@ type Meta = {
 
 type Participants = {
   loading: Loading;
-  error: null | string;
+  error?: string;
   data: Record<number, number>;
 };
 

@@ -7,7 +7,7 @@ import Omit from 'lodash.omit';
 import useDispatch from 'hooks/useDispatch';
 import useStore from 'hooks/useStore';
 import { FilterPayload } from 'types/payload';
-import { EmptyContainer, Spinner } from 'features/Common';
+import { EmptyContainer, Error, Spinner } from 'features/Common';
 import { DEFAULT_PAGINATION } from 'config/constants';
 import { useScrollContainer } from 'context/ScrollContainerContext';
 import Loading from 'types/loading';
@@ -51,8 +51,9 @@ const PostList: FC<Props> = ({ entityId, filter = ALL }) => {
   const dispatch = useDispatch();
   const scrollContainer = useScrollContainer();
   const {
-    meta: { total },
+    meta: { total, error: countError },
     loading,
+    error: listError,
   } = useStore((state) => state.posts);
   const { networks, events } = useStore((state) => state.auth.user);
   const posts = useSelector(listSelector);
@@ -61,6 +62,7 @@ const PostList: FC<Props> = ({ entityId, filter = ALL }) => {
     () => loading !== Loading.SUCCEEDED && loading !== Loading.FAILED,
     [loading],
   );
+  const error = useMemo(() => listError || countError, [listError, countError]);
   const [byEntityFilter, setByEntityFilter] = useState<ByEntityFilter>(ALL);
   const [filters, setFilters] = useState<Filters>(
     filter == ALL
@@ -133,7 +135,34 @@ const PostList: FC<Props> = ({ entityId, filter = ALL }) => {
     loadPosts(filters);
   }, []);
 
-  if (loading === Loading.FAILED) return <div>Here some error</div>;
+  const memoizedContent = useMemo(() => {
+    if (error) return <Error errorData={{ title: error }} fullWidth />;
+
+    if (isEmpty(posts) && isLoading) return <Spinner height='500px' />;
+
+    if (loading == Loading.SUCCEEDED && isEmpty(posts))
+      return (
+        <EmptyContainer description='Unfortunately, we did not find any matches for your request' />
+      );
+
+    return (
+      <>
+        <InfiniteScroll
+          initialLoad={false}
+          key={`${filter}-${byEntityFilter}`} // unique key for unmount when switch filter
+          loadMore={loadMorePosts}
+          hasMore={hasMore && !(loading === Loading.PENDING)}
+          threshold={100}
+          getScrollParent={() => scrollContainer!.current}
+          useWindow={false}
+        >
+          {posts.map((post) => (
+            <PostItem key={post.id} item={post} />
+          ))}
+        </InfiniteScroll>
+      </>
+    );
+  }, [error, posts, loading, total]);
 
   return (
     <>
@@ -145,26 +174,7 @@ const PostList: FC<Props> = ({ entityId, filter = ALL }) => {
           />
         </FiltersContainer>
       )}
-      {isEmpty(posts) && isLoading && <Spinner height='500px' />}
-      {loading == Loading.SUCCEEDED && isEmpty(posts) ? (
-        <EmptyContainer description='Unfortunately, we did not find any matches for your request' />
-      ) : (
-        <>
-          <InfiniteScroll
-            initialLoad={false}
-            key={`${filter}-${byEntityFilter}`} // unique key for unmount when switch filter
-            loadMore={loadMorePosts}
-            hasMore={hasMore && !(loading === Loading.PENDING)}
-            threshold={100}
-            getScrollParent={() => scrollContainer!.current}
-            useWindow={false}
-          >
-            {posts.map((post) => (
-              <PostItem key={post.id} item={post} />
-            ))}
-          </InfiniteScroll>
-        </>
-      )}
+      {memoizedContent}
     </>
   );
 };

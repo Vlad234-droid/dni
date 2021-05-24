@@ -6,12 +6,11 @@ import { Page, PAGE_PREFIX } from 'features/Page';
 import BasePage from '../BasePage';
 
 const ERROR_DATA = {
-  title: 'Something went wrong',
-  message:
-    "We couldn't find the page you were looking for. Please check the website address or click home and try again.",
+  title: 'Server Error',
+  message: 'Please, try later',
 };
 
-const NotFound: FC = () => (
+const ServerError: FC = () => (
   <div data-testid={`${PAGE_PREFIX}${Page.NOT_FOUND}`}>
     <BasePage
       renderMain={() => (
@@ -23,4 +22,4 @@ const NotFound: FC = () => (
   </div>
 );
 
-export default NotFound;
+export default ServerError;

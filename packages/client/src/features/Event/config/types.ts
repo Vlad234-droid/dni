@@ -8,14 +8,14 @@ import { ALL, THIS_WEEK, THIS_MONTH } from './contstants';
 type State = {
   data: Event | {};
   loading: Loading;
-  error: null | string;
+  error?: string;
   meta: Meta;
   participants: Participants;
 } & EntityState<Event>;
 
 type Meta = {
   loading: Loading;
-  error: null | string;
+  error?: string;
   count: number;
   total: number;
   page: number;
@@ -24,7 +24,7 @@ type Meta = {
 
 type Participants = {
   loading: Loading;
-  error: null | string;
+  error?: string;
   data: Record<number, number>;
 };
 

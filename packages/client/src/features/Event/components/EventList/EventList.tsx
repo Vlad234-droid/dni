@@ -7,7 +7,7 @@ import ButtonFilter from 'features/ButtonFilter';
 import { EntityListPayload } from 'types/payload';
 import { DEFAULT_FILTERS, DEFAULT_PAGINATION } from 'config/constants';
 import List from 'features/List';
-import { EmptyContainer, Spinner } from 'features/Common';
+import { EmptyContainer, Error, Spinner } from 'features/Common';
 import { Page } from 'features/Page';
 import Loading from 'types/loading';
 
@@ -51,6 +51,7 @@ type Props = {
   onPageChange: () => void;
   filter: Filter;
   onFilterChange: (filter: Filter) => void;
+  error?: string;
 };
 
 const EventList: FC<Props> = ({
@@ -67,6 +68,7 @@ const EventList: FC<Props> = ({
   onPageChange,
   filter,
   onFilterChange,
+  error,
 }) => {
   const isLoading = useMemo(
     () => loading !== Loading.SUCCEEDED && loading !== Loading.FAILED,
@@ -96,7 +98,7 @@ const EventList: FC<Props> = ({
   useEffect(() => {
     loadCount(filters);
     loadEvents({ ...filters, _start: page * DEFAULT_PAGINATION._limit });
-  }, [networks, page]);
+  }, [networks, page, filter]);
 
   useEffect(() => {
     handleClear();
@@ -106,51 +108,51 @@ const EventList: FC<Props> = ({
     loadParticipants();
   }, []);
 
-  if (loading === Loading.FAILED) {
-    return (
-      <Wrapper data-testid={TEST_ID}>
-        <div>Here some error</div>
-      </Wrapper>
-    );
-  }
+  const memoizedContent = useMemo(() => {
+    if (error) return <Error errorData={{ title: error }} />;
 
-  return (
-    <Wrapper>
-      <ButtonFilter
-        initialFilters={initialFilters}
-        onChange={(key) => handleFilterChange(key as Filter)}
-      />
-      {isEmpty(events) && isLoading && <Spinner height='500px' />}
-      {loading === Loading.SUCCEEDED && isEmpty(events) ? (
+    if (isEmpty(events) && isLoading) return <Spinner height='500px' />;
+
+    if (loading === Loading.SUCCEEDED && isEmpty(events))
+      return (
         <EmptyContainer
           description='Unfortunately, we did not find any matches for your request'
           explanation='Please change your filtering criteria to try again.'
         />
-      ) : (
-        <>
-          <List
-            link={Page.EVENTS}
-            //@ts-ignore
-            items={events}
-            hideMaxParticipants={false}
-            participants={participants}
-            renderAction={(id, disabled) => (
-              <EventAction id={id} disabled={disabled} />
-            )}
-          />
-          {!isEmpty(events) && isLoading && <Spinner />}
-          {!isEmpty(events) && (
-            <Button
-              disabled={!hasMore || isLoading}
-              variant='secondary'
-              onClick={onPageChange}
-            >
-              More New Events
-              <Icon graphic='expand' size='xx' />
-            </Button>
+      );
+
+    return (
+      <>
+        <List
+          link={Page.EVENTS}
+          //@ts-ignore
+          items={events}
+          hideMaxParticipants={false}
+          participants={participants}
+          renderAction={(id, disabled) => (
+            <EventAction id={id} disabled={disabled} />
           )}
-        </>
-      )}
+        />
+        {isLoading && <Spinner />}
+        <Button
+          disabled={!hasMore || isLoading}
+          variant='secondary'
+          onClick={onPageChange}
+        >
+          More New Events
+          <Icon graphic='expand' size='xx' />
+        </Button>
+      </>
+    );
+  }, [error, loading, events, participants, total]);
+
+  return (
+    <Wrapper data-testid={TEST_ID}>
+      <ButtonFilter
+        initialFilters={initialFilters}
+        onChange={(key) => handleFilterChange(key as Filter)}
+      />
+      {memoizedContent}
     </Wrapper>
   );
 };
