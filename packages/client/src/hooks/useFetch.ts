@@ -25,6 +25,7 @@ type Response<T, R> = [
     setResponse: Dispatch<SetStateAction<R | null>>;
   },
   FetchHandler<T, R>,
+  any,
 ];
 
 function useFetch<T, R = T>(initialValue: R | null = null): Response<T, R> {
@@ -64,7 +65,7 @@ function useFetch<T, R = T>(initialValue: R | null = null): Response<T, R> {
     })();
   }, [loading]);
 
-  return [{ loading, response, error, setResponse }, doFetch];
+  return [{ loading, response, error, setResponse }, doFetch, setLoading];
 }
 
 export default useFetch;

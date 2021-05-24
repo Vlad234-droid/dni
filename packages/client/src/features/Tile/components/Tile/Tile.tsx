@@ -3,10 +3,10 @@ import isNumber from 'lodash.isnumber';
 import Icon from '@beans/icon';
 import { WindowResize } from '@beans/helpers';
 import ResponsiveImage from '@beans/responsive-image';
-import { TitleWithEllipsis } from '@beans/title-link';
 import { HORIZONTAL, VERTICAL } from '@beans/constants';
 import BaseTile from '@beans/base-tile';
 
+import { TitleWithEllipsis } from 'features/Common';
 import Description from '../Description';
 import { Wrapper, DescriptionContainer, TileText, TileMeta } from './styled';
 
@@ -64,7 +64,7 @@ const Tile: FC<Props> = ({
           />
         }
         title={
-          <TitleWithEllipsis maxLines={1} titleHeight='30px'>
+          <TitleWithEllipsis titleHeight='30px' href={`${link}/${id}`}>
             {title}
           </TitleWithEllipsis>
         }

@@ -16,6 +16,7 @@ type Props = {
 };
 
 const Wrapper = styled.div<Props>`
+  width: 80px;
   border-radius: ${({ small }) => (small ? 'none' : '20px')};
   padding: ${({ small }) => (small ? '0' : '5px 10px')};
   background: ${({ theme, type, small }) =>

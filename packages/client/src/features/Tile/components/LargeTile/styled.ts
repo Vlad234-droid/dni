@@ -21,7 +21,8 @@ export const Wrapper = styled.div<{ height?: string }>`
     ${textSM}
   }
 
-  & .beans-title-link__container {
+  // customize tile TitleWithEllipsis
+  & h5 {
     margin: 16px 16px 0;
   }
 
