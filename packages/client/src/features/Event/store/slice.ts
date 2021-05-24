@@ -17,7 +17,7 @@ const eventsAdapter = createEntityAdapter<Event>();
 const initialState: T.State = eventsAdapter.getInitialState({
   data: {},
   loading: Loading.IDLE,
-  error: null,
+  error: undefined,
   meta: DEFAULT_META,
   participants: DEFAULT_PARTICIPANTS,
 });
@@ -105,20 +105,22 @@ const slice = createSlice({
   extraReducers: (builder) => {
     const setPending = (state: T.State) => {
       state.loading = Loading.PENDING;
+      state.error = undefined;
     };
 
     const setSucceeded = (state: T.State) => {
       state.loading = Loading.SUCCEEDED;
     };
 
-    // TODO: #set info about error received?
-    const setFailed = (state: T.State) => {
+    const setFailed = (state: T.State, payload: any) => {
       state.loading = Loading.FAILED;
+      state.error = payload.error.message;
     };
 
     builder
       .addCase(getCount.pending, (state: T.State) => {
         state.meta.loading = Loading.PENDING;
+        state.meta.error = undefined;
       })
       .addCase(getCount.fulfilled, (state: T.State, { payload: total }) => {
         const meta = state.meta;
@@ -128,8 +130,9 @@ const slice = createSlice({
           loading: Loading.SUCCEEDED,
         };
       })
-      .addCase(getCount.rejected, (state: T.State) => {
+      .addCase(getCount.rejected, (state: T.State, payload) => {
         state.meta.loading = Loading.FAILED;
+        state.meta.error = payload.error.message;
       })
       .addCase(getList.pending, setPending)
       .addCase(getList.fulfilled, (state: T.State, { payload: events }) => {
@@ -164,13 +167,15 @@ const slice = createSlice({
       .addCase(uploadImage.rejected, setFailed)
       .addCase(getParticipants.pending, (state: T.State) => {
         state.participants.loading = Loading.PENDING;
+        state.participants.error = undefined;
       })
       .addCase(getParticipants.fulfilled, (state: T.State, action) => {
         state.participants.data = action.payload;
         state.participants.loading = Loading.SUCCEEDED;
       })
-      .addCase(getParticipants.rejected, (state: T.State) => {
+      .addCase(getParticipants.rejected, (state: T.State, payload) => {
         state.participants.loading = Loading.FAILED;
+        state.participants.error = payload.error.message;
       })
       .addDefaultCase((state) => state);
   },

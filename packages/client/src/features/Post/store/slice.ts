@@ -9,7 +9,7 @@ import * as T from './types';
 
 const initialState: T.State = T.EntityAdapter.getInitialState({
   loading: Loading.IDLE,
-  error: null,
+  error: undefined,
   meta: DEFAULT_META,
 });
 
@@ -48,19 +48,22 @@ const slice = createSlice({
   extraReducers: (builder) => {
     const setPending = (state: T.State) => {
       state.loading = Loading.PENDING;
+      state.error = undefined;
     };
 
     const setSucceeded = (state: T.State) => {
       state.loading = Loading.SUCCEEDED;
     };
 
-    const setFailed = (state: T.State) => {
+    const setFailed = (state: T.State, payload: any) => {
       state.loading = Loading.FAILED;
+      state.error = payload.error.message;
     };
 
     builder
       .addCase(getCount.pending, (state: T.State) => {
         state.meta.loading = Loading.PENDING;
+        state.meta.error = undefined;
       })
       .addCase(getCount.fulfilled, (state: T.State, action) => {
         const total = action.payload;
@@ -71,8 +74,9 @@ const slice = createSlice({
           loading: Loading.SUCCEEDED,
         };
       })
-      .addCase(getCount.rejected, (state: T.State) => {
+      .addCase(getCount.rejected, (state: T.State, payload) => {
         state.meta.loading = Loading.FAILED;
+        state.meta.error = payload.error.message;
       })
       .addCase(getList.pending, setPending)
       .addCase(getList.fulfilled, (state: T.State, action) => {

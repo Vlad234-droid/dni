@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useMemo } from 'react';
 
-import { EmptyContainer, Spinner, BackLink } from 'features/Common';
+import { EmptyContainer, Spinner, BackLink, Error } from 'features/Common';
 import { Page } from 'features/Page';
 import Loading from 'types/loading';
 
@@ -15,9 +15,10 @@ type Props = {
   events?: number[];
   loadPost: (id: number) => void;
   post?: Post;
+  error?: string;
 };
 
-const PostSingle: FC<Props> = ({ postId, loadPost, loading, post }) => {
+const PostSingle: FC<Props> = ({ postId, loadPost, loading, post, error }) => {
   const isLoading = useMemo(
     () => loading !== Loading.SUCCEEDED && loading !== Loading.FAILED,
     [loading],
@@ -30,20 +31,22 @@ const PostSingle: FC<Props> = ({ postId, loadPost, loading, post }) => {
   }, [postId]);
 
   const memoizedContent = useMemo(() => {
+    if (error) return <Error errorData={{ title: error }} fullWidth />;
+
+    if (!post && isLoading) return <Spinner height='500px' />;
+
     if (post && post!.archived)
       return <EmptyContainer description='Post has been archived' />;
 
     return <PostItem item={post!} />;
-  }, [post]);
+  }, [post, error, loading]);
 
   return (
     <div>
       <BackLinkWrapper>
         <BackLink to={`/${Page.NETWORK_NEWS}`} text='Back to Network News' />
       </BackLinkWrapper>
-      {loading === Loading.FAILED && <div>Here some error</div>}
-      {!post && isLoading && <Spinner height='500px' />}
-      {loading === Loading.SUCCEEDED && post && memoizedContent}
+      {memoizedContent}
     </div>
   );
 };

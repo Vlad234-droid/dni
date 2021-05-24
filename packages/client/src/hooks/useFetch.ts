@@ -21,7 +21,7 @@ type Response<T, R> = [
   {
     loading: Loading;
     response: R | null;
-    error: string | null;
+    error?: string;
     setResponse: Dispatch<SetStateAction<R | null>>;
   },
   FetchHandler<T, R>,
@@ -29,7 +29,7 @@ type Response<T, R> = [
 
 function useFetch<T, R = T>(initialValue: R | null = null): Response<T, R> {
   const [loading, setLoading] = useState(Loading.IDLE);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState();
   const [response, setResponse] = useState<R | null>(initialValue);
   const executer = useRef<ExecHandler<T>>();
   const responseHandler = useRef<ResponseHandler<T, R>>();
@@ -55,12 +55,10 @@ function useFetch<T, R = T>(initialValue: R | null = null): Response<T, R> {
         try {
           const response = await executer.current(API);
           setResponse(responseHandler.current(response));
-        } catch (error) {
-          console.log('Something going wrong!', error);
-          setError(error);
-          setLoading(Loading.FAILED);
-        } finally {
           setLoading(Loading.SUCCEEDED);
+        } catch (error) {
+          setError(error.message);
+          setLoading(Loading.FAILED);
         }
       }
     })();

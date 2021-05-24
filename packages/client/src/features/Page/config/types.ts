@@ -13,7 +13,7 @@ enum Page {
   UNAUTHORIZED = '401',
   FORBIDDEN = '403',
   SERVER_ERROR = '500',
-  NOT_FOUND = '*',
+  NOT_FOUND = '404',
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

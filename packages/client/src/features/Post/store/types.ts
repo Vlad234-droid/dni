@@ -14,13 +14,13 @@ const EntityAdapter = createEntityAdapter<Post>();
 
 type State = {
   loading: Loading;
-  error: null | string;
+  error?: string;
   meta: Meta;
 } & EntityState<Post>;
 
 type Meta = {
   loading: Loading;
-  error: null | string;
+  error?: string;
   count: number;
   total: number;
   page: number;

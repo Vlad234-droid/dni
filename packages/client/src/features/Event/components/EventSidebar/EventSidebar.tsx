@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import Button from '@beans/button';
 import isEmpty from 'lodash.isempty';
 
-import { EmptyContainer, Spinner } from 'features/Common';
+import { EmptyContainer, Spinner, Error } from 'features/Common';
 import { LargeTile, SmallTile } from 'features/Tile';
 import Loading from 'types/loading';
 import { EntityListPayload } from 'types/payload';
@@ -32,6 +32,7 @@ type Props = {
   loadParticipants: () => void;
   participants?: Record<number, number>;
   networks?: number[];
+  error?: string;
 };
 
 const EventSidebar: FC<Props> = ({
@@ -42,6 +43,7 @@ const EventSidebar: FC<Props> = ({
   participants,
   networks,
   handleClear,
+  error,
 }) => {
   const isLoading = useMemo(
     () => loading !== Loading.SUCCEEDED && loading !== Loading.FAILED,
@@ -63,21 +65,16 @@ const EventSidebar: FC<Props> = ({
     loadParticipants();
   }, []);
 
-  if (loading === Loading.FAILED) {
-    return (
-      <Wrapper data-testid={TEST_ID}>
-        <div>Here some error</div>
-      </Wrapper>
-    );
-  }
+  const memoizedContent = useMemo(() => {
+    if (error) return <Error errorData={{ title: error }} fullWidth />;
 
-  return (
-    <Wrapper data-testid={TEST_ID}>
-      <Title>Events</Title>
-      {isEmpty(events) && isLoading && <Spinner height='500px' />}
-      {loading === Loading.SUCCEEDED && isEmpty(events) ? (
-        <EmptyContainer description='You have no events' />
-      ) : (
+    if (isEmpty(events) && isLoading) return <Spinner height='500px' />;
+
+    if (loading === Loading.SUCCEEDED && isEmpty(events))
+      return <EmptyContainer description='You have no events' />;
+
+    return (
+      <>
         <List>
           {events.map((eventItem, index) => {
             const {
@@ -135,12 +132,17 @@ const EventSidebar: FC<Props> = ({
             );
           })}
         </List>
-      )}
-      {!isEmpty(events) && (
         <Link to={Page.EVENTS}>
           <Button variant='secondary'>All events</Button>
         </Link>
-      )}
+      </>
+    );
+  }, [error, loading, events, participants]);
+
+  return (
+    <Wrapper data-testid={TEST_ID}>
+      <Title>Events</Title>
+      {memoizedContent}
     </Wrapper>
   );
 };

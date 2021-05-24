@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 
 import useDispatch from 'hooks/useDispatch';
@@ -16,8 +16,12 @@ import {
 const EventSidebarContainer: FC = () => {
   const dispatch = useDispatch();
   const events = useSelector(eventsSelector);
-  const { participants, loading } = useStore((state) => state.events);
+  const { participants, loading, error } = useStore((state) => state.events);
   const { networks } = useStore((state) => state.auth.user);
+  const errorMessage = useMemo(() => error || participants.error, [
+    participants,
+    error,
+  ]);
 
   const handleClear = () => dispatch(clear());
   const loadEvents = (filters: EntityListPayload) =>
@@ -33,6 +37,7 @@ const EventSidebarContainer: FC = () => {
       loadParticipants={loadParticipants}
       handleClear={handleClear}
       networks={networks}
+      error={errorMessage}
     />
   );
 };
