@@ -1,4 +1,5 @@
 import { User, DefaultUser } from 'features/User';
+import Loading from 'types/loading';
 
 const ROOT = 'auth';
 const FETCH_PROFILE_ACTION = `${ROOT}/profile`;
@@ -9,8 +10,12 @@ const LEAVE_EVENT_ACTION = `${ROOT}/leaveEvent`;
 
 type State = {
   user: DefaultUser | User;
-  isLoading: boolean;
-  error: Nullable<string>;
+  loading: Loading;
+  error?: string;
+  networkLoading: Loading;
+  networkError?: string;
+  eventLoading: Loading;
+  eventError?: string;
 };
 
 type UserResponse = DefaultUser | User;
