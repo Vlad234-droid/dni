@@ -26,20 +26,20 @@ const NetworkAction: FC<Props> = ({ id, onLeave, onJoin }) => {
   const handleModalClose = () => setIsModalOpen(false);
 
   const handleConfirmLeave = useCallback(async () => {
+    setIsModalOpen(false);
     if (employeeNumber) {
       await dispatch(leaveNetwork({ employeeNumber, networkId: id }));
       dispatch(leaveParticipant(id));
     }
-    setIsModalOpen(false);
     onLeave && onLeave();
   }, [employeeNumber]);
 
   const handleConfirmJoin = useCallback(async () => {
+    setIsModalOpen(false);
     if (employeeNumber) {
       await dispatch(joinNetwork({ employeeNumber, networkId: id }));
       dispatch(joinParticipant(id));
     }
-    setIsModalOpen(false);
     onJoin && onJoin();
   }, [employeeNumber]);
 

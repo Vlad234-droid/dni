@@ -10,7 +10,7 @@ import { EntityListPayload } from 'types/payload';
 import { Page } from 'features/Page';
 import { DEFAULT_FILTERS } from 'config/constants';
 
-import { isActionDisabled, isEventOnAir } from '../../utils';
+import { isActionDisabled, isEventOnAir, getPayloadWhere } from '../../utils';
 import Event from '../../config/types';
 import EventAction from '../EventAction';
 import { List, Title, Wrapper } from './styled';
@@ -20,7 +20,6 @@ const MAX_VISIBLE_ITEMS = 3;
 export const FILTERS = {
   _start: 0,
   _limit: MAX_VISIBLE_ITEMS,
-  _sort: 'startDate:ASC',
   endDate_gte: new Date(),
 };
 
@@ -50,10 +49,12 @@ const EventSidebar: FC<Props> = ({
     [loading],
   );
   const filters = {
+    ...getPayloadWhere(networks),
     ...FILTERS,
     ...DEFAULT_FILTERS,
-    network_in: [...(networks || []), -1],
   };
+
+  console.log('filters', filters);
 
   useEffect(() => {
     handleClear();

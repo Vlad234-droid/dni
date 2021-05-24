@@ -7,10 +7,13 @@ import { DEFAULT_FILTERS } from 'config/constants';
 import { getPayloadWhere } from '../../utils';
 import useFetchEvents from '../../hooks/useFetchEvents';
 import EventCarousel from './EventCarousel';
+import { getParticipants } from '../../store';
+import useDispatch from '../../../../hooks/useDispatch';
 
 const MAX_VISIBLE_ITEMS = 5;
 
 const EventCarouselContainer: FC = () => {
+  const dispatch = useDispatch();
   const { participants } = useStore((state) => state.events);
   const { networks } = useStore((state) => state.auth.user);
 
@@ -29,6 +32,7 @@ const EventCarouselContainer: FC = () => {
     () => listError || countError || participants.error,
     [participants, listError, countError],
   );
+  const loadParticipants = () => dispatch(getParticipants());
 
   return (
     <EventCarousel
@@ -36,6 +40,7 @@ const EventCarouselContainer: FC = () => {
       participants={participants}
       loading={loading}
       error={errorMessage}
+      loadParticipants={loadParticipants}
     />
   );
 };

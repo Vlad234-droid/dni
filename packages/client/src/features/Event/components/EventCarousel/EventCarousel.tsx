@@ -1,4 +1,4 @@
-import React, { FC, useMemo } from 'react';
+import React, { FC, useEffect, useMemo } from 'react';
 import isEmpty from 'lodash.isempty';
 
 import Carousel from 'features/Carousel';
@@ -8,7 +8,7 @@ import { Page } from 'features/Page';
 import Loading from 'types/loading';
 
 import { isEventOnAir, isActionDisabled } from '../../utils';
-import Event from '../../config/types';
+import Event, { Participants } from '../../config/types';
 import EventAction from '../EventAction';
 import { Wrapper, ErrorWrapper } from './styled';
 
@@ -18,15 +18,26 @@ const TEST_ID = 'events-carousel';
 type Props = {
   events: Event[];
   loading: Loading;
-  participants?: Record<number, number>;
+  participants?: Participants;
   error?: string;
+  loadParticipants: () => void;
 };
 
-const EventCarousel: FC<Props> = ({ events, loading, participants, error }) => {
+const EventCarousel: FC<Props> = ({
+  events,
+  loading,
+  participants,
+  error,
+  loadParticipants,
+}) => {
   const isLoading = useMemo(
     () => loading !== Loading.SUCCEEDED && loading !== Loading.FAILED,
     [loading],
   );
+
+  useEffect(() => {
+    loadParticipants();
+  }, []);
 
   const memoizedContent = useMemo(() => {
     if (error)
@@ -50,7 +61,7 @@ const EventCarousel: FC<Props> = ({ events, loading, participants, error }) => {
               key={id}
               id={id}
               title={title}
-              participants={participants![id] || 0}
+              participants={participants!.data[id] || 0}
               maxParticipants={maxParticipants}
               link={Page.EVENTS}
               meta={startDate}
@@ -60,7 +71,7 @@ const EventCarousel: FC<Props> = ({ events, loading, participants, error }) => {
                 <EventAction
                   id={id}
                   disabled={isActionDisabled(
-                    participants![id],
+                    participants!.data[id],
                     maxParticipants,
                   )}
                 />

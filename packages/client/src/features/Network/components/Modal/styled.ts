@@ -8,14 +8,14 @@ export const Content = styled.div`
   margin-bottom: 16px;
 
   ${Media.tablet`
-    font-size: 16px;
-    line-height: 20px;
+    font-size: 14px;
+    line-height: 16px;
     margin-bottom: 32px;
   `}
 
   ${Media.desktop`
-    font-size: 24px;
-    line-height: 28px;
+    font-size: 16px;
+    line-height: 20px;
   `}
 `;
 

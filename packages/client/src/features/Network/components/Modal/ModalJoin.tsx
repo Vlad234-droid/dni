@@ -43,6 +43,7 @@ const ModalJoin: FC<Props> = ({ isOpen, onClose, onConfirm }) => (
     </Content>
     <Actions>
       <Button onClick={onConfirm}>Confirm</Button>
+      <Button onClick={onClose}>Cancel</Button>
     </Actions>
   </BeansModal>
 );
