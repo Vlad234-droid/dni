@@ -37,4 +37,13 @@ export default createGlobalStyle<{
   a {
     text-decoration: none;
   }
+
+  // to be over everything and header
+  .beans-modal__mask {
+    z-index: 1001;
+  }
+
+  .beans-modal__modal-container {
+    max-width: 90%;
+  }
 `;
