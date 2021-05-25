@@ -184,7 +184,7 @@ const NetworkList: FC = () => {
             link={Page.NETWORKS}
             //@ts-ignore
             items={networksList}
-            participants={participants}
+            participants={participants.data}
             renderAction={(id) => <NetworkAction id={id} />}
           />
         </InfiniteScroll>

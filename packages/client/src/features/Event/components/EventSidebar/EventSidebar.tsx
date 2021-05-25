@@ -11,7 +11,7 @@ import { Page } from 'features/Page';
 import { DEFAULT_FILTERS } from 'config/constants';
 
 import { isActionDisabled, isEventOnAir, getPayloadWhere } from '../../utils';
-import Event from '../../config/types';
+import Event, { Participants } from '../../config/types';
 import EventAction from '../EventAction';
 import { List, Title, Wrapper } from './styled';
 
@@ -29,7 +29,7 @@ type Props = {
   loadEvents: (filters: EntityListPayload) => void;
   handleClear: () => void;
   loadParticipants: () => void;
-  participants?: Record<number, number>;
+  participants?: Participants;
   networks?: number[];
   error?: string;
 };
@@ -91,7 +91,7 @@ const EventSidebar: FC<Props> = ({
                 id={id}
                 title={title}
                 image={image}
-                participants={participants![id] || 0}
+                participants={participants!.data[id] || 0}
                 maxParticipants={maxParticipants}
                 hideMaxParticipants={false}
                 isOnAir={isEventOnAir(startDate, endDate)}
@@ -99,7 +99,7 @@ const EventSidebar: FC<Props> = ({
                   <EventAction
                     id={id}
                     disabled={isActionDisabled(
-                      participants![id],
+                      participants!.data[id],
                       maxParticipants,
                     )}
                   />
@@ -115,11 +115,12 @@ const EventSidebar: FC<Props> = ({
                 title={title}
                 image={image}
                 isOnAir={isEventOnAir(startDate, endDate)}
+                participants={participants!.data[id] || 0}
                 renderAction={() => (
                   <EventAction
                     id={id}
                     disabled={isActionDisabled(
-                      participants![id],
+                      participants!.data[id],
                       maxParticipants,
                     )}
                   />

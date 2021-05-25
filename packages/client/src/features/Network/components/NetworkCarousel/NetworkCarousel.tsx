@@ -47,7 +47,7 @@ const NetworkCarousel: FC = () => {
         link={Page.NETWORKS}
         //@ts-ignore
         items={networks}
-        participants={participants}
+        participants={participants.data}
         renderAction={(id) => <NetworkAction id={id} />}
       />
     );
