@@ -31,7 +31,7 @@ const EventSidebarContainer: FC = () => {
   return (
     <EventSidebar
       events={events}
-      participants={participants}
+      participants={participants!.data}
       loading={loading}
       loadEvents={loadEvents}
       loadParticipants={loadParticipants}

@@ -44,7 +44,7 @@ const EventSidebarContainer: FC = () => {
   return (
     <EventList
       events={events}
-      participants={participants}
+      participants={participants!.data}
       loading={loading}
       total={total}
       networks={networks}

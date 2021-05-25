@@ -184,13 +184,12 @@ const NetworkList: FC = () => {
             link={Page.NETWORKS}
             //@ts-ignore
             items={networksList}
-            participants={participants.data}
             renderAction={(id) => <NetworkAction id={id} />}
           />
         </InfiniteScroll>
       </ListContainer>
     );
-  }, [error, loading, networksList, participants]);
+  }, [error, loading, networksList]);
 
   return (
     <Wrapper data-testid={TEST_ID}>

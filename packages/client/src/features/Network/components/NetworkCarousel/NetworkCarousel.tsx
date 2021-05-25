@@ -47,11 +47,10 @@ const NetworkCarousel: FC = () => {
         link={Page.NETWORKS}
         //@ts-ignore
         items={networks}
-        participants={participants.data}
         renderAction={(id) => <NetworkAction id={id} />}
       />
     );
-  }, [networks, participants, loading, error]);
+  }, [networks, loading, error]);
 
   return <Wrapper>{memoizedContent}</Wrapper>;
 };

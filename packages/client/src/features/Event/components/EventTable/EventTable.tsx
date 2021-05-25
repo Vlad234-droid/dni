@@ -65,7 +65,7 @@ const EventTable: FC = () => {
               <Row key={id}>
                 <Cell width='25%'>
                   <TitleWithEllipsis
-                    titleHeight='22px'
+                    titleHeight='30px'
                     href={`${Page.EVENTS}/${id}`}
                   >
                     {title}

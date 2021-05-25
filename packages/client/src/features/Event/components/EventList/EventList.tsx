@@ -11,7 +11,7 @@ import { EmptyContainer, Error, Spinner } from 'features/Common';
 import { Page } from 'features/Page';
 import Loading from 'types/loading';
 
-import Event, { Filter, Participants } from '../../config/types';
+import Event, { Filter } from '../../config/types';
 import { ALL, THIS_MONTH, THIS_WEEK } from '../../config/contstants';
 import EventAction from '../EventAction';
 import { getPayloadPeriod, getPayloadWhere } from '../../utils';
@@ -44,7 +44,7 @@ type Props = {
   loadCount: (filters: EntityListPayload) => void;
   loadParticipants: () => void;
   handleClear: () => void;
-  participants?: Participants;
+  participants?: Record<number, number>;
   total: number;
   networks?: number[];
   page: number;
@@ -128,7 +128,7 @@ const EventList: FC<Props> = ({
           //@ts-ignore
           items={events}
           hideMaxParticipants={false}
-          participants={participants!.data}
+          participants={participants}
           renderAction={(id, disabled) => (
             <EventAction id={id} disabled={disabled} />
           )}

@@ -8,7 +8,7 @@ import { Page } from 'features/Page';
 import Loading from 'types/loading';
 
 import { isEventOnAir, isActionDisabled } from '../../utils';
-import Event, { Participants } from '../../config/types';
+import Event from '../../config/types';
 import EventAction from '../EventAction';
 import { Wrapper, ErrorWrapper } from './styled';
 
@@ -18,7 +18,7 @@ const TEST_ID = 'events-carousel';
 type Props = {
   events: Event[];
   loading: Loading;
-  participants?: Participants;
+  participants?: Record<number, number>;
   error?: string;
   loadParticipants: () => void;
 };
@@ -61,7 +61,7 @@ const EventCarousel: FC<Props> = ({
               key={id}
               id={id}
               title={title}
-              participants={participants!.data[id] || 0}
+              participants={participants![id] || 0}
               maxParticipants={maxParticipants}
               link={Page.EVENTS}
               meta={startDate}
@@ -71,7 +71,7 @@ const EventCarousel: FC<Props> = ({
                 <EventAction
                   id={id}
                   disabled={isActionDisabled(
-                    participants!.data[id],
+                    participants![id],
                     maxParticipants,
                   )}
                 />
