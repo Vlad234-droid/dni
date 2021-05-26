@@ -21,6 +21,10 @@
         "type": "plain",
         "value": "9000"
       },
+      "APPLICATION_PATH": {
+        "type": "plain",
+        "value": "/"
+      },
       "TYPEORM_TYPE": {
         "type": "plain",
         "value": "postgres"
