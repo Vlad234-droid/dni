@@ -1,9 +1,8 @@
 import React, { FC } from 'react';
 import styled from 'styled-components';
 
-import { Emotion } from '../PostEmotions';
+import PostEmotions, { Emotion } from '../PostEmotions';
 import { iconsSrc } from '../../config/media';
-import PostEmotions from '../PostEmotions';
 
 const PostControlIcon = styled.div<{
   iconSrc: string;

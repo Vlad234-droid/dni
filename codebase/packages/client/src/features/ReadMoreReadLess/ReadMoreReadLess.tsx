@@ -5,7 +5,8 @@ import React, {
   useMemo,
   MutableRefObject,
   useCallback,
- useEffect } from 'react';
+  useEffect,
+} from 'react';
 
 import styled from 'styled-components';
 import useEventListener from 'hooks/useEventListener';

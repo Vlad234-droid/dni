@@ -64,9 +64,7 @@ const ToasterItem: FC<ToasterItemProps> = ({ id, skin, data }) => {
   return (
     <ToastWrapper data-testid={toasterItemTestId}>
       <MyNotification variant={variant} title={title}>
-        <ToastContent>
-          {Content && <Content {...data} />}
-        </ToastContent>
+        <ToastContent>{Content && <Content {...data} />}</ToastContent>
         <ToastCloser
           onClick={() => {
             dispatch(actions.deleteToast({ id }));
