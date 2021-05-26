@@ -3,15 +3,11 @@
     "name": "diversity-and-inclusion"
   },
   "build": {
-    "dockerFileDirectory": "./dockerfiles/Dockerfile",
+    "dockerFileDirectory": "./dockerfiles/dni-frontend_docker_build.Dockerfile",
     "args": {
-      "NODE_ENV": {
-        "type": "plain",
-        "value": "development"
-      },
-      "NPM_ACCESS_TOKEN": {
+      "NEXUS_ACCESS_TOKEN": {
         "type": "secret",
-        "name": "TODO_npm_access_token"
+        "name": "nexus_access_token"
       }
     }
   },
@@ -19,31 +15,99 @@
     "envs": {
       "NODE_ENV": {
         "type": "plain",
-        "value": "development"
+        "value": "production"
       },
-      "POSTGRES_DB": {
+      "NODE_PORT": {
         "type": "plain",
-        "value": "di_database"
+        "value": "9000"
       },
-      "DATABASE_PORT": {
+      "TYPEORM_TYPE": {
         "type": "plain",
-        "value": "5432"
+        "value": "postgres"
       },
-      "DATABASE_HOST": {
+      "TYPEORM_HOST": {
         "type": "plain",
         "value": "euw-dev-213-dai-dipostgres.postgres.database.azure.com"
       },
-      "POSTGRES_SSL_ENABLED": {
+      "TYPEORM_PORT": {
         "type": "plain",
-        "value": "true"
+        "value": "5432"
       },
-      "POSTGRES_USER": {
+      "TYPEORM_DATABASE": {
+        "type": "plain",
+        "value": "di_database"
+      },
+      "TYPEORM_USERNAME": {
         "type": "secret",
         "name": "postgres_user"
       },
-      "POSTGRES_PASSWORD": {
+      "TYPEORM_PASSWORD": {
         "type": "secret",
         "name": "postgres_password"
+      },
+      "TYPEORM_SSL": {
+        "type": "plain",
+        "value": "true"
+      },
+      "TYPEORM_RUN_MIGRATION": {
+        "type": "plain",
+        "value": "true"
+      },
+      "WITH_ONE_LOGIN": {
+        "type": "plain",
+        "value": "true"
+      },
+      "OIDC_CLIENT_ID": {
+        "type": "secret",
+        "name": "oidc_client_id"
+      },
+      "OIDC_CLIENT_SECRET": {
+        "type": "secret",
+        "name": "oidc_client_secret"
+      },
+      "ISSUER_URL": {
+        "type": "plain",
+        "value": "https://loginppe.ourtesco.com/oidc/2"
+      },
+      "REGISTERED_CALLBACK_URL_ROOT": {
+        "type": "plain",
+        "value": "https://diversity-and-inclusion.dev.thp.tescocloud.com"
+      },
+      "REGISTERED_CALLBACK_URL_PATH": {
+        "type": "plain",
+        "value": "/diversity-and-inclusion/auth/openid/callback"
+      },
+      "REDIRECT_AFTER_LOGOUT_URL": {
+        "type": "plain",
+        "value": "https://loginppe.ourtesco.com/logout"
+      },
+      "REFRESH_TOKEN_SECRET": {
+        "type": "secret",
+        "value": "oidc_refresh_token_secret"
+      },
+      "IDENTITY_CLIENT_ID": {
+        "type": "secret",
+        "value": "identity_client_id"
+      },
+      "IDENTITY_CLIENT_SECRET": {
+        "type": "secret",
+        "value": "identity_client_secret"
+      },
+      "IDENTITY_USER_SCOPED_TOKEN_COOKIE_SECRET": {
+        "type": "secret",
+        "value": "identity_user_scoped_token_cookie_secret"
+      },
+      "IDENTITY_USER_SCOPED_TOKEN_COOKIE_NAME": {
+        "type": "plain",
+        "value": "identity-user-token"
+      },
+      "COOKIE_SESSION_KEY": {
+        "type": "plain",
+        "value": "dni_cookie"
+      },
+      "COOKIE_USER_KEY": {
+        "type": "plain",
+        "value": "user_data"
       }
     }
   }

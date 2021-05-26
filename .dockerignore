@@ -12,10 +12,10 @@ LICENSE
 cicd
 dockerfiles
 docs
-scripts
 
 npm-debug.log
 
-codebase/*/coverage
-codebase/*/build
-codebase/*/node_modules
+codebase/**/.env
+codebase/**/coverage
+codebase/**/build
+codebase/**/node_modules

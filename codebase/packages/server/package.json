@@ -6,8 +6,7 @@
   "scripts": {
     "build:prod": "tsc -p .",
     "run:dev": "env-cmd -f .env nodemon --watch \"src/**/*\" -e ts,tsx --exec \"ts-node --files\" src/app.ts",
-    "run:prod": "env-cmd --silent --no-override --fallback -f .env.${BUILD_ENV_PARAM} ts-node build/app.js",
-    "run:prod_old": "env-cmd --silent --no-override --fallback -f .env.${BUILD_ENV_PARAM} ts-node --transpile-only -- src/app.ts",
+    "run:prod": "env-cmd --silent --no-override --fallback -f .env.${BUILD_ENV_PARAM} ts-node --transpile-only -- src/app.ts",
     "clean": "rimraf build coverage",
     "clean:all": "yarn clean && rimraf node_modules",
     "test": "jest",
