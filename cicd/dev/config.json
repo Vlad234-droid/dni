@@ -55,7 +55,7 @@
       },
       "REGISTERED_CALLBACK_URL_PATH": {
         "type": "plain",
-        "value": "/diversity-and-inclusion/auth/openid/callback"
+        "value": "/auth/openid/callback"
       },
       "REDIRECT_AFTER_LOGOUT_URL": {
         "type": "plain",
