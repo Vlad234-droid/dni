@@ -1,8 +1,8 @@
 mkdir temp
 
-cp -v package.json yarn.lock lerna.json tsconfig.json .eslintrc.js .npmrc temp/
+cp -v ./codebase/package.json ./codebase/yarn.lock ./codebase/lerna.json ./codebase/tsconfig.json ./codebase/.eslintrc.js ./codebase/.npmrc temp/
 cp -v ./scripts/create-npmrc.sh temp/
-find ./packages -name 'package.json' -exec sh -c 'cd ./temp && mkdir -p "${0%/*}" &&  cp -v "../$0" "${0}"' {} \; 
+find ./codebase/packages -name 'package.json' -exec sh -c 'cd ./temp && mkdir -p "${0%/*}" &&  cp -v "../$0" "${0}"' {} \; 
 
 IMAGE_NAME=$1
 BUILD_ENV_PARAM=$2
