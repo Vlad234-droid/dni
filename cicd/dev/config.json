@@ -8,6 +8,14 @@
       "NEXUS_ACCESS_TOKEN": {
         "type": "secret",
         "name": "nexus_access_token"
+      },
+      "NODE_ENV": {
+        "type": "plain",
+        "value": "ppe"
+      },
+      "APPLICATION_PATH": {
+        "type": "plain",
+        "value": "/diversity-and-inclusion"
       }
     }
   },
