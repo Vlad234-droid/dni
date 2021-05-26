@@ -15,7 +15,7 @@
     "envs": {
       "NODE_ENV": {
         "type": "plain",
-        "value": "production"
+        "value": "ppe"
       },
       "NODE_PORT": {
         "type": "plain",
