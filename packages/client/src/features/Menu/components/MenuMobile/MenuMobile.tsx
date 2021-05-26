@@ -1,19 +1,14 @@
-import React, { useState, FC } from 'react';
+import React, { useState, FC, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
+import Icon from '@beans/icon';
 
 import MenuItem from '../MenuItem';
 import MoreButton from '../MoreButton';
 import MoreMenuMobile from '../MoreMenuMobile';
 import { menuItemsMobile, iconsSrc, itemsVisible } from '../../config/items';
 import { PageWithIcon } from '../../config/types';
-import {
-  Navigation,
-  ItemsList,
-  Item,
-  IconWrapper,
-  IconDefault,
-  IconActive,
-} from './styled';
+import { getPageByPath } from '../../utils';
+import { Navigation, ItemsList, Item, IconWrapper } from './styled';
 
 export const MOBILE_MENU_TEST_ID = 'menu-mobile';
 
@@ -29,6 +24,13 @@ const MenuMobile: FC = () => {
     setOpened(false);
   };
 
+  const isItemActive = useCallback(
+    (page: string) => {
+      return getPageByPath(location.pathname) === page && !isOpened;
+    },
+    [location, isOpened],
+  );
+
   return (
     <Navigation data-testid={MOBILE_MENU_TEST_ID}>
       {isOpened && <MoreMenuMobile onItemClick={handleMenuItemClick} />}
@@ -43,13 +45,9 @@ const MenuMobile: FC = () => {
           >
             <Item>
               <IconWrapper>
-                <IconDefault
-                  src={iconsSrc[page as PageWithIcon]?.default}
-                  alt='alt'
-                />
-                <IconActive
-                  src={iconsSrc[page as PageWithIcon]?.active}
-                  alt='alt'
+                <Icon
+                  graphic={iconsSrc[page as PageWithIcon]}
+                  inverse={isItemActive(page)}
                 />
               </IconWrapper>
               <div>{name}</div>

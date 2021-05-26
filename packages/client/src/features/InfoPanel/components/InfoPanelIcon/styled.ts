@@ -6,8 +6,8 @@ import { Type } from '../../config/types';
 export const CustomIconWrapper = styled.div`
   svg {
     ${Media.tablet`
-      width: 120px;
-      height: 120px;
+      width: 90px;
+      height: 100px;
   `}
   }
 `;

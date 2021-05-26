@@ -20,5 +20,6 @@ export const IconWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 24px;
+  //height: 24px;
+  margin-bottom: 4px;
 `;

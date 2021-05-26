@@ -48,7 +48,7 @@ const List: FC<Props> = ({
           participants![id] >= maxParticipants,
       ),
     meta: link === Page.NETWORKS ? undefined : startDate,
-    participants: (participants && participants![id]) || 0,
+    participants: participants && participants![id],
     maxParticipants: maxParticipants,
     hideMaxParticipants: hideMaxParticipants,
     isOnAir: link === Page.EVENTS && isEventOnAir(startDate, endDate),

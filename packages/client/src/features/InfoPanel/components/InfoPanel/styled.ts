@@ -18,7 +18,7 @@ export const Wrapper = styled.div.attrs({
     !isSmall &&
     css`
       ${Media.tablet`
-      padding: '48px 65.5px 54px';
+      padding: 32px 42px 40px 49px;;
       align-items: 'center';
     `}
     `}
@@ -33,7 +33,7 @@ export const Content = styled.div<{ type: Type; isSmall: boolean }>`
     !isSmall &&
     css`
       ${Media.tablet`
-        margin-left: ${type === Type.INFO ? '0' : '65.5px'};
+        margin-left: ${type === Type.INFO ? '0' : '48px'};
     `}
     `}
 `;
@@ -47,7 +47,7 @@ export const Title = styled.h2<{ isSmall: boolean }>`
     !isSmall &&
     css`
       ${Media.tablet`
-      margin-bottom: 24px;
+      margin-bottom: 8px;
       font-size: 32px;
       line-height: 45px;
     `}

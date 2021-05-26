@@ -2,19 +2,9 @@ import React, { FC } from 'react';
 import { PromoCarousel } from '@beans/carousel';
 import styled from 'styled-components';
 
-import {
-  ControlsContainer,
-  Controls,
-  CarouselControl,
-} from '../CarouselControls';
-
 const Wrapper = styled.div`
   position: relative;
 `;
-
-PromoCarousel.ControlsContainer = ControlsContainer;
-PromoCarousel.Controls = Controls;
-PromoCarousel.Control = CarouselControl;
 
 const TEST_ID = 'main-carousel';
 

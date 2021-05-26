@@ -60,6 +60,7 @@ const slice = createSlice({
     };
 
     const setFailed = (state: T.State, payload: any) => {
+      console.log('payload', payload);
       state.loading = Loading.FAILED;
       state.error = payload.error.message;
     };

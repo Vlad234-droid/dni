@@ -1,28 +1,32 @@
 import React, { FC, useRef } from 'react';
+
+import { ScrollContainerProvider } from 'context/ScrollContainerContext';
+
+import { LayoutProps } from '../../config/types';
 import {
   Wrapper,
   HeaderContainer,
+  HeaderReducer,
   LeftContainer,
   MainContainer,
-  Content,
+  MainContent,
+  LeftContent,
 } from './styled';
-import { LayoutProps } from '../../config/types';
-import { ScrollContainerProvider } from 'context/ScrollContainerContext';
 
-const Layout: FC<LayoutProps> = ({
-  renderHeader,
-  renderLeft,
-  renderMain,
-  withBackground = true,
-}) => {
+const Layout: FC<LayoutProps> = ({ renderHeader, renderLeft, renderMain }) => {
   const mainContainer = useRef<HTMLDivElement>(null);
+
   return (
     <Wrapper>
-      <HeaderContainer>{renderHeader()}</HeaderContainer>
-      <LeftContainer>{renderLeft()}</LeftContainer>
-      <MainContainer ref={mainContainer} withBackground={withBackground}>
+      <HeaderContainer>
+        <HeaderReducer>{renderHeader()}</HeaderReducer>
+      </HeaderContainer>
+      <LeftContainer>
+        <LeftContent>{renderLeft()}</LeftContent>
+      </LeftContainer>
+      <MainContainer ref={mainContainer}>
         <ScrollContainerProvider value={mainContainer}>
-          <Content>{renderMain()}</Content>
+          <MainContent>{renderMain()}</MainContent>
         </ScrollContainerProvider>
       </MainContainer>
     </Wrapper>

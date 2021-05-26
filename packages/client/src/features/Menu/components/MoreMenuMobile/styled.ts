@@ -1,11 +1,12 @@
 import styled from 'styled-components';
 import Media from 'styles/media';
+import { HEADER_HEIGHT_MOBILE, FOOTER_HEIGHT } from 'styles';
 
 export const Wrapper = styled.div`
   overflow: hidden;
   position: fixed;
-  bottom: 53px;
-  top: 52px;
+  bottom: ${FOOTER_HEIGHT};
+  top: calc(${HEADER_HEIGHT_MOBILE} - 1px);
   background: ${({ theme }) => theme.colors.background.dark};
   width: 100%;
   z-index: 999;

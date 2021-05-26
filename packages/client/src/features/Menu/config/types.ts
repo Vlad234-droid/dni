@@ -1,10 +1,5 @@
 import { Page } from 'features/Page';
 
-export type IconSrc = {
-  default: string;
-  active: string;
-};
-
 export type MenuItem = string;
 
 type NotVisiblePage = Page.NOT_FOUND;

@@ -3,34 +3,19 @@ import omit from 'lodash.omit';
 
 import { Page } from 'features/Page';
 
-import { IconSrc, PageWithIcon } from './types';
-import iconEvents from '../assets/icon-events.svg';
-import iconEventsInv from '../assets/icon-events-inv.svg';
-import iconNetworks from '../assets/icon-networks.svg';
-import iconNetworksInv from '../assets/icon-networks-inv.svg';
-import iconNetworkNews from '../assets/icon-network-news.svg';
-import iconNetworkNewsInv from '../assets/icon-network-news-inv.svg';
+import { PageWithIcon } from './types';
 
-const iconsSrc: Record<PageWithIcon, IconSrc> = {
-  [Page.EVENTS]: {
-    default: iconEvents,
-    active: iconEventsInv,
-  },
-  [Page.NETWORKS]: {
-    default: iconNetworks,
-    active: iconNetworksInv,
-  },
-  [Page.NETWORK_NEWS]: {
-    default: iconNetworkNews,
-    active: iconNetworkNewsInv,
-  },
+const iconsSrc: Record<PageWithIcon, string> = {
+  [Page.EVENTS]: 'datePicker',
+  [Page.NETWORKS]: 'account',
+  [Page.NETWORK_NEWS]: 'feedback',
 };
 
 const menuItems = {
-  [Page.NETWORK_NEWS]: 'Network News',
+  [Page.NETWORK_NEWS]: 'News',
   [Page.EVENTS]: 'Events',
-  [Page.NETWORKS]: 'Networks',
   [Page.REPORTS]: 'Reports',
+  [Page.NETWORKS]: 'Networks',
   [Page.ABOUT]: 'About',
 };
 

@@ -18,22 +18,14 @@ type Props = {
   image: {
     src: string;
   };
-  onClick: () => void;
-  isOpen: boolean;
 };
 
-const CarouselContent: FC<Props> = ({
-  title,
-  description,
-  image: { src },
-  onClick,
-  isOpen,
-}) => (
+const CarouselContent: FC<Props> = ({ title, description, image: { src } }) => (
   <Wrapper>
     <ContentWrapper>
       <Title>{title}</Title>
       <DescriptionWrapper>
-        <Description isOpen={isOpen}>
+        <Description>
           {Array.isArray(description) ? (
             description.map((item, index) => <p key={index}>{item}</p>)
           ) : (
@@ -41,9 +33,9 @@ const CarouselContent: FC<Props> = ({
           )}
         </Description>
       </DescriptionWrapper>
-      <Button inverse variant='primary' onClick={onClick}>
-        {isOpen ? 'Read less' : 'Read more'}
-        <Icon graphic={isOpen ? 'contract' : 'expand'} size='xx' />
+      <Button inverse variant='primary'>
+        Read more
+        <Icon graphic='expand' size='xx' />
       </Button>
     </ContentWrapper>
     <Image src={src} />

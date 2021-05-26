@@ -16,12 +16,12 @@ export const Container = styled.div`
 
   ${Media.small_desktop`
     grid-template-columns: calc(100% - 320px) 320px;
-    padding: 32px 16px 0;
+    padding: 32px 0 0 16px;
   `}
   
   ${Media.desktop`
-    grid-template-columns: calc(100% - 320px) 320px;
-    padding: 32px 40px 0;
+    grid-template-columns: calc(100% - 334px) 334px;
+    padding: 32px 0 0 40px;
   `}
 `;
 
@@ -29,19 +29,16 @@ export const Left = styled.div`
   grid-area: left;
   margin-bottom: 56px;
 
-  ${Media.tablet`
-    margin-right: 32px;
-  `}
-
   ${Media.small_desktop`
     margin-right: 16px;
   `}
-  
+
   ${Media.desktop`
     margin-right: 40px;
   `}
 `;
 
 export const Right = styled.aside`
+  position: relative;
   grid-area: right;
 `;

@@ -21,21 +21,18 @@ export const ItemsList = styled.div<{ amount: number }>`
 `;
 
 export const Item = styled.div`
-  font-size: 10px;
-  padding: 8px 4px 0;
+  font-size: 12px;
+  line-height: 14px;
+  padding: 6px 4px;
   text-align: center;
-
-  ${Media.large_phone`
-    font-size: 14px;
-  `}
 `;
 
 export const IconWrapper = styled.div`
-  width: 24px;
-  height: 24px;
-  margin: auto;
+  //width: 24px;
+  //height: 24px;
   overflow: hidden;
   position: relative;
+  margin: 0 auto 4px;
 
   & > img {
     width: 100%;
@@ -43,12 +40,12 @@ export const IconWrapper = styled.div`
   }
 `;
 
-export const IconDefault = styled.img`
-  opacity: 1;
-`;
-
-export const IconActive = styled.img`
-  position: absolute;
-  left: 0;
-  opacity: 0;
-`;
+// export const IconDefault = styled.img`
+//   opacity: 1;
+// `;
+//
+// export const IconActive = styled.img`
+//   position: absolute;
+//   left: 0;
+//   opacity: 0;
+// `;

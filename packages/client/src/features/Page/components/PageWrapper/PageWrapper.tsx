@@ -19,17 +19,17 @@ const Wrapper = styled.div`
   border-radius: 16px 16px 0 0;
   background-color: ${({ theme }) => theme.colors.white};
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-  min-height: calc(100vh - 53px - 155px);
+  min-height: calc(100vh - 65px - 155px);
 
   ${Media.tablet`
-    min-height: calc(100vh - 53px - 255px);
+    min-height: calc(100vh - 65px - 255px);
   `}
 
   ${Media.small_desktop`
     margin: -56px 40px -10px 40px;
     padding: 32px 0;
     border-radius: 32px 32px 0 0;
-    min-height: calc(100vh - 53px - 195px);
+    min-height: calc(100vh - 65px - 195px);
   `}
 `;
 

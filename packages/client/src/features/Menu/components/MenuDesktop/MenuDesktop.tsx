@@ -1,28 +1,28 @@
 import React, { FC } from 'react';
-import styled from 'styled-components';
+
+import { Page } from 'features/Page';
 
 import { menuItemsDesktop } from '../../config/items';
-import MenuItem from '../MenuItem';
+import { Wrapper, Item, ItemInner } from './styled';
 
-const Navigation = styled.nav`
-  background-color: ${({ theme }) => theme.colors.white};
-  font-family: ${({ theme }) => theme.fontFamily.text};
-`;
-
-const MenuBlock = styled.div`
-  padding: 10px 12px;
-`;
-
-export const MENU_DESKTOP_TEST_ID = 'menu-desktop';
+export const MENU_TEST_ID = 'menu-desktop';
+export const MENU_ITEM_TEST_IS = 'menu-item';
 
 const MenuDesktop: FC = () => (
-  <Navigation data-testid={MENU_DESKTOP_TEST_ID}>
+  <Wrapper data-testid={MENU_TEST_ID}>
     {Object.entries(menuItemsDesktop).map(([page, name]) => (
-      <MenuItem key={name} name={name} page={page}>
-        <MenuBlock>{name}</MenuBlock>
-      </MenuItem>
+      <Item
+        key={name}
+        exact={page === Page.ABOUT}
+        activeClassName={'active-link'}
+        data-testid={`${MENU_ITEM_TEST_IS}-${name?.toLowerCase()}`}
+        to={`/${page}`}
+        title={name}
+      >
+        <ItemInner>{name}</ItemInner>
+      </Item>
     ))}
-  </Navigation>
+  </Wrapper>
 );
 
 export default MenuDesktop;
