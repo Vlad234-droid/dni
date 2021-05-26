@@ -23,39 +23,7 @@
       },
       "APPLICATION_PATH": {
         "type": "plain",
-        "value": "/"
-      },
-      "TYPEORM_TYPE": {
-        "type": "plain",
-        "value": "postgres"
-      },
-      "TYPEORM_HOST": {
-        "type": "plain",
-        "value": "euw-dev-213-dai-dipostgres.postgres.database.azure.com"
-      },
-      "TYPEORM_PORT": {
-        "type": "plain",
-        "value": "5432"
-      },
-      "TYPEORM_DATABASE": {
-        "type": "plain",
-        "value": "di_database"
-      },
-      "TYPEORM_USERNAME": {
-        "type": "secret",
-        "name": "postgres_user"
-      },
-      "TYPEORM_PASSWORD": {
-        "type": "secret",
-        "name": "postgres_password"
-      },
-      "TYPEORM_SSL": {
-        "type": "plain",
-        "value": "true"
-      },
-      "TYPEORM_RUN_MIGRATION": {
-        "type": "plain",
-        "value": "true"
+        "value": "/diversity-and-inclusion"
       },
       "WITH_ONE_LOGIN": {
         "type": "plain",
@@ -104,6 +72,38 @@
       "IDENTITY_USER_SCOPED_TOKEN_COOKIE_NAME": {
         "type": "plain",
         "value": "identity-user-token"
+      },
+      "TYPEORM_TYPE": {
+        "type": "plain",
+        "value": "postgres"
+      },
+      "TYPEORM_HOST": {
+        "type": "plain",
+        "value": "euw-dev-213-dai-dipostgres.postgres.database.azure.com"
+      },
+      "TYPEORM_PORT": {
+        "type": "plain",
+        "value": "5432"
+      },
+      "TYPEORM_DATABASE": {
+        "type": "plain",
+        "value": "di_database"
+      },
+      "TYPEORM_USERNAME": {
+        "type": "secret",
+        "name": "postgres_user"
+      },
+      "TYPEORM_PASSWORD": {
+        "type": "secret",
+        "name": "postgres_password"
+      },
+      "TYPEORM_SSL": {
+        "type": "plain",
+        "value": "true"
+      },
+      "TYPEORM_RUN_MIGRATION": {
+        "type": "plain",
+        "value": "true"
       },
       "COOKIE_SESSION_KEY": {
         "type": "plain",
