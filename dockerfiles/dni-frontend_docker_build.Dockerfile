@@ -2,6 +2,8 @@ FROM node:14.4-alpine
 
 # Ourtesco NEXUS repository access token
 ARG NEXUS_ACCESS_TOKEN
+ARG NODE_ENV
+ARG APPLICATION_PATH
 
 WORKDIR /home/app
 
@@ -18,6 +20,9 @@ RUN dos2unix ./create-npmrc.sh && bash ./create-npmrc.sh --token $NEXUS_ACCESS_T
 RUN yarn bootstrap
 
 ENV BUILD_ENV_PARAM=production
+
+ENV NODE_ENV=$NODE_ENV
+ENV APPLICATION_PATH=$APPLICATION_PATH
 
 ENV SKIP_PREFLIGHT_CHECK=true
 ENV REACT_APP_API_URL=/api 
