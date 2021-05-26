@@ -1,17 +1,15 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import ResponsiveImage from '@beans/responsive-image';
 
-import { PostList, BY_EVENT } from 'features/Post';
+import { BY_EVENT, PostList } from 'features/Post';
 import { useImageWrapper } from 'context';
-import ButtonFilter from 'features/ButtonFilter';
-import { Loading } from 'store/types';
-import { EmptyContainer, Spinner } from 'features/Common';
+import Loading from 'types/loading';
+import { EmptyContainer, Error, Spinner } from 'features/Common';
 
 import Event from '../../config/types';
 import EventHeader from '../EventHeader';
-
-import { Wrapper, Content, LeftContent, Filters } from './styled';
+import { Content, LeftContent, Wrapper } from './styled';
 
 const TEST_ID = 'event';
 
@@ -22,28 +20,13 @@ type Props = {
   loadParticipants: () => void;
   event?: Event;
   participants: number;
+  error?: string;
 };
 
-const ALL = 'ALL';
-const ARCHIVED = 'ARCHIVED';
+const ERROR_TITLE = 'Request ID not found';
+const ERROR_MESSAGE =
+  'We can not find the event ID you are looking for, please try again.';
 
-const filters = [
-  {
-    key: ALL,
-    title: 'All Posts',
-    active: true,
-  },
-  {
-    key: ARCHIVED,
-    title: 'Archived',
-    active: false,
-  },
-];
-
-type Filter = typeof ALL | typeof ARCHIVED;
-
-// TODO: @katia filter events by all and archived
-// TODO: @katia Pass events to PostList
 const EventComponent: FC<Props> = ({
   id,
   event,
@@ -51,9 +34,13 @@ const EventComponent: FC<Props> = ({
   loadParticipants,
   loading,
   participants,
+  error,
 }) => {
-  const [filter, setFilter] = useState<Filter>(ALL);
   const imageWrapperEl = useImageWrapper();
+  const isLoading = useMemo(
+    () => loading !== Loading.SUCCEEDED && loading !== Loading.FAILED,
+    [loading],
+  );
 
   useEffect(() => {
     if (event) return;
@@ -61,75 +48,47 @@ const EventComponent: FC<Props> = ({
     loadEvent();
   }, [event]);
 
-  // TODO: @katia refactor to get participants for current event!!!
-  // if other participants (not related change, the component will be updated too)
   useEffect(() => {
     if (participants || participants === 0) return;
 
     loadParticipants();
   }, []);
 
-  if (loading == Loading.IDLE) return null;
+  const memoizedContent = useMemo(() => {
+    if (error)
+      return (
+        <Error errorData={{ title: ERROR_TITLE, message: ERROR_MESSAGE }} />
+      );
 
-  if (loading === Loading.PENDING) {
-    return (
-      <Wrapper data-testid={TEST_ID}>
-        <Spinner height='300px' />
-      </Wrapper>
-    );
-  }
+    if (!event && isLoading) return <Spinner height='500px' />;
 
-  if (loading === Loading.SUCCEEDED && !event) {
-    return (
-      <Wrapper data-testid={TEST_ID}>
-        <EmptyContainer description={`There is no event with id ${id}`} />
-      </Wrapper>
-    );
-  }
+    if (!event && loading === Loading.SUCCEEDED)
+      return <EmptyContainer description={`There is no event with id ${id}`} />;
 
-  if (loading === Loading.FAILED) {
     return (
-      <Wrapper data-testid={TEST_ID}>
-        <div>Here some error</div>
-      </Wrapper>
-    );
-  }
-
-  if (loading === Loading.SUCCEEDED && event) {
-    return (
-      <Wrapper data-testid={TEST_ID}>
+      <>
         {imageWrapperEl &&
           createPortal(
             <ResponsiveImage
-              key={event.id}
-              alt={event.image?.alternativeText}
-              src={event.image?.url}
+              key={event!.id}
+              alt={event!.image?.alternativeText}
+              src={event!.image?.url}
               fallbackSizeRatio='57%'
               objectFit='cover'
             />,
             imageWrapperEl,
           )}
-        <EventHeader event={event} participants={participants} />
+        <EventHeader event={event!} participants={participants} />
         <Content>
           <LeftContent>
-            <Filters>
-              <ButtonFilter
-                initialFilters={filters}
-                onChange={(key) => setFilter(key as Filter)}
-              />
-            </Filters>
-            <PostList
-              entityId={id}
-              filter={BY_EVENT}
-              isArchived={filter === ARCHIVED}
-            />
+            <PostList entityId={id} filter={BY_EVENT} />
           </LeftContent>
         </Content>
-      </Wrapper>
+      </>
     );
-  }
+  }, [error, event, loading, participants]);
 
-  return null;
+  return <Wrapper data-testid={TEST_ID}>{memoizedContent}</Wrapper>;
 };
 
 export { TEST_ID };

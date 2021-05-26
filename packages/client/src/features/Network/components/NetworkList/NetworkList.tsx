@@ -1,4 +1,4 @@
-import { FC, useEffect, useState, useCallback, useMemo } from 'react';
+import React, { FC, useEffect, useState, useCallback, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroller';
 import isEmpty from 'lodash.isempty';
@@ -10,10 +10,9 @@ import { FilterPayload } from 'types/payload';
 import { DEFAULT_PAGINATION } from 'config/constants';
 import { useScrollContainer } from 'context/ScrollContainerContext';
 import List from 'features/List';
-import { useMedia } from 'context/InterfaceContext';
-import { EmptyContainer, Spinner } from 'features/Common';
+import { EmptyContainer, Error, Spinner } from 'features/Common';
 import { Page } from 'features/Page';
-import { Loading } from 'store/types';
+import Loading from 'types/loading';
 import { RootState } from 'store/rootReducer';
 
 import { Filter, ALL, YOUR_NETWORKS } from '../../config/types';
@@ -24,49 +23,77 @@ import {
   clear,
   getParticipants,
 } from '../../store';
-import { Wrapper, ListContainer } from './styled';
 import NetworkAction from '../NetworkAction';
+import { Wrapper, ListContainer } from './styled';
 
 const TEST_ID = 'networks-list';
 
 const initialFilters = [
   {
-    key: ALL,
-    title: 'All',
+    key: YOUR_NETWORKS,
+    title: 'Your networks',
     active: true,
   },
   {
-    key: YOUR_NETWORKS,
-    title: 'Your networks',
+    key: ALL,
+    title: 'All',
     active: false,
   },
 ];
 
+type Filters = FilterPayload & { id_in?: number[] };
+
 const NetworkList: FC = () => {
-  const { isMobile } = useMedia();
   const dispatch = useDispatch();
-  const [filter, setFilter] = useState<Filter>(ALL);
-  const [filters, setFilters] = useState<
-    FilterPayload & { id_in?: number[] }
-  >();
-  const { networks = [] } = useStore((state) => state.auth.user);
+  const { networks } = useStore((state) => state.auth.user);
+  const [filter, setFilter] = useState<Filter>(YOUR_NETWORKS);
+  const [filters, setFilters] = useState<Filters>({
+    id_in: [...(networks || []), -1],
+  });
 
   const scrollContainer = useScrollContainer();
 
   const {
     participants,
-    meta: { total },
+    meta: { total, error: countError },
     loading,
+    error: listError,
   } = useStore((state) => state.networks);
-  const list = useSelector((state: RootState) => listSelector(state, filters));
-  const hasMore = useMemo(() => list.length < total, [list, total]);
-
-  const isLoading = useMemo(() => loading === Loading.PENDING, [loading]);
+  const networksList = useSelector((state: RootState) =>
+    listSelector(state, filter === ALL ? undefined : networks),
+  );
+  const hasMore = useMemo(() => networksList.length < total, [
+    networksList,
+    total,
+  ]);
+  const isLoading = useMemo(
+    () => loading !== Loading.SUCCEEDED && loading !== Loading.FAILED,
+    [loading],
+  );
+  const error = useMemo(() => listError || countError, [listError, countError]);
 
   const loadNetworks = useCallback(
+    (filters: Filters) => {
+      dispatch(
+        getList({
+          ...filters,
+          ...DEFAULT_PAGINATION,
+          _start: 0,
+        }),
+      );
+    },
+    [filters],
+  );
+
+  const loadMoreNetworks = useCallback(
     (page: number) => {
       const next = page * DEFAULT_PAGINATION._limit;
-      if (filters && hasMore && !isLoading && next <= total) {
+      if (
+        !(loading === Loading.PENDING) &&
+        filters &&
+        hasMore &&
+        next <= total
+      ) {
         dispatch(
           getList({
             ...filters,
@@ -79,76 +106,99 @@ const NetworkList: FC = () => {
     [filters, hasMore, isLoading, total],
   );
 
-  useEffect(() => {
-    (async () => {
-      if (filters) {
-        await dispatch(clear());
-        await dispatch(getCount(filters));
+  const handleFilterChange = useCallback(
+    (filter: Filter) => {
+      let filters;
+
+      switch (filter) {
+        case YOUR_NETWORKS: {
+          filters = { id_in: [...(networks || []), -1] };
+          break;
+        }
+        case ALL: {
+          filters = {};
+          break;
+        }
       }
-    })();
-  }, [filters]);
 
-  useEffect(() => {
-    if (filter == YOUR_NETWORKS) {
-      setFilters({ id_in: [...networks, -1] });
-    }
-  }, [filter, networks]);
+      loadNetworks(filters);
+      setFilters(filters);
+      setFilter(filter);
+    },
+    [networks],
+  );
 
+  // initial load
   useEffect(() => {
-    if (filter == ALL) {
-      setFilters({});
-    }
-  }, [filter]);
-
-  useEffect(() => {
+    loadNetworks(filters);
     dispatch(getParticipants());
   }, []);
 
-  if (loading == Loading.IDLE) return null;
+  // TODO: move to handleFilterChange?
+  useEffect(() => {
+    (async () => {
+      await dispatch(clear());
+      await dispatch(getCount(filters));
+    })();
+  }, [filters]);
 
-  if (loading === Loading.FAILED) {
+  // load on networks change, if filtered by your networks
+  useEffect(() => {
+    if (filter !== ALL) {
+      const filters = {
+        id_in: [...(networks || []), -1],
+      };
+
+      //@ts-ignore
+      dispatch(getCount(filters));
+      loadNetworks(filters);
+    }
+  }, [networks]);
+
+  const memoizedContent = useMemo(() => {
+    if (error) return <Error errorData={{ title: error }} />;
+
+    if (isEmpty(networksList) && isLoading) return <Spinner height='500px' />;
+
+    if (loading == Loading.SUCCEEDED && isEmpty(networksList)) {
+      return (
+        <EmptyContainer
+          description='Unfortunately, we did not find any matches for your request'
+          explanation='Please change your filtering criteria to try again.'
+        />
+      );
+    }
+
     return (
-      <Wrapper data-testid={TEST_ID}>
-        <div>Here some error</div>
-      </Wrapper>
+      <ListContainer>
+        <InfiniteScroll
+          initialLoad={false}
+          key={filter} // unique key for unmount when switch filter
+          loadMore={loadMoreNetworks}
+          hasMore={!(loading === Loading.PENDING) && hasMore}
+          threshold={100}
+          getScrollParent={() => scrollContainer!.current}
+          useWindow={false}
+        >
+          <List
+            link={Page.NETWORKS}
+            //@ts-ignore
+            items={networksList}
+            participants={participants.data}
+            renderAction={(id) => <NetworkAction id={id} />}
+          />
+        </InfiniteScroll>
+      </ListContainer>
     );
-  }
+  }, [error, loading, networksList, participants]);
 
   return (
     <Wrapper data-testid={TEST_ID}>
       <ButtonFilter
         initialFilters={initialFilters}
-        onChange={(key) => setFilter(key as Filter)}
+        onChange={(key) => handleFilterChange(key as Filter)}
       />
-      {!isLoading && isEmpty(list) && !hasMore ? (
-        <EmptyContainer
-          description='Unfortunately, we did not find any matches for your request'
-          explanation='Please change your filtering criteria to try again.'
-        />
-      ) : (
-        <ListContainer>
-          <InfiniteScroll
-            key={filter} // unique key for unmount when switch filter
-            loadMore={loadNetworks}
-            hasMore={!isLoading && hasMore}
-            pageStart={-1}
-            loader={<Spinner key={0} height='200px' />}
-            threshold={0}
-            getScrollParent={() => scrollContainer!.current}
-            useWindow={false}
-          >
-            <List
-              link={Page.NETWORKS}
-              // TODO: object is not correct type
-              //@ts-ignore
-              items={list}
-              participants={participants}
-              isMobile={isMobile}
-              renderAction={(id) => <NetworkAction id={id} />}
-            />
-          </InfiniteScroll>
-        </ListContainer>
-      )}
+      {memoizedContent}
     </Wrapper>
   );
 };

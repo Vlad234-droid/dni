@@ -25,11 +25,6 @@ export const Wrapper = styled.div`
     bottom: 8px;
   }
 
-  & .beans-title-link__container {
-    height: 20px;
-    margin-bottom: 12px;
-  }
-
   & .beans-button__container {
     height: 32px;
   }

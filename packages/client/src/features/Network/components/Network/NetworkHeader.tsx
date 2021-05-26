@@ -1,11 +1,12 @@
 import React, { FC } from 'react';
 import styled from 'styled-components';
-import { TitleWithEllipsis } from '@beans/title-link';
 import Link from '@beans/link';
 
 import Media from 'styles/media';
 import { useMedia } from 'context/InterfaceContext';
 import { headingMD } from 'styles';
+import { CopyLink, TitleWithEllipsis } from 'features/Common';
+
 import NetworkAction from '../NetworkAction';
 
 type Props = {
@@ -23,53 +24,31 @@ const NetworkHeader: FC<Props> = ({ id, title, email, onLeave, onJoin }) => {
   return (
     <Wrapper>
       <TitleWrapper>
-        <div>
-          <TitleWithEllipsis
-            maxLines={1}
-            titleHeight={isMobile ? '28px' : '45px'}
-          >
-            {title}
-          </TitleWithEllipsis>
-          {isMobile && <Link href={`mailto: ${email}`}>{email}</Link>}
-        </div>
+        <TitleWithEllipsis titleHeight={isMobile ? '28px' : '45px'}>
+          {title}
+        </TitleWithEllipsis>
+        {isMobile && <CopyLink />}
+      </TitleWrapper>
+      {isMobile && <Link href={`mailto: ${email}`}>{email}</Link>}
+      <Actions>
+        {!isMobile && <CopyLink />}
         <ButtonWrapper>
           <NetworkAction {...{ id, onLeave, onJoin }} />
         </ButtonWrapper>
-      </TitleWrapper>
-      {/*<Actions>*/}
-      {/*  <IconWrapper>*/}
-      {/*    <Button variant='link'>*/}
-      {/*      <Icon graphic='edit' />*/}
-      {/*    </Button>*/}
-      {/*  </IconWrapper>*/}
-      {/*  <IconWrapper>*/}
-      {/*    <Button variant='link'>*/}
-      {/*      <Icon graphic='archive' />*/}
-      {/*    </Button>*/}
-      {/*  </IconWrapper>*/}
-      {/*</Actions>*/}
+      </Actions>
     </Wrapper>
   );
 };
 
 export const Wrapper = styled.div`
-  display: flex;
-  justify-content: space-between;
   padding: 24px 16px;
 
   ${Media.tablet`
-     padding: 24px;
+    display: flex;
+    justify-content: space-between;
+    padding: 24px;
   `}
 `;
-
-// TODO: use commented code to display network actions edit and archive
-// const Actions = styled.div`
-//   display: flex;
-//
-//   & div:not(:last-child) {
-//     margin-right: 8px;
-//   }
-// `;
 
 export const ButtonWrapper = styled.div`
   position: fixed;
@@ -88,11 +67,18 @@ export const ButtonWrapper = styled.div`
 `;
 
 export const TitleWrapper = styled.div`
+  overflow: hidden;
   display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
 
-  h3 {
+  ${Media.tablet`
+    margin-bottom: 0;
+  `}
+
+  h5 {
     margin-right: 24px;
-    margin-bottom: 4px;
     ${headingMD};
 
     ${Media.tablet`
@@ -100,6 +86,16 @@ export const TitleWrapper = styled.div`
       line-height: 45px;
       margin-bottom: 0;
     `}
+  }
+`;
+
+export const Actions = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  & button:not(:last-child) {
+    margin-right: 16px;
   }
 `;
 

@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect, useMemo } from 'react';
 import styled from 'styled-components';
 import {
   AreaChart,
@@ -11,8 +11,10 @@ import {
 import Button from '@beans/button';
 import Icon from '@beans/icon';
 
+import { Spinner } from 'features/Common';
 import useFetch from 'hooks/useFetch';
 import { useMedia } from 'context/InterfaceContext';
+import Loading from 'types/loading';
 
 export type Data = {
   elements: Record<string, Record<'color', string>>;
@@ -26,7 +28,11 @@ type Props = {
 const Chart = ({ data, type }: Props) => {
   const { isDesktop, isTablet } = useMedia();
 
-  const [{ response, isLoading }, doFetch] = useFetch<Blob>();
+  const [{ response, loading }, doFetch] = useFetch<Blob>();
+  const isLoading = useMemo(
+    () => loading !== Loading.SUCCEEDED && loading !== Loading.FAILED,
+    [loading],
+  );
 
   useEffect(() => {
     if (response && !isLoading) {

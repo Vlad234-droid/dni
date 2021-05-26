@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC, useEffect, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import useDispatch from 'hooks/useDispatch';
 import useStore from 'hooks/useStore';
@@ -13,8 +13,11 @@ type Props = {
 const EventContainer: FC<Props> = ({ id }) => {
   const dispatch = useDispatch();
   const event = useSelector(byIdSelector(id));
-  const { loading, participants } = useStore((state) => state.events);
-
+  const { loading, participants, error } = useStore((state) => state.events);
+  const errorMessage = useMemo(() => error || participants.error, [
+    error,
+    participants,
+  ]);
   const loadEvent = () => dispatch(getOne({ id }));
   const loadParticipants = () => dispatch(getParticipants());
 
@@ -27,9 +30,10 @@ const EventContainer: FC<Props> = ({ id }) => {
       id={id}
       event={event}
       loading={loading}
-      participants={participants![id] || 0}
+      participants={participants!.data![id] || 0}
       loadEvent={loadEvent}
       loadParticipants={loadParticipants}
+      error={errorMessage}
     />
   );
 };

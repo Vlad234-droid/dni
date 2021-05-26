@@ -1,37 +1,35 @@
-import { useMemo, useEffect, useState, useCallback } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+
 import useFetch from 'hooks/useFetch';
+import { DEFAULT_PAGINATION } from 'config/constants';
+import Loading from 'types/loading';
 
 import Event from '../config/types';
 import { serializer } from '../store';
-import { DEFAULT_PAGINATION } from 'config/constants';
 
 export default function useFetchEvents(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   filters: Record<string, any>,
   page = 0,
   isInitial = true,
-): [boolean, Event[], boolean] {
+): [Loading, Event[], boolean, string?, string?] {
   const [list, setList] = useState<Event[]>([]);
 
   const [
-    { response: data, isLoading: isEventsLoading },
+    { response: data, loading, error: listError },
     doFetchEvents,
+    setLoading,
   ] = useFetch<Event[]>([]);
   const [
-    { response: total, isLoading: isEventsCoutnLoading },
+    { response: total, loading: countLoading, error: countError },
     doFetchEventsCount,
   ] = useFetch<number>(0);
-
-  const isLoading = useMemo(() => isEventsLoading || isEventsCoutnLoading, [
-    isEventsLoading,
-    isEventsCoutnLoading,
-  ]);
 
   const hasMore = useMemo(() => list!.length < total!, [list, total]);
 
   const loadEvents = useCallback(
     (page: number) => {
-      if (hasMore && !isEventsLoading) {
+      if (hasMore && loading !== Loading.PENDING) {
         doFetchEvents(
           (api) =>
             api.events.fetchAll({
@@ -43,14 +41,21 @@ export default function useFetchEvents(
         );
       }
     },
-    [hasMore, isEventsLoading],
+    [hasMore, loading],
   );
 
   useEffect(() => {
     if (isInitial && hasMore) {
       loadEvents(page);
     }
-  }, [page, hasMore, isInitial]);
+  }, [page, total, isInitial]);
+
+  useEffect(() => {
+    // if total === 0 request is not performed --> set succeeded to display empty container
+    if (countLoading == Loading.SUCCEEDED && total === 0) {
+      setLoading(Loading.SUCCEEDED);
+    }
+  }, [total, countLoading]);
 
   useEffect(() => {
     setList(list.concat(data!));
@@ -63,5 +68,5 @@ export default function useFetchEvents(
     );
   }, []);
 
-  return [isLoading, list, hasMore];
+  return [loading, list, hasMore, listError, countError];
 }

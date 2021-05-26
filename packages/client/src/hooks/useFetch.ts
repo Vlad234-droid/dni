@@ -1,6 +1,6 @@
-import { useState, useEffect, useRef, Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 
-// utils
+import Loading from 'types/loading';
 import API from 'utils/api';
 
 type Config = {
@@ -19,17 +19,18 @@ interface ResponseHandler<T, R = T> {
 
 type Response<T, R> = [
   {
-    isLoading: boolean;
+    loading: Loading;
     response: R | null;
-    error: string | null;
+    error?: string;
     setResponse: Dispatch<SetStateAction<R | null>>;
   },
   FetchHandler<T, R>,
+  any,
 ];
 
 function useFetch<T, R = T>(initialValue: R | null = null): Response<T, R> {
-  const [isLoading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(Loading.IDLE);
+  const [error, setError] = useState();
   const [response, setResponse] = useState<R | null>(initialValue);
   const executer = useRef<ExecHandler<T>>();
   const responseHandler = useRef<ResponseHandler<T, R>>();
@@ -42,26 +43,29 @@ function useFetch<T, R = T>(initialValue: R | null = null): Response<T, R> {
     executer.current = exec;
     responseHandler.current = res;
 
-    setLoading(true);
+    setLoading(Loading.PENDING);
   };
 
   useEffect(() => {
     (async () => {
-      if (isLoading && responseHandler.current && executer.current) {
+      if (
+        loading === Loading.PENDING &&
+        responseHandler.current &&
+        executer.current
+      ) {
         try {
           const response = await executer.current(API);
           setResponse(responseHandler.current(response));
+          setLoading(Loading.SUCCEEDED);
         } catch (error) {
-          console.log('Somthing going wrong!', error);
-          setError(error);
-        } finally {
-          setLoading(false);
+          setError(error.message);
+          setLoading(Loading.FAILED);
         }
       }
     })();
-  }, [isLoading]);
+  }, [loading]);
 
-  return [{ isLoading, response, error, setResponse }, doFetch];
+  return [{ loading, response, error, setResponse }, doFetch, setLoading];
 }
 
 export default useFetch;

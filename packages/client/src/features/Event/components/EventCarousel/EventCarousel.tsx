@@ -1,34 +1,59 @@
-import React, { FC } from 'react';
+import React, { FC, useEffect, useMemo } from 'react';
 import isEmpty from 'lodash.isempty';
 
 import Carousel from 'features/Carousel';
 import { LargeTile } from 'features/Tile';
-import { EmptyContainer, Spinner } from 'features/Common';
+import { EmptyContainer, Error, Spinner } from 'features/Common';
 import { Page } from 'features/Page';
+import Loading from 'types/loading';
 
 import { isEventOnAir, isActionDisabled } from '../../utils';
+import Event, { Participants } from '../../config/types';
 import EventAction from '../EventAction';
-import Event from '../../config/types';
-import { Wrapper } from './styled';
+import { Wrapper, ErrorWrapper } from './styled';
 
+const CONTENT_HEIGHT = '483px';
 const TEST_ID = 'events-carousel';
 
 type Props = {
   events: Event[];
-  isLoading: boolean;
-  participants?: Record<number, number>;
+  loading: Loading;
+  participants?: Participants;
+  error?: string;
+  loadParticipants: () => void;
 };
 
-// events are not loaded as they are loaded for EventsList and EventCarousel is only used there
-const EventCarousel: FC<Props> = ({ events, isLoading, participants }) => {
-  return isLoading ? (
-    <Spinner height='300px' />
-  ) : !isLoading && isEmpty(events) ? (
-    <Wrapper data-testid={TEST_ID}>
-      <EmptyContainer description='You have no events' />
-    </Wrapper>
-  ) : (
-    <Wrapper data-testid={TEST_ID}>
+const EventCarousel: FC<Props> = ({
+  events,
+  loading,
+  participants,
+  error,
+  loadParticipants,
+}) => {
+  const isLoading = useMemo(
+    () => loading !== Loading.SUCCEEDED && loading !== Loading.FAILED,
+    [loading],
+  );
+
+  useEffect(() => {
+    loadParticipants();
+  }, []);
+
+  const memoizedContent = useMemo(() => {
+    if (error)
+      return (
+        <ErrorWrapper>
+          <Error errorData={{ title: error }} />
+        </ErrorWrapper>
+      );
+
+    if (isLoading && isEmpty(events))
+      return <Spinner height={CONTENT_HEIGHT} />;
+
+    if (loading === Loading.SUCCEEDED && isEmpty(events))
+      return <EmptyContainer description='You have no events' />;
+
+    return (
       <Carousel itemWidth='278px' id='event-carousel'>
         {events.map(
           ({ id, title, maxParticipants, image, startDate, endDate }) => (
@@ -36,16 +61,17 @@ const EventCarousel: FC<Props> = ({ events, isLoading, participants }) => {
               key={id}
               id={id}
               title={title}
-              participants={participants![id] || 0}
+              participants={participants!.data[id] || 0}
               maxParticipants={maxParticipants}
               link={Page.EVENTS}
               meta={startDate}
               isOnAir={isEventOnAir(startDate, endDate)}
+              wrapperHeight={CONTENT_HEIGHT}
               renderAction={() => (
                 <EventAction
                   id={id}
                   disabled={isActionDisabled(
-                    participants![id],
+                    participants!.data[id],
                     maxParticipants,
                   )}
                 />
@@ -55,8 +81,10 @@ const EventCarousel: FC<Props> = ({ events, isLoading, participants }) => {
           ),
         )}
       </Carousel>
-    </Wrapper>
-  );
+    );
+  }, [error, loading, events, participants]);
+
+  return <Wrapper data-testid={TEST_ID}>{memoizedContent}</Wrapper>;
 };
 
 export default EventCarousel;

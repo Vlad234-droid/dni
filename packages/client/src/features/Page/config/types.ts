@@ -7,9 +7,13 @@ enum Page {
   NETWORKS = 'networks',
   NETWORK = 'networks/:id',
   NETWORK_NEWS = 'network-news',
+  NETWORK_POST = 'network-news/:id',
   REPORTS = 'reports',
   PROFILE = 'profile',
-  NOT_FOUND = '*',
+  UNAUTHORIZED = '401',
+  FORBIDDEN = '403',
+  SERVER_ERROR = '500',
+  NOT_FOUND = '404',
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

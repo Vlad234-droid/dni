@@ -1,9 +1,12 @@
 import React, { FC, useMemo } from 'react';
-import { TitleWithEllipsis } from '@beans/title-link';
-import Button from '@beans/button';
 import Icon from '@beans/icon';
 
-import { StatusLabel, StatusType } from 'features/Common';
+import {
+  StatusLabel,
+  StatusType,
+  CopyLink,
+  TitleWithEllipsis,
+} from 'features/Common';
 import { useMedia } from 'context/InterfaceContext';
 
 import EventAction from '../EventAction';
@@ -40,10 +43,7 @@ const EventHeader: FC<Props> = ({ event, participants }) => {
     <Wrapper>
       <Inner>
         <TitleWrapper>
-          <TitleWithEllipsis
-            maxLines={1}
-            titleHeight={isMobile ? '28px' : '45px'}
-          >
+          <TitleWithEllipsis titleHeight={isMobile ? '28px' : '45px'}>
             {title}
           </TitleWithEllipsis>
           {isOnAir && (
@@ -53,11 +53,7 @@ const EventHeader: FC<Props> = ({ event, participants }) => {
           )}
         </TitleWrapper>
         <Actions>
-          {!isMobile && (
-            <Button variant='link'>
-              <Icon graphic='link' />
-            </Button>
-          )}
+          {!isMobile && <CopyLink />}
           <ButtonWrapper>
             <EventAction id={id} disabled={memoizedDisabledAction} />
           </ButtonWrapper>
@@ -75,11 +71,7 @@ const EventHeader: FC<Props> = ({ event, participants }) => {
               {participants} are participating.{' '}
               {maxParticipants && `${maxParticipants} is maximum capacity.`}
             </span>
-            {isMobile && (
-              <Button variant='link'>
-                <Icon graphic='link' />
-              </Button>
-            )}
+            {isMobile && <CopyLink />}
           </TextIconWrapper>
         </Inner>
         <p>{description}</p>

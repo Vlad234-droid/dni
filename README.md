@@ -61,9 +61,11 @@ Ensure you are in the top level root directory.
 - Run `yarn ws:client storybook` to start Storybook locally.
 - Run `yarn ws:client build-storybook` to output a static Storybook in the `storybook-static` directory, which can then be deployed to any static site hosting service..
 
-### Building project in production mode
+### Building project
 
-- Run `yarn build:prod` to build.
+- Run `yarn build:prod` in production mode.
+- Run `yarn build:dev` in dev mode.
+- Run `yarn build:test` in test mode.
 
 ### Bootstrap the packages in the repo. Installs all of their dependencies and links any cross-dependencies.
 

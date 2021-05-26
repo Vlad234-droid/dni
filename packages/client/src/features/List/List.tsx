@@ -5,8 +5,9 @@ import Event from 'features/Event';
 import Network from 'features/Network';
 import { Page } from 'features/Page';
 
-import { Wrapper } from './styled';
 import { isEventOnAir } from '../Event/utils';
+import { useMedia } from '../../context/InterfaceContext';
+import { Wrapper } from './styled';
 
 type Entity = Event | Network;
 
@@ -16,12 +17,7 @@ type Props = {
   hideMaxParticipants?: boolean;
   participants?: Record<number, number>;
   renderAction: (id: number, disabled: boolean) => JSX.Element;
-  isMobile: boolean;
-  isLoading?: boolean;
 };
-
-// TODO: add loader component
-const Loader = <div key='loader'>Loading ...</div>;
 
 const List: FC<Props> = ({
   link,
@@ -29,9 +25,8 @@ const List: FC<Props> = ({
   renderAction,
   hideMaxParticipants,
   participants,
-  isMobile,
-  isLoading = false,
 }) => {
+  const { isMobile } = useMedia();
   const propertiesExtractor = ({
     id,
     //@ts-ignore
@@ -41,25 +36,22 @@ const List: FC<Props> = ({
     //@ts-ignore
     endDate,
     ...rest
-  }: Entity) => {
-    const actualParticipants = participants![id] || 0;
-    return {
-      key: id,
-      id,
-      link,
-      renderAction: () =>
-        renderAction(
-          id,
-          Boolean(maxParticipants) && actualParticipants >= maxParticipants,
-        ),
-      meta: link === Page.NETWORKS ? undefined : startDate,
-      participants: actualParticipants,
-      maxParticipants: maxParticipants,
-      hideMaxParticipants: hideMaxParticipants,
-      isOnAir: link === Page.EVENTS && isEventOnAir(startDate, endDate),
-      ...rest,
-    };
-  };
+  }: Entity) => ({
+    key: id,
+    id,
+    link,
+    renderAction: () =>
+      renderAction(
+        id,
+        Boolean(maxParticipants) && participants![id] >= maxParticipants,
+      ),
+    meta: link === Page.NETWORKS ? undefined : startDate,
+    participants: participants![id] || 0,
+    maxParticipants: maxParticipants,
+    hideMaxParticipants: hideMaxParticipants,
+    isOnAir: link === Page.EVENTS && isEventOnAir(startDate, endDate),
+    ...rest,
+  });
 
   return (
     <Wrapper>
@@ -72,7 +64,6 @@ const List: FC<Props> = ({
           <LargeTile {...propertiesExtractor(entity)} />
         ),
       )}
-      {isLoading && Loader}
     </Wrapper>
   );
 };

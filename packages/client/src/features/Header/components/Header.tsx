@@ -19,12 +19,12 @@ const Header: React.FC = () => (
         icon={{ graphic: 'notification', position: { global: 'right' } }}
         variant='iconButton'
       />
-      <Link
-        href={'/profile'}
-        inverse={true}
-        icon={{ graphic: 'account', position: { global: 'right' } }}
-        variant='iconButton'
-      />
+      {/*<Link*/}
+      {/*  href={'/profile'}*/}
+      {/*  inverse={true}*/}
+      {/*  icon={{ graphic: 'account', position: { global: 'right' } }}*/}
+      {/*  variant='iconButton'*/}
+      {/*/>*/}
     </Block>
     <Toaster />
   </Wrapper>

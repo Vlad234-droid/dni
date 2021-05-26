@@ -6,19 +6,19 @@ import {
 
 import API from 'utils/api';
 import { FilterPayload, PaginationPayload } from 'types/payload';
-import { DEFAULT_META } from 'config/constants';
+import { DEFAULT_META, DEFAULT_PARTICIPANTS } from 'config/constants';
+import Loading from 'types/loading';
 
 import Network, * as T from '../config/types';
 import * as A from './actionTypes';
-import { Loading } from 'store/types';
 
 const networksAdapter = createEntityAdapter<Network>();
 
 const initialState: T.State = networksAdapter.getInitialState({
   loading: Loading.IDLE,
-  error: null,
+  error: undefined,
   meta: DEFAULT_META,
-  participants: {},
+  participants: DEFAULT_PARTICIPANTS,
 });
 
 const getList = createAsyncThunk<
@@ -66,40 +66,56 @@ const slice = createSlice({
       const participants = state.participants;
       state.participants = {
         ...participants,
-        [eventId]: (participants[eventId] || 0) + 1,
+        data: {
+          ...participants.data,
+          [eventId]: (participants.data[eventId] || 0) + 1,
+        },
       };
     },
     leaveParticipant(state, { payload: eventId }) {
       const participants = state.participants;
       state.participants = {
         ...participants,
-        [eventId]: (participants[eventId] || 1) - 1,
+        data: {
+          ...participants.data,
+          [eventId]: (participants.data[eventId] || 1) - 1,
+        },
       };
     },
   },
   extraReducers: (builder) => {
     const setPending = (state: T.State) => {
       state.loading = Loading.PENDING;
+      state.error = undefined;
     };
 
     const setSucceeded = (state: T.State) => {
       state.loading = Loading.SUCCEEDED;
     };
 
-    const setFailed = (state: T.State) => {
+    const setFailed = (state: T.State, payload: any) => {
+      console.log('setFailed');
       state.loading = Loading.FAILED;
+      state.error = payload.error.message;
     };
 
     builder
-      .addCase(getCount.pending, setPending)
+      .addCase(getCount.pending, (state: T.State) => {
+        state.meta.loading = Loading.PENDING;
+        state.meta.error = undefined;
+      })
       .addCase(getCount.fulfilled, (state: T.State, action) => {
         const total = action.payload;
         const meta = state.meta;
         state.meta = {
           ...meta,
           total,
+          loading: Loading.SUCCEEDED,
         };
-        setSucceeded(state);
+      })
+      .addCase(getCount.rejected, (state: T.State, payload) => {
+        state.meta.loading = Loading.FAILED;
+        state.meta.error = payload.error.message;
       })
       .addCase(getList.pending, setPending)
       .addCase(getList.fulfilled, (state: T.State, action) => {
@@ -125,12 +141,19 @@ const slice = createSlice({
         setSucceeded(state);
       })
       .addCase(createOne.rejected, setFailed)
-      .addCase(getParticipants.pending, setPending)
-      .addCase(getParticipants.fulfilled, (state: T.State, action) => {
-        state.participants = action.payload;
-        setSucceeded(state);
+      .addCase(getParticipants.pending, (state: T.State) => {
+        state.participants.loading = Loading.PENDING;
+        state.participants.error = undefined;
       })
-      .addCase(getParticipants.rejected, setFailed);
+      .addCase(getParticipants.fulfilled, (state: T.State, action) => {
+        state.participants.data = action.payload;
+        state.participants.loading = Loading.SUCCEEDED;
+      })
+      .addCase(getParticipants.rejected, (state: T.State, payload) => {
+        state.participants.loading = Loading.FAILED;
+        state.participants.error = payload.error.message;
+      })
+      .addDefaultCase((state) => state);
   },
 });
 

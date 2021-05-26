@@ -1,6 +1,8 @@
 import { DateTime } from 'luxon';
 import { buildEventCRUD } from '@dni/mock-server/src/crud';
 
+import { isoDateToFormat, FULL_FORMAT } from 'utils/date';
+
 import { isEventOnAir, isActionDisabled } from './index';
 
 describe('utils', () => {
@@ -12,22 +14,40 @@ describe('utils', () => {
     });
 
     it('should return false, if now < start', () => {
-      const startDate = DateTime.now().plus({ days: 1 }).toISO();
-      const endDate = DateTime.now().plus({ days: 2 }).toISO();
+      const startDate = isoDateToFormat(
+        DateTime.now().plus({ days: 1 }).toISO(),
+        FULL_FORMAT,
+      );
+      const endDate = isoDateToFormat(
+        DateTime.now().plus({ days: 2 }).toISO(),
+        FULL_FORMAT,
+      );
 
       expect(isEventOnAir(startDate, endDate)).toBe(false);
     });
 
     it('should return false, if now > end', () => {
-      const startDate = DateTime.now().minus({ days: 2 }).toISO();
-      const endDate = DateTime.now().minus({ days: 1 }).toISO();
+      const startDate = isoDateToFormat(
+        DateTime.now().minus({ days: 2 }).toISO(),
+        FULL_FORMAT,
+      );
+      const endDate = isoDateToFormat(
+        DateTime.now().minus({ days: 1 }).toISO(),
+        FULL_FORMAT,
+      );
 
       expect(isEventOnAir(startDate, endDate)).toBe(false);
     });
 
     it('should return true, if now is in range of start and end time', () => {
-      const startDate = DateTime.now().minus({ days: 1 }).toISO();
-      const endDate = DateTime.now().plus({ days: 2 }).toISO();
+      const startDate = isoDateToFormat(
+        DateTime.now().minus({ days: 1 }).toISO(),
+        FULL_FORMAT,
+      );
+      const endDate = isoDateToFormat(
+        DateTime.now().plus({ days: 2 }).toISO(),
+        FULL_FORMAT,
+      );
 
       expect(isEventOnAir(startDate, endDate)).toBe(true);
     });

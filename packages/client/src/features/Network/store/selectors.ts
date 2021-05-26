@@ -5,7 +5,7 @@ import { getEntitySelectors } from 'utils/storeHelper';
 
 import { networksAdapter } from './slice';
 import serializer from './serializer';
-import { Network, Filters } from '../config/types';
+import { Network } from '../config/types';
 
 const networksSelectors = networksAdapter.getSelectors(
   (state: RootState) => state.networks,
@@ -19,14 +19,14 @@ const byIdSelector = (id: Network['id']) =>
   );
 
 const listSelector = createSelector(
-  (state: RootState, filters: Filters | undefined) =>
+  (state: RootState, networks: number[] | undefined) =>
     selectAll(state)
-      .map((network) => serializer(network)!)
       .filter((item) => {
-        if (!filters?.id_in) return true;
+        if (!networks) return item;
 
-        return filters.id_in.includes(item.id);
-      }),
+        return networks.includes(item.id);
+      })
+      .map((network) => serializer(network)!),
   (networks) => networks,
 );
 

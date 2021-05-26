@@ -5,8 +5,6 @@ import Media from 'styles/media';
 const ListContainer = styled.div`
   margin-top: 16px;
   & > div {
-    // display: flex;
-    // flex-flow: row wrap;
     width: 100%;
     height: 100%;
   }

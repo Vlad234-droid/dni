@@ -6,7 +6,6 @@ import {
   DateTimePicker,
 } from 'features/Common';
 
-// TODO: #fix type - check name ignore
 type Names = keyof FormData;
 
 const formFields: Array<FormField<Names>> = [

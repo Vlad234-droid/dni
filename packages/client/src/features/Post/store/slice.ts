@@ -3,12 +3,13 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import API from 'utils/api';
 import { FilterPayload, PaginationPayload } from 'types/payload';
 import { DEFAULT_META } from 'config/constants';
+import Loading from 'types/loading';
 
 import * as T from './types';
 
 const initialState: T.State = T.EntityAdapter.getInitialState({
-  isLoading: false,
-  error: null,
+  loading: Loading.IDLE,
+  error: undefined,
   meta: DEFAULT_META,
 });
 
@@ -45,25 +46,39 @@ const slice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    const startLoading = (state: T.State) => {
-      state.isLoading = true;
+    const setPending = (state: T.State) => {
+      state.loading = Loading.PENDING;
+      state.error = undefined;
     };
-    const stopLoading = (state: T.State) => {
-      state.isLoading = false;
+
+    const setSucceeded = (state: T.State) => {
+      state.loading = Loading.SUCCEEDED;
+    };
+
+    const setFailed = (state: T.State, payload: any) => {
+      state.loading = Loading.FAILED;
+      state.error = payload.error.message;
     };
 
     builder
-      .addCase(getCount.pending, startLoading)
+      .addCase(getCount.pending, (state: T.State) => {
+        state.meta.loading = Loading.PENDING;
+        state.meta.error = undefined;
+      })
       .addCase(getCount.fulfilled, (state: T.State, action) => {
         const total = action.payload;
         const meta = state.meta;
         state.meta = {
           ...meta,
           total,
+          loading: Loading.SUCCEEDED,
         };
-        stopLoading(state);
       })
-      .addCase(getList.pending, startLoading)
+      .addCase(getCount.rejected, (state: T.State, payload) => {
+        state.meta.loading = Loading.FAILED;
+        state.meta.error = payload.error.message;
+      })
+      .addCase(getList.pending, setPending)
       .addCase(getList.fulfilled, (state: T.State, action) => {
         const data = action.payload;
         T.EntityAdapter.upsertMany(state, data);
@@ -71,21 +86,22 @@ const slice = createSlice({
         state.meta = {
           ...meta,
         };
-        stopLoading(state);
+        setSucceeded(state);
       })
-      .addCase(getList.rejected, stopLoading)
-      .addCase(getOne.pending, startLoading)
+      .addCase(getList.rejected, setFailed)
+      .addCase(getOne.pending, setPending)
       .addCase(getOne.fulfilled, (state: T.State, action) => {
         T.EntityAdapter.upsertOne(state, action.payload);
-        stopLoading(state);
+        setSucceeded(state);
       })
-      .addCase(getOne.rejected, stopLoading)
-      .addCase(createOne.pending, startLoading)
+      .addCase(getOne.rejected, setFailed)
+      .addCase(createOne.pending, setPending)
       .addCase(createOne.fulfilled, (state: T.State, action) => {
         T.EntityAdapter.upsertOne(state, action.payload);
-        stopLoading(state);
+        setSucceeded(state);
       })
-      .addCase(createOne.rejected, stopLoading);
+      .addCase(createOne.rejected, setFailed)
+      .addDefaultCase((state) => state);
   },
 });
 

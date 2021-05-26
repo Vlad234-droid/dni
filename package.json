@@ -14,6 +14,7 @@
     "bootstrap": "yarn install --frozen-lockfile && lerna bootstrap",
     "build:prod": "cross-env BUILD_ENV_PARAM=production lerna run --parallel build",
     "build:dev": "lerna run --parallel build:dev",
+    "build:test": "lerna run --parallel build:test",
     "clean": "lerna run --parallel clean",
     "clean:all": "lerna run --parallel clean:all && rimraf node_modules",
     "lint": "prettier --write --config ./prettier.config.js './packages/*/src/**/*.{ts,tsx}'",
@@ -36,8 +37,8 @@
     "run:dev:client": "yarn client run:dev --stream",
     "docker:build:prod": "sh ./scripts/build-docker.sh dni-prod production",
     "docker:run:prod": "docker run --publish 9000:9000 dni-prod",
-    "test": "lerna run test --stream",
-    "test:coverage": "lerna run test:coverage --stream",
+    "test": "lerna run test --stream --scope @dni/client",
+    "test:coverage": "lerna run test:coverage --stream --scope @dni/client",
     "npmrc:create": "bash ./scripts/create-npmrc.sh"
   },
   "devDependencies": {

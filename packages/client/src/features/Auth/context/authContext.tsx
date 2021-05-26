@@ -7,13 +7,13 @@ import { FetchUserAction } from '../config/types';
 type AuthData = {
   authenticated: boolean;
   user: DefaultUser | User;
-  fethUser: FetchUserAction;
+  fetchUser: FetchUserAction;
 };
 
 export const defaultValue: AuthData = {
   authenticated: false, // to check if authenticated or not
   user: defaultUserState, // store all the user details
-  fethUser: () => null, // to start fetch user
+  fetchUser: () => null, // to start fetch user
 };
 
 const authContext = createContext<AuthData>(defaultValue);

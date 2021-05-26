@@ -1,5 +1,6 @@
-import React, { FC } from 'react';
+import React, { FC, useMemo } from 'react';
 import { useSelector } from 'react-redux';
+
 import useDispatch from 'hooks/useDispatch';
 import useStore from 'hooks/useStore';
 import { EntityListPayload } from 'types/payload';
@@ -7,36 +8,36 @@ import { EntityListPayload } from 'types/payload';
 import EventSidebar from './EventSidebar';
 import {
   getList as getEvents,
-  getCount,
   listSelector as eventsSelector,
   getParticipants,
+  clear,
 } from '../../store';
 
 const EventSidebarContainer: FC = () => {
   const dispatch = useDispatch();
   const events = useSelector(eventsSelector);
-  const {
+  const { participants, loading, error } = useStore((state) => state.events);
+  const { networks } = useStore((state) => state.auth.user);
+  const errorMessage = useMemo(() => error || participants.error, [
     participants,
-    loading,
-    meta: { total },
-  } = useStore((state) => state.events);
-  const { networks = [] } = useStore((state) => state.auth.user);
+    error,
+  ]);
 
+  const handleClear = () => dispatch(clear());
   const loadEvents = (filters: EntityListPayload) =>
     dispatch(getEvents(filters));
-  const loadCount = (filters: EntityListPayload) => dispatch(getCount(filters));
   const loadParticipants = () => dispatch(getParticipants());
 
   return (
     <EventSidebar
-      total={total}
       events={events}
       participants={participants}
       loading={loading}
       loadEvents={loadEvents}
-      loadCount={loadCount}
       loadParticipants={loadParticipants}
+      handleClear={handleClear}
       networks={networks}
+      error={errorMessage}
     />
   );
 };

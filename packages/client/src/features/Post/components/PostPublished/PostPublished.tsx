@@ -2,8 +2,10 @@ import React, { FC } from 'react';
 
 import { useMedia } from 'context/InterfaceContext';
 
+import { RichTextRenderer, CopyLink } from 'features/Common';
+import { Page } from 'features/Page';
+
 import { Post } from '../../config/types';
-import { RichTextRenderer } from 'features/Common';
 import { PostPublishedAttachments } from '../PostAttachments';
 import {
   PostPublisherAvatarBox,
@@ -14,6 +16,7 @@ import {
   PostDescription,
   PostContent,
   PostPublishedWrapper,
+  PostPublishDate,
 } from './styled';
 
 interface PostPublishedProps {
@@ -23,7 +26,7 @@ interface PostPublishedProps {
 const TEST_ID = 'post-published';
 
 const PostPublished: FC<PostPublishedProps> = ({ item }) => {
-  const { title, content, authorName, attachments } = item;
+  const { title, content, authorName, attachments, id, published_at } = item;
   const media = useMedia();
 
   return (
@@ -35,9 +38,9 @@ const PostPublished: FC<PostPublishedProps> = ({ item }) => {
           </PostPublisherAvatarBox>
           <PostPublisherName>{`${authorName}`}</PostPublisherName>
         </PostPublisher>
-        {/*<PostPublishDate>*/}
-        {/*  {new Date(published_at).toDateString()}*/}
-        {/*</PostPublishDate>*/}
+        <PostPublishDate>
+          {new Date(published_at).toDateString()}
+        </PostPublishDate>
       </PostHead>
       <PostContent>
         {attachments && attachments.length > 0 && (
@@ -47,7 +50,8 @@ const PostPublished: FC<PostPublishedProps> = ({ item }) => {
         <PostDescription>
           <RichTextRenderer source={content} />
         </PostDescription>
-        {/* <PostControls id={id} emotions={emotions} /> */}
+        <CopyLink pathname={`/${Page.NETWORK_NEWS}/${id}`} />
+        {/*<PostControls id={id} emotions={emotions} /> */}
       </PostContent>
     </PostPublishedWrapper>
   );

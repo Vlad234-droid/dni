@@ -1,6 +1,6 @@
 import { EntityState } from '@reduxjs/toolkit';
 import { Network } from '@dni-connectors/colleague-cms-api';
-import { Loading } from 'store/types';
+import Loading from 'types/loading';
 
 interface FormData {
   image?: File;
@@ -22,15 +22,23 @@ type ParticipantsResponse = Participant[];
 
 type State = {
   loading: Loading;
-  error: null | string;
+  error?: string;
   meta: Meta;
-  participants: Record<number, number>;
+  participants: Participants;
 } & EntityState<Network>;
 
 type Meta = {
+  loading: Loading;
+  error?: string;
   count: number;
   total: number;
   page: number;
+};
+
+type Participants = {
+  loading: Loading;
+  error?: string;
+  data: Record<number, number>;
 };
 
 type ListResponse = Array<Network>;

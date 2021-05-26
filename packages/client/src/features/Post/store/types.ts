@@ -1,5 +1,7 @@
 import { EntityState, createEntityAdapter } from '@reduxjs/toolkit';
 
+import Loading from 'types/loading';
+
 import { Post } from '../config/types';
 
 const ROOT = 'posts';
@@ -11,12 +13,14 @@ const COUNT_ACTION = `${ROOT}/count`;
 const EntityAdapter = createEntityAdapter<Post>();
 
 type State = {
-  isLoading: boolean;
-  error: null | string;
+  loading: Loading;
+  error?: string;
   meta: Meta;
 } & EntityState<Post>;
 
 type Meta = {
+  loading: Loading;
+  error?: string;
   count: number;
   total: number;
   page: number;

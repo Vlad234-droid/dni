@@ -1,13 +1,17 @@
 import { DateTime } from 'luxon';
 
-import { firstDayOf, lastDayOf } from 'utils/date';
+import { firstDayOf, lastDayOf, FULL_FORMAT } from 'utils/date';
 
-import { Filter, ALL, THIS_MONTH, THIS_WEEK } from '../config/types';
+import { Filter } from '../config/types';
+import { ALL, THIS_MONTH, THIS_WEEK } from '../config/contstants';
 
 export const isEventOnAir = (startDate: string, endDate: string) => {
   const now = DateTime.now();
 
-  return DateTime.fromISO(startDate) < now && DateTime.fromISO(endDate) > now;
+  return (
+    DateTime.fromFormat(startDate, FULL_FORMAT) < now &&
+    DateTime.fromFormat(endDate, FULL_FORMAT) > now
+  );
 };
 
 export const isActionDisabled = (
@@ -19,12 +23,23 @@ export const isActionDisabled = (
   return (participants || 0) >= maxParticipants;
 };
 
-export const getPayloadWhere = (filter: Filter) => {
+export const getPayloadWhere = (networks?: number[]) => ({
+  _publicationState: 'preview',
+  published_at_null: false,
+  _where: {
+    _or: [
+      { network_null: true }, // public events
+      { network_in: networks }, // events for networks to which the user is subscribed
+    ],
+  },
+});
+
+export const getPayloadPeriod = (filter: Filter) => {
   let where = {};
   switch (filter) {
     case ALL: {
       where = {
-        startDate_gte: new Date(),
+        endDate_gte: new Date(),
       };
       break;
     }
