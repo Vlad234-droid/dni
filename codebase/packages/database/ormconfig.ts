@@ -24,7 +24,7 @@ const SUBSCRIBERS_DIR = buildPath(root, 'subscribers');
 const MIGRATIONS_DIR = buildPath('src', 'migrations');
 const SCHEMAS_DIR = buildPath(root, 'schemas');
 
-const sslOpt = TYPEORM_SSL == 'true' && { ssl: TYPEORM_SSL };
+const sslOpt = { ssl: TYPEORM_SSL === 'true' };
 
 export default {
   ...sslOpt,
