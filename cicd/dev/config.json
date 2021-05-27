@@ -117,6 +117,14 @@
         "type": "plain",
         "value": "true"
       },
+      "TYPEORM_SYNCHRONIZE": {
+        "type": "plain",
+        "value": "false"
+      },
+      "TYPEORM_LOGGING": {
+        "type": "plain",
+        "value": "true"
+      },
       "TYPEORM_RUN_MIGRATION": {
         "type": "plain",
         "value": "true"
