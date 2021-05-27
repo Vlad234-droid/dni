@@ -13,7 +13,7 @@
         "type": "plain",
         "value": "ppe"
       },
-      "APPLICATION_PATH": {
+      "PUBLIC_URL": {
         "type": "plain",
         "value": "/diversity-and-inclusion"
       }
@@ -29,7 +29,7 @@
         "type": "plain",
         "value": "9000"
       },
-      "APPLICATION_PATH": {
+      "PUBLIC_URL": {
         "type": "plain",
         "value": "/diversity-and-inclusion"
       },

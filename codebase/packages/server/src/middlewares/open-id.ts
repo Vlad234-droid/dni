@@ -20,7 +20,7 @@ export const openIdConfig = ({
   registeredCallbackUrlPath,
   registeredCallbackUrlRoot,
   redirectAfterLogoutUrl,
-  applicationPath,
+  publicUrl,
   identityClientId,
   identityClientSecret,
   identityUserScopedTokenCookieSecret,
@@ -47,7 +47,7 @@ export const openIdConfig = ({
     registeredCallbackUrlPath,
     registeredCallbackUrlRoot,
     redirectAfterLogoutUrl,
-    applicationPath,
+    applicationPath: publicUrl,
     requireIdToken: false,
     scope: ['openid', 'profile', 'params', 'groups'],
     plugins: [

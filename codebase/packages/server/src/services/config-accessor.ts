@@ -6,7 +6,7 @@ type ProcessConfig = {
   appName: string;
   environment: string;
   port: string;
-  applicationPath: string;
+  publicUrl: string;
   uploadSize: number;
   // client
   cookieKey: string;
@@ -41,7 +41,7 @@ class ConfigAccessor {
     const {
       NODE_ENV: environment,
       NODE_PORT: port,
-      APPLICATION_PATH: applicationPath,
+      PUBLIC_URL: publicUrl,
       OIDC_CLIENT_ID: oidcClientId,
       OIDC_CLIENT_SECRET: oidcClientSecret,
       COOKIE_SESSION_KEY: cookieKey,
@@ -65,7 +65,7 @@ class ConfigAccessor {
       environment,
       port,
       // if root "/" needs to be converted to an empty string
-      applicationPath: applicationPath.length > 1 ? applicationPath : '',
+      publicUrl: publicUrl && publicUrl.length > 1 ? publicUrl : '',
       oidcClientId,
       oidcClientSecret,
       cookieKey,

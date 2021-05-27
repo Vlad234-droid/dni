@@ -4,7 +4,7 @@ type ProcessEnv = {
   // general
   NODE_ENV: string;
   NODE_PORT: string;
-  APPLICATION_PATH: string;
+  PUBLIC_URL: string;
   // client
   COOKIE_SESSION_KEY: string;
   COOKIE_USER_KEY: string;
@@ -66,7 +66,7 @@ class EnvAccessor {
     const {
       NODE_ENV,
       NODE_PORT,
-      APPLICATION_PATH,
+      PUBLIC_URL,
       COOKIE_SESSION_KEY,
       COOKIE_USER_KEY,
       OIDC_CLIENT_ID,
@@ -88,7 +88,7 @@ class EnvAccessor {
     this.data = {
       NODE_ENV,
       NODE_PORT,
-      APPLICATION_PATH,
+      PUBLIC_URL,
       COOKIE_SESSION_KEY,
       COOKIE_USER_KEY,
       OIDC_CLIENT_ID,

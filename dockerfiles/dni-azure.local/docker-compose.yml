@@ -6,7 +6,7 @@ services:
         environment:
             - NODE_ENV=ppe
             - NODE_PORT=9000
-            - APPLICATION_PATH=/
+            - PUBLIC_URL=/
             - WITH_ONE_LOGIN=false
             - OIDC_CLIENT_ID=cc1a44c0-7b26-0139-86ba-06f79909864e37548
             - OIDC_CLIENT_SECRET=1aaaab9d7016c7b2ad0497d2fd55260dddb8ea6f1d8d38fcab79e17c6764d29e
