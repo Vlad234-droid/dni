@@ -8,6 +8,6 @@ export const executeSafe = async (
     return await action();
   } catch (e) {
     console.log(e);
-    return res.status(500).json('Internal Server error');
+    return res.status(500).json({ error: 'Internal Server error', code: 500, exceptionDetails: e });
   }
 };
