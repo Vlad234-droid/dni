@@ -1,6 +1,6 @@
 @echo off
 
-rem setlocal
+setlocal
 
 cd ..
 
@@ -24,5 +24,5 @@ docker build ^
 
 :completed
 
-cd scripts
-rem endlocal
+rem cd scripts
+endlocal

@@ -1,11 +1,11 @@
 import { io } from 'socket.io-client';
+import { PUBLIC_URL, SOCKET_URL } from 'config/api';
 
-let socketUrl = process.env.REACT_APP_WS_URL;
+let socketUrl = SOCKET_URL;
 
-if (process.env.PUBLIC_URL && process.env.PUBLIC_URL !== '/') {
-  socketUrl = `${process.env.PUBLIC_URL}${socketUrl}`;
+if (PUBLIC_URL && PUBLIC_URL !== '/') {
+  socketUrl = `${PUBLIC_URL}${socketUrl}`;
 }
-
 
 const defaultProps = { transports: ['websocket', 'polling'] };
 
