@@ -26,7 +26,7 @@ const SCHEMAS_DIR = buildPath(root, 'schemas');
 
 const sslOpt = { ssl: TYPEORM_SSL === 'true' };
 
-const typeOrmConfig = {
+export default {
   ...sslOpt,
   type: TYPEORM_TYPE,
   host: TYPEORM_HOST,
@@ -47,7 +47,3 @@ const typeOrmConfig = {
   },
   namingStrategy: new SnakeNamingStrategy(),
 };
-
-console.log(typeOrmConfig);
-
-export default typeOrmConfig;
