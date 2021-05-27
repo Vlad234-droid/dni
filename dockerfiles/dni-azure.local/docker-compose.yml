@@ -7,11 +7,11 @@ services:
             - NODE_ENV=ppe
             - NODE_PORT=9000
             - PUBLIC_URL=/
-            - WITH_ONE_LOGIN=false
+            - WITH_ONE_LOGIN=true
             - OIDC_CLIENT_ID=cc1a44c0-7b26-0139-86ba-06f79909864e37548
             - OIDC_CLIENT_SECRET=1aaaab9d7016c7b2ad0497d2fd55260dddb8ea6f1d8d38fcab79e17c6764d29e
             - ISSUER_URL=https://loginppe.ourtesco.com/oidc/2
-            - REGISTERED_CALLBACK_URL_ROOT=https://diversity-and-inclusion.dev.thp.tescocloud.com
+            - REGISTERED_CALLBACK_URL_ROOT=http://localhost:9000
             - REGISTERED_CALLBACK_URL_PATH=/auth/openid/callback
             - REDIRECT_AFTER_LOGOUT_URL=https://loginppe.ourtesco.com/logout
             - REFRESH_TOKEN_SECRET=c8E3Q6qEFWSkzBJaYDZ6mybtTQm4R6aB
@@ -41,3 +41,6 @@ services:
             - POSTGRES_DB=dni_database
         volumes:
             - ./postgres/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+        ports:
+            - 5433:5432
+    
