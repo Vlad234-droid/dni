@@ -12,13 +12,13 @@ console.log(`SOCKET_URL = ${SOCKET_URL}`);
 console.log(`socketUrl = ${socketUrl}`);
 
 
-const defaultProps = { transports: ['websocket', 'polling'] };
+const defaultProps = { transports: ['websocket', 'polling'], path: socketUrl };
 
 const NOTIFICATIONS = 'notifications';
 const NOTIFICATION_CREATE = 'notification-create';
 const NOTIFICATION_REMOVE = 'notification-remove';
 
-const socket = io(socketUrl, defaultProps);
+const socket = io('/', defaultProps);
 
 console.log(socket);
 

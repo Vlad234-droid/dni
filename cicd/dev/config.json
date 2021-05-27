@@ -19,7 +19,7 @@
       },
       "REACT_APP_WS_URL": {
         "type": "plain",
-        "value": "/"
+        "value": "/socket.io"
       },
       "PUBLIC_URL": {
         "type": "plain",
