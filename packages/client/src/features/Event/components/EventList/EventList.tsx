@@ -10,6 +10,7 @@ import List from 'features/List';
 import { EmptyContainer, Error, Spinner } from 'features/Common';
 import { Page } from 'features/Page';
 import Loading from 'types/loading';
+import { Type } from 'features/Tile';
 
 import Event, { Filter } from '../../config/types';
 import { ALL, THIS_MONTH, THIS_WEEK } from '../../config/contstants';
@@ -124,6 +125,7 @@ const EventList: FC<Props> = ({
     return (
       <>
         <List
+          type={Type.NARROW}
           link={Page.EVENTS}
           //@ts-ignore
           items={events}

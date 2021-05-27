@@ -48,6 +48,8 @@ const NetworkCarousel: FC = () => {
         //@ts-ignore
         items={networks}
         renderAction={(id) => <NetworkAction id={id} />}
+        participants={participants}
+        hideParticipants={true}
       />
     );
   }, [networks, loading, error]);

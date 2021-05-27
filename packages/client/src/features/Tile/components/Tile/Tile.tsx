@@ -7,8 +7,10 @@ import { HORIZONTAL, VERTICAL } from '@beans/constants';
 import BaseTile from '@beans/base-tile';
 
 import { TitleWithEllipsis } from 'features/Common';
+
+import { Type } from '../../config/types';
 import Description from '../Description';
-import { Wrapper, DescriptionContainer, TileText, TileMeta } from './styled';
+import { DescriptionContainer, TileMeta, TileText, Wrapper } from './styled';
 
 type Props = {
   id: number;
@@ -21,6 +23,7 @@ type Props = {
   participants?: number;
   maxParticipants?: number;
   hideMaxParticipants?: boolean;
+  hideParticipants?: boolean;
   image?: {
     alternativeText: string;
     url: string;
@@ -30,6 +33,7 @@ type Props = {
     belowTablet: typeof HORIZONTAL | typeof VERTICAL;
   };
   imageHeight: string;
+  type?: Type;
 };
 
 const Tile: FC<Props> = ({
@@ -44,8 +48,10 @@ const Tile: FC<Props> = ({
   orientation,
   maxParticipants,
   hideMaxParticipants = false,
+  hideParticipants = false,
   id,
   imageHeight,
+  type = Type.WIDE,
 }) => {
   return (
     <Wrapper>
@@ -64,7 +70,12 @@ const Tile: FC<Props> = ({
           />
         }
         title={
-          <TitleWithEllipsis titleHeight='30px' href={`${link}/${id}`}>
+          <TitleWithEllipsis
+            titleHeight={
+              hideParticipants && type == Type.NARROW ? 'auto' : '30px'
+            }
+            href={`${link}/${id}`}
+          >
             {title}
           </TitleWithEllipsis>
         }
@@ -76,9 +87,9 @@ const Tile: FC<Props> = ({
             </WindowResize>
           </DescriptionContainer>
         )}
-        {meta && <TileMeta>{meta}</TileMeta>}
+        {meta && <TileMeta type={type}>{meta}</TileMeta>}
         {isNumber(participants) && (
-          <TileText>
+          <TileText type={type}>
             <Icon graphic='account' size={'sm'} />
             {participants}
             {!hideMaxParticipants && maxParticipants && ` / ${maxParticipants}`}

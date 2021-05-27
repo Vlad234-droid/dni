@@ -6,8 +6,7 @@ import { useMedia } from 'context/InterfaceContext';
 import { EventCarousel, EventList, EventTable } from 'features/Event';
 
 import BasePage from '../BasePage';
-import PageHeader from '../PageHeader';
-import PageWrapper from '../PageWrapper';
+import PageWrapper from '../PageWrapperNew';
 
 const TEST_ID = 'container-events';
 
@@ -17,19 +16,16 @@ const Events: FC = () => {
   const renderMain = useCallback(
     () => (
       <div data-testid={TEST_ID}>
-        <PageHeader
-          renderLeft={() => <Heading>Events</Heading>}
-          renderCenter={() => (
-            <Heading size={Size.md} color={Color.black}>
-              Upcoming events
-            </Heading>
+        <PageWrapper
+          pageName='Events'
+          renderContent={() => (
+            <>
+              <EventCarousel />
+              <EventList />
+              <EventTable />
+            </>
           )}
         />
-        <PageWrapper>
-          <EventCarousel />
-          <EventList />
-          <EventTable />
-        </PageWrapper>
       </div>
     ),
     [isMobile],
