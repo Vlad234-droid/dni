@@ -55,6 +55,7 @@ const slice = createSlice({
       state.loading = Loading.SUCCEEDED;
     };
 
+    // eslint-disable-next-line  @typescript-eslint/no-explicit-any
     const setFailed = (state: T.State, payload: any) => {
       state.loading = Loading.FAILED;
       state.error = payload.error.message;

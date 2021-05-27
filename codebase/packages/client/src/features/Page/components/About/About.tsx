@@ -6,6 +6,7 @@ import Intro from 'features/Intro';
 import InfoPanel, { InfoPanelType } from 'features/InfoPanel';
 import NetworksPreview from 'features/NetworksPreview';
 import { NetworkMainCarousel } from 'features/Network';
+import { buildPublicPath } from 'config/api';
 
 import BasePage from '../BasePage';
 import { InfoPanelReducer, Reducer, Footer } from './styled';
@@ -28,7 +29,7 @@ const PageAbout: FC = () => {
                   title={survey.title}
                   content={survey.description}
                   footnote={survey.footnote}
-                  infoLink='/'
+                  infoLink={ buildPublicPath('/') }
                   customIcon='lists'
                 />
               </InfoPanelReducer>

@@ -1,6 +1,7 @@
 import { createBrowserHistory as createHistory } from 'history';
+import { PUBLIC_URL as appRootUrl } from 'config/api';
 
-const history = createHistory({ basename: process.env.PUBLIC_URL });
+const history = createHistory({ basename: appRootUrl });
 
 export type History = typeof history;
 

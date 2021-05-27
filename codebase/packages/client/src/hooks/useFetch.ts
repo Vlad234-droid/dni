@@ -25,6 +25,7 @@ type Response<T, R> = [
     setResponse: Dispatch<SetStateAction<R | null>>;
   },
   FetchHandler<T, R>,
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   any,
 ];
 
