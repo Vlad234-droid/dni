@@ -15,6 +15,7 @@ import Reports from '../components/Reports';
 import Profile from '../components/Profile';
 
 const pages: Record<Page, PageElement> = {
+  [Page.HOME]: About,
   [Page.ABOUT]: About,
   [Page.EVENTS]: Events,
   [Page.EVENT]: Event,

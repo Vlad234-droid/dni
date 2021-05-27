@@ -10,7 +10,11 @@ interface StylesItemsVisible {
   amount: number;
 }
 
-type PageWithIcon = Page.EVENTS | Page.NETWORKS | Page.NETWORK_NEWS;
-type HiddenMobilePages = Page.ABOUT | Page.REPORTS;
+type PageWithIcon =
+  | Page.EVENTS
+  | Page.NETWORKS
+  | Page.NETWORK_NEWS
+  | Page.HOME
+  | Page.ABOUT;
 
-export type { StylesItemsVisible, PageWithIcon, HiddenMobilePages };
+export type { StylesItemsVisible, PageWithIcon };

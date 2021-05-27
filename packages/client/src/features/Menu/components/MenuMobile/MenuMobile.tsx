@@ -1,66 +1,36 @@
-import React, { useState, FC, useCallback } from 'react';
+import React, { FC, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
-import Icon from '@beans/icon';
 
-import MenuItem from '../MenuItem';
-import MoreButton from '../MoreButton';
-import MoreMenuMobile from '../MoreMenuMobile';
-import { menuItemsMobile, iconsSrc, itemsVisible } from '../../config/items';
-import { PageWithIcon } from '../../config/types';
+import { menuItemsMobile } from '../../config/items';
 import { getPageByPath } from '../../utils';
-import { Navigation, ItemsList, Item, IconWrapper } from './styled';
+import MenuItemMobile from '../MenuItemMobile';
+import { Wrapper, ItemsList } from './styled';
 
-export const MOBILE_MENU_TEST_ID = 'menu-mobile';
+export const TEST_ID = 'menu-mobile';
 
 const MenuMobile: FC = () => {
-  const [isOpened, setOpened] = useState(false);
   const location = useLocation();
 
-  const handleMoreClick = () => {
-    setOpened(!isOpened);
-  };
-
-  const handleMenuItemClick = () => {
-    setOpened(false);
-  };
-
   const isItemActive = useCallback(
-    (page: string) => {
-      return getPageByPath(location.pathname) === page && !isOpened;
-    },
-    [location, isOpened],
+    (page: string) => getPageByPath(location.pathname) === page,
+    [location],
   );
 
   return (
-    <Navigation data-testid={MOBILE_MENU_TEST_ID}>
-      {isOpened && <MoreMenuMobile onItemClick={handleMenuItemClick} />}
-      <ItemsList amount={itemsVisible.length}>
-        {Object.entries(menuItemsMobile.visible).map(([page, name]) => (
-          <MenuItem
+    <Wrapper data-testid={TEST_ID}>
+      <ItemsList amount={5}>
+        {Object.entries(menuItemsMobile).map(([page, name]) => (
+          <MenuItemMobile
             key={name}
-            name={name}
+            data-testid={`$menu-item-${name?.toLowerCase()}`}
             page={page}
-            removeActive={isOpened}
-            onClick={handleMenuItemClick}
-          >
-            <Item>
-              <IconWrapper>
-                <Icon
-                  graphic={iconsSrc[page as PageWithIcon]}
-                  inverse={isItemActive(page)}
-                />
-              </IconWrapper>
-              <div>{name}</div>
-            </Item>
-          </MenuItem>
+            activeClassName={'active-link'}
+            name={name!}
+            isActive={isItemActive(page)}
+          />
         ))}
-        <MoreButton
-          onClick={handleMoreClick}
-          isOpened={isOpened}
-          pathname={location.pathname}
-        />
       </ItemsList>
-    </Navigation>
+    </Wrapper>
   );
 };
 
