@@ -19,8 +19,8 @@ const {
 const root = getPackageDistFolder('@dni/database', ['', '']);
 const buildPath = (...paths: string[]) => path.join(...paths);
 const buildPathWithExt = (dir: string, ext = '*.ts') => buildPath(dir, ext);
-const ENTITIES_DIR = buildPath(root, 'entities');
-const SUBSCRIBERS_DIR = buildPath(root, 'subscribers');
+const ENTITIES_DIR = buildPath('src', 'entities');
+const SUBSCRIBERS_DIR = buildPath('src', 'subscribers');
 const MIGRATIONS_DIR = buildPath('src', 'migrations');
 const SCHEMAS_DIR = buildPath(root, 'schemas');
 
