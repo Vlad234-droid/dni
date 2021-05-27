@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { createConnection } from './utils';
+import { createConnection, getConnectionOptions } from './utils';
 import { getManager, getRepository, Connection } from 'typeorm';
 
 createConnection()
@@ -11,4 +11,4 @@ createConnection()
   .catch((error) => console.log(error));
 
 export * from './entities';
-export { createConnection, getManager, getRepository };
+export { createConnection, getConnectionOptions, getManager, getRepository };

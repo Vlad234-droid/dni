@@ -12,19 +12,19 @@ import {
 } from '../services';
 import { executeSafe } from '../utils';
 
-const getProfile: Middleware = (req, res) => {
+const getProfile: Middleware = (req: Request, res: Response) => {
   return executeSafe(res, async () =>
     res.status(200).json(await profileInfoExtractor(req, res)),
   );
 };
 
-const getNetworksByEmployeeNumber = (req: Request, res: Response) => {
+const getNetworksByEmployeeNumber: Middleware = (req: Request, res: Response) => {
   return executeSafe(res, async () =>
     res.status(200).json(await findNetworksBy(req.params.employeeNumber)),
   );
 };
 
-const addNetworkToEmployee = async (req: Request, res: Response) => {
+const addNetworkToEmployee: Middleware = async (req: Request, res: Response) => {
   return executeSafe(res, async () => {
     const { employeeNumber, networkId } = req.body;
 
@@ -37,7 +37,7 @@ const addNetworkToEmployee = async (req: Request, res: Response) => {
   });
 };
 
-const deleteNetworkFromEmployee = async (req: Request, res: Response) => {
+const deleteNetworkFromEmployee: Middleware = async (req: Request, res: Response) => {
   return executeSafe(res, async () => {
     const { employeeNumber, networkId } = req.body;
 
@@ -50,13 +50,13 @@ const deleteNetworkFromEmployee = async (req: Request, res: Response) => {
   });
 };
 
-const getEventsByEmployeeNumber = (req: Request, res: Response) => {
+const getEventsByEmployeeNumber: Middleware = (req: Request, res: Response) => {
   return executeSafe(res, async () =>
     res.status(200).json(await findEventsBy(req.params.employeeNumber)),
   );
 };
 
-const addEventToEmployee = async (req: Request, res: Response) => {
+const addEventToEmployee: Middleware = async (req: Request, res: Response) => {
   return executeSafe(res, async () => {
     const { employeeNumber, eventId } = req.body;
 
@@ -69,7 +69,7 @@ const addEventToEmployee = async (req: Request, res: Response) => {
   });
 };
 
-const deleteEventFromEmployee = async (req: Request, res: Response) => {
+const deleteEventFromEmployee: Middleware = async (req: Request, res: Response) => {
   return executeSafe(res, async () => {
     const { employeeNumber, eventId } = req.body;
 

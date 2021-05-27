@@ -21,6 +21,7 @@ const buildApiConsumer = <T extends ApiDefinition>(
 const buildClient = (ctx: DniCmsApiContext) => {
   const baseUrl =
     process.env.COLLEAGUE_CMS_URL || resolveBaseUrl(DNI_CMS_API_URLS, ctx);
+
   const headers = {
     Auth: () => `Bearer ${ctx.identityClientToken()}`,
   };

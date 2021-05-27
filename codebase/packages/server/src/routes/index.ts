@@ -20,6 +20,8 @@ import {
   //report
   getReportByFilters,
   printPDF,
+  //utils
+  getTypeOrmConnectionOptions
 } from '../controllers';
 
 import { cmsAuth } from '../middlewares/cms-auth';
@@ -47,5 +49,7 @@ api.post('/notifications', cmsAuth, handleHook);
 
 api.get('/reports/time-periods', getReportByFilters);
 api.post('/reports/print-pdf', printPDF);
+
+api.get('/utils/type-orm-options', getTypeOrmConnectionOptions);
 
 export { healthCheck, api };
