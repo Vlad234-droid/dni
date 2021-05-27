@@ -5,6 +5,8 @@ import { TescoLogo } from '@beans/branding';
 import { Wrapper, Block } from './styled';
 import Toaster from 'features/Toaster';
 
+import { PUBLIC_URL as appRootUrl } from 'config/api';
+
 const TEST_ID = 'header';
 
 const Header: React.FC = () => (
@@ -14,7 +16,7 @@ const Header: React.FC = () => (
     </Block>
     <Block data-testid='links'>
       <Link
-        href={'/'}
+        href={appRootUrl}
         inverse={true}
         icon={{ graphic: 'notification', position: { global: 'right' } }}
         variant='iconButton'
