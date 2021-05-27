@@ -13,6 +13,14 @@
         "type": "plain",
         "value": "ppe"
       },
+      "REACT_APP_API_URL": {
+        "type": "plain",
+        "value": "/api"
+      },
+      "REACT_APP_WS_URL": {
+        "type": "plain",
+        "value": "/"
+      },
       "PUBLIC_URL": {
         "type": "plain",
         "value": "/diversity-and-inclusion"
