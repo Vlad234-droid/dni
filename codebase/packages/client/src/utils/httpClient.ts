@@ -16,7 +16,7 @@ import { PUBLIC_URL, API_URL } from 'config/api';
 let baseURL = '';
 
 if (PUBLIC_URL && PUBLIC_URL !== '/') baseURL += PUBLIC_URL;
-if (API_URL && API_URL !== '/') baseURL += `${baseURL}${API_URL}`;
+if (API_URL && API_URL !== '/') baseURL += `${API_URL}`;
 if (baseURL.length === 0) baseURL = '/';
 
 const httpClient = axios.create({ baseURL });

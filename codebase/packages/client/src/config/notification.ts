@@ -7,11 +7,6 @@ if (PUBLIC_URL && PUBLIC_URL !== '/') {
   socketUrl = `${PUBLIC_URL}${socketUrl}`;
 }
 
-console.log(`PUBLIC_URL = ${PUBLIC_URL}`);
-console.log(`SOCKET_URL = ${SOCKET_URL}`);
-console.log(`socketUrl = ${socketUrl}`);
-
-
 const defaultProps = { transports: ['websocket', 'polling'], path: socketUrl };
 
 const NOTIFICATIONS = 'notifications';
@@ -19,8 +14,6 @@ const NOTIFICATION_CREATE = 'notification-create';
 const NOTIFICATION_REMOVE = 'notification-remove';
 
 const socket = io('/', defaultProps);
-
-console.log(socket);
 
 export {
   socket,
