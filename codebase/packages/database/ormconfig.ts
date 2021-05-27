@@ -19,14 +19,14 @@ const {
 const root = getPackageDistFolder('@dni/database', ['', '']);
 const buildPath = (...paths: string[]) => path.join(...paths);
 const buildPathWithExt = (dir: string, ext = '*.ts') => buildPath(dir, ext);
-const ENTITIES_DIR = buildPath('src', 'entities');
-const SUBSCRIBERS_DIR = buildPath('src', 'subscribers');
-const MIGRATIONS_DIR = buildPath('src', 'migrations');
-const SCHEMAS_DIR = buildPath(root, 'schemas');
+const ENTITIES_DIR = buildPath('/home/app/packages/database/src', 'entities');
+const SUBSCRIBERS_DIR = buildPath('/home/app/packages/database/src', 'subscribers');
+const MIGRATIONS_DIR = buildPath('/home/app/packages/database/src', 'migrations');
+const SCHEMAS_DIR = buildPath('/home/app/packages/database/src', 'schemas');
 
 const sslOpt = { ssl: TYPEORM_SSL === 'true' };
 
-export default {
+const typeOrmConfig =  {
   ...sslOpt,
   type: TYPEORM_TYPE,
   host: TYPEORM_HOST,
@@ -47,3 +47,7 @@ export default {
   },
   namingStrategy: new SnakeNamingStrategy(),
 };
+
+console.log(typeOrmConfig);
+
+export default typeOrmConfig;
