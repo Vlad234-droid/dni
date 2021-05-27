@@ -1,6 +1,7 @@
 @echo off
 
-setlocal
+rem setlocal
+
 cd ..
 
 if "%NEXUS_ACCESS_TOKEN%"=="" (
@@ -23,4 +24,5 @@ docker build ^
 
 :completed
 
-endlocal
+cd scripts
+rem endlocal
