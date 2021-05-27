@@ -1,6 +1,11 @@
 import { io } from 'socket.io-client';
 
-const SOCKET_URL = process.env.REACT_APP_WS_URL;
+let socketUrl = process.env.REACT_APP_WS_URL;
+
+if (process.env.PUBLIC_URL && process.env.PUBLIC_URL !== '/') {
+  socketUrl = `${process.env.PUBLIC_URL}${socketUrl}`;
+}
+
 
 const defaultProps = { transports: ['websocket', 'polling'] };
 
@@ -8,11 +13,11 @@ const NOTIFICATIONS = 'notifications';
 const NOTIFICATION_CREATE = 'notification-create';
 const NOTIFICATION_REMOVE = 'notification-remove';
 
-const socket = io(SOCKET_URL!, defaultProps);
+const socket = io(socketUrl!, defaultProps);
 
 export {
   socket,
-  SOCKET_URL,
+  socketUrl,
   NOTIFICATIONS,
   NOTIFICATION_REMOVE,
   NOTIFICATION_CREATE,
