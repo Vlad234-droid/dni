@@ -94,7 +94,6 @@ const slice = createSlice({
     };
 
     const setFailed = (state: T.State, payload: any) => {
-      console.log('setFailed');
       state.loading = Loading.FAILED;
       state.error = payload.error.message;
     };

@@ -8,8 +8,6 @@ import { getPackageDistFolder } from './package';
 
 const packageDistFolder = getPackageDistFolder('@dni/database', ['src', '']);
 
-console.log(`TypeORM connection options folder: ${packageDistFolder}`);
-
 const connectionOptionsReader = new ConnectionOptionsReader({ root: packageDistFolder });
 
 let connectionOptions: ConnectionOptions;
@@ -26,9 +24,6 @@ export async function createTypeOrmConnection(): Promise<Connection> {
         process.env.TYPEORM_CONNECTION || 'default',
       )),
     };
-
-    console.log('--- 2 ---');
-    console.log(connectionOptions);
   }
 
   if (!connection) {

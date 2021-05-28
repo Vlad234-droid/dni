@@ -48,7 +48,4 @@ const typeOrmConfig =  {
   namingStrategy: new SnakeNamingStrategy(),
 };
 
-console.log('--- 1 ---');
-console.log(typeOrmConfig);
-
 export default typeOrmConfig;

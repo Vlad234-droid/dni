@@ -25,12 +25,12 @@ export const fakeUserExtractor: Middleware = (req, res, next) => {
 };
 
 const buildFakeUserInfo = (employeeNumber = 'UK00000427'): OpenIdUserInfo => ({
-  sub: 'faeke-openid',
+  sub: 'fake-openid',
   preferred_username: 'AD',
   name: 'Arthur Dent',
   at_hash: '111',
   sid: '427',
-  iss: 'https://acme.onelogin.com/oidc/2',
+  iss: 'https://fake.onelogin.com/oidc/2',
   iat: 1580902408,
   exp: 4736576008,
   aud: '9a6d6350-2af8-0136-197b-06acc76d34b492920',
