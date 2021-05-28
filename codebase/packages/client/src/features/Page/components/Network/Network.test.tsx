@@ -4,8 +4,6 @@ import { createMemoryHistory, createLocation } from 'history';
 import { match } from 'react-router';
 
 import { renderWithProviders } from 'utils/testUtils';
-import { buildPublicPath } from 'config/api';
-
 import { TEST_ID as HEADER_TEST_ID } from 'features/Header';
 import { TEST_ID as MENU_TEST_ID } from 'features/Menu';
 import { TEST_ID as NETWORK_TEST_ID } from 'features/Network';
@@ -29,7 +27,7 @@ describe('<Network />', () => {
   const render = () =>
     renderWithProviders(
       <Router history={history}>
-        <Route path={ buildPublicPath('/') }>
+        <Route path={'/'}>
           <NetworkPage history={history} location={location} match={match} />
         </Route>
       </Router>,

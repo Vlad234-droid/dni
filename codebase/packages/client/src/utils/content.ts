@@ -1,5 +1,4 @@
 import { REACT_APP_CONTENT_URL } from 'config/content';
-
 import { File } from '@dni-connectors/colleague-cms-api';
 
 const buildAbsolutePath = (path: string) =>

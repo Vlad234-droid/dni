@@ -1,7 +1,6 @@
 import axios, { AxiosRequestConfig } from 'axios';
 import qs from 'qs';
 import { Page } from 'features/Page';
-import { API_URL, buildPublicPath } from 'config/api';
 
 import './mockHttpClient';
 import history from './history';
@@ -12,7 +11,13 @@ enum ResponseStatus {
   SERVER_ERROR = 500,
 }
 
-const baseURL = buildPublicPath(API_URL);
+import { PUBLIC_URL, API_URL } from 'config/api';
+
+let baseURL = '';
+
+if (PUBLIC_URL && PUBLIC_URL !== '/') baseURL += PUBLIC_URL;
+if (API_URL && API_URL !== '/') baseURL += `${API_URL}`;
+if (baseURL.length === 0) baseURL = '/';
 
 const httpClient = axios.create({ baseURL });
 

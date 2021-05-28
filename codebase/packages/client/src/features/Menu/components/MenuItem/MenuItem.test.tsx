@@ -6,8 +6,6 @@ import { Route, Switch } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 
 import { renderWithRouter } from 'utils/testUtils';
-import { buildPublicPath } from 'config/api';
-
 import MenuItem, { MENU_TEST_ID_PREFIX } from './MenuItem';
 
 describe('<MenuItem />', () => {
@@ -25,12 +23,12 @@ describe('<MenuItem />', () => {
     const render = () =>
       renderWithRouter(
         <Switch>
-          <Route path={ buildPublicPath('/') } exact>
+          <Route path='/' exact>
             <MenuItem {...menuItem}>
               <div>{menuItem.name}</div>
             </MenuItem>
           </Route>
-          <Route path={ buildPublicPath('/about') }>
+          <Route path='/about'>
             <MenuItem {...menuItem}>
               <div>{menuItem.name}</div>
             </MenuItem>

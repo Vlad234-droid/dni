@@ -25,7 +25,7 @@ const EventCarouselContainer: FC = () => {
     endDate_gte: new Date(),
     startDate_lte: addDuration({ weeks: 2 }),
   });
-  const [loading, list, listError, countError] = useFetchEvents(
+  const [loading, list, hasMore, listError, countError] = useFetchEvents(
     filters,
   );
   const errorMessage = useMemo(
@@ -39,7 +39,7 @@ const EventCarouselContainer: FC = () => {
       events={list!}
       participants={participants}
       loading={loading}
-      error={errorMessage as string}
+      error={errorMessage}
       loadParticipants={loadParticipants}
     />
   );

@@ -1,4 +1,4 @@
-import { Page, pages } from 'features/Page';
+import { Page, pages, Page } from 'features/Page';
 
 import { buildPath, buildRoute } from './index';
 

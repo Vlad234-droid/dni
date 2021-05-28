@@ -3,7 +3,6 @@ import { Route, Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 
 import { renderWithProviders } from 'utils/testUtils';
-import { buildPublicPath } from 'config/api';
 
 import BasePage from './BasePage';
 
@@ -14,7 +13,7 @@ describe('<BasePage />', () => {
   const render = () =>
     renderWithProviders(
       <Router history={history}>
-        <Route path={ buildPublicPath('/') }>
+        <Route path={'/'}>
           <BasePage renderMain={renderMain} />,
         </Route>
       </Router>,

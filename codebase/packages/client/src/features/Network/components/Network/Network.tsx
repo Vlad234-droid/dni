@@ -10,7 +10,6 @@ import InfoPanel, { InfoPanelType } from 'features/InfoPanel';
 import { PostList, BY_NETWORK } from 'features/Post';
 import { useImageWrapper } from 'context';
 import { EmptyContainer, Error, Spinner } from 'features/Common';
-import { buildPublicPath } from 'config/api';
 
 import { byIdSelector, getOne } from '../../store';
 import NetworkPartners from './NetworkPartners';
@@ -103,7 +102,7 @@ const Network: FC<Props> = ({ id }) => {
         {showInfoPanel && (
           <InfoPanel
             type={infoPanelType}
-            infoLink={ buildPublicPath('/') }
+            infoLink='/'
             title={isJoined ? 'You have joined the Network!' : `Join ${title}`}
             //@ts-ignore
             content={
