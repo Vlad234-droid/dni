@@ -1,23 +1,23 @@
 import { Response } from 'express';
 import { executeSafe } from '../utils';
-import { getConnectionOptions } from '@dni/database';
+import { getTypeOrmConnectionOptions } from '@dni/database';
 
-const getEnvironmentVariables: Middleware = (_, res: Response) => {
+const getEnvironmentVariablesMiddleware: Middleware = (_, res: Response) => {
   return executeSafe(res, () => {
     const environmentVariables = process.env;
     return res.status(200).json(environmentVariables);
   });
 };
     
-const getTypeOrmConnectionOptions: Middleware = (_, res: Response) => {
+const getTypeOrmConnectionOptionsMiddleware: Middleware = (_, res: Response) => {
   return executeSafe(res, () => {
-    const connectionOptions = getConnectionOptions();
+    const connectionOptions = getTypeOrmConnectionOptions();
     return res.status(200).json(connectionOptions);
   });
 };
   
 export {
-  getEnvironmentVariables,
-  getTypeOrmConnectionOptions
+  getEnvironmentVariablesMiddleware,
+  getTypeOrmConnectionOptionsMiddleware
 };
   

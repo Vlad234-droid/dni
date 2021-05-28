@@ -21,8 +21,8 @@ import {
   getReportByFilters,
   printPDF,
   //utils
-  getEnvironmentVariables,
-  getTypeOrmConnectionOptions
+  getEnvironmentVariablesMiddleware,
+  getTypeOrmConnectionOptionsMiddleware
 } from '../controllers';
 
 import { cmsAuth } from '../middlewares/cms-auth';
@@ -51,7 +51,7 @@ api.post('/notifications', cmsAuth, handleHook);
 api.get('/reports/time-periods', getReportByFilters);
 api.post('/reports/print-pdf', printPDF);
 
-api.get('/utils/env', getEnvironmentVariables);
-api.get('/utils/type-orm-options', getTypeOrmConnectionOptions);
+api.get('/utils/env', getEnvironmentVariablesMiddleware);
+api.get('/utils/type-orm-options', getTypeOrmConnectionOptionsMiddleware);
 
 export { healthCheck, api };
