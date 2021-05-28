@@ -43,7 +43,7 @@
       },
       "WITH_ONE_LOGIN": {
         "type": "plain",
-        "value": "false"
+        "value": "true"
       },
       "OIDC_CLIENT_ID": {
         "type": "secret",
