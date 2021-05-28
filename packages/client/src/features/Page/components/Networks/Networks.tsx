@@ -23,6 +23,7 @@ const Networks: FC = () => {
               </>
             )}
             pageName={menuItemsDesktop[Page.NETWORKS]}
+            withBorder
           />
         </div>
       )}

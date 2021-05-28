@@ -25,6 +25,7 @@ const Events: FC = () => {
               <EventTable />
             </>
           )}
+          withBorder
         />
       </div>
     ),
