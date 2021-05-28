@@ -1,8 +1,8 @@
 import 'reflect-metadata';
-import { createConnection, getConnectionOptions } from './utils';
+import { createTypeOrmConnection, getTypeOrmConnectionOptions } from './utils';
 import { getManager, getRepository, Connection } from 'typeorm';
 
-createConnection()
+createTypeOrmConnection()
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   .then(async (_: Connection) => {
     // TODO: load seeds
@@ -11,4 +11,4 @@ createConnection()
   .catch((error) => console.log(error));
 
 export * from './entities';
-export { createConnection, getConnectionOptions, getManager, getRepository };
+export { createTypeOrmConnection, getTypeOrmConnectionOptions, getManager, getRepository };

@@ -15,17 +15,23 @@ const connectionOptionsReader = new ConnectionOptionsReader({ root: packageDistF
 let connectionOptions: ConnectionOptions;
 let connection: Promise<Connection>;
 
-export function getConnectionOptions(): ConnectionOptions {
+export function getTypeOrmConnectionOptions(): ConnectionOptions {
   return connectionOptions;
 }
 
-export async function connect(): Promise<Connection> {
-  if (!connection) {
+export async function createTypeOrmConnection(): Promise<Connection> {
+  if (!connectionOptions) {
     connectionOptions = {
       ...(await connectionOptionsReader.get(
         process.env.TYPEORM_CONNECTION || 'default',
       )),
     };
+
+    console.log('--- 2 ---');
+    console.log(connectionOptions);
+  }
+
+  if (!connection) {
     connection = createConnection(connectionOptions);
   }
 

@@ -71,7 +71,7 @@
       },
       "REFRESH_TOKEN_SECRET": {
         "type": "secret",
-        "value": "oidc_refresh_token_secret"
+        "value": "refresh_token_secret"
       },
       "IDENTITY_CLIENT_ID": {
         "type": "secret",
@@ -107,11 +107,11 @@
       },
       "TYPEORM_USERNAME": {
         "type": "secret",
-        "name": "postgres_user"
+        "name": "typeorm_username"
       },
       "TYPEORM_PASSWORD": {
         "type": "secret",
-        "name": "postgres_password"
+        "name": "typeorm_password"
       },
       "TYPEORM_SSL": {
         "type": "plain",
@@ -136,6 +136,10 @@
       "COOKIE_USER_KEY": {
         "type": "plain",
         "value": "user_data"
+      },
+      "WEB_HOOKS_SECRET": {
+        "type": "secret",
+        "value": "web_hooks_secret"
       }
     }
   }

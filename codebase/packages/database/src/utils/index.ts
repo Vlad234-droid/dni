@@ -1,3 +1,3 @@
-export { connect as createConnection, getConnectionOptions } from './connect';
+export { createTypeOrmConnection, getTypeOrmConnectionOptions } from './connect';
 export * from './strategy';
 export * from './package';
