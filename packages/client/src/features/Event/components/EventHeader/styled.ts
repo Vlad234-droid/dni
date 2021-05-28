@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 import Media from 'styles/media';
-import { headingMD, textXS } from 'styles';
+import { textXS } from 'styles';
 
 export const Wrapper = styled.div`
   padding: 0 16px 24px;
@@ -15,10 +15,6 @@ export const Wrapper = styled.div`
 export const Inner = styled.div`
   display: flex;
   justify-content: space-between;
-
-  ${Media.tablet`
-     margin-bottom: 16px;
-  `}
 `;
 
 export const StatusWrapper = styled.div`
@@ -29,6 +25,10 @@ export const TextIconWrapper = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 16px;
+
+  &:last-child {
+    margin-bottom: 24px;
+  }
 
   svg {
     margin-right: 10px;
@@ -69,25 +69,23 @@ export const TitleWrapper = styled.div`
   overflow: hidden;
   display: flex;
   align-items: center;
-  margin-bottom: 16px;
-
-  ${Media.tablet`
-    margin-bottom: 0;
-  `}
 
   h5 {
     margin-right: 24px;
-    ${headingMD};
+    font-weight: bold;
+    font-size: 50px;
+    line-height: 71px;
 
-    ${Media.tablet`
-      font-size: 32px;
-      line-height: 45px;
-    `}
+    &::after {
+      content: '.';
+      color: ${({ theme }) => theme.colors.tescoRed};
+    }
   }
 `;
 
 export const Description = styled.div`
   ${textXS};
+  margin-bottom: 32px;
 
   ${Media.tablet`
       font-size: 20px;

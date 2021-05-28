@@ -171,6 +171,7 @@ const PostList: FC<Props> = ({ entityId, filter = ALL }) => {
           <ButtonFilter
             initialFilters={byEventFilters}
             onChange={(key) => handleByEventFilterChange(key as ByEntityFilter)}
+            name='posts'
           />
         </FiltersContainer>
       )}

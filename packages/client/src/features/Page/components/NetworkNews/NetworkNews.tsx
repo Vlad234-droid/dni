@@ -8,7 +8,7 @@ import { useMedia } from 'context/InterfaceContext';
 import { menuItemsDesktop } from 'features/Menu';
 
 import BasePage from '../BasePage';
-import PageWrapper from '../PageWrapperNew';
+import PageWrapper from '../PageWrapper';
 import { Container, Left, Right } from './styled';
 
 const NetworkNews: FC = () => {

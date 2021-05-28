@@ -5,7 +5,7 @@ import { NetworkList, NetworkCarousel } from 'features/Network';
 import { menuItemsDesktop } from 'features/Menu';
 
 import BasePage from '../BasePage';
-import PageWrapper from '../PageWrapperNew';
+import PageWrapper from '../PageWrapper';
 
 const TEST_ID = 'container-networks';
 
@@ -23,7 +23,6 @@ const Networks: FC = () => {
               </>
             )}
             pageName={menuItemsDesktop[Page.NETWORKS]}
-            withBorder
           />
         </div>
       )}

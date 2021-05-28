@@ -6,10 +6,23 @@ import { Network } from 'features/Network';
 import { ImageWrapperProvider } from 'context/ImageWrapperProvider';
 
 import BasePage from '../BasePage';
-import PageHeader from '../PageHeader';
-import PageWrapper from '../PageWrapper';
+import PageImageWrapper from '../PageImageWrapper';
+import { Page } from '../../config/types';
+import { Breadcrumb } from '../../../Common';
 
 const TEST_ID = 'network-page';
+
+const links = [
+  {
+    current: true,
+    text: 'Network',
+  },
+];
+
+const home = {
+  href: `/${Page.NETWORKS}`,
+  text: 'Networks',
+};
 
 const NetworkPage: FC<RouteComponentProps<{ id: string }>> = (props) => {
   const [ref, setRef] = useState<HTMLDivElement | null>(null);
@@ -19,17 +32,19 @@ const NetworkPage: FC<RouteComponentProps<{ id: string }>> = (props) => {
       <BasePage
         renderMain={() => (
           <ImageWrapperProvider value={ref}>
-            <div>
-              <PageHeader>
-                <ImageWrapper
-                  data-testid='image-container'
-                  ref={(newRef) => setRef(newRef)}
-                />
-              </PageHeader>
-              <PageWrapper>
+            <>
+              <Breadcrumb links={links} home={home} />
+              <PageImageWrapper
+                renderImage={() => (
+                  <ImageWrapper
+                    data-testid='image-container'
+                    ref={(newRef) => setRef(newRef)}
+                  />
+                )}
+              >
                 <Network id={parseInt(props.match.params.id, 10)} />
-              </PageWrapper>
-            </div>
+              </PageImageWrapper>
+            </>
           </ImageWrapperProvider>
         )}
       />

@@ -5,6 +5,9 @@ import { ScrollContainerProvider } from 'context/ScrollContainerContext';
 import { LayoutProps } from '../../config/types';
 import {
   Wrapper,
+  TopHeaderContainer,
+  TopHeaderReducer,
+  MainHeaderContainer,
   HeaderContainer,
   HeaderReducer,
   LeftContainer,
@@ -13,11 +16,23 @@ import {
   LeftContent,
 } from './styled';
 
-const Layout: FC<LayoutProps> = ({ renderHeader, renderLeft, renderMain }) => {
+const Layout: FC<LayoutProps> = ({
+  renderTopHeader,
+  renderMainHeader,
+  renderHeader,
+  renderLeft,
+  renderMain,
+}) => {
   const mainContainer = useRef<HTMLDivElement>(null);
 
   return (
     <Wrapper>
+      <TopHeaderContainer>
+        <TopHeaderReducer>{renderTopHeader()}</TopHeaderReducer>
+      </TopHeaderContainer>
+      <MainHeaderContainer>
+        <HeaderReducer>{renderMainHeader()}</HeaderReducer>
+      </MainHeaderContainer>
       <HeaderContainer>
         <HeaderReducer>{renderHeader()}</HeaderReducer>
       </HeaderContainer>

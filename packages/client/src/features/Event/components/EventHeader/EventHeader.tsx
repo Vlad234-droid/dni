@@ -1,12 +1,7 @@
 import React, { FC, useMemo } from 'react';
 import Icon from '@beans/icon';
 
-import {
-  StatusLabel,
-  StatusType,
-  CopyLink,
-  TitleWithEllipsis,
-} from 'features/Common';
+import { OnAir, CopyLink, TitleWithEllipsis } from 'features/Common';
 import { useMedia } from 'context/InterfaceContext';
 
 import EventAction from '../EventAction';
@@ -43,12 +38,12 @@ const EventHeader: FC<Props> = ({ event, participants }) => {
     <Wrapper>
       <Inner>
         <TitleWrapper>
-          <TitleWithEllipsis titleHeight={isMobile ? '28px' : '45px'}>
+          <TitleWithEllipsis titleHeight={isMobile ? '28px' : '71px'}>
             {title}
           </TitleWithEllipsis>
           {isOnAir && (
             <StatusWrapper>
-              <StatusLabel type={StatusType.SUCCESS}>On-Air</StatusLabel>
+              <OnAir />
             </StatusWrapper>
           )}
         </TitleWrapper>

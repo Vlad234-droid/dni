@@ -1,7 +1,24 @@
 import styled from 'styled-components';
 import Media from 'styles/media';
 
-const Wrapper = styled.div`
+export const Content = styled.div`
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 1000px;
+  margin: -56px auto 0;
+  padding: 24px 0;
+  background-color: ${({ theme }) => theme.colors.white};
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+
+  ${Media.small_desktop`
+    margin: -56px 40px -10px 40px;
+    padding: 32px 0;
+    min-height: calc(100vh - 237px - 194px);
+  `}
+`;
+
+export const Header = styled.div`
   position: relative;
   overflow: hidden;
   display: flex;
@@ -18,16 +35,3 @@ const Wrapper = styled.div`
     height: 249px;
   `}
 `;
-
-const LeftContainer = styled.div``;
-
-const RightContainer = styled.div``;
-
-const CenterContainer = styled.div`
-  flex-basis: 100%;
-  margin-top: 32px;
-  width: 100%;
-  overflow-x: auto;
-`;
-
-export { Wrapper, LeftContainer, RightContainer, CenterContainer };

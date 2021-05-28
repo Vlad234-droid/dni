@@ -1318,6 +1318,18 @@
     "@beans/helpers" "^18.0.0"
     "@beans/selectors" "^18.0.0"
 
+"@beans/breadcrumb@^18.5.2":
+  version "18.5.2"
+  resolved "https://nexus.ourtesco.com/repository/online-web-group/@beans/breadcrumb/-/breadcrumb-18.5.2.tgz#102b58c88e7813ae52d37700ce4c06c0dc70e32c"
+  integrity sha512-fDGGQbVBWt98dfNEPuV8cRXKVGgI+vDYJYDOYOYDFtGeibtXNRtprboqrvq06bzfKenUF/MHmfRhE3TAKGdX/w==
+  dependencies:
+    "@beans/foundation" "^18.0.0"
+    "@beans/helpers" "^18.0.0"
+    "@beans/icon" "^18.0.0"
+    "@beans/link" "^18.0.0"
+    "@beans/selectors" "^18.0.0"
+    "@beans/typography" "^18.0.0"
+
 "@beans/button@^18.0.0", "@beans/button@^18.2.2":
   version "18.3.0"
   resolved "https://nexus.ourtesco.com/repository/online-web-group/@beans/button/-/button-18.3.0.tgz#0ad4446d6cab3746432ca5d6e8529e836363a1c3"
@@ -1589,6 +1601,17 @@
     "@beans/link" "^18.0.0"
     "@beans/selectors" "^18.0.0"
 
+"@beans/modal@^18.0.0":
+  version "18.5.2"
+  resolved "https://nexus.ourtesco.com/repository/online-web-group/@beans/modal/-/modal-18.5.2.tgz#c37b0a5c4c7faae632dd45d3f29be14f1c8112e8"
+  integrity sha512-Oh1eORyte8Lev8MMsXu32CJkPkbQ6Kv+ZZcBCqwzSVBga+gtx6Q0aHx1VWCQRBGChkrSx7ORLzAyhuUdDBuuMg==
+  dependencies:
+    "@beans/foundation" "^18.0.0"
+    "@beans/helpers" "^18.0.0"
+    "@beans/link" "^18.0.0"
+    "@beans/portal" "^18.0.0"
+    "@beans/selectors" "^18.0.0"
+
 "@beans/modal@^18.5.1":
   version "18.5.1"
   resolved "https://nexus.ourtesco.com/repository/online-web-group/@beans/modal/-/modal-18.5.1.tgz#4510413df2c3173ddb5b6ac72ff5a074fbc1b91e"
@@ -1631,6 +1654,19 @@
   integrity sha512-Km0kpPzZvTeSTrqe2Tat6MQOGX6nJnRLxBcbJHmxHC96Mmd5qlvjvo99g79Cz5brPsks1dzKYXGFx//jSIfq3w==
   dependencies:
     "@beans/foundation" "^18.0.0"
+    "@beans/selectors" "^18.0.0"
+
+"@beans/primary-navigation@^18.5.2":
+  version "18.5.2"
+  resolved "https://nexus.ourtesco.com/repository/online-web-group/@beans/primary-navigation/-/primary-navigation-18.5.2.tgz#61a6ccbab8469dc4bd898028de27427beb96dfa4"
+  integrity sha512-sfWW5rF1ct3P8/Ouz6xyUiZY9pzYPfGx6Z0Wm/TmaFMnub5TJSbY+SKsYsSBy+0ri2jIAEvT3B3qGGCHfhIPEA==
+  dependencies:
+    "@beans/foundation" "^18.0.0"
+    "@beans/grid" "^18.0.0"
+    "@beans/helpers" "^18.0.0"
+    "@beans/link" "^18.0.0"
+    "@beans/menu" "^18.0.0"
+    "@beans/modal" "^18.0.0"
     "@beans/selectors" "^18.0.0"
 
 "@beans/radio-button-group@^18.5.2":
@@ -1701,6 +1737,41 @@
     "@beans/foundation" "^18.0.0"
     "@beans/helpers" "^18.0.0"
     "@beans/selectors" "^18.0.0"
+
+"@beans/status-indicator@^18.0.0":
+  version "18.5.2"
+  resolved "https://nexus.ourtesco.com/repository/online-web-group/@beans/status-indicator/-/status-indicator-18.5.2.tgz#79cb0df80fa2fba9ab6535a6d754b05cea40d45a"
+  integrity sha512-pcnr547NA/8QAH6yIdlPmpKJZwn5e+ZdQ24d9CP39p7QF8tW5HmFdFvMQ7SjSnLggkFeRauuuU8UyAhl0gjFLA==
+  dependencies:
+    "@beans/foundation" "^18.0.0"
+    "@beans/helpers" "^18.0.0"
+    "@beans/icon" "^18.0.0"
+    "@beans/link" "^18.0.0"
+    "@beans/selectors" "^18.0.0"
+    "@beans/typography" "^18.0.0"
+
+"@beans/tabs-menu@^18.0.0":
+  version "18.5.2"
+  resolved "https://nexus.ourtesco.com/repository/online-web-group/@beans/tabs-menu/-/tabs-menu-18.5.2.tgz#a0817aec9abc490948615de9cb558bda0e10b578"
+  integrity sha512-Cwa4sPoZAggBBx9lRTaFFGB724FtPOGzv7gtd5mFLvhjGXrEDMYdIR3sTDBBsTCGcPkocwrrTqtPU37mqwk0qA==
+  dependencies:
+    "@beans/foundation" "^18.0.0"
+    "@beans/helpers" "^18.0.0"
+    "@beans/link" "^18.0.0"
+    "@beans/menu" "^18.0.0"
+    "@beans/selectors" "^18.0.0"
+    "@beans/status-indicator" "^18.0.0"
+    "@beans/typography" "^18.0.0"
+
+"@beans/tabs@^18.5.2":
+  version "18.5.2"
+  resolved "https://nexus.ourtesco.com/repository/online-web-group/@beans/tabs/-/tabs-18.5.2.tgz#d55f25c88c943bacd4da6897015796e4a1b2de2e"
+  integrity sha512-lfb9S9+wzMtnogMivGdto5VWq7dP3p/kPPwODhzFgwfPSnVXfH8nVhpEVndmZz5/qg76FbljmcxTB0E7ZV3xlQ==
+  dependencies:
+    "@beans/foundation" "^18.0.0"
+    "@beans/helpers" "^18.0.0"
+    "@beans/selectors" "^18.0.0"
+    "@beans/tabs-menu" "^18.0.0"
 
 "@beans/tesco-lotus@^15.0.0":
   version "15.7.0"
@@ -19433,7 +19504,7 @@ style-to-object@0.3.0, style-to-object@^0.3.0:
   dependencies:
     inline-style-parser "0.1.1"
 
-styled-components@^5, styled-components@^5.1.1, styled-components@^5.2.1:
+styled-components@^5.1.1, styled-components@^5.2.1:
   version "5.3.0"
   resolved "https://registry.yarnpkg.com/styled-components/-/styled-components-5.3.0.tgz#e47c3d3e9ddfff539f118a3dd0fd4f8f4fb25727"
   integrity sha512-bPJKwZCHjJPf/hwTJl6TbkSZg/3evha+XPEizrZUGb535jLImwDUdjTNxXqjjaASt2M4qO4AVfoHJNe3XB/tpQ==

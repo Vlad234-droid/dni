@@ -7,7 +7,7 @@ import Reports, { Filter, PERIOD, filters } from 'features/Reports';
 import { menuItemsDesktop } from 'features/Menu';
 
 import BasePage from '../BasePage';
-import PageWrapper from '../PageWrapperNew';
+import PageWrapper from '../PageWrapper';
 import { TEST_ID } from '../Networks/Networks';
 
 const ReportPage: FC = () => {

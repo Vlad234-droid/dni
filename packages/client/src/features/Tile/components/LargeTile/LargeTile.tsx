@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { VERTICAL } from '@beans/constants';
 
 import Tile from 'features/Tile';
-import { StatusLabel, StatusType } from 'features/Common';
+import { OnAir } from 'features/Common';
 
 import { Type } from '../../config/types';
 import { Wrapper, ActionContainer, StatusContainer } from './styled';
@@ -48,7 +48,7 @@ const LargeTile: FC<Props> = ({
   <Wrapper data-testid={TEST_ID} height={wrapperHeight} type={type}>
     {isOnAir && (
       <StatusContainer>
-        <StatusLabel type={StatusType.SUCCESS}>On-Air</StatusLabel>
+        <OnAir />
       </StatusContainer>
     )}
     <Tile

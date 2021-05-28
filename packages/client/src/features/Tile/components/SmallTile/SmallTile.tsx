@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { HORIZONTAL } from '@beans/constants';
 
 import Tile from 'features/Tile';
-import { StatusLabel, StatusType } from 'features/Common';
+import { OnAir } from 'features/Common';
 
 import { Type } from '../../config/types';
 import { Wrapper, ActionContainer, StatusContainer } from './styled';
@@ -44,7 +44,7 @@ const SmallTile: FC<Props> = ({
   <Wrapper data-testid={TEST_ID}>
     {isOnAir && (
       <StatusContainer>
-        <StatusLabel type={StatusType.SUCCESS} small />
+        <OnAir small />
       </StatusContainer>
     )}
     <Tile

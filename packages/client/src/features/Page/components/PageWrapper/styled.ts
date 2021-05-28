@@ -22,11 +22,8 @@ export const Wrapper = styled.div`
   padding: 24px 40px 0;
 `;
 
-export const Content = styled.div<{ withBorder: boolean }>`
-  border: ${({ withBorder, theme }) =>
-    withBorder && `1px solid ${theme.colors.lines.base}`};
-  box-shadow: ${({ withBorder }) =>
-    withBorder && '0 2px 6px 0 rgba(0, 0, 0, 0.15)'};
-  min-height: ${({ withBorder }) =>
-    withBorder ? 'calc(100vh - 119px - 65px)' : 'auto'};
+export const Content = styled.div`
+  box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.15);
+  border: ${({ theme }) => `1px solid ${theme.colors.lines.base}`};
+  min-height: calc(100vh - 237px - 120px);
 `;

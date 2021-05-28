@@ -6,7 +6,7 @@ import { EventCarousel, EventList, EventTable } from 'features/Event';
 import { menuItemsDesktop } from 'features/Menu';
 
 import BasePage from '../BasePage';
-import PageWrapper from '../PageWrapperNew';
+import PageWrapper from '../PageWrapper';
 
 const TEST_ID = 'container-events';
 
@@ -25,7 +25,6 @@ const Events: FC = () => {
               <EventTable />
             </>
           )}
-          withBorder
         />
       </div>
     ),

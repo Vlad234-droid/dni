@@ -2,29 +2,25 @@ import React, { FC, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import Notification from '@beans/notification';
-import Icon from '@beans/icon';
+
+import { GREEN_COLOR } from 'styles';
 
 import { actions } from '../../store/slice';
 import { skins } from '../../config/skins';
 import { ToastSkin } from '../../config/types';
 
 const MyNotification = styled(Notification)`
-  padding: 20px 16px 16px 64px;
+  // handle custom colors for toaster, when get different Toaster types
+  background: ${GREEN_COLOR};
+  padding: 18px 0;
 `;
 
 const ToastContent = styled.div`
-  padding-right: 16px;
-`;
-
-const ToastCloser = styled.div`
-  cursor: pointer;
-  position: absolute;
-  top: 0;
-  right: 0;
-`;
-
-const ToastWrapper = styled.div`
-  box-shadow: 0 2px 6px 2px rgba(0, 0, 0, 0.1);
+  color: ${({ theme }) => theme.colors.white};
+  text-align: center;
+  font-weight: bold;
+  font-size: 20px;
+  line-height: 22px;
 `;
 
 type Id = number | string;
@@ -42,7 +38,7 @@ const toasterItemTestId = 'toaster-item-test-id';
 const ToasterItem: FC<ToasterItemProps> = ({ id, skin, data }) => {
   const dispatch = useDispatch();
 
-  const { variant, title, Content, timeout } = skins[skin];
+  const { variant, Content, timeout } = skins[skin];
   const [timeToDestruct, setTime] = useState(timeout || Infinity);
 
   if (timeout) {
@@ -62,20 +58,13 @@ const ToasterItem: FC<ToasterItemProps> = ({ id, skin, data }) => {
   }
 
   return (
-    <ToastWrapper data-testid={toasterItemTestId}>
-      <MyNotification variant={variant} title={title}>
-        <ToastContent>
-          {Content && <Content {...data} />}
-        </ToastContent>
-        <ToastCloser
-          onClick={() => {
-            dispatch(actions.deleteToast({ id }));
-          }}
-        >
-          <Icon graphic='close' />
-        </ToastCloser>
-      </MyNotification>
-    </ToastWrapper>
+    <MyNotification
+      variant={variant}
+      showIcon={false}
+      data-testid={toasterItemTestId}
+    >
+      <ToastContent>{Content && <Content {...data} />}</ToastContent>
+    </MyNotification>
   );
 };
 

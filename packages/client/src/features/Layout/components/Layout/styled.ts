@@ -4,6 +4,8 @@ import styled, { css } from 'styled-components';
 import Media from 'styles/media';
 import {
   GREY_COLOR,
+  TOP_HEADER_HEIGHT,
+  MAIN_HEADER_HEIGHT,
   HEADER_HEIGHT_DESKTOP,
   HEADER_HEIGHT_MOBILE,
   FOOTER_HEIGHT,
@@ -38,8 +40,8 @@ export const Wrapper = styled.div<Props>`
       ${PADDING},
       1fr
     );
-    grid-template-rows: ${HEADER_HEIGHT_DESKTOP} 1fr;
-    grid-template-areas: 'header header header header' 'left left main main';
+    grid-template-rows:  ${TOP_HEADER_HEIGHT} ${MAIN_HEADER_HEIGHT} ${HEADER_HEIGHT_DESKTOP} 1fr;
+    grid-template-areas: 'top-header top-header top-header top-header' 'main-header main-header main-header main-header' 'header header header header' 'left left main main';
   `}
 
   ${Media.large_desktop`
@@ -47,24 +49,19 @@ export const Wrapper = styled.div<Props>`
       ${PADDING},
       1fr
     );
-    grid-template-rows: ${HEADER_HEIGHT_DESKTOP} 1fr;
-    grid-template-areas: 'header header header header' '. left main main';
+    grid-template-rows:  ${TOP_HEADER_HEIGHT} ${MAIN_HEADER_HEIGHT} ${HEADER_HEIGHT_DESKTOP} 1fr;
+    grid-template-areas: 'top-header top-header top-header top-header' 'main-header main-header main-header main-header' 'header header header header' '. left main main';
   `}
 `;
 
-export const HeaderContainer = styled.div.attrs({
-  'data-testid': 'header-container',
-})<Props>`
+const stylesHeader = css`
   position: relative;
   z-index: 1000;
-  grid-area: header;
-  box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.15);
   display: grid;
   grid-template-columns: 1fr;
   grid-template-areas: 'header-reducer';
 
   ${Media.small_desktop`
-    background-color: ${GREY_COLOR};
     grid-template-columns: minmax(${PADDING}, 1fr) minmax(auto, ${HEADER_WIDTH_SMALL}) minmax(
       ${PADDING},
       1fr
@@ -79,6 +76,43 @@ export const HeaderContainer = styled.div.attrs({
     );
     grid-template-areas: '. header-reducer .';
   `}
+`;
+
+export const TopHeaderContainer = styled.div.attrs({
+  'data-testid': 'top-header-container',
+})<Props>`
+  display: none;
+
+  ${({ theme }) => css`
+    ${Media.small_desktop`
+        grid-area: top-header;
+        background-color: ${theme.colors.tescoBlue};
+        ${stylesHeader};
+    `}
+  `}
+`;
+
+export const MainHeaderContainer = styled.div.attrs({
+  'data-testid': 'main-header-container',
+})<Props>`
+  display: none;
+
+  ${Media.small_desktop`
+    grid-area: main-header;
+    ${stylesHeader};
+  `}
+`;
+
+export const HeaderContainer = styled.div.attrs({
+  'data-testid': 'header-container',
+})<Props>`
+  ${stylesHeader};
+  grid-area: header;
+  box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.15);
+
+  ${Media.small_desktop`
+    background-color: ${GREY_COLOR};
+  `}
 
   ${({ theme }) => css`
     ${Media.large_tablet`
@@ -89,7 +123,17 @@ export const HeaderContainer = styled.div.attrs({
 `;
 
 export const HeaderReducer = styled.div`
-  grid-area: header-reducer;
+  ${Media.small_desktop`
+    grid-area: header-reducer;
+  `}
+`;
+
+export const TopHeaderReducer = styled(HeaderReducer)`
+  ${Media.small_desktop`
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+  `}
 `;
 
 export const LeftContainer = styled.div.attrs({
