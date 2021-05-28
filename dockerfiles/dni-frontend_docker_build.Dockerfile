@@ -37,6 +37,9 @@ RUN yarn build:prod
 # ==========================================
 # These ENV variable must be set to run app:
 # ==========================================
+# By default turn on SSO
+ENV WITH_ONE_LOGIN=true
+
 # Mock server (must not be empty)
 ENV MOCK_SERVER_URL=<none>
 

@@ -72,7 +72,7 @@ class ConfigAccessor {
       cookieUserKey,
       issuerUrl,
       refreshTokenSecret,
-      withOneLogin: withOneLogin == 'true',
+      withOneLogin: (withOneLogin === 'true'),
       registeredCallbackUrlPath,
       registeredCallbackUrlRoot,
       redirectAfterLogoutUrl,
