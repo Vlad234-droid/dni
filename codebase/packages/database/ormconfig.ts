@@ -2,12 +2,6 @@ import path from 'path';
 import { SnakeNamingStrategy, getPackageDistFolder } from './src/utils';
 import dotenv from 'dotenv';
 
-import { EmployeeEvent } from "./src/entities/EmployeeEvent";
-import { EmployeeHistory } from "./src/entities/EmployeeHistory";
-import { EmployeeNetwork } from "./src/entities/EmployeeNetwork";
-import { Notification } from "./src/entities/Notification";
-
-
 dotenv.config();
 
 const {
@@ -42,8 +36,7 @@ const typeOrmConfig =  {
   database: TYPEORM_DATABASE,
   logging: TYPEORM_LOGGING ? TYPEORM_LOGGING === 'true' : false,
   synchronize: TYPEORM_SYNCHRONIZE ? TYPEORM_SYNCHRONIZE === 'true' : false,
-  //entities: [buildPathWithExt(ENTITIES_DIR)],
-  entities: [ EmployeeEvent, EmployeeHistory, EmployeeNetwork, Notification ],
+  entities: [buildPathWithExt(ENTITIES_DIR)],
   subscribers: [buildPathWithExt(SUBSCRIBERS_DIR)],
   entitySchemas: [buildPathWithExt(SCHEMAS_DIR, '*.json')],
   migrations: [buildPathWithExt(MIGRATIONS_DIR)],

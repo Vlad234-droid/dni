@@ -4,10 +4,11 @@
 
 .dockerignore
 
-Dockerfile*
-docker-compose*
-README.md
-LICENSE
+**/.gitignore
+**/Dockerfile*
+**/docker-compose*
+**/README.md
+**/LICENSE
 
 cicd
 dockerfiles
@@ -16,6 +17,7 @@ docs
 npm-debug.log
 
 codebase/**/.env
+codebase/**/.env.example
 codebase/**/coverage
 codebase/**/build
 codebase/**/node_modules

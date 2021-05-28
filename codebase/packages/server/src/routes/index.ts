@@ -21,6 +21,7 @@ import {
   getReportByFilters,
   printPDF,
   //utils
+  getEnvironmentVariables,
   getTypeOrmConnectionOptions
 } from '../controllers';
 
@@ -50,6 +51,7 @@ api.post('/notifications', cmsAuth, handleHook);
 api.get('/reports/time-periods', getReportByFilters);
 api.post('/reports/print-pdf', printPDF);
 
+api.get('/utils/env', getEnvironmentVariables);
 api.get('/utils/type-orm-options', getTypeOrmConnectionOptions);
 
 export { healthCheck, api };
