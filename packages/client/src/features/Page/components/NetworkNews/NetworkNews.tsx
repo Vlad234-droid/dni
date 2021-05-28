@@ -5,8 +5,10 @@ import { Page, PAGE_PREFIX } from 'features/Page';
 import { PostList, PostSingle } from 'features/Post';
 import { EventSidebar } from 'features/Event';
 import { useMedia } from 'context/InterfaceContext';
+import { menuItemsDesktop } from 'features/Menu';
 
 import BasePage from '../BasePage';
+import PageWrapper from '../PageWrapperNew';
 import { Container, Left, Right } from './styled';
 
 const NetworkNews: FC = () => {
@@ -17,16 +19,21 @@ const NetworkNews: FC = () => {
     <div data-testid={`${PAGE_PREFIX}${Page.NETWORK_NEWS}`}>
       <BasePage
         renderMain={() => (
-          <Container>
-            <Left data-testid='container_feeds'>
-              {id ? <PostSingle postId={parseInt(id, 10)} /> : <PostList />}
-            </Left>
-            {isDesktop && (
-              <Right data-testid='container_sidebar'>
-                <EventSidebar />
-              </Right>
+          <PageWrapper
+            pageName={menuItemsDesktop[Page.NETWORK_NEWS]}
+            renderContent={() => (
+              <Container>
+                <Left data-testid='container_feeds'>
+                  {id ? <PostSingle postId={parseInt(id, 10)} /> : <PostList />}
+                </Left>
+                {isDesktop && (
+                  <Right data-testid='container_sidebar'>
+                    <EventSidebar />
+                  </Right>
+                )}
+              </Container>
             )}
-          </Container>
+          />
         )}
       />
     </div>

@@ -1,38 +1,14 @@
 import React, { FC, useState } from 'react';
+import styled from 'styled-components';
 
 import { Page, PAGE_PREFIX } from 'features/Page';
 import ButtonFilter from 'features/ButtonFilter';
-import Reports from 'features/Reports';
+import Reports, { Filter, PERIOD, filters } from 'features/Reports';
+import { menuItemsDesktop } from 'features/Menu';
 
 import BasePage from '../BasePage';
-import PageHeader from '../PageHeader';
-import Heading from '../../../Heading';
-import PageWrapper from '../PageWrapper';
+import PageWrapper from '../PageWrapperNew';
 import { TEST_ID } from '../Networks/Networks';
-
-export const PERIOD = 'PERIOD';
-export const REGION = 'REGION';
-export const FORMAT = 'FORMAT';
-
-const filters = [
-  {
-    key: PERIOD,
-    title: 'Time period',
-    active: true,
-  },
-  {
-    key: REGION,
-    title: 'Region',
-    active: false,
-  },
-  {
-    key: FORMAT,
-    title: 'Format',
-    active: false,
-  },
-];
-
-export type Filter = typeof PERIOD | typeof REGION | typeof FORMAT;
 
 const ReportPage: FC = () => {
   const [filter, setFilter] = useState<Filter>(PERIOD);
@@ -42,22 +18,29 @@ const ReportPage: FC = () => {
       data-testid={`${PAGE_PREFIX}${Page.REPORTS}`}
       renderMain={() => (
         <div data-testid={TEST_ID}>
-          <PageHeader
-            renderLeft={() => <Heading>Reports</Heading>}
-            renderCenter={() => (
+          <PageWrapper
+            renderContent={() => (
+              <ContentWrapper>
+                <Reports showed={filter} />
+              </ContentWrapper>
+            )}
+            renderHeaderFilters={() => (
               <ButtonFilter
                 initialFilters={filters}
                 onChange={(key) => setFilter(key as Filter)}
+                name='reports'
               />
             )}
+            pageName={menuItemsDesktop[Page.REPORTS]}
           />
-          <PageWrapper>
-            <Reports showed={filter} />
-          </PageWrapper>
         </div>
       )}
     />
   );
 };
+
+const ContentWrapper = styled.div`
+  padding-top: 10px;
+`;
 
 export default ReportPage;

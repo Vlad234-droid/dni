@@ -3,7 +3,7 @@ import { EntityState } from '@reduxjs/toolkit';
 
 import Loading from 'types/loading';
 
-import { ALL, THIS_WEEK, THIS_MONTH } from './contstants';
+import { ALL, THIS_WEEK, THIS_MONTH } from './filters';
 
 type State = {
   data: Event | {};

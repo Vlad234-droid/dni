@@ -13,30 +13,12 @@ import Loading from 'types/loading';
 import { Type } from 'features/Tile';
 
 import Event, { Filter } from '../../config/types';
-import { ALL, THIS_MONTH, THIS_WEEK } from '../../config/contstants';
-import EventAction from '../EventAction';
+import { initialListFilters } from '../../config/filters';
 import { getPayloadPeriod, getPayloadWhere } from '../../utils';
+import EventAction from '../EventAction';
 import { Wrapper } from './styled';
 
 const TEST_ID = 'events-list';
-
-const initialFilters = [
-  {
-    key: ALL,
-    title: 'All',
-    active: true,
-  },
-  {
-    key: THIS_WEEK,
-    title: 'This week',
-    active: false,
-  },
-  {
-    key: THIS_MONTH,
-    title: 'This month',
-    active: false,
-  },
-];
 
 type Props = {
   events?: Event[];
@@ -136,14 +118,16 @@ const EventList: FC<Props> = ({
           )}
         />
         {isLoading && <Spinner />}
-        <Button
-          disabled={!hasMore || isLoading}
-          variant='secondary'
-          onClick={onPageChange}
-        >
-          More New Events
-          <Icon graphic='expand' size='xx' />
-        </Button>
+        {!isEmpty(events) && hasMore && (
+          <Button
+            disabled={isLoading}
+            variant='secondary'
+            onClick={onPageChange}
+          >
+            More New Events
+            <Icon graphic='expand' size='xx' />
+          </Button>
+        )}
       </>
     );
   }, [error, loading, events, participants, total]);
@@ -151,8 +135,9 @@ const EventList: FC<Props> = ({
   return (
     <Wrapper data-testid={TEST_ID}>
       <ButtonFilter
-        initialFilters={initialFilters}
+        initialFilters={initialListFilters}
         onChange={(key) => handleFilterChange(key as Filter)}
+        name='eventList'
       />
       {memoizedContent}
     </Wrapper>

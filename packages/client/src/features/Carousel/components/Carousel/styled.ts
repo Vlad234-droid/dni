@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 
+import { GREY_COLOR } from 'styles';
 import Media from 'styles/media';
 
 const Wrapper = styled.div`
@@ -11,9 +12,10 @@ const Wrapper = styled.div`
     display: none;
 
     ${Media.tablet`
-      display: flex;
-      margin: 0 -10px;
-  `}
+        background-color: ${GREY_COLOR};
+        display: flex;
+        margin: 0 -10px;
+      `}
   }
 `;
 

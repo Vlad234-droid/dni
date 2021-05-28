@@ -14,6 +14,14 @@ const Wrapper = styled.div`
   &::-webkit-scrollbar {
     display: none;
   }
+
+  .beans-form-group__children {
+    display: flex;
+
+    label:not(:last-child) {
+      margin-right: 12px;
+    }
+  }
 `;
 
 type ButtonProps = {

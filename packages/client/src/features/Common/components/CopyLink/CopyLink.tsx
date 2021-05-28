@@ -25,7 +25,12 @@ const CopyLink: FC<Props> = ({
   }, []);
 
   return (
-    <Button data-testid='copy-button' variant='link' onClick={handleClick}>
+    <Button
+      data-testid='copy-button'
+      variant='link'
+      onClick={handleClick}
+      size='sm'
+    >
       <Icon graphic='link' data-testid='copy-icon' />
     </Button>
   );

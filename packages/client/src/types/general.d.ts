@@ -8,6 +8,7 @@ declare module '@beans/dropdown-group';
 declare module '@beans/form-group';
 declare module '@beans/date-input-group';
 declare module '@beans/spinner';
+declare module '@beans/radio-button-group';
 declare module '*.mp4' {
   const src: string;
   export default src;

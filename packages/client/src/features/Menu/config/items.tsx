@@ -1,6 +1,8 @@
 import { Page } from 'features/Page';
 
-const iconsSrc = {
+import { PageWithIcon } from './types';
+
+const iconsSrc: Record<PageWithIcon, string> = {
   [Page.HOME]: 'home',
   [Page.NETWORK_NEWS]: 'feedback',
   [Page.EVENTS]: 'datePicker',
@@ -9,7 +11,7 @@ const iconsSrc = {
 };
 
 const menuItemsDesktop = {
-  [Page.NETWORK_NEWS]: 'News',
+  [Page.NETWORK_NEWS]: 'Network News',
   [Page.EVENTS]: 'Events',
   [Page.REPORTS]: 'Reports',
   [Page.NETWORKS]: 'Networks',

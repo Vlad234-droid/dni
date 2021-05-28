@@ -12,7 +12,7 @@ import {
   getParticipants,
   Filter,
 } from '../../store';
-import { ALL } from '../../config/contstants';
+import { ALL } from '../../config/filters';
 import EventList from './EventList';
 
 const EventSidebarContainer: FC = () => {

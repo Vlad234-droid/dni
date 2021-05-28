@@ -4,6 +4,7 @@ import { HORIZONTAL } from '@beans/constants';
 import Tile from 'features/Tile';
 import { StatusLabel, StatusType } from 'features/Common';
 
+import { Type } from '../../config/types';
 import { Wrapper, ActionContainer, StatusContainer } from './styled';
 
 const TEST_ID = 'small-tile';
@@ -23,9 +24,11 @@ type Props = {
   maxParticipants?: number;
   hideMaxParticipants?: boolean;
   imageHeight?: string;
+  type: Type;
 };
 
 const SmallTile: FC<Props> = ({
+  type,
   title,
   participants,
   image,
@@ -45,6 +48,7 @@ const SmallTile: FC<Props> = ({
       </StatusContainer>
     )}
     <Tile
+      type={type}
       id={id}
       link={link}
       renderAction={() => <ActionContainer>{renderAction()}</ActionContainer>}

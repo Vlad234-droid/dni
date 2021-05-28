@@ -16,7 +16,8 @@ import Loading from 'types/loading';
 import { RootState } from 'store/rootReducer';
 import { Type } from 'features/Tile';
 
-import { Filter, ALL, YOUR_NETWORKS } from '../../config/types';
+import { Filter } from '../../config/types';
+import { initialListFilters, ALL, YOUR_NETWORKS } from '../../config/filters';
 import {
   getList,
   getCount,
@@ -28,19 +29,6 @@ import NetworkAction from '../NetworkAction';
 import { Wrapper, ListContainer } from './styled';
 
 const TEST_ID = 'networks-list';
-
-const initialFilters = [
-  {
-    key: YOUR_NETWORKS,
-    title: 'Your networks',
-    active: true,
-  },
-  {
-    key: ALL,
-    title: 'All',
-    active: false,
-  },
-];
 
 type Filters = FilterPayload & { id_in?: number[] };
 
@@ -198,8 +186,9 @@ const NetworkList: FC = () => {
   return (
     <Wrapper data-testid={TEST_ID}>
       <ButtonFilter
-        initialFilters={initialFilters}
+        initialFilters={initialListFilters}
         onChange={(key) => handleFilterChange(key as Filter)}
+        name='networkList'
       />
       {memoizedContent}
     </Wrapper>

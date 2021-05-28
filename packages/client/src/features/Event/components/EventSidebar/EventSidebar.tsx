@@ -4,11 +4,12 @@ import Button from '@beans/button';
 import isEmpty from 'lodash.isempty';
 
 import { EmptyContainer, Spinner, Error } from 'features/Common';
-import { LargeTile, SmallTile } from 'features/Tile';
+import { LargeTile, SmallTile , Type } from 'features/Tile';
 import Loading from 'types/loading';
 import { EntityListPayload } from 'types/payload';
 import { Page } from 'features/Page';
 import { DEFAULT_FILTERS } from 'config/constants';
+
 
 import { isActionDisabled, isEventOnAir, getPayloadWhere } from '../../utils';
 import Event from '../../config/types';
@@ -110,6 +111,7 @@ const EventSidebar: FC<Props> = ({
               />
             ) : (
               <SmallTile
+                type={Type.NARROW}
                 key={id}
                 id={id}
                 title={title}

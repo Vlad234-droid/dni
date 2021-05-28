@@ -1,9 +1,9 @@
 import React, { FC, useCallback } from 'react';
 
 import { Page, PAGE_PREFIX } from 'features/Page';
-import Heading, { Size, Color } from 'features/Heading';
 import { useMedia } from 'context/InterfaceContext';
 import { EventCarousel, EventList, EventTable } from 'features/Event';
+import { menuItemsDesktop } from 'features/Menu';
 
 import BasePage from '../BasePage';
 import PageWrapper from '../PageWrapperNew';
@@ -17,7 +17,7 @@ const Events: FC = () => {
     () => (
       <div data-testid={TEST_ID}>
         <PageWrapper
-          pageName='Events'
+          pageName={menuItemsDesktop[Page.EVENTS]}
           renderContent={() => (
             <>
               <EventCarousel />
@@ -25,6 +25,7 @@ const Events: FC = () => {
               <EventTable />
             </>
           )}
+          withBorder
         />
       </div>
     ),
