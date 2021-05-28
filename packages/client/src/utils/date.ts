@@ -3,7 +3,7 @@ import { DateTime, DurationUnit, DurationObject } from 'luxon';
 const DATE_FORMAT = 'yyyy-MM-dd';
 const TIME_FORMAT = 'HH:mm';
 const DATE_TIME_FORMAT = `${DATE_FORMAT} ${TIME_FORMAT}`;
-const FULL_FORMAT = "cccc, dd LLLL yyyy 'at' hh:mm";
+const FULL_FORMAT = "cccc, dd LLLL yyyy 'at' HH:mm";
 const FULL_DAY_FORMAT = 'LLLL dd, yyyy';
 
 const dateToFormat = (date: Date, format: string) =>
