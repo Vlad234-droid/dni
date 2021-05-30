@@ -5,18 +5,10 @@ import { textXS } from 'styles';
 
 const Wrapper = styled.div`
   padding: 4px 4px;
-  overflow-x: auto;
-  white-space: nowrap;
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
-
-  /* Hide scrollbar for Chrome, Safari and Opera */
-  &::-webkit-scrollbar {
-    display: none;
-  }
 
   .beans-form-group__children {
     display: flex;
+    flex-wrap: wrap;
 
     label:not(:last-child) {
       margin-right: 12px;

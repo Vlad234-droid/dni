@@ -82,7 +82,7 @@ const EventTable: FC = () => {
                 <Cell width={isMobile ? '25%' : '15%'}>
                   {participants.data[id]! || 0} members
                 </Cell>
-                <Cell width='25%'>
+                <Cell width='25%' visible={!isMobile}>
                   {network && (
                     <NetworkWrapper>
                       {network.image && (

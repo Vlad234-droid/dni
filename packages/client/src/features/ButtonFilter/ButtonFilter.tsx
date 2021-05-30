@@ -14,6 +14,8 @@ type Props = {
   name?: string;
 };
 
+const TEST_ID = 'button-filter';
+
 const ButtonFilter: FC<Props> = ({ initialFilters = [], onChange, name }) => {
   const [filters, setFilters] = useState(initialFilters);
 
@@ -30,7 +32,7 @@ const ButtonFilter: FC<Props> = ({ initialFilters = [], onChange, name }) => {
   );
 
   return (
-    <Wrapper>
+    <Wrapper data-testid={TEST_ID}>
       <RadioButtonGroup
         radioButtons={filters.map(({ title, key }) => ({
           id: key,

@@ -1,6 +1,6 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
-import { headingMD } from 'styles';
+import { headingMD, GREY_COLOR } from 'styles';
 import Media from 'styles/media';
 
 const Wrapper = styled.div`
@@ -12,18 +12,38 @@ const Wrapper = styled.div`
 
   h5 {
     font-weight: normal;
+    line-height: 38px;
+  }
+
+  tr:nth-child(even) {
+    background-color: ${GREY_COLOR};
+
+    ${({ theme }) => css`
+      ${Media.tablet`
+        background-color: ${theme.colors.white};
+      `}
+    `}
   }
 
   td:first-child {
-    padding-left: 34px;
+    padding-left: 16px;
+    line-height: 30px;
+
+    ${Media.small_desktop`
+      padding-left: 34px;
+    `}
   }
 `;
 
 const Title = styled.h3`
   ${headingMD};
   color: ${({ theme }) => theme.colors.base};
+  margin-left: 16px;
   margin-bottom: 16px;
-  margin-left: 32px;
+
+  ${Media.small_desktop`
+    margin-left: 32px;
+  `}
 `;
 
 const ButtonWrapper = styled.div`

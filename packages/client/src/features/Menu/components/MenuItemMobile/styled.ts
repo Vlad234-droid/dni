@@ -6,7 +6,7 @@ export const Link = styled(NavLink)`
   color: ${({ theme }) => theme.colors.primary};
   background-color: ${({ theme }) => theme.colors.white};
   display: block;
-  padding: 6px 4px;
+  padding: 8px 4px;
   font-size: 12px;
   line-height: 14px;
   text-align: center;
@@ -26,12 +26,8 @@ export const Link = styled(NavLink)`
 `;
 
 export const IconWrapper = styled.div`
+  height: 23px;
   overflow: hidden;
   position: relative;
   margin: 0 auto 2px;
-
-  & > img {
-    width: 100%;
-    height: 100%;
-  }
 `;
