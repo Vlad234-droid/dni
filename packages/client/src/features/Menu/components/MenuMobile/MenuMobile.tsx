@@ -17,7 +17,7 @@ const MenuMobile: FC = () => {
   );
 
   return (
-    <Wrapper data-testid={TEST_ID}>
+    <div data-testid={TEST_ID}>
       <ItemsList amount={5}>
         {Object.entries(menuItemsMobile).map(([page, name]) => (
           <MenuItemMobile
@@ -30,7 +30,7 @@ const MenuMobile: FC = () => {
           />
         ))}
       </ItemsList>
-    </Wrapper>
+    </div>
   );
 };
 
