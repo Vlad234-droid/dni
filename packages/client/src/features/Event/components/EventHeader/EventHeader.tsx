@@ -1,5 +1,6 @@
 import React, { FC, useMemo } from 'react';
 import Icon from '@beans/icon';
+import ICalendarLink from 'react-icalendar-link';
 
 import { OnAir, CopyLink, TitleWithEllipsis } from 'features/Common';
 import { useMedia } from 'context/InterfaceContext';
@@ -56,7 +57,18 @@ const EventHeader: FC<Props> = ({ event, participants }) => {
       </Inner>
       <Description>
         <TextIconWrapper>
-          <Icon graphic='datePicker' />
+          <ICalendarLink
+            filename={`${event.title} event.ics`}
+            event={{
+              title: event.title,
+              description: event.description,
+              startTime: event.startDate.replace('at', ''),
+              endTime: event.endDate.replace('at', ''),
+              location: '',
+            }}
+          >
+            <Icon graphic='datePicker' />
+          </ICalendarLink>
           {startDate}
         </TextIconWrapper>
         <Inner>

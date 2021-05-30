@@ -13,6 +13,7 @@ const {
   TYPEORM_PORT,
   TYPEORM_SYNCHRONIZE,
   TYPEORM_LOGGING,
+  TYPEORM_SSL,
 } = process.env;
 
 const root = getPackageDistFolder('@dni/database', ['', '']);
@@ -23,7 +24,10 @@ const SUBSCRIBERS_DIR = buildPath(root, 'subscribers');
 const MIGRATIONS_DIR = buildPath('src', 'migrations');
 const SCHEMAS_DIR = buildPath(root, 'schemas');
 
+const sslOpt = TYPEORM_SSL == 'true' && { ssl: TYPEORM_SSL };
+
 export default {
+  ...sslOpt,
   type: TYPEORM_TYPE,
   host: TYPEORM_HOST,
   port: TYPEORM_PORT,

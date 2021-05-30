@@ -37,14 +37,14 @@ export const Wrapper = styled.div`
     line-height: 16px;
     padding-left: 0;
     padding-right: 0;
-  }
 
-  ${Media.desktop`
-    font-size: 16px;
-    line-height: 18px;
-    padding-left: 8px;
-    padding-right: 8px;
-  `}
+    ${Media.desktop`
+      font-size: 16px;
+      line-height: 18px;
+      padding-left: 8px;
+      padding-right: 8px;
+    `}
+  }
 `;
 
 export const LinkWrapper = styled.div`
