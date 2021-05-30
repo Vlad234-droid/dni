@@ -5,7 +5,7 @@ import { Page } from 'features/Page';
 
 import { iconsSrc } from '../../config/items';
 import { PageWithIcon } from '../../config/types';
-import { Wrapper, IconWrapper } from './styled';
+import { Link, IconWrapper } from './styled';
 
 export const TEST_ID = 'menu-item-mobile';
 
@@ -22,7 +22,7 @@ const MenuItemMobile: FC<Props> = ({
   activeClassName,
   isActive,
 }) => (
-  <Wrapper
+  <Link
     key={name}
     exact={page === Page.ABOUT}
     activeClassName={activeClassName}
@@ -34,7 +34,7 @@ const MenuItemMobile: FC<Props> = ({
       <Icon graphic={iconsSrc[page as PageWithIcon]} inverse={isActive} />
     </IconWrapper>
     <div>{name}</div>
-  </Wrapper>
+  </Link>
 );
 
 export default MenuItemMobile;

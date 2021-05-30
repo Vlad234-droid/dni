@@ -26,7 +26,7 @@ const menuItemsMobile = {
   [Page.ABOUT]: 'About',
 };
 
-export const mainMenuItemsDesktop = [
+export const mainMenuItems = [
   {
     href: 'https://www.ourtesco.com/colleague',
     id: 'home',
@@ -61,14 +61,17 @@ export const mainMenuItemsDesktop = [
     href: '/',
     id: 'diversity-and-inclusion',
     text: 'Diversity and Inclusion',
+    active: true,
   },
 ];
 
-export const mainMoreMenuItemsDesktop = {
+// is not actually used but is required for @beans/primary-navigation
+export const mainMoreMenuItems = {
   href: '#',
   text: 'More',
 };
 
+// is not actually used but is required for @beans/primary-navigation
 export const mainMenuItemMobile = {
   href: '#',
   text: 'Menu',

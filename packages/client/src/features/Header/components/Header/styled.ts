@@ -37,7 +37,7 @@ export const IconWrapper = styled.div`
       height: 40px;
   `}
 
-  a {
+  .beans-link__anchor {
     width: 16px;
     height: 16px;
 

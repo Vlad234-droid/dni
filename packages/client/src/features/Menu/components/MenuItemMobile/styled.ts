@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { NavLink } from 'react-router-dom';
 
-export const Wrapper = styled(NavLink)`
+export const Link = styled(NavLink)`
   text-decoration: none;
   color: ${({ theme }) => theme.colors.primary};
   background-color: ${({ theme }) => theme.colors.white};
