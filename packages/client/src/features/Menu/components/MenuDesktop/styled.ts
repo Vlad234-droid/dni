@@ -10,7 +10,6 @@ export const Wrapper = styled.nav`
 
 export const Item = styled(NavLink)`
   ${textXS};
-  //text-decoration: none;
   color: ${({ theme }) => theme.colors.link.base};
   padding: 0 17px;
 

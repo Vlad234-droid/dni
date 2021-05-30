@@ -42,14 +42,14 @@ const Header: FC = () => {
             variant='iconButton'
           />
         </IconWrapper>
-        <IconWrapper>
-          <Link
-            href={'/profile'}
-            icon={{ graphic: 'account', position: { global: 'right' } }}
-            inverse={!isDesktop}
-            variant='iconButton'
-          />
-        </IconWrapper>
+        {/*<IconWrapper>*/}
+        {/*  <Link*/}
+        {/*    href={'/profile'}*/}
+        {/*    icon={{ graphic: 'account', position: { global: 'right' } }}*/}
+        {/*    inverse={!isDesktop}*/}
+        {/*    variant='iconButton'*/}
+        {/*  />*/}
+        {/*</IconWrapper>*/}
         {!isDesktop && (
           <IconWrapper>
             <Icon graphic='menu' onClick={handleOpenMenu} />
