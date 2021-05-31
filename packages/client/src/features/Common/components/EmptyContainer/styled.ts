@@ -13,7 +13,6 @@ const Wrapper = styled.div`
   align-items: center;
 
   ${Media.small_desktop`
-     max-width: 554px;
      padding: 30px 0;
   `}
 `;
@@ -50,6 +49,14 @@ const Explanation = styled.div`
   text-align: center;
   ${textXX};
   color: ${({ theme }) => theme.colors.grayscale};
+
+  ${Media.large_phone`
+    max-width: 420px;
+  `}
+
+  ${Media.tablet`
+    max-width: 554px;
+  `}
 
   ${Media.small_desktop`
      margin-bottom: 0;
