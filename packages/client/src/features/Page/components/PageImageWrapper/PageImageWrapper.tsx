@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 
-import { Header, Content } from './styled';
+import { Wrapper, Header, Content } from './styled';
 
 const TEST_ID = 'page-wrapper';
 
@@ -9,10 +9,10 @@ type Props = {
 };
 
 const PageImageWrapper: FC<Props> = ({ children, renderImage }) => (
-  <div data-testid={TEST_ID}>
+  <Wrapper data-testid={TEST_ID}>
     <Header>{renderImage()}</Header>
     <Content>{children}</Content>
-  </div>
+  </Wrapper>
 );
 
 export { TEST_ID };

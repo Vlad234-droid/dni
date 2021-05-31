@@ -1,6 +1,7 @@
 import React, { useState, FC } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import styled from 'styled-components';
+import Breadcrumb from '@beans/breadcrumb';
 
 import { Network } from 'features/Network';
 import { ImageWrapperProvider } from 'context/ImageWrapperProvider';
@@ -8,16 +9,8 @@ import { ImageWrapperProvider } from 'context/ImageWrapperProvider';
 import BasePage from '../BasePage';
 import PageImageWrapper from '../PageImageWrapper';
 import { Page } from '../../config/types';
-import { Breadcrumb } from '../../../Common';
 
 const TEST_ID = 'network-page';
-
-const links = [
-  {
-    current: true,
-    text: 'Network',
-  },
-];
 
 const home = {
   href: `/${Page.NETWORKS}`,
@@ -32,19 +25,29 @@ const NetworkPage: FC<RouteComponentProps<{ id: string }>> = (props) => {
       <BasePage
         renderMain={() => (
           <ImageWrapperProvider value={ref}>
-            <>
-              <Breadcrumb links={links} home={home} />
-              <PageImageWrapper
-                renderImage={() => (
-                  <ImageWrapper
-                    data-testid='image-container'
-                    ref={(newRef) => setRef(newRef)}
+            <PageImageWrapper
+              renderImage={() => (
+                <ImageWrapper
+                  data-testid='image-container'
+                  ref={(newRef) => setRef(newRef)}
+                />
+              )}
+            >
+              <Network
+                id={parseInt(props.match.params.id, 10)}
+                renderBreadcrumb={(networkTitle) => (
+                  <Breadcrumb
+                    links={[
+                      {
+                        current: true,
+                        text: `${networkTitle}`,
+                      },
+                    ]}
+                    home={home}
                   />
                 )}
-              >
-                <Network id={parseInt(props.match.params.id, 10)} />
-              </PageImageWrapper>
-            </>
+              />
+            </PageImageWrapper>
           </ImageWrapperProvider>
         )}
       />

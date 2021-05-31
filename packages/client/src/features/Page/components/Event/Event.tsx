@@ -1,10 +1,10 @@
 import React, { useState, FC } from 'react';
 import styled from 'styled-components';
 import { RouteComponentProps } from 'react-router-dom';
+import Breadcrumb from '@beans/breadcrumb';
 
-import { Breadcrumb } from 'features/Common';
+import { ImageWrapperProvider } from 'context';
 import { Event } from 'features/Event';
-import { ImageWrapperProvider } from 'context/ImageWrapperProvider';
 import { Page } from 'features/Page';
 
 import BasePage from '../BasePage';
@@ -26,26 +26,37 @@ const home = {
 };
 
 const EventPage: FC<RouteComponentProps<{ id: string }>> = (props) => {
-  const [ref, setRef] = useState<HTMLElement | null>(null);
+  const [imageRef, setImageRef] = useState<HTMLElement | null>(null);
+  const [navRef, setNavRef] = useState<HTMLElement | null>(null);
 
   return (
     <div data-testid={TEST_ID}>
       <BasePage
         renderMain={() => (
-          <ImageWrapperProvider value={ref}>
-            <>
-              <Breadcrumb links={links} home={home} />
-              <PageImageWrapper
-                renderImage={() => (
-                  <ImageWrapper
-                    data-testid={IMAGE_WRAPPER_TEST_ID}
-                    ref={(newRef) => setRef(newRef)}
+          <ImageWrapperProvider value={imageRef}>
+            <PageImageWrapper
+              renderImage={() => (
+                <ImageWrapper
+                  data-testid={IMAGE_WRAPPER_TEST_ID}
+                  ref={(newRef) => setImageRef(newRef)}
+                />
+              )}
+            >
+              <Event
+                id={parseInt(props.match.params.id, 10)}
+                renderBreadcrumb={(eventTitle) => (
+                  <Breadcrumb
+                    links={[
+                      {
+                        current: true,
+                        text: `${eventTitle}`,
+                      },
+                    ]}
+                    home={home}
                   />
                 )}
-              >
-                <Event id={parseInt(props.match.params.id, 10)} />
-              </PageImageWrapper>
-            </>
+              />
+            </PageImageWrapper>
           </ImageWrapperProvider>
         )}
       />

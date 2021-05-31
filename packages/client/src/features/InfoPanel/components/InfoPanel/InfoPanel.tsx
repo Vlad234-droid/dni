@@ -33,7 +33,7 @@ const InfoPanel: FC<Props> = ({
   onClose,
   isSmall = false,
 }) => (
-  <Wrapper type={type} isSmall={isSmall}>
+  <Wrapper type={type} isSmall={isSmall} canClose={!!onClose}>
     {onClose && (
       <CloseIcon isSmall={isSmall}>
         <Icon graphic='close' onClick={onClose} />

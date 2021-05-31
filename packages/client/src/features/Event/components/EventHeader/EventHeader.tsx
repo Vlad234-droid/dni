@@ -39,9 +39,7 @@ const EventHeader: FC<Props> = ({ event, participants }) => {
     <Wrapper>
       <Inner>
         <TitleWrapper>
-          <TitleWithEllipsis titleHeight={isMobile ? '28px' : '71px'}>
-            {title}
-          </TitleWithEllipsis>
+          <TitleWithEllipsis>{title}</TitleWithEllipsis>
           {isOnAir && (
             <StatusWrapper>
               <OnAir />

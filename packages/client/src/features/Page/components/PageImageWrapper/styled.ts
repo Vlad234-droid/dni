@@ -1,13 +1,27 @@
 import styled from 'styled-components';
+
+import { GREY_COLOR } from 'styles';
 import Media from 'styles/media';
+
+export const Wrapper = styled.div`
+  & .beans-breadcrumb__container {
+    background: ${GREY_COLOR};
+    position: fixed;
+    top: 43px;
+    width: 100%;
+    z-index: 100;
+
+    ${Media.small_desktop`
+    top: 237px;
+  `}
+  }
+`;
 
 export const Content = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
   flex: 1 1 1000px;
-  margin: -56px auto 0;
-  padding: 24px 0;
   background-color: ${({ theme }) => theme.colors.white};
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 
@@ -23,8 +37,8 @@ export const Header = styled.div`
   overflow: hidden;
   display: flex;
   flex-wrap: wrap;
+  margin-top: 39px;
   max-height: 250px;
-  padding: 24px 16px 80px;
   justify-content: space-between;
   background-color: ${({ theme }) => theme.colors.background.darkest};
   align-items: flex-end;

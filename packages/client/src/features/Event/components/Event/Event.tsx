@@ -21,6 +21,7 @@ type Props = {
   event?: Event;
   participants: number;
   error?: string;
+  renderBreadcrumb: (eventTitle: string) => void;
 };
 
 const ERROR_TITLE = 'Request ID not found';
@@ -35,6 +36,7 @@ const EventComponent: FC<Props> = ({
   loading,
   participants,
   error,
+  renderBreadcrumb,
 }) => {
   const imageWrapperEl = useImageWrapper();
   const isLoading = useMemo(
@@ -69,13 +71,16 @@ const EventComponent: FC<Props> = ({
       <>
         {imageWrapperEl &&
           createPortal(
-            <ResponsiveImage
-              key={event!.id}
-              alt={event!.image?.alternativeText}
-              src={event!.image?.url}
-              fallbackSizeRatio='57%'
-              objectFit='cover'
-            />,
+            <>
+              {renderBreadcrumb(event!.title)}
+              <ResponsiveImage
+                key={event!.id}
+                alt={event!.image?.alternativeText}
+                src={event!.image?.url}
+                fallbackSizeRatio='57%'
+                objectFit='cover'
+              />
+            </>,
             imageWrapperEl,
           )}
         <EventHeader event={event!} participants={participants} />
