@@ -2,13 +2,12 @@ import React from 'react';
 import ReactMarkdown from 'react-markdown';
 import htmlParser from 'react-markdown/lib/plugins/html-parser';
 import styled from 'styled-components';
+import Link from '@beans/link';
 
 import ResponsiveImage from '@beans/responsive-image';
 import { Box, Vertical } from '@energon-components/layout';
 
 import { useMedia } from 'context/InterfaceContext';
-
-import Link from '../Link';
 
 type ElementType = keyof JSX.IntrinsicElements | React.ComponentType;
 
@@ -24,10 +23,10 @@ export type RichTextComponent = {
 
 const MarkdownContainer = styled(Box)`
   > :first-child {
-    margin-top: 0px;
+    margin-top: 0;
   }
   > :last-child {
-    margin-bottom: 0px;
+    margin-bottom: 0;
   }
 `;
 
@@ -60,11 +59,7 @@ export const MarkdownRenderer = ({ source }: { source: string }) => (
       commonmark: true,
     }}
     renderers={{
-      link: (props) => (
-        <Link to={{ url: props.href }} variant='beans'>
-          {props.children}
-        </Link>
-      ),
+      link: (props) => <Link href={props.href}>{props.children}</Link>,
       heading: (props) => (
         <Box color='tescoBlue' as={`h${props.level}` as ElementType}>
           {props.children}
