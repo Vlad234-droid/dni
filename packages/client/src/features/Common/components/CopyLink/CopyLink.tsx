@@ -11,8 +11,7 @@ type Props = {
 
 const CopyLink: FC<Props> = ({ id, showNotification, hideNotification }) => {
   const handleClick = useCallback(() => {
-    const host = window.location.host;
-    const pathname = window.location.pathname;
+    const { host, pathname } = window.location;
     const url = id ? `${host}${pathname}/${id}` : `${host}${pathname}`;
 
     copy(url);
