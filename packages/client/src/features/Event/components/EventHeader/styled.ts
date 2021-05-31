@@ -8,7 +8,7 @@ export const Wrapper = styled.div`
   border-bottom: ${({ theme }) => `1px solid ${theme.colors.lines.base}`};
 
   ${Media.tablet`
-     padding: 0 24px 24px;
+     padding: 0 24px;
   `}
 `;
 

@@ -26,18 +26,17 @@ export const Content = styled.div`
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
 
   ${Media.small_desktop`
-    margin: -56px 40px -10px 40px;
-    padding: 32px 0;
+    margin: -56px 40px 0;
     min-height: calc(100vh - 237px - 194px);
   `}
 `;
 
 export const Header = styled.div`
   position: relative;
+  top: 39px;
   overflow: hidden;
   display: flex;
   flex-wrap: wrap;
-  margin-top: 39px;
   max-height: 250px;
   justify-content: space-between;
   background-color: ${({ theme }) => theme.colors.background.darkest};
