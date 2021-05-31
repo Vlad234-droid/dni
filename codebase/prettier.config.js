@@ -5,5 +5,5 @@ module.exports = {
   jsxSingleQuote: true,
   trailingComma: 'all',
   semi: true,
-  printWidth: 80,
+  printWidth: 120,
 };

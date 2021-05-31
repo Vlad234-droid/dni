@@ -22,7 +22,7 @@ RUN dos2unix ./run.sh && dos2unix ./create-npmrc.sh && bash ./create-npmrc.sh --
 
 RUN yarn bootstrap
 
-ENV BUILD_ENV_PARAM=production
+ENV BUILD_ENV=production
 
 ENV NODE_ENV=$NODE_ENV
 

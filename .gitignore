@@ -34,4 +34,4 @@ yarn-error.log*
 
 # docker build
 temp
-/cicd/dev/secrets.json
+**/secrets.json

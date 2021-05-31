@@ -5,11 +5,11 @@ cp -v ./scripts/create-npmrc.sh temp/
 find ./codebase/packages -name 'package.json' -exec sh -c 'cd ./temp && mkdir -p "${0%/*}" &&  cp -v "../$0" "${0}"' {} \; 
 
 IMAGE_NAME=$1
-BUILD_ENV_PARAM=$2
+BUILD_ENV=$2
 
 docker build \
   --tag $IMAGE_NAME \
-  --build-arg BUILD_ENV_PARAM=$BUILD_ENV_PARAM \
+  --build-arg BUILD_ENV=$BUILD_ENV \
   --build-arg NPM_CREDENTIALS=$NPM_CREDENTIALS \
   --build-arg WITH_ONE_LOGIN=$WITH_ONE_LOGIN \
   --build-arg OIDC_CLIENT_ID=$OIDC_CLIENT_ID \

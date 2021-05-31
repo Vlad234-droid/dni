@@ -4,7 +4,7 @@ FROM node:14.4-alpine as build
 ARG NEXUS_ACCESS_TOKEN
 
 # Node build time variable
-ARG BUILD_ENV_PARAM=production
+ARG BUILD_ENV=production
 
 WORKDIR /home/app
 
@@ -19,7 +19,7 @@ RUN dos2unix ./create-npmrc.sh && bash ./create-npmrc.sh --token $NEXUS_ACCESS_T
 
 RUN yarn bootstrap
 
-ENV BUILD_ENV_PARAM=$BUILD_ENV_PARAM
+ENV BUILD_ENV=$BUILD_ENV
 
 ENV SKIP_PREFLIGHT_CHECK=true
 ENV REACT_APP_API_URL=/api 
