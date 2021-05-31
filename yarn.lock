@@ -17322,6 +17322,11 @@ react-hook-form@^6.13.1:
   resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-6.15.5.tgz#c2578f9ce6a6df7b33015587d40cd880dc13e2db"
   integrity sha512-so2jEPYKdVk1olMo+HQ9D9n1hVzaPPFO4wsjgSeZ964R7q7CHsYRbVF0PGBi83FcycA5482WHflasdwLIUVENg==
 
+react-icalendar-link@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/react-icalendar-link/-/react-icalendar-link-3.0.1.tgz#85fc0bf6d4f89d892266bf47c0c79f34ed339543"
+  integrity sha512-t1/gBjzWDsehL+7wjQlC4iWGZeDOF9yqgmb8MhqWZ8VmL0vawqKY3s2Bf5+q6BXUpf0rzavwpMs3YW/F6TQyNg==
+
 react-infinite-scroller@^1.2.4:
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/react-infinite-scroller/-/react-infinite-scroller-1.2.4.tgz#f67eaec4940a4ce6417bebdd6e3433bfc38826e9"

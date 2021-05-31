@@ -1,64 +1,33 @@
 import styled from 'styled-components';
 import { BaseElement } from '@beans/foundation';
-// ts-ignore
 import { PromoCarousel } from '@beans/carousel';
 
+import { GREY_COLOR } from 'styles';
+
 const ControlsContainer = styled(BaseElement)`
-  --button-border-color: ${({ theme }) => theme.colors.tescoBlue};
-
-  margin-right: 35px;
-  z-index: 3;
-  height: 100%;
-  max-height: 724px;
+  background-color: ${GREY_COLOR};
+  height: 58px;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  width: 58px;
-  position: absolute;
-  top: 60px;
-  right: 0;
-
-  & > button:not(:last-child) {
-    margin-bottom: 8px;
-  }
-
-  svg {
-    width: 34px;
-    height: 34px;
-    margin-left: 15px;
-  }
+  justify-content: flex-end;
+  align-items: center;
 `;
 
 const Controls = styled(BaseElement)`
-  align-items: center;
   display: flex;
-  height: 170px;
-
-  flex-direction: column;
   justify-content: center;
+  align-items: center;
 
-  ul,
-  span,
+  .beans-carousel__forward-control,
+  .beans-carousel__backward-control,
   .beans-carousel__play-control {
-    display: none;
-  }
-
-  .beans-carousel__backward-control:not(:last-child) {
-    margin-bottom: 8px;
+    margin-left: 16px;
+    margin-right: 16px;
   }
 `;
 
 const Control = styled(PromoCarousel.Control)`
-  border: ${({ theme }) => `3px solid ${theme.colors.tescoBlue}`};
-  width: 81px;
-  height: 81px;
-
-  :focus,
-  :hover {
-    box-shadow: 0 0 0 4px rgb(255 255 255 / .6);
-  }
-}
-
+  width: 24px;
+  height: 24px;
 `;
 
 export { ControlsContainer, Controls, Control };
