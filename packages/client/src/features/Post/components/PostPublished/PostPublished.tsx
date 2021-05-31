@@ -50,7 +50,7 @@ const PostPublished: FC<PostPublishedProps> = ({ item }) => {
         <PostDescription>
           <RichTextRenderer source={content} />
         </PostDescription>
-        <CopyLink pathname={`/${Page.NETWORK_NEWS}/${id}`} />
+        <CopyLink id={id} />
         {/*<PostControls id={id} emotions={emotions} /> */}
       </PostContent>
     </PostPublishedWrapper>

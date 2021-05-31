@@ -30,6 +30,9 @@ const MarkdownContainer = styled(Box)`
   }
 `;
 
+const getLinkHref = (url: string) =>
+  url.indexOf('http') === -1 ? `https://${url}` : url;
+
 export const supportedSourceHTMLTags = new Set(['img', 'u']);
 
 export const RichTextRenderer = (props: RichTextComponentProps) => {
@@ -59,7 +62,9 @@ export const MarkdownRenderer = ({ source }: { source: string }) => (
       commonmark: true,
     }}
     renderers={{
-      link: (props) => <Link href={props.href}>{props.children}</Link>,
+      link: (props) => (
+        <Link href={getLinkHref(props.href)}>{props.children}</Link>
+      ),
       heading: (props) => (
         <Box color='tescoBlue' as={`h${props.level}` as ElementType}>
           {props.children}
