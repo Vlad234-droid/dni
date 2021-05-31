@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import Layout, { ExtraLayoutProps } from 'features/Layout';
 import { Header, HeaderMain, HeaderLink } from 'features/Header';
-import { Links, MenuMobile } from 'features/Menu';
+import { MenuMobile } from 'features/Menu';
 import { useMedia } from 'context/InterfaceContext';
 // import NetworkUpdates from 'features/NetworkUpdates';
 
@@ -26,9 +26,6 @@ const BasePage: FC<ExtraLayoutProps> = (props) => {
                 {/*<UpdatesWrapper>*/}
                 {/*  <NetworkUpdates />*/}
                 {/*</UpdatesWrapper>*/}
-                <LinksWrapper>
-                  <Links />
-                </LinksWrapper>
               </>
             ) : (
               <MenuMobile />
@@ -44,10 +41,6 @@ const BasePage: FC<ExtraLayoutProps> = (props) => {
 // const UpdatesWrapper = styled.div`
 //   margin-top: 32px;
 // `;
-
-const LinksWrapper = styled.div`
-  margin-top: 48px;
-`;
 
 export { TEST_ID };
 

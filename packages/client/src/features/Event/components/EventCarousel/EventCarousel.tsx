@@ -51,7 +51,7 @@ const EventCarousel: FC<Props> = ({
       return <Spinner height={CONTENT_HEIGHT} />;
 
     if (loading === Loading.SUCCEEDED && isEmpty(events))
-      return <EmptyContainer description='You have no events' />;
+      return <EmptyContainer description='Nothing to show' />;
 
     return (
       <Carousel itemWidth='278px' id='event-carousel'>

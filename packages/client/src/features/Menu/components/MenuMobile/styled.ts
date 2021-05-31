@@ -1,10 +1,7 @@
 import styled from 'styled-components';
+import Link from '@beans/link';
 
-export const Wrapper = styled.nav`
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-`;
+import { LinkStyles } from '../MenuItemMobile';
 
 export const ItemsList = styled.div<{ amount: number }>`
   height: 100%;
@@ -15,4 +12,8 @@ export const ItemsList = styled.div<{ amount: number }>`
   & > * {
     flex: 0 0 ${({ amount }) => 100 / amount}%;
   }
+`;
+
+export const HomeLink = styled(Link)`
+  ${LinkStyles};
 `;

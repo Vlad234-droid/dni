@@ -9,9 +9,9 @@ export const Container = styled.div`
   grid-template-rows: auto;
   grid-template-areas: 'left right';
 
-  ${Media.small_desktop`
-    grid-template-columns: calc(100% - 320px) 320px;
-  `}
+  // ${Media.small_desktop`
+  //   grid-template-columns: calc(100% - 200px) 200px;
+  // `}
 
   ${Media.desktop`
     grid-template-columns: calc(100% - 334px) 334px;
@@ -20,18 +20,23 @@ export const Container = styled.div`
 
 export const Left = styled.div`
   grid-area: left;
-  margin-bottom: 56px;
+  padding-bottom: 56px;
 
   ${Media.small_desktop`
-    margin-right: 16px;
+    padding-right: 16px;
   `}
 
   ${Media.desktop`
-    margin-right: 40px;
+    padding-right: 40px;
   `}
 `;
 
 export const Right = styled.aside`
-  position: relative;
   grid-area: right;
+  display: none;
+
+  ${Media.desktop`
+    display: block;
+    position: relative;
+  `}
 `;

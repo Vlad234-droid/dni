@@ -4,12 +4,11 @@ import Button from '@beans/button';
 import isEmpty from 'lodash.isempty';
 
 import { EmptyContainer, Spinner, Error } from 'features/Common';
-import { LargeTile, SmallTile , Type } from 'features/Tile';
+import { LargeTile, SmallTile, Type } from 'features/Tile';
 import Loading from 'types/loading';
 import { EntityListPayload } from 'types/payload';
 import { Page } from 'features/Page';
 import { DEFAULT_FILTERS } from 'config/constants';
-
 
 import { isActionDisabled, isEventOnAir, getPayloadWhere } from '../../utils';
 import Event from '../../config/types';
@@ -71,7 +70,7 @@ const EventSidebar: FC<Props> = ({
     if (isEmpty(events) && isLoading) return <Spinner height='500px' />;
 
     if (loading === Loading.SUCCEEDED && isEmpty(events))
-      return <EmptyContainer description='You have no events' />;
+      return <EmptyContainer description='Nothing to show' />;
 
     return (
       <>

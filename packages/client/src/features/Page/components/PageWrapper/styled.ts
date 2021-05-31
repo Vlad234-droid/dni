@@ -18,7 +18,7 @@ export const Title = styled.h3`
     color: ${({ theme }) => theme.colors.tescoRed};
   }
 
-  ${Media.small_desktop`
+  ${Media.tablet`
     margin-right: 32px;
     font-size: 50px;
     line-height: 71px;
@@ -28,7 +28,7 @@ export const Title = styled.h3`
 export const Wrapper = styled.div`
   padding: 24px 16px 0;
 
-  ${Media.small_desktop`
+  ${Media.tablet`
     padding: 24px 40px 0;
   `}
 `;

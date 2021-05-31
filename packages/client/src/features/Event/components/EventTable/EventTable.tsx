@@ -59,7 +59,7 @@ const EventTable: FC = () => {
     if (isEmpty(events) && isLoading) return <Spinner height='500px' />;
 
     if (loading === Loading.SUCCEEDED && isEmpty(events)) {
-      return <EmptyContainer description='You have no past events' />;
+      return <EmptyContainer description='Nothing to show' />;
     }
 
     return (

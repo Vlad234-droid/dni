@@ -6,7 +6,7 @@ const iconsSrc: Record<PageWithIcon, string> = {
   [Page.HOME]: 'home',
   [Page.NETWORK_NEWS]: 'feedback',
   [Page.EVENTS]: 'datePicker',
-  [Page.NETWORKS]: 'account',
+  [Page.NETWORKS]: 'people',
   [Page.ABOUT]: 'info',
 };
 
@@ -19,7 +19,6 @@ const menuItemsDesktop = {
 };
 
 const menuItemsMobile = {
-  [Page.HOME]: 'Home',
   [Page.NETWORK_NEWS]: 'News',
   [Page.EVENTS]: 'Events',
   [Page.NETWORKS]: 'Networks',

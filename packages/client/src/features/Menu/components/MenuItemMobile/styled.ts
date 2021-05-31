@@ -1,7 +1,7 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { NavLink } from 'react-router-dom';
 
-export const Link = styled(NavLink)`
+export const LinkStyles = css`
   text-decoration: none;
   color: ${({ theme }) => theme.colors.primary};
   background-color: ${({ theme }) => theme.colors.white};
@@ -14,6 +14,14 @@ export const Link = styled(NavLink)`
   &:hover {
     background-color: ${({ theme }) => theme.colors.background.dark};
   }
+
+  & svg {
+    stroke-width: 1.2;
+  }
+`;
+
+export const Link = styled(NavLink)`
+  ${LinkStyles};
 
   &.${(props) => props.activeClassName} {
     color: ${({ theme }) => theme.colors.white};

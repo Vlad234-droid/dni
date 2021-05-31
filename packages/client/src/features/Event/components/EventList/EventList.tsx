@@ -97,12 +97,7 @@ const EventList: FC<Props> = ({
     if (isEmpty(events) && isLoading) return <Spinner height='500px' />;
 
     if (loading === Loading.SUCCEEDED && isEmpty(events))
-      return (
-        <EmptyContainer
-          description='Unfortunately, we did not find any matches for your request'
-          explanation='Please change your filtering criteria to try again.'
-        />
-      );
+      return <EmptyContainer description='Nothing to show' />;
 
     return (
       <>

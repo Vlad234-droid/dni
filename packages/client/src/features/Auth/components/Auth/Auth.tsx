@@ -28,11 +28,11 @@ const Auth: FC = ({ children }) => {
   }, [fetchUserAction]);
 
   if (error) return <Error errorData={{ title: error }} />;
-  if (isLoading) return <Spinner height='1000px' />;
+  if (isLoading) return <Spinner height='100vh' />;
 
   // TODO: remove in future
   // to avoid requests when networks ids are not loaded and display content before role is reassigned
-  if (user.role === 'guest') return <Spinner height='1000px' />;
+  if (user.role === 'guest') return <Spinner height='100vh' />;
 
   return (
     <AuthProvider
