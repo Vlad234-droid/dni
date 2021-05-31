@@ -6,12 +6,12 @@ import { ToastSkin, toasterActions } from 'features/Toaster';
 import CopyLink from './CopyLink';
 
 type Props = {
-  pathname?: string;
+  id?: number;
 };
 
 const TOAST_ID = 'copy-link-toast';
 
-const CopyLinkContainer: FC<Props> = ({ pathname }) => {
+const CopyLinkContainer: FC<Props> = ({ id }) => {
   const dispatch = useDispatch();
 
   const showNotification = () =>
@@ -27,7 +27,7 @@ const CopyLinkContainer: FC<Props> = ({ pathname }) => {
 
   return (
     <CopyLink
-      pathname={pathname}
+      id={id}
       showNotification={showNotification}
       hideNotification={hideNotification}
     />
