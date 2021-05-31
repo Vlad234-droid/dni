@@ -45,8 +45,8 @@ const ToasterItem: FC<ToasterItemProps> = ({ id, skin, data }) => {
   const { variant, title, Content, timeout } = skins[skin];
   const [timeToDestruct, setTime] = useState(timeout || Infinity);
 
-  if (timeout) {
-    useEffect(() => {
+  useEffect(() => {
+    if (timeout) {
       let timer: ReturnType<typeof setTimeout>;
 
       if (timeToDestruct <= 0) {
@@ -58,8 +58,8 @@ const ToasterItem: FC<ToasterItemProps> = ({ id, skin, data }) => {
       }
 
       return () => clearTimeout(timer);
-    }, [timeToDestruct]);
-  }
+    }
+  }, [timeToDestruct, timeout]);
 
   return (
     <ToastWrapper data-testid={toasterItemTestId}>

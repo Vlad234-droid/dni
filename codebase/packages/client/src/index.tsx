@@ -12,6 +12,7 @@ import GlobalStyle from 'styles';
 import history from 'utils/history';
 import Auth from 'features/Auth';
 import Routes from 'features/Routes';
+import Toaster from 'features/Toaster';
 
 import reportWebVitals from './reportWebVitals';
 
@@ -29,6 +30,7 @@ ReactDOM.render(
               <React.StrictMode>
                 <GlobalStyle />
                 <Routes />
+                <Toaster />
               </React.StrictMode>
             </Router>
           </NotificationProvider>

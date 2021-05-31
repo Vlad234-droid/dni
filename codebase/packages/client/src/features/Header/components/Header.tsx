@@ -3,7 +3,6 @@ import Link from '@beans/link';
 import { TescoLogo } from '@beans/branding';
 
 import { Wrapper, Block } from './styled';
-import Toaster from 'features/Toaster';
 
 import { PUBLIC_URL as appRootUrl } from 'config/api';
 
@@ -28,7 +27,6 @@ const Header: React.FC = () => (
       {/*  variant='iconButton'*/}
       {/*/>*/}
     </Block>
-    <Toaster />
   </Wrapper>
 );
 
