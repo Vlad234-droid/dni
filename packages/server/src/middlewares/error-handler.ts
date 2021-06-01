@@ -1,10 +1,17 @@
-import { FetchError } from '@energon/fetch-client';
+import {
+  appErrorFromUnknown,
+  toResponseStatus,
+  toResponseMessage,
+  toHTMLResponse,
+} from '../utils/errors';
+import path from 'path';
 
-export const errorHandler: ErrorMiddleware = (err, _, res, next) => {
-  console.log(err);
-  if (FetchError.is(err)) {
-    res.status(err.status).send(err.details);
-    return next();
-  }
-  res.status(500).send('Something broke!');
+export const errorHandler: ErrorMiddleware = (err: unknown, req, res, _) => {
+  const error = appErrorFromUnknown(err);
+
+  res.status(toResponseStatus(error));
+
+  req.url.startsWith('/api/')
+    ? res.json(toResponseMessage(error))
+    : res.sendFile(path.resolve(path.join('public', toHTMLResponse(error))));
 };

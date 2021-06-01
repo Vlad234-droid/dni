@@ -9,6 +9,10 @@ const processEnv = envAccessor.getData();
 
 // prepare static artifact
 const clientDistFolder = getPackageDistFolder('@dni/client', ['src', 'build']);
+const serverPublicFolder = getPackageDistFolder('@dni/server', [
+  'src',
+  'public',
+]);
 const htmlFilePath = path.join(clientDistFolder, 'index.html');
 
 if (processEnv.NODE_ENV !== 'test' && !fs.existsSync(htmlFilePath)) {
@@ -16,7 +20,7 @@ if (processEnv.NODE_ENV !== 'test' && !fs.existsSync(htmlFilePath)) {
 }
 
 const clientStaticFolder = express.static(clientDistFolder, { index: false });
-const publicStaticFolder = express.static('public');
+const publicStaticFolder = express.static(serverPublicFolder);
 
 const clientStaticFile: Middleware = (_, res) => {
   res.sendFile(htmlFilePath);

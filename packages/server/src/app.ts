@@ -41,11 +41,12 @@ establishConnection(buildIO(server));
 const { openId, openIdCookieParser, clientScopedToken } = openIdConfig(config);
 const fakeLogin = fakeLoginConfig(context, config);
 
-openId
-  .then((openIdMiddleware) => {
+const startServer = async () => {
+  try {
     // middlewares
     app.use(cors());
     app.use('/', healthCheck);
+
     if (isDEV(config.environment) || !config.withOneLogin) {
       // fake login behavior
       app.use(cookieParser());
@@ -54,8 +55,9 @@ openId
     } else {
       app.use(openIdCookieParser);
       app.use(clientScopedToken());
-      app.use(openIdMiddleware);
+      app.use(await openId);
     }
+
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
     app.use('/api/upload', upload.any(), formData);
@@ -69,11 +71,13 @@ openId
     server.listen(PORT, () => {
       console.log(`⚡️[server]: Server is running at http://localhost:${PORT}`);
     });
-  })
-  .catch((error) => {
+  } catch (error) {
     console.log(error);
     process.exit(1);
-  });
+  }
+};
+
+startServer();
 
 export { app, express };
 export default server;
