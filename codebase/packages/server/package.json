@@ -34,7 +34,8 @@
     "pg-hstore": "^2.3.3",
     "puppeteer": "^9.1.0",
     "redux-first-router": "^2.1.5",
-    "socket.io": "^4.0.1"
+    "socket.io": "^4.0.1",
+    "unionize": "^3.1.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.10",
