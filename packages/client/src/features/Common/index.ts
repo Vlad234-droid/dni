@@ -19,5 +19,5 @@ export { default as Spinner } from './components/Spinner';
 export { default as CopyLink } from './components/CopyLink';
 export { default as RichTextRenderer } from './components/RichTextRenderer';
 export { default as Error } from './components/Error';
-export { default as TitleWithEllipsis } from './components/TitleWithEllipsis';
+export { default as TextWithEllipsis } from './components/TextWithEllipsis';
 export { FieldWrapper } from './styled';

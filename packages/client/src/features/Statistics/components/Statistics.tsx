@@ -2,7 +2,8 @@ import React, { ChangeEvent } from 'react';
 import styled from 'styled-components';
 import Checkbox from '@beans/checkbox';
 
-import { Decrease, Increase, TitleWithEllipsis } from 'features/Common';
+import { textSM } from 'styles';
+import { Decrease, Increase, TextWithEllipsis } from 'features/Common';
 
 type Props = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -30,7 +31,7 @@ const Statistics = ({ data, onChange }: Props) => {
                 id={item.id}
                 onChange={handleChangeItem}
               />
-              <TitleWithEllipsis>{item.name}</TitleWithEllipsis>
+              <TextWithEllipsis maxWidth='400px'>{item.name}</TextWithEllipsis>
             </Cell>
             <Cell>{item.members}</Cell>
             <Cell>
@@ -63,8 +64,6 @@ const Row = styled.tr`
 `;
 
 const Cell = styled.td`
-  vertical-align: middle;
-
   &:first-child {
     display: flex;
     align-items: center;
@@ -75,11 +74,9 @@ const Cell = styled.td`
   }
 
   h5 {
-    color: ${({ color }) => color};
     margin-left: 16px;
-    margin-right: 0;
-    font-weight: normal;
-    max-width: 400px;
+    color: ${({ theme }) => theme.colors.tescoBlue};
+    ${textSM}
   }
 `;
 

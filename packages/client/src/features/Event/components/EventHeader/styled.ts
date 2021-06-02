@@ -79,11 +79,10 @@ export const TitleWrapper = styled.div`
   align-items: center;
 
   h5 {
-    font-weight: bold;
     font-size: 32px;
     line-height: 45px;
-    margin-right: 0;
     padding: 22px 0;
+    color: ${({ theme }) => theme.colors.tescoBlue};
 
     ${Media.tablet`
       padding: 0;

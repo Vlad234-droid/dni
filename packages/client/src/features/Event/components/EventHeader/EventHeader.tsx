@@ -2,7 +2,7 @@ import React, { FC, useMemo } from 'react';
 import Icon from '@beans/icon';
 import ICalendarLink from 'react-icalendar-link';
 
-import { OnAir, CopyLink, TitleWithEllipsis } from 'features/Common';
+import { OnAir, CopyLink, TextWithEllipsis } from 'features/Common';
 import { useMedia } from 'context/InterfaceContext';
 
 import EventAction from '../EventAction';
@@ -39,7 +39,7 @@ const EventHeader: FC<Props> = ({ event, participants }) => {
     <Wrapper>
       <Inner>
         <TitleWrapper>
-          <TitleWithEllipsis>{title}</TitleWithEllipsis>
+          <TextWithEllipsis>{title}</TextWithEllipsis>
           {isOnAir && (
             <StatusWrapper>
               <OnAir />

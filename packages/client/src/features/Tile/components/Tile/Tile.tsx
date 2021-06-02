@@ -6,7 +6,7 @@ import ResponsiveImage from '@beans/responsive-image';
 import { HORIZONTAL, VERTICAL } from '@beans/constants';
 import BaseTile from '@beans/base-tile';
 
-import { TitleWithEllipsis } from 'features/Common';
+import { TextWithEllipsis } from 'features/Common';
 
 import { Type } from '../../config/types';
 import Description from '../Description';
@@ -70,14 +70,12 @@ const Tile: FC<Props> = ({
           />
         }
         title={
-          <TitleWithEllipsis
-            titleHeight={
-              hideParticipants && type == Type.NARROW ? 'auto' : '30px'
-            }
+          <TextWithEllipsis
+            height={hideParticipants && type == Type.NARROW ? 'auto' : '30px'}
             href={`${link}/${id}`}
           >
             {title}
-          </TitleWithEllipsis>
+          </TextWithEllipsis>
         }
       >
         {description && (
