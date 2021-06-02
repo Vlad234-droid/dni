@@ -1,5 +1,4 @@
 export { default as Heading } from './components/Heading';
-export { default as LargeHeading } from './components/LargeHeading';
 export { default as TextInput } from './components/TextInput';
 export { default as TextArea } from './components/TextArea';
 export { default as FileInput } from './components/FileInput';
@@ -10,7 +9,7 @@ export { default as DateTimePicker } from './components/DateTimePicker';
 export { default as Multiselect } from './components/Multiselect';
 export { default as BackLink } from './components/BackLink';
 export { default as ButtonGroup } from './components/ButtonGroup';
-export { default as StatusLabel, StatusType } from './components/StatusLabel';
+export { default as OnAir } from './components/OnAir';
 export { default as IconWrapper } from './components/IconWrapper';
 export { default as Checkbox } from './components/Checkbox';
 export { default as Decrease } from './components/Decrease';

@@ -2,7 +2,7 @@ import React, { ChangeEvent } from 'react';
 import styled from 'styled-components';
 import Checkbox from '@beans/checkbox';
 
-import { Decrease, Increase } from 'features/Common';
+import { Decrease, Increase, TitleWithEllipsis } from 'features/Common';
 
 type Props = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -12,9 +12,16 @@ type Props = {
 const Statistics = ({ data, onChange }: Props) => {
   const handleChangeItem = (e: ChangeEvent<HTMLInputElement>) =>
     onChange(e.target.id, e.target.checked);
+
   return (
     <Table>
       <tbody>
+        <Row>
+          <Cell>Networks</Cell>
+          <Cell>Members</Cell>
+          <Cell>Subscribe</Cell>
+          <Cell>Leave</Cell>
+        </Row>
         {data.map((item) => (
           <Row key={item.id}>
             <Cell>
@@ -23,9 +30,7 @@ const Statistics = ({ data, onChange }: Props) => {
                 id={item.id}
                 onChange={handleChangeItem}
               />
-            </Cell>
-            <Cell>
-              <Name color={item.color}>{item.name}</Name>
+              <TitleWithEllipsis>{item.name}</TitleWithEllipsis>
             </Cell>
             <Cell>{item.members}</Cell>
             <Cell>
@@ -44,19 +49,38 @@ const Statistics = ({ data, onChange }: Props) => {
 };
 
 const Table = styled.table`
+  margin-top: 30px;
   border-spacing: 16px;
   border-collapse: separate;
 `;
+
 const Row = styled.tr`
   vertical-align: middle;
+
+  &:first-child {
+    color: ${({ theme }) => theme.colors.grayscale};
+  }
 `;
 
 const Cell = styled.td`
   vertical-align: middle;
-`;
 
-const Name = styled.div<{ color: string }>`
-  color: ${({ color }) => color};
+  &:first-child {
+    display: flex;
+    align-items: center;
+  }
+
+  &:not(:first-child) {
+    text-align: right;
+  }
+
+  h5 {
+    color: ${({ color }) => color};
+    margin-left: 16px;
+    margin-right: 0;
+    font-weight: normal;
+    max-width: 400px;
+  }
 `;
 
 export default Statistics;

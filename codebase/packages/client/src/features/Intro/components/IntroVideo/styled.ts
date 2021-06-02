@@ -25,7 +25,6 @@ const Wrapper = styled.div`
     max-width: 288px;
     max-height: 165px;
     border-radius: 10px;
-    box-shadow: 0 4px 114px rgba(59, 129, 196, 0.3);
 
     ${Media.large_phone`
       max-width: 350px;

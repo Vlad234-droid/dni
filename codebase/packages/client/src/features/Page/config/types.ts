@@ -1,6 +1,7 @@
 import { ComponentType, LazyExoticComponent, FC } from 'react';
 
 enum Page {
+  HOME = 'home',
   ABOUT = '',
   EVENTS = 'events',
   EVENT = 'events/:id',

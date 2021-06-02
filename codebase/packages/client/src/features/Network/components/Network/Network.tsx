@@ -18,14 +18,14 @@ import { Wrapper, Content, LeftContent, RightContent } from './styled';
 
 const TEST_ID = 'network';
 const ERROR_TITLE = 'Request ID not found';
-const ERROR_MESSAGE =
-  'We can not find the network ID you are looking for, please try again.';
+const ERROR_MESSAGE = 'We can not find the network ID you are looking for, please try again.';
 
 type Props = {
   id: number;
+  renderBreadcrumb: (networkTitle: string) => void;
 };
 
-const Network: FC<Props> = ({ id }) => {
+const Network: FC<Props> = ({ id, renderBreadcrumb }) => {
   const dispatch = useDispatch();
   const network = useSelector(byIdSelector(id));
   const { partners, description, title, image, contact } = network || {};
@@ -35,10 +35,7 @@ const Network: FC<Props> = ({ id }) => {
   const [infoPanelType, setInfoPanelType] = useState(InfoPanelType.INFO);
   const { loading, error } = useStore((state) => state.networks);
   const imageWrapperEl = useImageWrapper();
-  const isLoading = useMemo(
-    () => loading !== Loading.SUCCEEDED && loading !== Loading.FAILED,
-    [loading],
-  );
+  const isLoading = useMemo(() => loading !== Loading.SUCCEEDED && loading !== Loading.FAILED, [loading]);
 
   useEffect(() => {
     if (network) return;
@@ -62,10 +59,7 @@ const Network: FC<Props> = ({ id }) => {
   }, [showInfoPanel]);
 
   const memoizedContent = useMemo(() => {
-    if (error)
-      return (
-        <Error errorData={{ title: ERROR_TITLE, message: ERROR_MESSAGE }} />
-      );
+    if (error) return <Error errorData={{ title: ERROR_TITLE, message: ERROR_MESSAGE }} />;
 
     if (!network && isLoading) return <Spinner height='500px' />;
 
@@ -81,13 +75,16 @@ const Network: FC<Props> = ({ id }) => {
       <>
         {imageWrapperEl &&
           createPortal(
-            <ResponsiveImage
-              key={id}
-              alt={image?.alternativeText}
-              src={image?.url}
-              fallbackSizeRatio='57%'
-              objectFit='cover'
-            />,
+            <>
+              {renderBreadcrumb(network!.title)}
+              <ResponsiveImage
+                key={id}
+                alt={image?.alternativeText}
+                src={image?.url}
+                fallbackSizeRatio='57%'
+                objectFit='cover'
+              />
+            </>,
             imageWrapperEl,
           )}
         <NetworkHeader

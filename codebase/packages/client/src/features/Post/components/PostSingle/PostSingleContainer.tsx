@@ -1,4 +1,4 @@
-import React, { FC, useMemo } from 'react';
+import React, { FC } from 'react';
 import { useSelector } from 'react-redux';
 
 import useDispatch from 'hooks/useDispatch';
@@ -18,15 +18,7 @@ const PostSingleContainer: FC<Props> = ({ postId }) => {
 
   const loadPost = (id: number) => dispatch(getOne({ id }));
 
-  return (
-    <PostSingle
-      loading={loading}
-      loadPost={loadPost}
-      post={post}
-      postId={postId}
-      error={error}
-    />
-  );
+  return <PostSingle loading={loading} loadPost={loadPost} post={post} postId={postId} error={error} />;
 };
 
 export default PostSingleContainer;

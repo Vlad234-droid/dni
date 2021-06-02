@@ -23,17 +23,8 @@ type Props = {
   isSmall?: boolean;
 };
 
-const InfoPanel: FC<Props> = ({
-  type,
-  title,
-  content,
-  footnote,
-  infoLink,
-  customIcon,
-  onClose,
-  isSmall = false,
-}) => (
-  <Wrapper type={type} isSmall={isSmall}>
+const InfoPanel: FC<Props> = ({ type, title, content, footnote, infoLink, customIcon, onClose, isSmall = false }) => (
+  <Wrapper type={type} isSmall={isSmall} canClose={!!onClose}>
     {onClose && (
       <CloseIcon isSmall={isSmall}>
         <Icon graphic='close' onClick={onClose} />
@@ -45,11 +36,7 @@ const InfoPanel: FC<Props> = ({
       <InfoPanelContent content={content} isSmall={isSmall} />
       {footnote && <InfoPanelFootnote footnote={footnote} />}
       {!(type === Type.INFO) && (
-        <Link
-          href={infoLink}
-          icon={{ graphic: 'externalLink', position: { global: 'right' } }}
-          variant='textButton'
-        >
+        <Link href={infoLink} icon={{ graphic: 'externalLink', position: { global: 'right' } }} variant='textButton'>
           Fill the survey
         </Link>
       )}

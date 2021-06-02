@@ -1,8 +1,4 @@
-import {
-  createAsyncThunk,
-  createEntityAdapter,
-  createSlice,
-} from '@reduxjs/toolkit';
+import { createAsyncThunk, createEntityAdapter, createSlice } from '@reduxjs/toolkit';
 
 import API from 'utils/api';
 import { FilterPayload, PaginationPayload } from 'types/payload';
@@ -22,13 +18,9 @@ const initialState: T.State = eventsAdapter.getInitialState({
   participants: DEFAULT_PARTICIPANTS,
 });
 
-const getList = createAsyncThunk<
-  T.ListResponse,
-  FilterPayload & PaginationPayload
->(
+const getList = createAsyncThunk<T.ListResponse, FilterPayload & PaginationPayload>(
   A.GET_LIST_ACTION,
-  async (filters: FilterPayload & PaginationPayload) =>
-    await API.events.fetchAll<T.ListResponse>(filters),
+  async (filters: FilterPayload & PaginationPayload) => await API.events.fetchAll<T.ListResponse>(filters),
 );
 
 const getOne = createAsyncThunk<T.OneResponse, T.OnePayload>(
@@ -41,36 +33,31 @@ const createOne = createAsyncThunk<T.OneResponse, T.SetOnePayload>(
   async (data) => await API.events.create<T.OneResponse>(data),
 );
 
-const uploadImage = createAsyncThunk<
-  Pick<T.OneResponse, 'id' | 'image'>,
-  T.UploadImgPayload
->(A.UPLOAD_IMG_ACTION, async ({ id, image }) => {
-  const data = new FormData();
-  data.append('refId', String(id));
-  data.append('ref', 'Event');
-  data.append('field', 'image');
-  data.append('files', image);
+const uploadImage = createAsyncThunk<Pick<T.OneResponse, 'id' | 'image'>, T.UploadImgPayload>(
+  A.UPLOAD_IMG_ACTION,
+  async ({ id, image }) => {
+    const data = new FormData();
+    data.append('refId', String(id));
+    data.append('ref', 'Event');
+    data.append('field', 'image');
+    data.append('files', image);
 
-  const uploadedImage = await API.common.upload<T.OneImageResponse>(data);
+    const uploadedImage = await API.common.upload<T.OneImageResponse>(data);
 
-  return {
-    id,
-    image: uploadedImage,
-  };
-});
-
-const getCount = createAsyncThunk<number, FilterPayload>(
-  A.GET_COUNT_ACTION,
-  (data) => API.events.count<number>(data),
+    return {
+      id,
+      image: uploadedImage,
+    };
+  },
 );
 
-const getParticipants = createAsyncThunk<Record<number, number>>(
-  A.GET_PARTICIPANTS_ACTION,
-  async () =>
-    (await API.events.participants<T.ParticipantsResponse>()).reduce(
-      (acc, p) => ({ ...acc, [p.id]: +p.participants }),
-      {},
-    ),
+const getCount = createAsyncThunk<number, FilterPayload>(A.GET_COUNT_ACTION, (data) => API.events.count<number>(data));
+
+const getParticipants = createAsyncThunk<Record<number, number>>(A.GET_PARTICIPANTS_ACTION, async () =>
+  (await API.events.participants<T.ParticipantsResponse>()).reduce(
+    (acc, p) => ({ ...acc, [p.id]: +p.participants }),
+    {},
+  ),
 );
 
 const slice = createSlice({
@@ -112,6 +99,7 @@ const slice = createSlice({
       state.loading = Loading.SUCCEEDED;
     };
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const setFailed = (state: T.State, payload: any) => {
       state.loading = Loading.FAILED;
       state.error = payload.error.message;

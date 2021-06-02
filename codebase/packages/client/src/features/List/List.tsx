@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 
-import { SmallTile, LargeTile } from 'features/Tile';
+import { SmallTile, LargeTile, Type } from 'features/Tile';
 import Event from 'features/Event';
 import Network from 'features/Network';
 import { Page } from 'features/Page';
@@ -12,20 +12,16 @@ import { Wrapper } from './styled';
 type Entity = Event | Network;
 
 type Props = {
+  type?: Type;
   items: Entity[];
   link: string;
+  hideParticipants?: boolean;
   hideMaxParticipants?: boolean;
   participants?: Record<number, number>;
   renderAction: (id: number, disabled: boolean) => JSX.Element;
 };
 
-const List: FC<Props> = ({
-  link,
-  items,
-  renderAction,
-  hideMaxParticipants,
-  participants,
-}) => {
+const List: FC<Props> = ({ link, items, renderAction, hideParticipants, hideMaxParticipants, participants, type }) => {
   const { isMobile } = useMedia();
   const propertiesExtractor = ({
     id,
@@ -43,10 +39,10 @@ const List: FC<Props> = ({
     renderAction: () =>
       renderAction(
         id,
-        Boolean(maxParticipants) && participants![id] >= maxParticipants,
+        hideParticipants || (Boolean(maxParticipants) && Boolean(participants) && participants![id] >= maxParticipants),
       ),
     meta: link === Page.NETWORKS ? undefined : startDate,
-    participants: participants![id] || 0,
+    participants: !hideParticipants && (participants![id] || 0),
     maxParticipants: maxParticipants,
     hideMaxParticipants: hideMaxParticipants,
     isOnAir: link === Page.EVENTS && isEventOnAir(startDate, endDate),
@@ -61,7 +57,7 @@ const List: FC<Props> = ({
           <SmallTile {...propertiesExtractor(entity)} />
         ) : (
           //@ts-ignore
-          <LargeTile {...propertiesExtractor(entity)} />
+          <LargeTile hideParticipants={hideParticipants} type={type} {...propertiesExtractor(entity)} />
         ),
       )}
     </Wrapper>

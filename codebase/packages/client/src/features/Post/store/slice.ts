@@ -13,10 +13,7 @@ const initialState: T.State = T.EntityAdapter.getInitialState({
   meta: DEFAULT_META,
 });
 
-const getList = createAsyncThunk<
-  T.ListResponse,
-  FilterPayload & PaginationPayload
->(
+const getList = createAsyncThunk<T.ListResponse, FilterPayload & PaginationPayload>(
   T.LIST_ACTION,
   async (filters) => await API.posts.fetchAll<T.ListResponse>(filters),
 );
@@ -31,10 +28,7 @@ const createOne = createAsyncThunk<T.OneResponse, T.SetOnePayload>(
   async (data) => await API.posts.create<T.OneResponse>(data),
 );
 
-const getCount = createAsyncThunk<number, FilterPayload>(
-  T.COUNT_ACTION,
-  (data) => API.posts.count<number>(data),
-);
+const getCount = createAsyncThunk<number, FilterPayload>(T.COUNT_ACTION, (data) => API.posts.count<number>(data));
 
 const slice = createSlice({
   name: T.ROOT,
@@ -55,6 +49,7 @@ const slice = createSlice({
       state.loading = Loading.SUCCEEDED;
     };
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const setFailed = (state: T.State, payload: any) => {
       state.loading = Loading.FAILED;
       state.error = payload.error.message;

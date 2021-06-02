@@ -12,7 +12,7 @@ import {
   getParticipants,
   Filter,
 } from '../../store';
-import { ALL } from '../../config/contstants';
+import { ALL } from '../../config/filters';
 import EventList from './EventList';
 
 const EventSidebarContainer: FC = () => {
@@ -27,13 +27,13 @@ const EventSidebarContainer: FC = () => {
   const { networks } = useStore((state) => state.auth.user);
   const [page, setPage] = useState<number>(0);
   const [filter, setFilter] = useState<Filter>(ALL);
-  const errorMessage = useMemo(
-    () => listError || countError || participants.error,
-    [participants, listError, countError],
-  );
+  const errorMessage = useMemo(() => listError || countError || participants.error, [
+    participants,
+    listError,
+    countError,
+  ]);
 
-  const loadEvents = (filters: EntityListPayload) =>
-    dispatch(getEvents(filters));
+  const loadEvents = (filters: EntityListPayload) => dispatch(getEvents(filters));
   const loadCount = (filters: EntityListPayload) => dispatch(getCount(filters));
   const handleClear = () => dispatch(clear());
   const loadParticipants = () => dispatch(getParticipants());
@@ -44,7 +44,7 @@ const EventSidebarContainer: FC = () => {
   return (
     <EventList
       events={events}
-      participants={participants}
+      participants={participants!.data}
       loading={loading}
       total={total}
       networks={networks}

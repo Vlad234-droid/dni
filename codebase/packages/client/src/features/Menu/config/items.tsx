@@ -1,45 +1,79 @@
-import pick from 'lodash.pick';
-import omit from 'lodash.omit';
-
 import { Page } from 'features/Page';
 
-import { IconSrc, PageWithIcon } from './types';
-import iconEvents from '../assets/icon-events.svg';
-import iconEventsInv from '../assets/icon-events-inv.svg';
-import iconNetworks from '../assets/icon-networks.svg';
-import iconNetworksInv from '../assets/icon-networks-inv.svg';
-import iconNetworkNews from '../assets/icon-network-news.svg';
-import iconNetworkNewsInv from '../assets/icon-network-news-inv.svg';
+import { PageWithIcon } from './types';
 
-const iconsSrc: Record<PageWithIcon, IconSrc> = {
-  [Page.EVENTS]: {
-    default: iconEvents,
-    active: iconEventsInv,
-  },
-  [Page.NETWORKS]: {
-    default: iconNetworks,
-    active: iconNetworksInv,
-  },
-  [Page.NETWORK_NEWS]: {
-    default: iconNetworkNews,
-    active: iconNetworkNewsInv,
-  },
+const iconsSrc: Record<PageWithIcon, string> = {
+  [Page.HOME]: 'home',
+  [Page.NETWORK_NEWS]: 'feedback',
+  [Page.EVENTS]: 'datePicker',
+  [Page.NETWORKS]: 'people',
+  [Page.ABOUT]: 'info',
 };
 
-const menuItems = {
+const menuItemsDesktop = {
   [Page.NETWORK_NEWS]: 'Network News',
   [Page.EVENTS]: 'Events',
-  [Page.NETWORKS]: 'Networks',
   [Page.REPORTS]: 'Reports',
+  [Page.NETWORKS]: 'Networks',
   [Page.ABOUT]: 'About',
 };
 
-const itemsVisible = [Page.NETWORK_NEWS, Page.EVENTS, Page.NETWORKS];
-
-const menuItemsDesktop = menuItems;
 const menuItemsMobile = {
-  visible: pick(menuItems, itemsVisible),
-  hidden: omit(menuItems, itemsVisible),
+  [Page.NETWORK_NEWS]: 'News',
+  [Page.EVENTS]: 'Events',
+  [Page.NETWORKS]: 'Networks',
+  [Page.ABOUT]: 'About',
 };
 
-export { menuItemsDesktop, menuItemsMobile, iconsSrc, itemsVisible };
+export const mainMenuItems = [
+  {
+    href: 'https://www.ourtesco.com/colleague',
+    id: 'home',
+    text: 'Home',
+  },
+  {
+    href: 'https://www.ourtesco.com/colleague/news',
+    id: 'news-and-views',
+    text: 'News & Views',
+  },
+  {
+    href: '#',
+    id: 'reward-and-benefits',
+    text: 'Reward & Benefits',
+  },
+  {
+    href: 'https://www.ourtesco.com/colleague/working-at-tesco',
+    id: 'working-at-tesco',
+    text: 'Working at Tesco',
+  },
+  {
+    href: 'https://www.ourtesco.com/colleague/our-community',
+    id: 'our-community',
+    text: 'Our Community',
+  },
+  {
+    href: 'https://www.ourtesco.com/colleague/health-and-wellbeing',
+    id: 'health-and-wellbeing',
+    text: 'Health and Wellbeing',
+  },
+  {
+    href: '/',
+    id: 'diversity-and-inclusion',
+    text: 'Diversity and Inclusion',
+    active: true,
+  },
+];
+
+// is not actually used but is required for @beans/primary-navigation
+export const mainMoreMenuItems = {
+  href: '#',
+  text: 'More',
+};
+
+// is not actually used but is required for @beans/primary-navigation
+export const mainMenuItemMobile = {
+  href: '#',
+  text: 'Menu',
+};
+
+export { menuItemsDesktop, menuItemsMobile, iconsSrc };

@@ -21,11 +21,11 @@ type Props = {
   event?: Event;
   participants: number;
   error?: string;
+  renderBreadcrumb: (eventTitle: string) => void;
 };
 
 const ERROR_TITLE = 'Request ID not found';
-const ERROR_MESSAGE =
-  'We can not find the event ID you are looking for, please try again.';
+const ERROR_MESSAGE = 'We can not find the event ID you are looking for, please try again.';
 
 const EventComponent: FC<Props> = ({
   id,
@@ -35,12 +35,10 @@ const EventComponent: FC<Props> = ({
   loading,
   participants,
   error,
+  renderBreadcrumb,
 }) => {
   const imageWrapperEl = useImageWrapper();
-  const isLoading = useMemo(
-    () => loading !== Loading.SUCCEEDED && loading !== Loading.FAILED,
-    [loading],
-  );
+  const isLoading = useMemo(() => loading !== Loading.SUCCEEDED && loading !== Loading.FAILED, [loading]);
 
   useEffect(() => {
     if (event) return;
@@ -55,10 +53,7 @@ const EventComponent: FC<Props> = ({
   }, []);
 
   const memoizedContent = useMemo(() => {
-    if (error)
-      return (
-        <Error errorData={{ title: ERROR_TITLE, message: ERROR_MESSAGE }} />
-      );
+    if (error) return <Error errorData={{ title: ERROR_TITLE, message: ERROR_MESSAGE }} />;
 
     if (!event && isLoading) return <Spinner height='500px' />;
 
@@ -69,13 +64,16 @@ const EventComponent: FC<Props> = ({
       <>
         {imageWrapperEl &&
           createPortal(
-            <ResponsiveImage
-              key={event!.id}
-              alt={event!.image?.alternativeText}
-              src={event!.image?.url}
-              fallbackSizeRatio='57%'
-              objectFit='cover'
-            />,
+            <>
+              {renderBreadcrumb(event!.title)}
+              <ResponsiveImage
+                key={event!.id}
+                alt={event!.image?.alternativeText}
+                src={event!.image?.url}
+                fallbackSizeRatio='57%'
+                objectFit='cover'
+              />
+            </>,
             imageWrapperEl,
           )}
         <EventHeader event={event!} participants={participants} />

@@ -33,6 +33,10 @@ export default createGlobalStyle<{
     font-family: ${({ theme }) => theme.fontFamily.heading};
     font-weight: ${({ theme }) => theme.fontWeight.heading};
   }
+  
+  p {
+    margin: 0;
+  }
 
   a {
     text-decoration: none;

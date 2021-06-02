@@ -8,7 +8,7 @@ import { Page } from 'features/Page';
 import Loading from 'types/loading';
 
 import { isEventOnAir, isActionDisabled } from '../../utils';
-import Event, { Participants } from '../../config/types';
+import Event from '../../config/types';
 import EventAction from '../EventAction';
 import { Wrapper, ErrorWrapper } from './styled';
 
@@ -18,22 +18,13 @@ const TEST_ID = 'events-carousel';
 type Props = {
   events: Event[];
   loading: Loading;
-  participants?: Participants;
+  participants?: Record<number, number>;
   error?: string;
   loadParticipants: () => void;
 };
 
-const EventCarousel: FC<Props> = ({
-  events,
-  loading,
-  participants,
-  error,
-  loadParticipants,
-}) => {
-  const isLoading = useMemo(
-    () => loading !== Loading.SUCCEEDED && loading !== Loading.FAILED,
-    [loading],
-  );
+const EventCarousel: FC<Props> = ({ events, loading, participants, error, loadParticipants }) => {
+  const isLoading = useMemo(() => loading !== Loading.SUCCEEDED && loading !== Loading.FAILED, [loading]);
 
   useEffect(() => {
     loadParticipants();
@@ -47,39 +38,27 @@ const EventCarousel: FC<Props> = ({
         </ErrorWrapper>
       );
 
-    if (isLoading && isEmpty(events))
-      return <Spinner height={CONTENT_HEIGHT} />;
+    if (isLoading && isEmpty(events)) return <Spinner height={CONTENT_HEIGHT} />;
 
-    if (loading === Loading.SUCCEEDED && isEmpty(events))
-      return <EmptyContainer description='You have no events' />;
+    if (loading === Loading.SUCCEEDED && isEmpty(events)) return <EmptyContainer description='Nothing to show' />;
 
     return (
       <Carousel itemWidth='278px' id='event-carousel'>
-        {events.map(
-          ({ id, title, maxParticipants, image, startDate, endDate }) => (
-            <LargeTile
-              key={id}
-              id={id}
-              title={title}
-              participants={participants!.data[id] || 0}
-              maxParticipants={maxParticipants}
-              link={Page.EVENTS}
-              meta={startDate}
-              isOnAir={isEventOnAir(startDate, endDate)}
-              wrapperHeight={CONTENT_HEIGHT}
-              renderAction={() => (
-                <EventAction
-                  id={id}
-                  disabled={isActionDisabled(
-                    participants!.data[id],
-                    maxParticipants,
-                  )}
-                />
-              )}
-              image={image}
-            />
-          ),
-        )}
+        {events.map(({ id, title, maxParticipants, image, startDate, endDate }) => (
+          <LargeTile
+            key={id}
+            id={id}
+            title={title}
+            participants={participants![id] || 0}
+            maxParticipants={maxParticipants}
+            link={Page.EVENTS}
+            meta={startDate}
+            isOnAir={isEventOnAir(startDate, endDate)}
+            wrapperHeight={CONTENT_HEIGHT}
+            renderAction={() => <EventAction id={id} disabled={isActionDisabled(participants![id], maxParticipants)} />}
+            image={image}
+          />
+        ))}
       </Carousel>
     );
   }, [error, loading, events, participants]);

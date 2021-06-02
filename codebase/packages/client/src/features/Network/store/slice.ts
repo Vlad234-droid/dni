@@ -1,8 +1,4 @@
-import {
-  createSlice,
-  createAsyncThunk,
-  createEntityAdapter,
-} from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, createEntityAdapter } from '@reduxjs/toolkit';
 
 import API from 'utils/api';
 import { FilterPayload, PaginationPayload } from 'types/payload';
@@ -21,18 +17,14 @@ const initialState: T.State = networksAdapter.getInitialState({
   participants: DEFAULT_PARTICIPANTS,
 });
 
-const getList = createAsyncThunk<
-  T.ListResponse,
-  FilterPayload & PaginationPayload
->(
+const getList = createAsyncThunk<T.ListResponse, FilterPayload & PaginationPayload>(
   A.GET_LIST_ACTION,
   async (filters) => await API.networks.fetchAll<T.ListResponse>(filters),
 );
 
 const getOne = createAsyncThunk<T.OneResponse, T.OnePayload>(
   A.GET_ONE_ACTION,
-  async ({ id }: T.OnePayload) =>
-    await API.networks.fetchOne<T.OneResponse>(id),
+  async ({ id }: T.OnePayload) => await API.networks.fetchOne<T.OneResponse>(id),
 );
 
 const createOne = createAsyncThunk<T.OneResponse, T.SetOnePayload>(
@@ -40,18 +32,15 @@ const createOne = createAsyncThunk<T.OneResponse, T.SetOnePayload>(
   async (data) => await API.networks.create<T.OneResponse>(data),
 );
 
-const getCount = createAsyncThunk<number, FilterPayload>(
-  A.GET_COUNT_ACTION,
-  (data) => API.networks.count<number>(data),
+const getCount = createAsyncThunk<number, FilterPayload>(A.GET_COUNT_ACTION, (data) =>
+  API.networks.count<number>(data),
 );
 
-const getParticipants = createAsyncThunk<Record<number, number>>(
-  A.GET_PARTICIPANTS_ACTION,
-  async () =>
-    (await API.networks.participants<T.ParticipantsResponse>()).reduce(
-      (acc, p) => ({ ...acc, [p.id]: +p.participants }),
-      {},
-    ),
+const getParticipants = createAsyncThunk<Record<number, number>>(A.GET_PARTICIPANTS_ACTION, async () =>
+  (await API.networks.participants<T.ParticipantsResponse>()).reduce(
+    (acc, p) => ({ ...acc, [p.id]: +p.participants }),
+    {},
+  ),
 );
 
 const slice = createSlice({
@@ -93,6 +82,7 @@ const slice = createSlice({
       state.loading = Loading.SUCCEEDED;
     };
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const setFailed = (state: T.State, payload: any) => {
       state.loading = Loading.FAILED;
       state.error = payload.error.message;

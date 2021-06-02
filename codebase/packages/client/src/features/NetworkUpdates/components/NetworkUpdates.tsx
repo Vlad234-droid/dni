@@ -3,31 +3,28 @@ import { Link } from 'react-router-dom';
 import Icon from '@beans/icon';
 import Button from '@beans/button';
 
-import { MenuItem } from 'features/Menu';
 import { Page } from 'features/Page';
 
 import { items } from '../config/items';
-import { Wrapper, Title, List, Item, Image, Name, Count } from './styled';
+import { Wrapper, Title, List, Image, Name, Count, Item } from './styled';
 
 const NetworkUpdates: FC = () => (
   <Wrapper>
     <Title>Updates in my Networks</Title>
     <List>
       {items.map(({ name, page, count = 0, imageSrc }) => (
-        <MenuItem key={name} name={name} page={page}>
-          <Item>
-            <Image>
-              <img src={imageSrc} alt='alt' />
-            </Image>
-            <Name>{name}</Name>
-            {Boolean(count) && (
-              <>
-                <Count>{count}</Count>
-                <Icon graphic={'indicator'} size={'xs'} />
-              </>
-            )}
-          </Item>
-        </MenuItem>
+        <Item key={name} title={name} to={`/${page}`} activeClassName='active-link'>
+          <Image>
+            <img src={imageSrc} alt='alt' />
+          </Image>
+          <Name>{name}</Name>
+          {Boolean(count) && (
+            <>
+              <Count>{count}</Count>
+              <Icon graphic={'indicator'} size={'xs'} />
+            </>
+          )}
+        </Item>
       ))}
     </List>
     <Link to={Page.NETWORKS}>

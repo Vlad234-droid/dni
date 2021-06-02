@@ -3,21 +3,15 @@ import { DateTime } from 'luxon';
 import { firstDayOf, lastDayOf, FULL_FORMAT } from 'utils/date';
 
 import { Filter } from '../config/types';
-import { ALL, THIS_MONTH, THIS_WEEK } from '../config/contstants';
+import { ALL, THIS_MONTH, THIS_WEEK } from '../config/filters';
 
 export const isEventOnAir = (startDate: string, endDate: string) => {
   const now = DateTime.now();
 
-  return (
-    DateTime.fromFormat(startDate, FULL_FORMAT) < now &&
-    DateTime.fromFormat(endDate, FULL_FORMAT) > now
-  );
+  return DateTime.fromFormat(startDate, FULL_FORMAT) < now && DateTime.fromFormat(endDate, FULL_FORMAT) > now;
 };
 
-export const isActionDisabled = (
-  participants?: number,
-  maxParticipants?: number,
-) => {
+export const isActionDisabled = (participants?: number, maxParticipants?: number) => {
   if (!maxParticipants) return false;
 
   return (participants || 0) >= maxParticipants;

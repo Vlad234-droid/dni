@@ -6,8 +6,12 @@ import { textXS } from 'styles';
 export const Wrapper = styled.div`
   position: relative;
 
+  h5 {
+    margin: 0 0 8px;
+  }
+
   & .beans-base-tile__panel-container {
-    padding: 4px 16px 0;
+    padding: 8px 16px 12px;
   }
 
   & .beans-icon__svg {
@@ -23,10 +27,15 @@ export const Wrapper = styled.div`
   & .beans-base-tile__content-container {
     position: relative;
     bottom: 8px;
+
+    div {
+      padding: 0;
+    }
   }
 
   & .beans-button__container {
     height: 32px;
+    margin-top: 16px;
   }
 
   & .beans-responsive-image__image {

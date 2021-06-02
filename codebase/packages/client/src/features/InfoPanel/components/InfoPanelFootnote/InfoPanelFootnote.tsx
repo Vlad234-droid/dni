@@ -27,7 +27,7 @@ const InfoPanelFootnote: FC<Props> = ({ footnote }) => (
 );
 
 export const Wrapper = styled.div`
-  margin-bottom: 32px;
+  margin-bottom: 24px;
 
   & > p {
     ${Media.small_desktop`

@@ -8,16 +8,14 @@ import { getParticipants, getOne, byIdSelector } from '../../store';
 
 type Props = {
   id: number;
+  renderBreadcrumb: (eventTitle: string) => void;
 };
 
-const EventContainer: FC<Props> = ({ id }) => {
+const EventContainer: FC<Props> = ({ id, renderBreadcrumb }) => {
   const dispatch = useDispatch();
   const event = useSelector(byIdSelector(id));
   const { loading, participants, error } = useStore((state) => state.events);
-  const errorMessage = useMemo(() => error || participants.error, [
-    error,
-    participants,
-  ]);
+  const errorMessage = useMemo(() => error || participants.error, [error, participants]);
   const loadEvent = () => dispatch(getOne({ id }));
   const loadParticipants = () => dispatch(getParticipants());
 
@@ -34,6 +32,7 @@ const EventContainer: FC<Props> = ({ id }) => {
       loadEvent={loadEvent}
       loadParticipants={loadParticipants}
       error={errorMessage}
+      renderBreadcrumb={renderBreadcrumb}
     />
   );
 };

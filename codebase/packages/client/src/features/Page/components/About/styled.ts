@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-import { textXX } from 'styles';
+//import { textXX } from 'styles';
 import Media from 'styles/media';
 
 const InfoPanelReducer = styled.div`
@@ -19,13 +19,4 @@ const Reducer = styled.div`
   `}
 `;
 
-const Footer = styled.div.attrs({
-  'data-testid': 'about-footer',
-})`
-  margin-bottom: 16px;
-  text-align: center;
-  color: ${({ theme }) => theme.colors.grayscale};
-  ${textXX}
-`;
-
-export { InfoPanelReducer, Reducer, Footer };
+export { InfoPanelReducer, Reducer };

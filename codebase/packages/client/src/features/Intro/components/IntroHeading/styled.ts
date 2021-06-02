@@ -1,8 +1,7 @@
 import styled from 'styled-components';
 
 import Media from 'styles/media';
-import { headingXS } from 'styles';
-import { LargeHeading } from 'features/Common';
+import { headingXS, headingXL } from 'styles';
 
 const Wrapper = styled.div`
   margin-bottom: 24px;
@@ -13,11 +12,15 @@ const Wrapper = styled.div`
   `}
 `;
 
-const Title = styled(LargeHeading)`
-  margin: 0 0 8px;
+const Title = styled.h2`
+  margin-bottom: 8px;
+  color: ${({ theme }) => theme.colors.white};
+  ${headingXL};
 
   ${Media.tablet`
-     margin-bottom: 10px;
+    margin-bottom: 10px;
+    font-size: 44px;
+    line-height: 1.17;
   `}
 `;
 

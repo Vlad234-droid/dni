@@ -6,11 +6,11 @@ import Media from 'styles/media';
 import { headingXS } from 'styles';
 
 type Props = {
-  titleHeight: string;
+  titleHeight?: string;
   href?: string;
 };
 
-const TitleWithEllipsis: FC<Props> = ({ titleHeight, href, children }) =>
+const TitleWithEllipsis: FC<Props> = ({ titleHeight = 'auto', href, children }) =>
   href ? (
     <Title titleHeight={titleHeight}>
       <Link href={href}>{children}</Link>

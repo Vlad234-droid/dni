@@ -25,6 +25,7 @@ type Response<T, R> = [
     setResponse: Dispatch<SetStateAction<R | null>>;
   },
   FetchHandler<T, R>,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   any,
 ];
 
@@ -48,11 +49,7 @@ function useFetch<T, R = T>(initialValue: R | null = null): Response<T, R> {
 
   useEffect(() => {
     (async () => {
-      if (
-        loading === Loading.PENDING &&
-        responseHandler.current &&
-        executer.current
-      ) {
+      if (loading === Loading.PENDING && responseHandler.current && executer.current) {
         try {
           const response = await executer.current(API);
           setResponse(responseHandler.current(response));

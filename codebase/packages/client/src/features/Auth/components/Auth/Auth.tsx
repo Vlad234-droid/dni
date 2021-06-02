@@ -10,29 +10,23 @@ import { profile, State as AuthState } from '../../store';
 import { AuthProvider } from '../../context/authContext';
 
 const Auth: FC = ({ children }) => {
-  const { user, loading, error } = useStore<AuthState>((r) => r.auth);
+  const { user, loading, error, networkError, eventError } = useStore<AuthState>((r) => r.auth);
   const dispatch = useDispatch();
-  const isLoading = useMemo(
-    () => loading !== Loading.SUCCEEDED && loading !== Loading.FAILED,
-    [loading],
-  );
+  const isLoading = useMemo(() => loading !== Loading.SUCCEEDED && loading !== Loading.FAILED, [loading]);
   const isAuthenticated = useMemo(() => Boolean(user?.id), [user]);
 
-  const fetchUserAction: FetchUserAction = useCallback(
-    () => dispatch(profile()),
-    [],
-  );
+  const fetchUserAction: FetchUserAction = useCallback(() => dispatch(profile()), []);
 
   useEffect(() => {
     fetchUserAction();
   }, [fetchUserAction]);
 
-  if (error) return <Error errorData={{ title: error }} />;
-  if (isLoading) return <Spinner height='1000px' />;
+  if (error || networkError || eventError) return <Error errorData={{ title: error }} />;
+  if (isLoading) return <Spinner height='100vh' />;
 
   // TODO: remove in future
   // to avoid requests when networks ids are not loaded and display content before role is reassigned
-  if (user.role === 'guest') return <Spinner height='1000px' />;
+  if (user.role === 'guest') return <Spinner height='100vh' />;
 
   return (
     <AuthProvider

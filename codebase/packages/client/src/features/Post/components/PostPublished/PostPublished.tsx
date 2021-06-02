@@ -3,8 +3,6 @@ import React, { FC } from 'react';
 import { useMedia } from 'context/InterfaceContext';
 
 import { RichTextRenderer, CopyLink } from 'features/Common';
-import { Page } from 'features/Page';
-
 import { Post } from '../../config/types';
 import { PostPublishedAttachments } from '../PostAttachments';
 import {
@@ -33,19 +31,13 @@ const PostPublished: FC<PostPublishedProps> = ({ item }) => {
     <PostPublishedWrapper data-testid={TEST_ID} isMobile={media.isMobile}>
       <PostHead>
         <PostPublisher>
-          <PostPublisherAvatarBox>
-            {/* <PostPublisherAvatar src={createdBy.avatar} /> */}
-          </PostPublisherAvatarBox>
+          <PostPublisherAvatarBox>{/* <PostPublisherAvatar src={createdBy.avatar} /> */}</PostPublisherAvatarBox>
           <PostPublisherName>{`${authorName}`}</PostPublisherName>
         </PostPublisher>
-        <PostPublishDate>
-          {new Date(published_at).toDateString()}
-        </PostPublishDate>
+        <PostPublishDate>{new Date(published_at).toDateString()}</PostPublishDate>
       </PostHead>
       <PostContent>
-        {attachments && attachments.length > 0 && (
-          <PostPublishedAttachments attachments={attachments} />
-        )}
+        {attachments && attachments.length > 0 && <PostPublishedAttachments attachments={attachments} />}
         <PostTitle>{title}</PostTitle>
         <PostDescription>
           <RichTextRenderer source={content} />

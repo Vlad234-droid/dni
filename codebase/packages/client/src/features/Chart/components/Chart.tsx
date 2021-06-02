@@ -1,17 +1,9 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
 import styled from 'styled-components';
-import {
-  AreaChart,
-  Area,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-} from 'recharts';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts';
 import Button from '@beans/button';
 import Icon from '@beans/icon';
 
-import { Spinner } from 'features/Common';
 import useFetch from 'hooks/useFetch';
 import { useMedia } from 'context/InterfaceContext';
 import Loading from 'types/loading';
@@ -29,10 +21,7 @@ const Chart = ({ data, type }: Props) => {
   const { isDesktop, isTablet } = useMedia();
 
   const [{ response, loading }, doFetch] = useFetch<Blob>();
-  const isLoading = useMemo(
-    () => loading !== Loading.SUCCEEDED && loading !== Loading.FAILED,
-    [loading],
-  );
+  const isLoading = useMemo(() => loading !== Loading.SUCCEEDED && loading !== Loading.FAILED, [loading]);
 
   useEffect(() => {
     if (response && !isLoading) {
@@ -95,11 +84,7 @@ const Chart = ({ data, type }: Props) => {
             );
           })}
         </defs>
-        <CartesianGrid
-          stroke='#E5E5E5'
-          strokeDasharray='2 2'
-          vertical={false}
-        />
+        <CartesianGrid stroke='#E5E5E5' strokeDasharray='2 2' vertical={false} />
         <XAxis
           dataKey='name'
           tickLine={false}

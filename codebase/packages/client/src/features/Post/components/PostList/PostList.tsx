@@ -58,16 +58,11 @@ const PostList: FC<Props> = ({ entityId, filter = ALL }) => {
   const { networks, events } = useStore((state) => state.auth.user);
   const posts = useSelector(listSelector);
   const hasMore = useMemo(() => posts.length < total, [posts, total]);
-  const isLoading = useMemo(
-    () => loading !== Loading.SUCCEEDED && loading !== Loading.FAILED,
-    [loading],
-  );
+  const isLoading = useMemo(() => loading !== Loading.SUCCEEDED && loading !== Loading.FAILED, [loading]);
   const error = useMemo(() => listError || countError, [listError, countError]);
   const [byEntityFilter, setByEntityFilter] = useState<ByEntityFilter>(ALL);
   const [filters, setFilters] = useState<Filters>(
-    filter == ALL
-      ? getAllFilterPayload(networks, events)
-      : getFilterPayload(filter, entityId),
+    filter == ALL ? getAllFilterPayload(networks, events) : getFilterPayload(filter, entityId),
   );
 
   const loadPosts = useCallback(
@@ -140,10 +135,7 @@ const PostList: FC<Props> = ({ entityId, filter = ALL }) => {
 
     if (isEmpty(posts) && isLoading) return <Spinner height='500px' />;
 
-    if (loading == Loading.SUCCEEDED && isEmpty(posts))
-      return (
-        <EmptyContainer description='Unfortunately, we did not find any matches for your request' />
-      );
+    if (loading == Loading.SUCCEEDED && isEmpty(posts)) return <EmptyContainer description='Nothing to show' />;
 
     return (
       <>
@@ -171,6 +163,7 @@ const PostList: FC<Props> = ({ entityId, filter = ALL }) => {
           <ButtonFilter
             initialFilters={byEventFilters}
             onChange={(key) => handleByEventFilterChange(key as ByEntityFilter)}
+            name='posts'
           />
         </FiltersContainer>
       )}
