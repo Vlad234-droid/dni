@@ -40,14 +40,18 @@ const NetworkPartners: FC<Props> = ({ email, partners }) => {
 
   return (
     <>
-      <Item>
-        <Title>Get in touch</Title>
-        <Link href={`mailto: ${email}`}>{email}</Link>
-      </Item>
-      <Item>
-        <Title>Network Partnership</Title>
-        <NetworkPartnersList partners={partners} />
-      </Item>
+      {email && (
+        <Item>
+          <Title>Get in touch</Title>
+          <Link href={`mailto: ${email}`}>{email}</Link>
+        </Item>
+      )}
+      {partners && (
+        <Item>
+          <Title>Network Partnership</Title>
+          <NetworkPartnersList partners={partners} />
+        </Item>
+      )}
     </>
   );
 };

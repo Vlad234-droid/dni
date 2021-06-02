@@ -1,23 +1,28 @@
 import React, { FC, useState, useCallback } from 'react';
+import RadioButtonGroup from '@beans/radio-button-group';
 
-import { Wrapper, Button } from './styled';
+import { Wrapper } from './styled';
 
 type Filter = {
   key: number | string;
   title: string;
-  active: boolean;
 };
 
 type Props = {
   initialFilters: Filter[];
   onChange: (key: number | string) => void;
+  name?: string;
 };
 
-const ButtonFilter: FC<Props> = ({ initialFilters = [], onChange }) => {
+const TEST_ID = 'button-filter';
+
+const ButtonFilter: FC<Props> = ({ initialFilters = [], onChange, name }) => {
   const [filters, setFilters] = useState(initialFilters);
 
   const changeFilter = useCallback(
-    (key) => {
+    (event) => {
+      const key = event.target.value;
+
       onChange(key);
       setFilters(
         filters.map((filter) => ({ ...filter, active: key === filter.key })),
@@ -27,12 +32,18 @@ const ButtonFilter: FC<Props> = ({ initialFilters = [], onChange }) => {
   );
 
   return (
-    <Wrapper>
-      {filters.map(({ title, active, key }) => (
-        <Button key={key} active={active} onClick={() => changeFilter(key)}>
-          {title}
-        </Button>
-      ))}
+    <Wrapper data-testid={TEST_ID}>
+      <RadioButtonGroup
+        radioButtons={filters.map(({ title, key }) => ({
+          id: key,
+          labelText: title,
+          value: key,
+        }))}
+        name={name}
+        onChange={changeFilter}
+        required
+        defaultCheckedValue={filters[0].key}
+      />
     </Wrapper>
   );
 };

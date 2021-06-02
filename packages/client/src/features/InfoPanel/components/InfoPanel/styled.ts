@@ -7,20 +7,20 @@ import { Type } from '../../config/types';
 
 export const Wrapper = styled.div.attrs({
   'data-testid': 'info-panel',
-})<{ type: Type; isSmall: boolean }>`
+})<{ type: Type; isSmall: boolean; canClose: boolean }>`
   position: relative;
   display: flex;
   align-items: start;
-  padding: 24px 16px 32px;
+  padding: ${({ canClose }) => (canClose ? '38px' : '24px')} 16px 24px;
   background: ${({ theme, type }) => theme.colors.background[type]};
 
   ${({ isSmall }) =>
     !isSmall &&
     css`
       ${Media.tablet`
-      padding: '48px 65.5px 54px';
-      align-items: 'center';
-    `}
+        padding: 32px 42px 40px 49px;;
+        align-items: 'center';
+      `}
     `}
 `;
 
@@ -33,7 +33,7 @@ export const Content = styled.div<{ type: Type; isSmall: boolean }>`
     !isSmall &&
     css`
       ${Media.tablet`
-        margin-left: ${type === Type.INFO ? '0' : '65.5px'};
+        margin-left: ${type === Type.INFO ? '0' : '48px'};
     `}
     `}
 `;
@@ -47,10 +47,10 @@ export const Title = styled.h2<{ isSmall: boolean }>`
     !isSmall &&
     css`
       ${Media.tablet`
-      margin-bottom: 24px;
-      font-size: 32px;
-      line-height: 45px;
-    `}
+        margin-bottom: 8px;
+        font-size: 32px;
+        line-height: 45px;
+      `}
     `}
 `;
 
@@ -68,8 +68,8 @@ export const CloseIcon = styled.span<{ isSmall: boolean }>`
     !isSmall &&
     css`
       ${Media.tablet`
-      right: 16px;
-      top: 16px;
-    `}
+        right: 16px;
+        top: 16px;
+      `}
     `}
 `;

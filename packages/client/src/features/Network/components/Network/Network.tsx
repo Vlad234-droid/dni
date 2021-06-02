@@ -23,9 +23,10 @@ const ERROR_MESSAGE =
 
 type Props = {
   id: number;
+  renderBreadcrumb: (networkTitle: string) => void;
 };
 
-const Network: FC<Props> = ({ id }) => {
+const Network: FC<Props> = ({ id, renderBreadcrumb }) => {
   const dispatch = useDispatch();
   const network = useSelector(byIdSelector(id));
   const { partners, description, title, image, contact } = network || {};
@@ -81,13 +82,16 @@ const Network: FC<Props> = ({ id }) => {
       <>
         {imageWrapperEl &&
           createPortal(
-            <ResponsiveImage
-              key={id}
-              alt={image?.alternativeText}
-              src={image?.url}
-              fallbackSizeRatio='57%'
-              objectFit='cover'
-            />,
+            <>
+              {renderBreadcrumb(network!.title)}
+              <ResponsiveImage
+                key={id}
+                alt={image?.alternativeText}
+                src={image?.url}
+                fallbackSizeRatio='57%'
+                objectFit='cover'
+              />
+            </>,
             imageWrapperEl,
           )}
         <NetworkHeader

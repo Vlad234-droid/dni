@@ -2,13 +2,15 @@ import React, { FC } from 'react';
 import { VERTICAL } from '@beans/constants';
 
 import Tile from 'features/Tile';
-import { StatusLabel, StatusType } from 'features/Common';
+import { OnAir } from 'features/Common';
 
+import { Type } from '../../config/types';
 import { Wrapper, ActionContainer, StatusContainer } from './styled';
 
 const TEST_ID = 'large-tile';
 
 type Props = {
+  type?: Type;
   id: number;
   title: string;
   participants: number;
@@ -22,6 +24,7 @@ type Props = {
   isOnAir?: boolean;
   maxParticipants?: number;
   hideMaxParticipants?: boolean;
+  hideParticipants?: boolean;
   imageHeight?: string;
   wrapperHeight?: string;
 };
@@ -36,25 +39,33 @@ const LargeTile: FC<Props> = ({
   isOnAir,
   maxParticipants,
   hideMaxParticipants,
+  hideParticipants,
   id,
   imageHeight = '276px',
   wrapperHeight,
+  type = Type.WIDE,
 }) => (
-  <Wrapper data-testid={TEST_ID} height={wrapperHeight}>
+  <Wrapper data-testid={TEST_ID} height={wrapperHeight} type={type}>
     {isOnAir && (
       <StatusContainer>
-        <StatusLabel type={StatusType.SUCCESS}>On-Air</StatusLabel>
+        <OnAir />
       </StatusContainer>
     )}
     <Tile
+      type={type}
       id={id}
       link={link}
-      renderAction={() => <ActionContainer>{renderAction()}</ActionContainer>}
+      renderAction={() => (
+        <ActionContainer type={type} hideParticipants={hideParticipants}>
+          {renderAction()}
+        </ActionContainer>
+      )}
       meta={meta}
       title={title}
       participants={participants}
       maxParticipants={maxParticipants}
       hideMaxParticipants={hideMaxParticipants}
+      hideParticipants={hideParticipants}
       image={image}
       orientation={{
         aboveTablet: VERTICAL,

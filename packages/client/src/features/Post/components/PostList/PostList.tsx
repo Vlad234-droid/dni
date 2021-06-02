@@ -141,9 +141,7 @@ const PostList: FC<Props> = ({ entityId, filter = ALL }) => {
     if (isEmpty(posts) && isLoading) return <Spinner height='500px' />;
 
     if (loading == Loading.SUCCEEDED && isEmpty(posts))
-      return (
-        <EmptyContainer description='Unfortunately, we did not find any matches for your request' />
-      );
+      return <EmptyContainer description='Nothing to show' />;
 
     return (
       <>
@@ -171,6 +169,7 @@ const PostList: FC<Props> = ({ entityId, filter = ALL }) => {
           <ButtonFilter
             initialFilters={byEventFilters}
             onChange={(key) => handleByEventFilterChange(key as ByEntityFilter)}
+            name='posts'
           />
         </FiltersContainer>
       )}

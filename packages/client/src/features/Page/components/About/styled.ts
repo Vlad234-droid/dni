@@ -19,13 +19,4 @@ const Reducer = styled.div`
   `}
 `;
 
-const Footer = styled.div.attrs({
-  'data-testid': 'about-footer',
-})`
-  margin-bottom: 16px;
-  text-align: center;
-  color: ${({ theme }) => theme.colors.grayscale};
-  ${textXX}
-`;
-
-export { InfoPanelReducer, Reducer, Footer };
+export { InfoPanelReducer, Reducer };

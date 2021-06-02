@@ -29,10 +29,10 @@ export const Content = styled.div<{ isOpen: boolean }>`
 
   ${({ isOpen }) => css`
     ${Media.tablet`
-          -webkit-line-clamp: ${isOpen ? 'auto' : '6'};
-          margin-bottom: 40px;
-          max-width: 463px;
-      `}
+      -webkit-line-clamp: ${isOpen ? 'auto' : '6'};
+      margin-bottom: 40px;
+      max-width: 463px;
+    `}
   `}
 
   p {

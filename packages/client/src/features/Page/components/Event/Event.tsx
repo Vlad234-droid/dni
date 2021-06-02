@@ -1,36 +1,62 @@
 import React, { useState, FC } from 'react';
 import styled from 'styled-components';
 import { RouteComponentProps } from 'react-router-dom';
+import Breadcrumb from '@beans/breadcrumb';
 
+import { ImageWrapperProvider } from 'context';
 import { Event } from 'features/Event';
-import { ImageWrapperProvider } from 'context/ImageWrapperProvider';
+import { Page } from 'features/Page';
 
 import BasePage from '../BasePage';
-import PageHeader from '../PageHeader';
-import PageWrapper from '../PageWrapper';
+import PageImageWrapper from '../PageImageWrapper';
 
 const TEST_ID = 'event-page';
 const IMAGE_WRAPPER_TEST_ID = 'mage-wrapper';
 
+const links = [
+  {
+    current: true,
+    text: 'Event',
+  },
+];
+
+const home = {
+  href: `/${Page.EVENTS}`,
+  text: 'Events',
+};
+
 const EventPage: FC<RouteComponentProps<{ id: string }>> = (props) => {
-  const [ref, setRef] = useState<HTMLElement | null>(null);
+  const [imageRef, setImageRef] = useState<HTMLElement | null>(null);
+  const [navRef, setNavRef] = useState<HTMLElement | null>(null);
 
   return (
     <div data-testid={TEST_ID}>
       <BasePage
         renderMain={() => (
-          <ImageWrapperProvider value={ref}>
-            <>
-              <PageHeader>
+          <ImageWrapperProvider value={imageRef}>
+            <PageImageWrapper
+              renderImage={() => (
                 <ImageWrapper
                   data-testid={IMAGE_WRAPPER_TEST_ID}
-                  ref={(newRef) => setRef(newRef)}
+                  ref={(newRef) => setImageRef(newRef)}
                 />
-              </PageHeader>
-              <PageWrapper>
-                <Event id={parseInt(props.match.params.id, 10)} />
-              </PageWrapper>
-            </>
+              )}
+            >
+              <Event
+                id={parseInt(props.match.params.id, 10)}
+                renderBreadcrumb={(eventTitle) => (
+                  <Breadcrumb
+                    links={[
+                      {
+                        current: true,
+                        text: `${eventTitle}`,
+                      },
+                    ]}
+                    home={home}
+                  />
+                )}
+              />
+            </PageImageWrapper>
           </ImageWrapperProvider>
         )}
       />

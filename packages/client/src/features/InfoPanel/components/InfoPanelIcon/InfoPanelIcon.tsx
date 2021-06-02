@@ -12,19 +12,16 @@ type Props = {
 };
 
 const InfoPanel: FC<Props> = ({ type, customIcon }) => {
-  const { isMobile } = useMedia();
-  const iconSize = isMobile ? 'xl' : 'xxxl';
-
   return (
     <>
       {customIcon && (
         <CustomIconWrapper>
-          <Icon graphic={customIcon} size={iconSize} />
+          <Icon graphic={customIcon} size='xl' />
         </CustomIconWrapper>
       )}
       {type === Type.SUCCESS && (
         <IconWrapper type={type}>
-          <Icon graphic='benefits' size={iconSize} />
+          <Icon graphic='benefits' size='xl' />
         </IconWrapper>
       )}
     </>

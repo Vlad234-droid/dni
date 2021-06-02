@@ -1,10 +1,11 @@
 import styled from 'styled-components';
 import { BaseElement } from '@beans/foundation';
 
-import { textSM } from 'styles';
 import Media from 'styles/media';
 
-export const Wrapper = styled.div<{ height?: string }>`
+import { Type } from '../../config/types';
+
+export const Wrapper = styled.div<{ height?: string; type?: Type }>`
   position: relative;
   height: ${({ height }) => height || 'unset'};
 
@@ -17,13 +18,11 @@ export const Wrapper = styled.div<{ height?: string }>`
     margin-right: 8px;
   }
 
-  & h3 .beans-multi-line-ellipsis__visible-text {
-    ${textSM}
-  }
-
   // customize tile TitleWithEllipsis
   & h5 {
-    margin: 16px 16px 0;
+    margin: ${({ type }) => (type == Type.WIDE ? '16px 16px 0' : '12px 8px 0')};
+    font-size: ${({ type }) => (type == Type.WIDE ? '20px' : '16px')};
+    line-height: ${({ type }) => (type == Type.WIDE ? '28px' : '20px')};
   }
 
   & .beans-base-tile__content-container {
@@ -31,22 +30,26 @@ export const Wrapper = styled.div<{ height?: string }>`
   }
 
   & p {
-    margin: 8px 16px 0 !important;
+    margin: 0 16px 11px;
   }
 `;
 
-export const ActionContainer = styled(BaseElement)`
+export const ActionContainer = styled(BaseElement)<{
+  type?: Type;
+  hideParticipants?: boolean;
+}>`
   overflow: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
   border-top: ${({ theme }) => `1px solid ${theme.colors.lines.base}`};
-  margin-top: 16px;
+  margin-top: ${({ type, hideParticipants }) =>
+    type == Type.NARROW || hideParticipants ? '16px' : '34px'};
   margin-bottom: -16px;
   padding: 16px;
 
   ${Media.large_tablet`
-    padding: 16px 18px;
+    padding: 16px;
   `}
 
   & > button {

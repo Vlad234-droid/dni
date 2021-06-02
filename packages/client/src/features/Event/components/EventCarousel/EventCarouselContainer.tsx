@@ -37,7 +37,7 @@ const EventCarouselContainer: FC = () => {
   return (
     <EventCarousel
       events={list!}
-      participants={participants}
+      participants={participants!.data}
       loading={loading}
       error={errorMessage}
       loadParticipants={loadParticipants}

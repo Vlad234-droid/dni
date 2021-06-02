@@ -3,10 +3,10 @@ import styled from 'styled-components';
 import Media from 'styles/media';
 
 export const Wrapper = styled.div`
-  margin-top: 16px;
   display: flex;
   flex-flow: row wrap;
   width: 100%;
+  margin-top: 16px;
 
   & > div {
     margin-bottom: 16px;

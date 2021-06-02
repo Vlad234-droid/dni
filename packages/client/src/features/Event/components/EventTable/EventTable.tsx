@@ -5,7 +5,6 @@ import { css } from 'styled-components';
 import isEmpty from 'lodash.isempty';
 
 import { Table, Body, Cell, Row } from 'features/Table';
-import Heading, { Size, Color } from 'features/Heading';
 import { useMedia } from 'context/InterfaceContext';
 import useStore from 'hooks/useStore';
 import {
@@ -20,7 +19,13 @@ import { DEFAULT_FILTERS } from 'config/constants';
 
 import useFetchEvents from '../../hooks/useFetchEvents';
 import { getPayloadWhere } from '../../utils';
-import { Wrapper } from './styled';
+import {
+  Wrapper,
+  Title,
+  ButtonWrapper,
+  ImageWrapper,
+  NetworkWrapper,
+} from './styled';
 
 const TEST_ID = 'events-table';
 
@@ -54,43 +59,62 @@ const EventTable: FC = () => {
     if (isEmpty(events) && isLoading) return <Spinner height='500px' />;
 
     if (loading === Loading.SUCCEEDED && isEmpty(events)) {
-      return <EmptyContainer description='You have no past events' />;
+      return <EmptyContainer description='Nothing to show' />;
     }
 
     return (
       <>
         <Table styles={styles}>
           <Body zebraStripes={isMobile}>
-            {events.map(({ id, title, endDate }) => (
+            {events.map(({ id, title, endDate, network }) => (
               <Row key={id}>
-                <Cell width='25%'>
+                <Cell width='30%'>
                   <TitleWithEllipsis
-                    titleHeight='22px'
+                    titleHeight='30px'
                     href={`${Page.EVENTS}/${id}`}
                   >
                     {title}
                   </TitleWithEllipsis>
                 </Cell>
-                <Cell width='40%' visible={!isMobile}>
+                <Cell width='30%' visible={!isMobile}>
                   {endDate}
                 </Cell>
                 <Cell width={isMobile ? '25%' : '15%'}>
                   {participants.data[id]! || 0} members
+                </Cell>
+                <Cell width='25%' visible={!isMobile}>
+                  {network && (
+                    <NetworkWrapper>
+                      {network.image && (
+                        <ImageWrapper>
+                          <img src={network.image!.url} />
+                        </ImageWrapper>
+                      )}
+                      <TitleWithEllipsis
+                        titleHeight='30px'
+                        href={`${Page.EVENTS}/${id}`}
+                      >
+                        {network.title}
+                      </TitleWithEllipsis>
+                    </NetworkWrapper>
+                  )}
                 </Cell>
               </Row>
             ))}
           </Body>
         </Table>
         {!isEmpty(events) && isLoading && <Spinner />}
-        {!isEmpty(events) && (
-          <Button
-            disabled={!hasMore || isLoading}
-            variant='secondary'
-            onClick={() => setPage(page + 1)}
-          >
-            More Past Events
-            <Icon graphic='expand' size='xx' />
-          </Button>
+        {!isEmpty(events) && hasMore && (
+          <ButtonWrapper>
+            <Button
+              disabled={isLoading}
+              variant='secondary'
+              onClick={() => setPage(page + 1)}
+            >
+              More Past Events
+              <Icon graphic='expand' size='xx' />
+            </Button>
+          </ButtonWrapper>
         )}
       </>
     );
@@ -98,9 +122,7 @@ const EventTable: FC = () => {
 
   return (
     <Wrapper data-testid={TEST_ID}>
-      <Heading size={Size.md} color={Color.black}>
-        Past Events
-      </Heading>
+      <Title>Past Events</Title>
       {memoizedContent}
     </Wrapper>
   );

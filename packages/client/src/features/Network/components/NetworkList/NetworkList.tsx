@@ -14,8 +14,10 @@ import { EmptyContainer, Error, Spinner } from 'features/Common';
 import { Page } from 'features/Page';
 import Loading from 'types/loading';
 import { RootState } from 'store/rootReducer';
+import { Type } from 'features/Tile';
 
-import { Filter, ALL, YOUR_NETWORKS } from '../../config/types';
+import { Filter } from '../../config/types';
+import { initialListFilters, ALL, YOUR_NETWORKS } from '../../config/filters';
 import {
   getList,
   getCount,
@@ -27,19 +29,6 @@ import NetworkAction from '../NetworkAction';
 import { Wrapper, ListContainer } from './styled';
 
 const TEST_ID = 'networks-list';
-
-const initialFilters = [
-  {
-    key: YOUR_NETWORKS,
-    title: 'Your networks',
-    active: true,
-  },
-  {
-    key: ALL,
-    title: 'All',
-    active: false,
-  },
-];
 
 type Filters = FilterPayload & { id_in?: number[] };
 
@@ -161,12 +150,7 @@ const NetworkList: FC = () => {
     if (isEmpty(networksList) && isLoading) return <Spinner height='500px' />;
 
     if (loading == Loading.SUCCEEDED && isEmpty(networksList)) {
-      return (
-        <EmptyContainer
-          description='Unfortunately, we did not find any matches for your request'
-          explanation='Please change your filtering criteria to try again.'
-        />
-      );
+      return <EmptyContainer description='Nothing to show' />;
     }
 
     return (
@@ -181,22 +165,25 @@ const NetworkList: FC = () => {
           useWindow={false}
         >
           <List
+            type={Type.NARROW}
             link={Page.NETWORKS}
             //@ts-ignore
             items={networksList}
-            participants={participants.data}
             renderAction={(id) => <NetworkAction id={id} />}
+            participants={participants}
+            hideParticipants={true}
           />
         </InfiniteScroll>
       </ListContainer>
     );
-  }, [error, loading, networksList, participants]);
+  }, [error, loading, networksList]);
 
   return (
     <Wrapper data-testid={TEST_ID}>
       <ButtonFilter
-        initialFilters={initialFilters}
+        initialFilters={initialListFilters}
         onChange={(key) => handleFilterChange(key as Filter)}
+        name='networkList'
       />
       {memoizedContent}
     </Wrapper>

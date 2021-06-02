@@ -12,7 +12,7 @@ import {
   getParticipants,
   Filter,
 } from '../../store';
-import { ALL } from '../../config/contstants';
+import { ALL } from '../../config/filters';
 import EventList from './EventList';
 
 const EventSidebarContainer: FC = () => {
@@ -44,7 +44,7 @@ const EventSidebarContainer: FC = () => {
   return (
     <EventList
       events={events}
-      participants={participants}
+      participants={participants!.data}
       loading={loading}
       total={total}
       networks={networks}

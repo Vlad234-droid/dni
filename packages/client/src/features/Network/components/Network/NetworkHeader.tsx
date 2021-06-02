@@ -24,9 +24,7 @@ const NetworkHeader: FC<Props> = ({ id, title, email, onLeave, onJoin }) => {
   return (
     <Wrapper>
       <TitleWrapper>
-        <TitleWithEllipsis titleHeight={isMobile ? '28px' : '45px'}>
-          {title}
-        </TitleWithEllipsis>
+        <TitleWithEllipsis>{title}</TitleWithEllipsis>
         {isMobile && <CopyLink />}
       </TitleWrapper>
       {isMobile && <Link href={`mailto: ${email}`}>{email}</Link>}
@@ -69,23 +67,29 @@ export const ButtonWrapper = styled.div`
 export const TitleWrapper = styled.div`
   overflow: hidden;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: 4px;
+  padding: 0 0 22px;
 
   ${Media.tablet`
-    margin-bottom: 0;
+     padding: 0;
   `}
 
   h5 {
-    margin-right: 24px;
-    ${headingMD};
+    font-weight: bold;
+    font-size: 32px;
+    line-height: 45px;
+    margin-right: 0;
 
     ${Media.tablet`
-      font-size: 32px;
-      line-height: 45px;
-      margin-bottom: 0;
+      margin-right: 24px;
+      font-size: 50px;
+      line-height: 71px;
     `}
+
+    &::after {
+      content: '.';
+      color: ${({ theme }) => theme.colors.tescoRed};
+    }
   }
 `;
 

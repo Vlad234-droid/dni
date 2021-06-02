@@ -4,14 +4,14 @@ import Button from '@beans/button';
 import isEmpty from 'lodash.isempty';
 
 import { EmptyContainer, Spinner, Error } from 'features/Common';
-import { LargeTile, SmallTile } from 'features/Tile';
+import { LargeTile, SmallTile, Type } from 'features/Tile';
 import Loading from 'types/loading';
 import { EntityListPayload } from 'types/payload';
 import { Page } from 'features/Page';
 import { DEFAULT_FILTERS } from 'config/constants';
 
 import { isActionDisabled, isEventOnAir, getPayloadWhere } from '../../utils';
-import Event, { Participants } from '../../config/types';
+import Event from '../../config/types';
 import EventAction from '../EventAction';
 import { List, Title, Wrapper } from './styled';
 
@@ -29,7 +29,7 @@ type Props = {
   loadEvents: (filters: EntityListPayload) => void;
   handleClear: () => void;
   loadParticipants: () => void;
-  participants?: Participants;
+  participants?: Record<number, number>;
   networks?: number[];
   error?: string;
 };
@@ -70,7 +70,7 @@ const EventSidebar: FC<Props> = ({
     if (isEmpty(events) && isLoading) return <Spinner height='500px' />;
 
     if (loading === Loading.SUCCEEDED && isEmpty(events))
-      return <EmptyContainer description='You have no events' />;
+      return <EmptyContainer description='Nothing to show' />;
 
     return (
       <>
@@ -91,7 +91,7 @@ const EventSidebar: FC<Props> = ({
                 id={id}
                 title={title}
                 image={image}
-                participants={participants!.data[id] || 0}
+                participants={participants![id] || 0}
                 maxParticipants={maxParticipants}
                 hideMaxParticipants={false}
                 isOnAir={isEventOnAir(startDate, endDate)}
@@ -99,7 +99,7 @@ const EventSidebar: FC<Props> = ({
                   <EventAction
                     id={id}
                     disabled={isActionDisabled(
-                      participants!.data[id],
+                      participants![id],
                       maxParticipants,
                     )}
                   />
@@ -110,17 +110,19 @@ const EventSidebar: FC<Props> = ({
               />
             ) : (
               <SmallTile
+                type={Type.NARROW}
                 key={id}
                 id={id}
                 title={title}
                 image={image}
                 isOnAir={isEventOnAir(startDate, endDate)}
-                participants={participants!.data[id] || 0}
+                participants={participants![id] || 0}
+                maxParticipants={maxParticipants}
                 renderAction={() => (
                   <EventAction
                     id={id}
                     disabled={isActionDisabled(
-                      participants!.data[id],
+                      participants![id],
                       maxParticipants,
                     )}
                   />

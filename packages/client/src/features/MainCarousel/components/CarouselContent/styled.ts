@@ -1,24 +1,23 @@
 import styled from 'styled-components';
 
 import Media from 'styles/media';
-import { LargeHeading } from 'features/Common';
-import { textSM } from 'styles';
+import { textSM, headingXL } from 'styles';
 
 export const Wrapper = styled.div`
   position: relative;
-  margin: 22px 0 54px;
+  margin-top: 22px;
   background-color: ${({ theme }) => theme.colors.tescoBlue};
   display: flex;
   justify-content: space-between;
-  min-height: 500px;
+  min-height: 474px;
 
   ${Media.large_phone`
     margin-top: 72px;
   `}
 
   ${Media.tablet`
-     margin: 132px 0 58px;
-     min-height: 534px;
+     margin-top: 132px;
+     min-height: 476px;
   `}
 `;
 
@@ -40,15 +39,19 @@ export const ContentWrapper = styled.div.attrs((props) => ({
   `}
 `;
 
-export const Title = styled(LargeHeading)`
+export const Title = styled.h2`
+  color: ${({ theme }) => theme.colors.white};
+  ${headingXL};
   margin: 0 0 24px;
 
   ${Media.tablet`
+      font-size: 44px;
+    line-height: 1.17;
     margin-bottom: 32px;
   `}
 `;
 
-export const Description = styled.div<{ isOpen: boolean }>`
+export const Description = styled.div`
   ${textSM};
   max-width: 328px;
 
@@ -67,8 +70,8 @@ export const Description = styled.div<{ isOpen: boolean }>`
   &:last-child {
     display: -webkit-box;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: ${({ isOpen }) => (isOpen ? 'auto' : '5')};
-    overflow: ${({ isOpen }) => (isOpen ? 'visible' : 'hidden')};
+    -webkit-line-clamp: 5;
+    overflow: hidden;
   }
 
   &:not(:last-child) {

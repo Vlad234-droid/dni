@@ -10,32 +10,15 @@ import List from 'features/List';
 import { EmptyContainer, Error, Spinner } from 'features/Common';
 import { Page } from 'features/Page';
 import Loading from 'types/loading';
+import { Type } from 'features/Tile';
 
-import Event, { Filter, Participants } from '../../config/types';
-import { ALL, THIS_MONTH, THIS_WEEK } from '../../config/contstants';
-import EventAction from '../EventAction';
+import Event, { Filter } from '../../config/types';
+import { initialListFilters } from '../../config/filters';
 import { getPayloadPeriod, getPayloadWhere } from '../../utils';
+import EventAction from '../EventAction';
 import { Wrapper } from './styled';
 
 const TEST_ID = 'events-list';
-
-const initialFilters = [
-  {
-    key: ALL,
-    title: 'All',
-    active: true,
-  },
-  {
-    key: THIS_WEEK,
-    title: 'This week',
-    active: false,
-  },
-  {
-    key: THIS_MONTH,
-    title: 'This month',
-    active: false,
-  },
-];
 
 type Props = {
   events?: Event[];
@@ -44,7 +27,7 @@ type Props = {
   loadCount: (filters: EntityListPayload) => void;
   loadParticipants: () => void;
   handleClear: () => void;
-  participants?: Participants;
+  participants?: Record<number, number>;
   total: number;
   networks?: number[];
   page: number;
@@ -114,34 +97,32 @@ const EventList: FC<Props> = ({
     if (isEmpty(events) && isLoading) return <Spinner height='500px' />;
 
     if (loading === Loading.SUCCEEDED && isEmpty(events))
-      return (
-        <EmptyContainer
-          description='Unfortunately, we did not find any matches for your request'
-          explanation='Please change your filtering criteria to try again.'
-        />
-      );
+      return <EmptyContainer description='Nothing to show' />;
 
     return (
       <>
         <List
+          type={Type.NARROW}
           link={Page.EVENTS}
           //@ts-ignore
           items={events}
           hideMaxParticipants={false}
-          participants={participants!.data}
+          participants={participants}
           renderAction={(id, disabled) => (
             <EventAction id={id} disabled={disabled} />
           )}
         />
         {isLoading && <Spinner />}
-        <Button
-          disabled={!hasMore || isLoading}
-          variant='secondary'
-          onClick={onPageChange}
-        >
-          More New Events
-          <Icon graphic='expand' size='xx' />
-        </Button>
+        {!isEmpty(events) && hasMore && (
+          <Button
+            disabled={isLoading}
+            variant='secondary'
+            onClick={onPageChange}
+          >
+            More New Events
+            <Icon graphic='expand' size='xx' />
+          </Button>
+        )}
       </>
     );
   }, [error, loading, events, participants, total]);
@@ -149,8 +130,9 @@ const EventList: FC<Props> = ({
   return (
     <Wrapper data-testid={TEST_ID}>
       <ButtonFilter
-        initialFilters={initialFilters}
+        initialFilters={initialListFilters}
         onChange={(key) => handleFilterChange(key as Filter)}
+        name='eventList'
       />
       {memoizedContent}
     </Wrapper>

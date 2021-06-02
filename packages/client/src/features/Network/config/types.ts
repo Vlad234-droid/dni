@@ -1,6 +1,8 @@
 import { EntityState } from '@reduxjs/toolkit';
 import { Network } from '@dni-connectors/colleague-cms-api';
+
 import Loading from 'types/loading';
+import { ALL, YOUR_NETWORKS } from './filters';
 
 interface FormData {
   image?: File;
@@ -51,16 +53,12 @@ type OnePayload = {
 
 type SetOnePayload = Network;
 
-const ALL = 'ALL';
-const YOUR_NETWORKS = 'YOUR_NETWORKS';
-
 type Filter = typeof ALL | typeof YOUR_NETWORKS;
 
 interface Filters {
   id_in?: number[];
 }
 
-export { ALL, YOUR_NETWORKS };
 export type {
   State,
   Network,

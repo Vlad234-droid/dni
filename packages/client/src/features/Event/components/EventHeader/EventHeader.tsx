@@ -1,13 +1,8 @@
 import React, { FC, useMemo } from 'react';
 import Icon from '@beans/icon';
-import ICalendarLink from "react-icalendar-link";
+import ICalendarLink from 'react-icalendar-link';
 
-import {
-  StatusLabel,
-  StatusType,
-  CopyLink,
-  TitleWithEllipsis,
-} from 'features/Common';
+import { OnAir, CopyLink, TitleWithEllipsis } from 'features/Common';
 import { useMedia } from 'context/InterfaceContext';
 
 import EventAction from '../EventAction';
@@ -44,12 +39,10 @@ const EventHeader: FC<Props> = ({ event, participants }) => {
     <Wrapper>
       <Inner>
         <TitleWrapper>
-          <TitleWithEllipsis titleHeight={isMobile ? '28px' : '45px'}>
-            {title}
-          </TitleWithEllipsis>
+          <TitleWithEllipsis>{title}</TitleWithEllipsis>
           {isOnAir && (
             <StatusWrapper>
-              <StatusLabel type={StatusType.SUCCESS}>On-Air</StatusLabel>
+              <OnAir />
             </StatusWrapper>
           )}
         </TitleWrapper>
