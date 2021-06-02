@@ -52,6 +52,7 @@ const NetworkCarousel: FC = () => {
         <Carousel
           itemWidth={isMobile ? '258px' : '278px'}
           id='network-carousel'
+          itemName='network'
         >
           {networks!.map(({ id, title, image }) => (
             <LargeTile

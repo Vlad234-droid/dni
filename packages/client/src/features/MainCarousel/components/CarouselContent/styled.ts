@@ -9,7 +9,7 @@ export const Wrapper = styled.div`
   background-color: ${({ theme }) => theme.colors.tescoBlue};
   display: flex;
   justify-content: space-between;
-  min-height: 464px;
+  min-height: 474px;
 
   ${Media.large_phone`
     margin-top: 72px;
