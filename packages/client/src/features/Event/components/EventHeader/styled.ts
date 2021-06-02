@@ -18,7 +18,14 @@ export const Inner = styled.div`
 `;
 
 export const StatusWrapper = styled.div`
+  position: absolute;
+  top: -100px;
+  left: 10px;
   margin-right: 32px;
+
+  ${Media.tablet`
+     position: static;
+  `}
 `;
 
 export const TextIconWrapper = styled.div`

@@ -6,6 +6,7 @@ import { LargeTile } from 'features/Tile';
 import { EmptyContainer, Error, Spinner } from 'features/Common';
 import { Page } from 'features/Page';
 import Loading from 'types/loading';
+import { useMedia } from 'context/InterfaceContext';
 
 import { isEventOnAir, isActionDisabled } from '../../utils';
 import Event from '../../config/types';
@@ -30,6 +31,7 @@ const EventCarousel: FC<Props> = ({
   error,
   loadParticipants,
 }) => {
+  const { isMobile } = useMedia();
   const isLoading = useMemo(
     () => loading !== Loading.SUCCEEDED && loading !== Loading.FAILED,
     [loading],
@@ -54,7 +56,11 @@ const EventCarousel: FC<Props> = ({
       return <EmptyContainer description='Nothing to show' />;
 
     return (
-      <Carousel itemWidth='278px' id='event-carousel'>
+      <Carousel
+        itemWidth={isMobile ? '260px' : '266px'}
+        id='event-carousel'
+        itemName='event'
+      >
         {events.map(
           ({ id, title, maxParticipants, image, startDate, endDate }) => (
             <LargeTile
