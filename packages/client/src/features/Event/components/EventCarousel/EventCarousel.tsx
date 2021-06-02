@@ -2,7 +2,7 @@ import React, { FC, useEffect, useMemo } from 'react';
 import isEmpty from 'lodash.isempty';
 
 import Carousel from 'features/Carousel';
-import { LargeTile } from 'features/Tile';
+import { VerticalTile } from 'features/Tile';
 import { EmptyContainer, Error, Spinner } from 'features/Common';
 import { Page } from 'features/Page';
 import Loading from 'types/loading';
@@ -63,7 +63,7 @@ const EventCarousel: FC<Props> = ({
       >
         {events.map(
           ({ id, title, maxParticipants, image, startDate, endDate }) => (
-            <LargeTile
+            <VerticalTile
               key={id}
               id={id}
               title={title}

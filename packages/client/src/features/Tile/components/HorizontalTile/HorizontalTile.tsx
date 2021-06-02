@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { VERTICAL } from '@beans/constants';
+import { HORIZONTAL } from '@beans/constants';
 
 import Tile from 'features/Tile';
 import { OnAir } from 'features/Common';
@@ -7,13 +7,12 @@ import { OnAir } from 'features/Common';
 import { Type } from '../../config/types';
 import { Wrapper, ActionContainer, StatusContainer } from './styled';
 
-const TEST_ID = 'large-tile';
+const TEST_ID = 'horizontal-tile';
 
 type Props = {
-  type?: Type;
   id: number;
   title: string;
-  participants: number;
+  participants?: number;
   link: string;
   image?: {
     alternativeText: string;
@@ -24,52 +23,44 @@ type Props = {
   isOnAir?: boolean;
   maxParticipants?: number;
   hideMaxParticipants?: boolean;
-  hideParticipants?: boolean;
   imageHeight?: string;
-  wrapperHeight?: string;
+  type: Type;
 };
 
-const LargeTile: FC<Props> = ({
+const HorizontalTile: FC<Props> = ({
+  type,
   title,
   participants,
   image,
   renderAction,
   link,
   meta,
-  isOnAir,
   maxParticipants,
   hideMaxParticipants,
-  hideParticipants,
   id,
-  imageHeight = '276px',
-  wrapperHeight,
-  type = Type.WIDE,
+  isOnAir,
+  imageHeight = '165px',
 }) => (
-  <Wrapper data-testid={TEST_ID} height={wrapperHeight} type={type}>
+  <Wrapper data-testid={TEST_ID}>
     {isOnAir && (
       <StatusContainer>
-        <OnAir />
+        <OnAir small />
       </StatusContainer>
     )}
     <Tile
       type={type}
       id={id}
       link={link}
-      renderAction={() => (
-        <ActionContainer type={type} hideParticipants={hideParticipants}>
-          {renderAction()}
-        </ActionContainer>
-      )}
+      renderAction={() => <ActionContainer>{renderAction()}</ActionContainer>}
       meta={meta}
       title={title}
       participants={participants}
       maxParticipants={maxParticipants}
       hideMaxParticipants={hideMaxParticipants}
-      hideParticipants={hideParticipants}
       image={image}
       orientation={{
-        aboveTablet: VERTICAL,
-        belowTablet: VERTICAL,
+        aboveTablet: HORIZONTAL,
+        belowTablet: HORIZONTAL,
       }}
       imageHeight={imageHeight}
     />
@@ -78,4 +69,4 @@ const LargeTile: FC<Props> = ({
 
 export { TEST_ID };
 
-export default LargeTile;
+export default HorizontalTile;

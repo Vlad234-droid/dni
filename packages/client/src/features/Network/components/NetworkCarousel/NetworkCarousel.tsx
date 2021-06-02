@@ -3,7 +3,7 @@ import isEmpty from 'lodash.isempty';
 
 import Carousel from 'features/Carousel';
 import useFetch from 'hooks/useFetch';
-import { LargeTile } from 'features/Tile';
+import { VerticalTile } from 'features/Tile';
 import useStore from 'hooks/useStore';
 import { EmptyContainer, Error, Spinner } from 'features/Common';
 import { Page } from 'features/Page';
@@ -55,7 +55,7 @@ const NetworkCarousel: FC = () => {
           itemName='network'
         >
           {networks!.map(({ id, title, image }) => (
-            <LargeTile
+            <VerticalTile
               link='/networks'
               renderAction={() => <NetworkAction id={id} />}
               id={id}

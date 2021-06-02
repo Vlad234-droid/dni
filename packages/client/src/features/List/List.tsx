@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
 
-import { SmallTile, LargeTile, Type } from 'features/Tile';
+import { HorizontalTile, VerticalTile, Type } from 'features/Tile';
 import Event from 'features/Event';
 import Network from 'features/Network';
 import { Page } from 'features/Page';
@@ -65,10 +65,10 @@ const List: FC<Props> = ({
       {items.map((entity: Entity) =>
         isMobile ? (
           //@ts-ignore
-          <SmallTile {...propertiesExtractor(entity)} />
+          <HorizontalTile {...propertiesExtractor(entity)} />
         ) : (
           //@ts-ignore
-          <LargeTile
+          <VerticalTile
             hideParticipants={hideParticipants}
             type={type}
             {...propertiesExtractor(entity)}

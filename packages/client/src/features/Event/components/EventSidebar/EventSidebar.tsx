@@ -4,7 +4,7 @@ import Button from '@beans/button';
 import isEmpty from 'lodash.isempty';
 
 import { EmptyContainer, Spinner, Error } from 'features/Common';
-import { LargeTile, SmallTile, Type } from 'features/Tile';
+import { VerticalTile, HorizontalTile, Type } from 'features/Tile';
 import Loading from 'types/loading';
 import { EntityListPayload } from 'types/payload';
 import { Page } from 'features/Page';
@@ -86,7 +86,7 @@ const EventSidebar: FC<Props> = ({
             } = eventItem;
 
             return !index ? (
-              <LargeTile
+              <VerticalTile
                 key={id}
                 id={id}
                 title={title}
@@ -109,7 +109,7 @@ const EventSidebar: FC<Props> = ({
                 imageHeight='unset'
               />
             ) : (
-              <SmallTile
+              <HorizontalTile
                 type={Type.NARROW}
                 key={id}
                 id={id}
