@@ -5,15 +5,14 @@ import Tile from 'features/Tile';
 import { OnAir } from 'features/Common';
 
 import { Type } from '../../config/types';
-import { Wrapper, ActionContainer, StatusContainer } from './styled';
+import { Wrapper, ActionWrapper, StatusWrapper, Meta } from './styled';
 
 const TEST_ID = 'vertical-tile';
 
 type Props = {
-  // type?: Type;
+  type?: Type;
   id: number;
   title: string;
-  // participants: number;
   link: string;
   image?: {
     alternativeText: string;
@@ -22,17 +21,11 @@ type Props = {
   renderAction: () => JSX.Element;
   renderDateTime?: () => JSX.Element;
   renderParticipants?: () => JSX.Element;
-  // meta?: string;
   isOnAir?: boolean;
-  // maxParticipants?: number;
-  // hideMaxParticipants?: boolean;
-  // hideParticipants?: boolean;
-  // wrapperHeight?: string;
 };
 
 const VerticalTile: FC<Props> = ({
   title,
-  // participants,
   image,
   renderAction,
   renderDateTime,
@@ -40,30 +33,38 @@ const VerticalTile: FC<Props> = ({
   link,
   isOnAir,
   id,
-}) => (
-  <Wrapper data-testid={TEST_ID}>
-    {isOnAir && (
-      <StatusContainer>
-        <OnAir />
-      </StatusContainer>
-    )}
-    <Tile
-      // type={type}
-      id={id}
-      link={link}
-      renderAction={() => <ActionContainer>{renderAction()}</ActionContainer>}
-      renderDateTime={renderDateTime}
-      renderParticipants={renderParticipants}
-      title={title}
-      image={image}
-      orientation={{
-        aboveTablet: VERTICAL,
-        belowTablet: VERTICAL,
-      }}
-      imageHeight='140px'
-    />
-  </Wrapper>
-);
+  type = Type.WIDE,
+}) => {
+  return (
+    <Wrapper data-testid={TEST_ID} type={type}>
+      {isOnAir && (
+        <StatusWrapper>
+          <OnAir />
+        </StatusWrapper>
+      )}
+      <Tile
+        id={id}
+        link={link}
+        renderAction={() => (
+          <ActionWrapper type={type}>{renderAction()}</ActionWrapper>
+        )}
+        renderMeta={() => (
+          <Meta type={type}>
+            {renderDateTime && renderDateTime()}
+            {renderParticipants && renderParticipants()}
+          </Meta>
+        )}
+        title={title}
+        image={image}
+        orientation={{
+          aboveTablet: VERTICAL,
+          belowTablet: VERTICAL,
+        }}
+        imageHeight='140px'
+      />
+    </Wrapper>
+  );
+};
 
 export { TEST_ID };
 

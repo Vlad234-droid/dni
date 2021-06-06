@@ -12,7 +12,7 @@ import { Wrapper } from './styled';
 type Entity = Event | Network;
 
 type Props = {
-  // type?: Type;
+  type?: Type;
   items: Entity[];
   link: string;
   renderAction: (id: number, maxParticipants?: number) => JSX.Element;
@@ -27,9 +27,10 @@ const List: FC<Props> = ({
   renderAction,
   renderDateTime,
   renderParticipants,
-  // type,
+  type,
 }) => {
   const { isMobile } = useMedia();
+
   const propertiesExtractor = ({
     id,
     //@ts-ignore
@@ -59,10 +60,7 @@ const List: FC<Props> = ({
           <HorizontalTile {...propertiesExtractor(entity)} />
         ) : (
           //@ts-ignore
-          <VerticalTile
-            // type={type}
-            {...propertiesExtractor(entity)}
-          />
+          <VerticalTile type={type} {...propertiesExtractor(entity)} />
         ),
       )}
     </Wrapper>

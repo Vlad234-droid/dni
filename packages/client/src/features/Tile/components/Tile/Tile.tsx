@@ -9,15 +9,8 @@ import BaseTile from '@beans/base-tile';
 import { TextWithEllipsis } from 'features/Common';
 import defaultImage from 'assets/pride-logo.jpg';
 
-import { Type } from '../../config/types';
 import Description from '../Description';
-import {
-  DescriptionContainer,
-  TileMeta,
-  TileText,
-  Wrapper,
-  ImageWrapper,
-} from './styled';
+import { DescriptionContainer, Wrapper } from './styled';
 
 type Props = {
   id: number;
@@ -25,9 +18,9 @@ type Props = {
   description?: string;
   link: string;
   renderAction: () => JSX.Element;
+  renderMeta?: () => JSX.Element;
   renderParticipants?: () => JSX.Element;
   renderDateTime?: () => JSX.Element;
-  // meta?: string;
   image?: {
     alternativeText: string;
     url: string;
@@ -38,7 +31,6 @@ type Props = {
   };
   imageHeight?: string;
   imageWidth?: string;
-  type?: Type;
 };
 
 const Tile: FC<Props> = ({
@@ -47,21 +39,19 @@ const Tile: FC<Props> = ({
   image,
   link,
   renderAction,
-  renderDateTime,
-  renderParticipants,
-  // meta,
+  renderMeta,
   orientation,
-  // hideParticipants = false,
   id,
   imageHeight,
   imageWidth = '100%',
-  // type = Type.WIDE,
 }) => {
   return (
     <Wrapper>
       <BaseTile
+        ariaLabel={title}
         href={`${link}/${id}`}
         orientation={orientation}
+        root={false}
         responsiveImage={
           <ResponsiveImage
             alt={image?.alternativeText || 'Tesco'}
@@ -76,12 +66,7 @@ const Tile: FC<Props> = ({
           />
         }
         title={
-          <TextWithEllipsis
-            // height={hideParticipants && type == Type.NARROW ? 'auto' : '30px'}
-            href={`${link}/${id}`}
-          >
-            {title}
-          </TextWithEllipsis>
+          <TextWithEllipsis href={`${link}/${id}`}>{title}</TextWithEllipsis>
         }
       >
         {description && (
@@ -91,17 +76,7 @@ const Tile: FC<Props> = ({
             </WindowResize>
           </DescriptionContainer>
         )}
-        {renderDateTime && renderDateTime()}
-        {renderParticipants && renderParticipants()}
-        {/*{meta && <TileMeta type={type}>{meta}</TileMeta>}*/}
-        {/*{isNumber(participants) && (*/}
-        {/*  <TileText type={type}>*/}
-        {/*    <Icon graphic='account' size={'sm'} />*/}
-        {/*    {participants}*/}
-        {/*    {!hideMaxParticipants && maxParticipants && ` / ${maxParticipants}`}*/}
-        {/*    &nbsp; participants*/}
-        {/*  </TileText>*/}
-        {/*)}*/}
+        {renderMeta && renderMeta()}
         {renderAction()}
       </BaseTile>
     </Wrapper>

@@ -58,7 +58,6 @@ const NetworkCarousel: FC = () => {
             <VerticalTile
               link='/networks'
               renderAction={() => <NetworkAction id={id} />}
-              // renderParticipants={() => <div>{participants.data[id] || 0} participants</div>}
               id={id}
               key={`networks-${id}`}
               title={title}
@@ -75,7 +74,6 @@ const NetworkCarousel: FC = () => {
         //@ts-ignore
         items={networks}
         renderAction={(id) => <NetworkAction id={id} />}
-        // renderParticipants={(id) => <div>{participants.data[id] || 0} participants</div>}
         participants={participants.data}
         hideParticipants={true}
       />

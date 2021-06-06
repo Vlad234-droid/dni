@@ -5,7 +5,7 @@ import Tile from 'features/Tile';
 import { OnAir } from 'features/Common';
 
 import { Type } from '../../config/types';
-import { Wrapper, ActionContainer, StatusContainer } from './styled';
+import { Wrapper, ActionWrapper, StatusWrapper, Meta } from './styled';
 
 const TEST_ID = 'horizontal-tile';
 
@@ -37,16 +37,20 @@ const HorizontalTile: FC<Props> = ({
 }) => (
   <Wrapper data-testid={TEST_ID}>
     {isOnAir && (
-      <StatusContainer>
+      <StatusWrapper>
         <OnAir small />
-      </StatusContainer>
+      </StatusWrapper>
     )}
     <Tile
       id={id}
       link={link}
-      renderAction={() => <ActionContainer>{renderAction()}</ActionContainer>}
-      renderDateTime={renderDateTime}
-      renderParticipants={renderParticipants}
+      renderAction={() => <ActionWrapper>{renderAction()}</ActionWrapper>}
+      renderMeta={() => (
+        <Meta>
+          {renderDateTime && renderDateTime()}
+          {renderParticipants && renderParticipants()}
+        </Meta>
+      )}
       title={title}
       image={image}
       orientation={{
