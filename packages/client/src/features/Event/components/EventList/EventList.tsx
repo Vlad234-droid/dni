@@ -10,12 +10,17 @@ import List from 'features/List';
 import { EmptyContainer, Error, Spinner } from 'features/Common';
 import { Page } from 'features/Page';
 import Loading from 'types/loading';
-import { Type } from 'features/Tile';
+import { Type, VerticalTile } from 'features/Tile';
 
 import Event, { Filter } from '../../config/types';
 import { initialListFilters } from '../../config/filters';
-import { getPayloadPeriod, getPayloadWhere } from '../../utils';
+import {
+  getPayloadPeriod,
+  getPayloadWhere,
+  isActionDisabled,
+} from '../../utils';
 import EventAction from '../EventAction';
+import EventParticipants from '../EventParticipants';
 import { Wrapper } from './styled';
 
 const TEST_ID = 'events-list';
@@ -106,10 +111,18 @@ const EventList: FC<Props> = ({
           link={Page.EVENTS}
           //@ts-ignore
           items={events}
-          hideMaxParticipants={false}
-          participants={participants}
-          renderAction={(id, disabled) => (
-            <EventAction id={id} disabled={disabled} />
+          renderAction={(id, maxParticipants) => (
+            <EventAction
+              id={id}
+              disabled={isActionDisabled(participants![id], maxParticipants)}
+            />
+          )}
+          renderDateTime={(startDate) => <div>{startDate}</div>}
+          renderParticipants={(id, maxParticipants) => (
+            <EventParticipants
+              maxParticipants={maxParticipants}
+              participants={participants![id]}
+            />
           )}
         />
         {isLoading && <Spinner />}

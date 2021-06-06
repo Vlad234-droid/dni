@@ -11,6 +11,7 @@ import { useMedia } from 'context/InterfaceContext';
 import { isEventOnAir, isActionDisabled } from '../../utils';
 import Event from '../../config/types';
 import EventAction from '../EventAction';
+import EventParticipants from '../EventParticipants';
 import { Wrapper, ErrorWrapper } from './styled';
 
 const CONTENT_HEIGHT = '483px';
@@ -67,12 +68,8 @@ const EventCarousel: FC<Props> = ({
               key={id}
               id={id}
               title={title}
-              participants={participants![id] || 0}
-              maxParticipants={maxParticipants}
               link={Page.EVENTS}
-              meta={startDate}
               isOnAir={isEventOnAir(startDate, endDate)}
-              wrapperHeight={CONTENT_HEIGHT}
               renderAction={() => (
                 <EventAction
                   id={id}
@@ -80,6 +77,13 @@ const EventCarousel: FC<Props> = ({
                     participants![id],
                     maxParticipants,
                   )}
+                />
+              )}
+              renderDateTime={() => <div>{startDate}</div>}
+              renderParticipants={() => (
+                <EventParticipants
+                  maxParticipants={maxParticipants}
+                  participants={participants![id]}
                 />
               )}
               image={image}

@@ -165,13 +165,14 @@ const NetworkList: FC = () => {
           useWindow={false}
         >
           <List
-            type={Type.NARROW}
+            // type={Type.NARROW}
             link={Page.NETWORKS}
             //@ts-ignore
             items={networksList}
             renderAction={(id) => <NetworkAction id={id} />}
-            participants={participants}
-            hideParticipants={true}
+            renderParticipants={(id) => (
+              <div>{participants.data[id] || 0} participants</div>
+            )}
           />
         </InfiniteScroll>
       </ListContainer>

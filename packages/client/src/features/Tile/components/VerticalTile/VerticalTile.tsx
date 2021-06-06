@@ -10,68 +10,57 @@ import { Wrapper, ActionContainer, StatusContainer } from './styled';
 const TEST_ID = 'vertical-tile';
 
 type Props = {
-  type?: Type;
+  // type?: Type;
   id: number;
   title: string;
-  participants: number;
+  // participants: number;
   link: string;
   image?: {
     alternativeText: string;
     url: string;
   } | null;
   renderAction: () => JSX.Element;
-  meta?: string;
+  renderDateTime?: () => JSX.Element;
+  renderParticipants?: () => JSX.Element;
+  // meta?: string;
   isOnAir?: boolean;
-  maxParticipants?: number;
-  hideMaxParticipants?: boolean;
-  hideParticipants?: boolean;
-  imageHeight?: string;
-  wrapperHeight?: string;
+  // maxParticipants?: number;
+  // hideMaxParticipants?: boolean;
+  // hideParticipants?: boolean;
+  // wrapperHeight?: string;
 };
 
 const VerticalTile: FC<Props> = ({
   title,
-  participants,
+  // participants,
   image,
   renderAction,
+  renderDateTime,
+  renderParticipants,
   link,
-  meta,
   isOnAir,
-  maxParticipants,
-  hideMaxParticipants,
-  hideParticipants,
   id,
-  imageHeight = '276px',
-  wrapperHeight,
-  type = Type.WIDE,
 }) => (
-  <Wrapper data-testid={TEST_ID} height={wrapperHeight} type={type}>
+  <Wrapper data-testid={TEST_ID}>
     {isOnAir && (
       <StatusContainer>
         <OnAir />
       </StatusContainer>
     )}
     <Tile
-      type={type}
+      // type={type}
       id={id}
       link={link}
-      renderAction={() => (
-        <ActionContainer type={type} hideParticipants={hideParticipants}>
-          {renderAction()}
-        </ActionContainer>
-      )}
-      meta={meta}
+      renderAction={() => <ActionContainer>{renderAction()}</ActionContainer>}
+      renderDateTime={renderDateTime}
+      renderParticipants={renderParticipants}
       title={title}
-      participants={participants}
-      maxParticipants={maxParticipants}
-      hideMaxParticipants={hideMaxParticipants}
-      hideParticipants={hideParticipants}
       image={image}
       orientation={{
         aboveTablet: VERTICAL,
         belowTablet: VERTICAL,
       }}
-      imageHeight={imageHeight}
+      imageHeight='140px'
     />
   </Wrapper>
 );

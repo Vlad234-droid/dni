@@ -12,23 +12,22 @@ import { Wrapper } from './styled';
 type Entity = Event | Network;
 
 type Props = {
-  type?: Type;
+  // type?: Type;
   items: Entity[];
   link: string;
-  hideParticipants?: boolean;
-  hideMaxParticipants?: boolean;
-  participants?: Record<number, number>;
-  renderAction: (id: number, disabled: boolean) => JSX.Element;
+  renderAction: (id: number, maxParticipants?: number) => JSX.Element;
+  renderDateTime?: (startDate: string) => JSX.Element;
+  renderParticipants?: (id: number, maxParticipants?: number) => JSX.Element;
+  actionDisabled?: boolean;
 };
 
 const List: FC<Props> = ({
   link,
   items,
   renderAction,
-  hideParticipants,
-  hideMaxParticipants,
-  participants,
-  type,
+  renderDateTime,
+  renderParticipants,
+  // type,
 }) => {
   const { isMobile } = useMedia();
   const propertiesExtractor = ({
@@ -44,19 +43,11 @@ const List: FC<Props> = ({
     key: id,
     id,
     link,
-    renderAction: () =>
-      renderAction(
-        id,
-        hideParticipants ||
-          (Boolean(maxParticipants) &&
-            Boolean(participants) &&
-            participants![id] >= maxParticipants),
-      ),
-    meta: link === Page.NETWORKS ? undefined : startDate,
-    participants: !hideParticipants && (participants![id] || 0),
-    maxParticipants: maxParticipants,
-    hideMaxParticipants: hideMaxParticipants,
-    isOnAir: link === Page.EVENTS && isEventOnAir(startDate, endDate),
+    renderAction: () => renderAction(id, maxParticipants),
+    renderDateTime: () => renderDateTime && renderDateTime(startDate),
+    renderParticipants: () =>
+      renderParticipants && renderParticipants(id, maxParticipants),
+    isOnAir: startDate && endDate && isEventOnAir(startDate, endDate),
     ...rest,
   });
 
@@ -69,8 +60,7 @@ const List: FC<Props> = ({
         ) : (
           //@ts-ignore
           <VerticalTile
-            hideParticipants={hideParticipants}
-            type={type}
+            // type={type}
             {...propertiesExtractor(entity)}
           />
         ),

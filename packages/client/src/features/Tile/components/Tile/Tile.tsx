@@ -7,23 +7,27 @@ import { HORIZONTAL, VERTICAL } from '@beans/constants';
 import BaseTile from '@beans/base-tile';
 
 import { TextWithEllipsis } from 'features/Common';
+import defaultImage from 'assets/pride-logo.jpg';
 
 import { Type } from '../../config/types';
 import Description from '../Description';
-import { DescriptionContainer, TileMeta, TileText, Wrapper } from './styled';
+import {
+  DescriptionContainer,
+  TileMeta,
+  TileText,
+  Wrapper,
+  ImageWrapper,
+} from './styled';
 
 type Props = {
   id: number;
   title: string;
   description?: string;
-  descriptionHeight?: number;
   link: string;
   renderAction: () => JSX.Element;
-  meta?: string;
-  participants?: number;
-  maxParticipants?: number;
-  hideMaxParticipants?: boolean;
-  hideParticipants?: boolean;
+  renderParticipants?: () => JSX.Element;
+  renderDateTime?: () => JSX.Element;
+  // meta?: string;
   image?: {
     alternativeText: string;
     url: string;
@@ -32,26 +36,26 @@ type Props = {
     aboveTablet: typeof HORIZONTAL | typeof VERTICAL;
     belowTablet: typeof HORIZONTAL | typeof VERTICAL;
   };
-  imageHeight: string;
+  imageHeight?: string;
+  imageWidth?: string;
   type?: Type;
 };
 
 const Tile: FC<Props> = ({
   title,
   description,
-  descriptionHeight,
-  participants,
   image,
   link,
   renderAction,
-  meta,
+  renderDateTime,
+  renderParticipants,
+  // meta,
   orientation,
-  maxParticipants,
-  hideMaxParticipants = false,
-  hideParticipants = false,
+  // hideParticipants = false,
   id,
   imageHeight,
-  type = Type.WIDE,
+  imageWidth = '100%',
+  // type = Type.WIDE,
 }) => {
   return (
     <Wrapper>
@@ -60,18 +64,20 @@ const Tile: FC<Props> = ({
         orientation={orientation}
         responsiveImage={
           <ResponsiveImage
-            alt={image?.alternativeText}
-            src={image?.url}
+            alt={image?.alternativeText || 'Tesco'}
+            src={image?.url || defaultImage}
             fallbackSizeRatio='57%'
-            minHeight='116px'
+            minHeight={imageHeight}
             maxHeight={imageHeight}
-            maxWidth='100%'
-            objectFit='contain'
+            maxWidth={imageWidth}
+            minWidth={imageWidth}
+            positioning={image?.url ? 'top' : 'center'}
+            objectFit={image?.url ? 'cover' : 'contain'}
           />
         }
         title={
           <TextWithEllipsis
-            height={hideParticipants && type == Type.NARROW ? 'auto' : '30px'}
+            // height={hideParticipants && type == Type.NARROW ? 'auto' : '30px'}
             href={`${link}/${id}`}
           >
             {title}
@@ -79,21 +85,23 @@ const Tile: FC<Props> = ({
         }
       >
         {description && (
-          <DescriptionContainer descriptionHeight={`${descriptionHeight}px`}>
+          <DescriptionContainer>
             <WindowResize>
               <Description ellipse>{description}</Description>
             </WindowResize>
           </DescriptionContainer>
         )}
-        {meta && <TileMeta type={type}>{meta}</TileMeta>}
-        {isNumber(participants) && (
-          <TileText type={type}>
-            <Icon graphic='account' size={'sm'} />
-            {participants}
-            {!hideMaxParticipants && maxParticipants && ` / ${maxParticipants}`}
-            &nbsp; participants
-          </TileText>
-        )}
+        {renderDateTime && renderDateTime()}
+        {renderParticipants && renderParticipants()}
+        {/*{meta && <TileMeta type={type}>{meta}</TileMeta>}*/}
+        {/*{isNumber(participants) && (*/}
+        {/*  <TileText type={type}>*/}
+        {/*    <Icon graphic='account' size={'sm'} />*/}
+        {/*    {participants}*/}
+        {/*    {!hideMaxParticipants && maxParticipants && ` / ${maxParticipants}`}*/}
+        {/*    &nbsp; participants*/}
+        {/*  </TileText>*/}
+        {/*)}*/}
         {renderAction()}
       </BaseTile>
     </Wrapper>

@@ -1,23 +1,29 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { BaseElement } from '@beans/foundation';
 
 import { textXS } from 'styles';
+
+// export const CalendarStyles = css`
+//   width: 328px;
+//   box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.15) !important;
+//   border: none !important;
+// `;
 
 export const Wrapper = styled.div`
   position: relative;
 
   h5 {
-    margin: 0 0 8px;
+    //margin: 0 0 8px;
   }
 
   & .beans-base-tile__panel-container {
-    padding: 8px 16px 12px;
+    //padding: 8px 16px 0;
   }
 
   & .beans-icon__svg {
-    width: 16px;
-    height: 16px;
-    margin-right: 8px;
+    //width: 16px;
+    //height: 16px;
+    //margin-right: 8px;
   }
 
   & h3 .beans-multi-line-ellipsis__visible-text {
@@ -26,16 +32,16 @@ export const Wrapper = styled.div`
 
   & .beans-base-tile__content-container {
     position: relative;
-    bottom: 8px;
+    //bottom: 8px;
 
     div {
-      padding: 0;
+      //padding: 0;
     }
   }
 
   & .beans-button__container {
-    height: 32px;
-    margin-top: 16px;
+    //height: 32px;
+    //margin-top: 16px;
   }
 
   & .beans-responsive-image__image {
@@ -44,7 +50,7 @@ export const Wrapper = styled.div`
   }
 
   & p {
-    margin-bottom: 8px;
+    //margin-bottom: 8px;
   }
 `;
 
@@ -56,7 +62,7 @@ export const ActionContainer = styled(BaseElement)`
   margin-top: 0;
   margin-bottom: 0;
   padding: 5px;
-  max-width: 112px;
+  //max-width: 112px;
 
   & > button {
     width: 100%;

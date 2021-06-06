@@ -58,10 +58,10 @@ const NetworkCarousel: FC = () => {
             <VerticalTile
               link='/networks'
               renderAction={() => <NetworkAction id={id} />}
+              // renderParticipants={() => <div>{participants.data[id] || 0} participants</div>}
               id={id}
               key={`networks-${id}`}
               title={title}
-              participants={120}
               image={image}
             />
           ))}
@@ -75,11 +75,12 @@ const NetworkCarousel: FC = () => {
         //@ts-ignore
         items={networks}
         renderAction={(id) => <NetworkAction id={id} />}
-        participants={participants}
+        // renderParticipants={(id) => <div>{participants.data[id] || 0} participants</div>}
+        participants={participants.data}
         hideParticipants={true}
       />
     );
-  }, [networks, loading, error]);
+  }, [networks, loading, error, participants]);
 
   return <Wrapper>{memoizedContent}</Wrapper>;
 };

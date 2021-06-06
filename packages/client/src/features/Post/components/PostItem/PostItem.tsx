@@ -1,6 +1,8 @@
 import React, { FC } from 'react';
 import styled from 'styled-components';
 
+import { CanPerform } from 'features/Auth';
+
 import { Post } from '../../config/types';
 import PostPublished from '../PostPublished';
 import PostArchived from '../PostArchived';
@@ -20,7 +22,14 @@ const PostItem: FC<PostItemProps> = ({ item }) => {
 
   return (
     <PostItemWrapper data-testid={TEST_ID}>
-      {archived ? <PostArchived item={item} /> : <PostPublished item={item} />}
+      {archived ? (
+        <CanPerform
+          perform='postsArchived:visit'
+          yes={() => <PostArchived item={item} />}
+        />
+      ) : (
+        <PostPublished item={item} />
+      )}
     </PostItemWrapper>
   );
 };

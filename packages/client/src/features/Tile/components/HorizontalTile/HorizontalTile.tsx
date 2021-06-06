@@ -19,27 +19,21 @@ type Props = {
     url: string;
   } | null;
   renderAction: () => JSX.Element;
-  meta?: string;
+  renderDateTime?: () => JSX.Element;
+  renderParticipants?: () => JSX.Element;
   isOnAir?: boolean;
-  maxParticipants?: number;
-  hideMaxParticipants?: boolean;
-  imageHeight?: string;
   type: Type;
 };
 
 const HorizontalTile: FC<Props> = ({
-  type,
   title,
-  participants,
   image,
   renderAction,
+  renderDateTime,
+  renderParticipants,
   link,
-  meta,
-  maxParticipants,
-  hideMaxParticipants,
   id,
   isOnAir,
-  imageHeight = '165px',
 }) => (
   <Wrapper data-testid={TEST_ID}>
     {isOnAir && (
@@ -48,21 +42,19 @@ const HorizontalTile: FC<Props> = ({
       </StatusContainer>
     )}
     <Tile
-      type={type}
       id={id}
       link={link}
       renderAction={() => <ActionContainer>{renderAction()}</ActionContainer>}
-      meta={meta}
+      renderDateTime={renderDateTime}
+      renderParticipants={renderParticipants}
       title={title}
-      participants={participants}
-      maxParticipants={maxParticipants}
-      hideMaxParticipants={hideMaxParticipants}
       image={image}
       orientation={{
         aboveTablet: HORIZONTAL,
         belowTablet: HORIZONTAL,
       }}
-      imageHeight={imageHeight}
+      imageHeight='126px'
+      imageWidth='80px'
     />
   </Wrapper>
 );
