@@ -10,7 +10,7 @@ import List from 'features/List';
 import { EmptyContainer, Error, Spinner } from 'features/Common';
 import { Page } from 'features/Page';
 import Loading from 'types/loading';
-import { Type, VerticalTile } from 'features/Tile';
+import { Type } from 'features/Tile';
 
 import Event, { Filter } from '../../config/types';
 import { initialListFilters } from '../../config/filters';

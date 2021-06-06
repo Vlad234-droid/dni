@@ -4,6 +4,10 @@ import { GREY_COLOR } from 'styles';
 import Media from 'styles/media';
 
 export const Wrapper = styled.div`
+  & .beans-responsive-image__image {
+    max-height: 250px;
+  }
+
   & .beans-breadcrumb__container {
     background: ${GREY_COLOR};
     position: fixed;
@@ -44,7 +48,6 @@ export const Header = styled.div`
   min-height: 151px;
 
   ${Media.large_tablet`
-    padding: 54px 40px 80px 40px;
     height: 249px;
   `}
 `;
