@@ -19,7 +19,7 @@ type Props = {
     url: string;
   } | null;
   renderAction: () => JSX.Element;
-  renderDateTime?: () => JSX.Element;
+  meta?: string;
   renderParticipants?: () => JSX.Element;
   isOnAir?: boolean;
 };
@@ -28,7 +28,7 @@ const VerticalTile: FC<Props> = ({
   title,
   image,
   renderAction,
-  renderDateTime,
+  meta,
   renderParticipants,
   link,
   isOnAir,
@@ -50,7 +50,7 @@ const VerticalTile: FC<Props> = ({
         )}
         renderMeta={() => (
           <Meta type={type}>
-            {renderDateTime && renderDateTime()}
+            {meta && <div>{meta}</div>}
             {renderParticipants && renderParticipants()}
           </Meta>
         )}

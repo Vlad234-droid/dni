@@ -102,7 +102,7 @@ const EventSidebar: FC<Props> = ({
                     )}
                   />
                 )}
-                renderDateTime={() => <div>{startDate}</div>}
+                meta={startDate}
                 renderParticipants={() => (
                   <EventParticipants
                     maxParticipants={maxParticipants}
@@ -128,7 +128,7 @@ const EventSidebar: FC<Props> = ({
                     )}
                   />
                 )}
-                renderDateTime={() => <div>{startDate}</div>}
+                meta={startDate}
                 renderParticipants={() => (
                   <EventParticipants
                     maxParticipants={maxParticipants}

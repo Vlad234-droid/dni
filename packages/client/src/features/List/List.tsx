@@ -16,7 +16,7 @@ type Props = {
   items: Entity[];
   link: string;
   renderAction: (id: number, maxParticipants?: number) => JSX.Element;
-  renderDateTime?: (startDate: string) => JSX.Element;
+  meta?: string;
   renderParticipants?: (id: number, maxParticipants?: number) => JSX.Element;
   actionDisabled?: boolean;
 };
@@ -25,7 +25,7 @@ const List: FC<Props> = ({
   link,
   items,
   renderAction,
-  renderDateTime,
+  meta,
   renderParticipants,
   type,
 }) => {
@@ -44,8 +44,8 @@ const List: FC<Props> = ({
     key: id,
     id,
     link,
+    meta: startDate,
     renderAction: () => renderAction(id, maxParticipants),
-    renderDateTime: () => renderDateTime && renderDateTime(startDate),
     renderParticipants: () =>
       renderParticipants && renderParticipants(id, maxParticipants),
     isOnAir: startDate && endDate && isEventOnAir(startDate, endDate),

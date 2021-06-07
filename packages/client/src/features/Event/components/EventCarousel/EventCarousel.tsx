@@ -79,7 +79,7 @@ const EventCarousel: FC<Props> = ({
                   )}
                 />
               )}
-              renderDateTime={() => <div>{startDate}</div>}
+              meta={startDate}
               renderParticipants={() => (
                 <EventParticipants
                   maxParticipants={maxParticipants}

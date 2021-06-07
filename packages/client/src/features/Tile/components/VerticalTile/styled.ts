@@ -69,7 +69,6 @@ export const ActionWrapper = styled(BaseElement)<{ type: Type }>`
   justify-content: center;
   align-items: center;
   border-top: ${({ theme }) => `1px solid ${theme.colors.lines.base}`};
-  //margin-bottom: -16px;
   padding: 16px;
   margin-top: ${({ type }) => (type == Type.WIDE ? '32px' : '16px')};
 

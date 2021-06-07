@@ -117,7 +117,6 @@ const EventList: FC<Props> = ({
               disabled={isActionDisabled(participants![id], maxParticipants)}
             />
           )}
-          renderDateTime={(startDate) => <div>{startDate}</div>}
           renderParticipants={(id, maxParticipants) => (
             <EventParticipants
               maxParticipants={maxParticipants}

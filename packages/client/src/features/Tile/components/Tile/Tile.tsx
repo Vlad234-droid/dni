@@ -17,8 +17,6 @@ type Props = {
   link: string;
   renderAction: () => JSX.Element;
   renderMeta?: () => JSX.Element;
-  renderParticipants?: () => JSX.Element;
-  renderDateTime?: () => JSX.Element;
   image?: {
     alternativeText: string;
     url: string;
