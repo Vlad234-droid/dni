@@ -53,7 +53,7 @@ const EventComponent: FC<Props> = ({
   }, [event]);
 
   useEffect(() => {
-    if (participants || participants === 0) return;
+    if (participants) return;
 
     loadParticipants();
   }, []);
