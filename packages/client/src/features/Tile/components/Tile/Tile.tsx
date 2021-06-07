@@ -9,6 +9,7 @@ import BaseTile from '@beans/base-tile';
 import { TitleWithEllipsis } from 'features/Common';
 import Description from '../Description';
 import { Wrapper, DescriptionContainer, TileText, TileMeta } from './styled';
+import { useIsAdmin, useIsManager } from '../../../Auth/hooks/usePermission';
 
 type Props = {
   id: number;
@@ -47,6 +48,9 @@ const Tile: FC<Props> = ({
   id,
   imageHeight,
 }) => {
+  const isAdmin = useIsAdmin();
+  const isManager = useIsManager();
+
   return (
     <Wrapper>
       <BaseTile
@@ -77,7 +81,7 @@ const Tile: FC<Props> = ({
           </DescriptionContainer>
         )}
         {meta && <TileMeta>{meta}</TileMeta>}
-        {isNumber(participants) && (
+        {(isAdmin || isManager) && isNumber(participants) && (
           <TileText>
             <Icon graphic='account' size={'sm'} />
             {participants}
