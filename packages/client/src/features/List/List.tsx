@@ -30,7 +30,7 @@ const List: FC<Props> = ({
   participants,
   type,
 }) => {
-  const { isMobile } = useMedia();
+  const { isMobile, isLargeMobile } = useMedia();
   const propertiesExtractor = ({
     id,
     //@ts-ignore
@@ -63,7 +63,7 @@ const List: FC<Props> = ({
   return (
     <Wrapper>
       {items.map((entity: Entity) =>
-        isMobile ? (
+        isMobile || isLargeMobile ? (
           //@ts-ignore
           <SmallTile {...propertiesExtractor(entity)} />
         ) : (

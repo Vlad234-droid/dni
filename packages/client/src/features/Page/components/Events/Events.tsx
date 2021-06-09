@@ -11,8 +11,6 @@ import PageWrapper from '../PageWrapper';
 const TEST_ID = 'container-events';
 
 const Events: FC = () => {
-  const { isMobile } = useMedia();
-
   const renderMain = useCallback(
     () => (
       <div data-testid={TEST_ID}>
@@ -29,7 +27,7 @@ const Events: FC = () => {
         />
       </div>
     ),
-    [isMobile],
+    [],
   );
 
   return (

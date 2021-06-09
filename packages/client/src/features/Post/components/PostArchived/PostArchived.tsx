@@ -38,7 +38,7 @@ const PostArchived: FC<PostArchivedProps> = ({ item }) => {
     <PostArchivedWrapper
       onClick={onPostClick}
       data-testid={TEST_ID}
-      isMobile={media.isMobile}
+      isMobile={media.isMobile || media.isLargeMobile}
     >
       <PostHead>
         <PostPublisherAvatarBox>

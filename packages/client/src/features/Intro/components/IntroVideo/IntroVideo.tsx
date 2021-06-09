@@ -7,8 +7,8 @@ import { Wrapper, IconWrapper, Label } from './styled';
 import tescoVideo from '../../assets/tesco_video.mp4';
 
 const IntroVideo: FC = () => {
-  const { isMobile } = useMedia();
-  const iconColor = isMobile ? '#666' : 'white';
+  const { isMobile, isLargeMobile } = useMedia();
+  const iconColor = isMobile || isLargeMobile ? '#666' : 'white';
 
   return (
     <Wrapper>
