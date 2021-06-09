@@ -30,6 +30,13 @@ const MarkdownContainer = styled(Box)`
   }
 `;
 
+const MarkdownRendererContainer = styled(Box)`
+  p {
+    margin-top: 1em;
+    margin-bottom: 1em;
+  }
+`;
+
 const getLinkHref = (url: string) =>
   url.indexOf('http') === -1 ? `https://${url}` : url;
 
@@ -47,37 +54,39 @@ export const RichTextRenderer = (props: RichTextComponentProps) => {
 };
 
 export const MarkdownRenderer = ({ source }: { source: string }) => (
-  <ReactMarkdown
-    source={source}
-    // It's a temporary workaround until proper module
-    // is available for embedding images
-    escapeHtml={false}
-    astPlugins={[
-      htmlParser({
-        isValidNode: ({ type, name }) =>
-          type === 'tag' && supportedSourceHTMLTags.has(name),
-      }),
-    ]}
-    parserOptions={{
-      commonmark: true,
-    }}
-    renderers={{
-      link: (props) => (
-        <Link href={getLinkHref(props.href)}>{props.children}</Link>
-      ),
-      heading: (props) => (
-        <Box color='tescoBlue' as={`h${props.level}` as ElementType}>
-          {props.children}
-        </Box>
-      ),
-      blockquote: (props) => (
-        <Box color='tescoBlue' fontSize='fsm' marginY='fxs' inline={true}>
-          <blockquote>{props.children}</blockquote>
-        </Box>
-      ),
-      image: (props) => <ResponsiveImage height={null} source={props.src} />,
-    }}
-  />
+  <MarkdownRendererContainer>
+    <ReactMarkdown
+      source={source}
+      // It's a temporary workaround until proper module
+      // is available for embedding images
+      escapeHtml={false}
+      astPlugins={[
+        htmlParser({
+          isValidNode: ({ type, name }) =>
+            type === 'tag' && supportedSourceHTMLTags.has(name),
+        }),
+      ]}
+      parserOptions={{
+        commonmark: true,
+      }}
+      renderers={{
+        link: (props) => (
+          <Link href={getLinkHref(props.href)}>{props.children}</Link>
+        ),
+        heading: (props) => (
+          <Box color='tescoBlue' as={`h${props.level}` as ElementType}>
+            {props.children}
+          </Box>
+        ),
+        blockquote: (props) => (
+          <Box color='tescoBlue' fontSize='fsm' marginY='fxs' inline={true}>
+            <blockquote>{props.children}</blockquote>
+          </Box>
+        ),
+        image: (props) => <ResponsiveImage height={null} source={props.src} />,
+      }}
+    />
+  </MarkdownRendererContainer>
 );
 
 export default MarkdownRenderer;
