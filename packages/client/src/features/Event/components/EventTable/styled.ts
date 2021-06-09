@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components';
 
-import { headingMD, GREY_COLOR } from 'styles';
+import { headingMD, textSM, GREY_COLOR } from 'styles';
 import Media from 'styles/media';
 
 const Wrapper = styled.div`
@@ -11,6 +11,7 @@ const Wrapper = styled.div`
   `}
 
   h5 {
+    ${textSM};
     font-weight: normal;
     line-height: 38px;
   }

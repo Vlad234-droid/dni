@@ -4,8 +4,7 @@ import Link from '@beans/link';
 
 import Media from 'styles/media';
 import { useMedia } from 'context/InterfaceContext';
-import { headingMD } from 'styles';
-import { CopyLink, TitleWithEllipsis } from 'features/Common';
+import { CopyLink, TextWithEllipsis } from 'features/Common';
 
 import NetworkAction from '../NetworkAction';
 
@@ -24,7 +23,7 @@ const NetworkHeader: FC<Props> = ({ id, title, email, onLeave, onJoin }) => {
   return (
     <Wrapper>
       <TitleWrapper>
-        <TitleWithEllipsis>{title}</TitleWithEllipsis>
+        <TextWithEllipsis>{title}</TextWithEllipsis>
         {isMobile && <CopyLink />}
       </TitleWrapper>
       {isMobile && <Link href={`mailto: ${email}`}>{email}</Link>}
@@ -69,6 +68,7 @@ export const TitleWrapper = styled.div`
   display: flex;
   align-items: center;
   padding: 0 0 22px;
+  color: ${({ theme }) => theme.colors.tescoBlue};
 
   ${Media.tablet`
      padding: 0;
