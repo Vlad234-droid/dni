@@ -35,22 +35,13 @@ const InterfaceContext = createContext<InterfaceContext>(
 export const InterfaceProvider: FC = ({ children }) => {
   const viewport = __useMedia();
   const isMobile = viewport === ViewportSize.PHONE;
-  console.log('viewport', viewport);
   const isLargeMobile = viewport === ViewportSize.LARGE_PHONE;
   const isTablet = viewport === ViewportSize.TABLET;
   const isDesktop = viewport === ViewportSize.SMALL_DESKTOP;
   const lt = useCallback((size: number) => viewport < size, [viewport]);
   const lte = useCallback((size: number) => viewport <= size, [viewport]);
   const gt = useCallback((size: number) => viewport > size, [viewport]);
-  const gte = useCallback(
-    (size: number) => {
-      console.log('size', size);
-      console.log('viewport', viewport);
-      console.log('res', viewport >= size);
-      return viewport >= size;
-    },
-    [viewport],
-  );
+  const gte = useCallback((size: number) => viewport >= size, [viewport]);
 
   return (
     <InterfaceContext.Provider
