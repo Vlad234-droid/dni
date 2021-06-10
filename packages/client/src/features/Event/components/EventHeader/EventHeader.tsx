@@ -27,7 +27,8 @@ type Props = {
 
 const EventHeader: FC<Props> = ({ event, participants }) => {
   const { id, title, description, maxParticipants, startDate, endDate } = event;
-  const { isMobile } = useMedia();
+  const { isMobile, isLargeMobile } = useMedia();
+  const isMobileView = isMobile || isLargeMobile;
   const isOnAir = isEventOnAir(startDate, endDate);
 
   return (
@@ -42,7 +43,7 @@ const EventHeader: FC<Props> = ({ event, participants }) => {
           )}
         </TitleWrapper>
         <Actions>
-          {!isMobile && <CopyLink />}
+          {!isMobileView && <CopyLink />}
           <ButtonWrapper>
             <EventAction
               id={id}
@@ -74,7 +75,7 @@ const EventHeader: FC<Props> = ({ event, participants }) => {
               {participants} are participating.{' '}
               {maxParticipants && `${maxParticipants} is maximum capacity.`}
             </span>
-            {isMobile && <CopyLink />}
+            {isMobileView && <CopyLink />}
           </TextIconWrapper>
         </Inner>
         <p>{description}</p>

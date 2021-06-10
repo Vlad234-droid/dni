@@ -5,11 +5,12 @@ import theme from 'theme';
 import { useMedia } from 'context/InterfaceContext';
 
 import { Wrapper, IconWrapper, Label } from './styled';
-import tescoVideo from '../../assets/tesco_video.mp4';
+import tescoVideo from 'assets/tesco_video.mp4';
 
 const IntroVideo: FC = () => {
-  const { isMobile } = useMedia();
-  const iconColor = isMobile ? theme.colors.grayscale : theme.colors.white;
+  const { isMobile, isLargeMobile } = useMedia();
+  const iconColor =
+    isMobile || isLargeMobile ? theme.colors.grayscale : theme.colors.white;
 
   return (
     <Wrapper>

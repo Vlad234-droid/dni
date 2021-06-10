@@ -17,7 +17,7 @@ import NetworkAction from '../NetworkAction';
 import { Wrapper } from './styled';
 
 const NetworkCarousel: FC = () => {
-  const { isDesktop, isMobile } = useMedia();
+  const { isDesktop, isMobile, isLargeMobile } = useMedia();
 
   const [{ response: networks, loading, error }, doFetch] = useFetch<Network[]>(
     [],
@@ -50,7 +50,7 @@ const NetworkCarousel: FC = () => {
     if (!isDesktop) {
       return (
         <Carousel
-          itemWidth={isMobile ? '258px' : '278px'}
+          itemWidth={isMobile || isLargeMobile ? '258px' : '278px'}
           id='network-carousel'
           itemName='network'
         >
