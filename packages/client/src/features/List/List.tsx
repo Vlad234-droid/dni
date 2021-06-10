@@ -3,7 +3,6 @@ import React, { FC } from 'react';
 import { HorizontalTile, VerticalTile, Type } from 'features/Tile';
 import Event from 'features/Event';
 import Network from 'features/Network';
-import { Page } from 'features/Page';
 
 import { isEventOnAir } from '../Event/utils';
 import { useMedia } from '../../context/InterfaceContext';
@@ -29,8 +28,7 @@ const List: FC<Props> = ({
   renderParticipants,
   type,
 }) => {
-  const { isMobile } = useMedia();
-
+  const { isMobile, isLargeMobile } = useMedia();
   const propertiesExtractor = ({
     id,
     //@ts-ignore
@@ -55,7 +53,7 @@ const List: FC<Props> = ({
   return (
     <Wrapper>
       {items.map((entity: Entity) =>
-        isMobile ? (
+        isMobile || isLargeMobile ? (
           //@ts-ignore
           <HorizontalTile {...propertiesExtractor(entity)} />
         ) : (

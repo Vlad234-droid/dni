@@ -17,18 +17,19 @@ type Props = {
 };
 
 const NetworkHeader: FC<Props> = ({ id, title, email, onLeave, onJoin }) => {
-  const { isMobile } = useMedia();
+  const { isMobile, isLargeMobile } = useMedia();
+  const isMobileView = isMobile || isLargeMobile;
 
   // TODO: use commented code to display network actions edit and archive
   return (
     <Wrapper>
       <TitleWrapper>
         <TextWithEllipsis>{title}</TextWithEllipsis>
-        {isMobile && <CopyLink />}
+        {isMobileView && <CopyLink />}
       </TitleWrapper>
-      {isMobile && <Link href={`mailto: ${email}`}>{email}</Link>}
+      {isMobileView && <Link href={`mailto: ${email}`}>{email}</Link>}
       <Actions>
-        {!isMobile && <CopyLink />}
+        {!isMobileView && <CopyLink />}
         <ButtonWrapper>
           <NetworkAction {...{ id, onLeave, onJoin }} />
         </ButtonWrapper>

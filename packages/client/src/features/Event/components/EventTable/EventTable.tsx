@@ -30,7 +30,8 @@ import {
 const TEST_ID = 'events-table';
 
 const EventTable: FC = () => {
-  const { isMobile } = useMedia();
+  const { isMobile, isLargeMobile } = useMedia();
+  const isMobileView = isMobile || isLargeMobile;
   const { networks } = useStore((state) => state.auth.user);
   const [page, setPage] = useState<number>(0);
   const { participants } = useStore((state) => state.events);
@@ -65,7 +66,7 @@ const EventTable: FC = () => {
     return (
       <>
         <Table styles={styles}>
-          <Body zebraStripes={isMobile}>
+          <Body zebraStripes={isMobileView}>
             {events.map(({ id, title, endDate, network }) => (
               <Row key={id}>
                 <Cell width='30%'>
@@ -73,13 +74,13 @@ const EventTable: FC = () => {
                     {title}
                   </TextWithEllipsis>
                 </Cell>
-                <Cell width='30%' visible={!isMobile}>
+                <Cell width='30%' visible={!isMobileView}>
                   {endDate}
                 </Cell>
-                <Cell width={isMobile ? '25%' : '15%'}>
+                <Cell width={isMobileView ? '25%' : '15%'}>
                   {participants.data[id]! || 0} members
                 </Cell>
-                <Cell width='25%' visible={!isMobile}>
+                <Cell width='25%' visible={!isMobileView}>
                   {network && (
                     <NetworkWrapper>
                       {network.image && (

@@ -51,7 +51,7 @@ export const Title = styled.h2`
   `}
 `;
 
-export const Description = styled.div`
+export const Description = styled.div<{ isOpen: boolean }>`
   ${textSM};
   max-width: 328px;
 
@@ -70,8 +70,8 @@ export const Description = styled.div`
   &:last-child {
     display: -webkit-box;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 5;
-    overflow: hidden;
+    -webkit-line-clamp: ${({ isOpen }) => (isOpen ? 'auto' : '5')};
+    overflow: ${({ isOpen }) => (isOpen ? 'visible' : 'hidden')};
   }
 
   &:not(:last-child) {

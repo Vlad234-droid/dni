@@ -19,12 +19,12 @@ type Props = {
 const NetworksPreviewItem: FC<Props> = ({
   network: { imageSrc, title, description },
 }) => {
-  const { isMobile } = useMedia();
+  const { isMobile, isLargeMobile } = useMedia();
 
   return (
     <Wrapper>
       <ImageWrapper>
-        {isMobile ? (
+        {isMobile || isLargeMobile ? (
           <Icon graphic='leaf' size='sm' stroke='#fff' fill='#0054A4' />
         ) : (
           <Image src={imageSrc} />

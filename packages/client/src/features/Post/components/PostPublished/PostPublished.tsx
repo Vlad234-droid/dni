@@ -30,7 +30,10 @@ const PostPublished: FC<PostPublishedProps> = ({ item }) => {
   const media = useMedia();
 
   return (
-    <PostPublishedWrapper data-testid={TEST_ID} isMobile={media.isMobile}>
+    <PostPublishedWrapper
+      data-testid={TEST_ID}
+      isMobile={media.isMobile || media.isLargeMobile}
+    >
       <PostHead>
         <PostPublisher>
           <PostPublisherAvatarBox>
