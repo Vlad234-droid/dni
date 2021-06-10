@@ -14,7 +14,6 @@ import { EmptyContainer, Error, Spinner } from 'features/Common';
 import { Page } from 'features/Page';
 import Loading from 'types/loading';
 import { RootState } from 'store/rootReducer';
-import { Type } from 'features/Tile';
 
 import { Filter } from '../../config/types';
 import { initialListFilters, ALL, YOUR_NETWORKS } from '../../config/filters';
@@ -165,13 +164,10 @@ const NetworkList: FC = () => {
           useWindow={false}
         >
           <List
-            type={Type.NARROW}
             link={Page.NETWORKS}
             //@ts-ignore
             items={networksList}
             renderAction={(id) => <NetworkAction id={id} />}
-            participants={participants}
-            hideParticipants={true}
           />
         </InfiniteScroll>
       </ListContainer>
