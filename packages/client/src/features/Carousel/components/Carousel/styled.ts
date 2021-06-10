@@ -42,6 +42,7 @@ export const SwipeWrapper = styled.div`
 export const CarouselWrapper = styled.div`
   position: relative;
   width: 100%;
+  margin-top: 32px;
 
   ${Media.small_desktop`
      padding: 0 10px;
