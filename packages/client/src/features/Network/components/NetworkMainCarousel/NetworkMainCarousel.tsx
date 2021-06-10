@@ -6,7 +6,11 @@ import networks from '../../networks';
 
 const NetworkCarousel: FC = () => {
   return (
-    <MainCarousel id='networks-preview-carousel' hideControls={false} autoPlay>
+    <MainCarousel
+      id='networks-preview-carousel'
+      hideControls={false}
+      autoPlay={false}
+    >
       {networks.map(({ id, ...network }) => (
         <CarouselContent key={id} {...network} />
       ))}

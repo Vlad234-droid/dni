@@ -4,11 +4,11 @@ import Media from 'styles/media';
 import { textSM, headingXL } from 'styles';
 
 export const Wrapper = styled.div`
-  position: relative;
-  margin-top: 22px;
+  //position: relative;
+  //margin-top: 22px;
   background-color: ${({ theme }) => theme.colors.tescoBlue};
   display: flex;
-  justify-content: space-between;
+  flex-direction: column-reverse;
   min-height: 474px;
 
   ${Media.large_phone`
@@ -16,6 +16,8 @@ export const Wrapper = styled.div`
   `}
 
   ${Media.tablet`
+     flex-direction: row;
+     justify-content: space-between;
      margin-top: 132px;
      min-height: 476px;
   `}
@@ -24,8 +26,8 @@ export const Wrapper = styled.div`
 export const ContentWrapper = styled.div.attrs((props) => ({
   className: props.className,
 }))`
-  position: relative;
-  z-index: 4;
+  //position: relative;
+  //z-index: 4;
   color: ${({ theme }) => theme.colors.white};
   padding: 40px 16px;
 
@@ -45,7 +47,7 @@ export const Title = styled.h2`
   margin: 0 0 24px;
 
   ${Media.tablet`
-      font-size: 44px;
+    font-size: 44px;
     line-height: 1.17;
     margin-bottom: 32px;
   `}
@@ -53,19 +55,19 @@ export const Title = styled.h2`
 
 export const Description = styled.div`
   ${textSM};
-  max-width: 328px;
-
-  ${Media.large_phone`
-    max-width: 60%;
-  `}
-
-  ${Media.tablet`
-     max-width: 70%;
-  `}
-  
-  ${Media.small_desktop`
-    max-width: unset;
-  `}
+  // max-width: 328px;
+  //
+  // ${Media.large_phone`
+  //   max-width: 60%;
+  // `}
+  //
+  // ${Media.tablet`
+  //    max-width: 70%;
+  // `}
+  //
+  // ${Media.small_desktop`
+  //   max-width: unset;
+  // `}
 
   &:last-child {
     display: -webkit-box;
@@ -84,18 +86,18 @@ export const DescriptionWrapper = styled.div`
 `;
 
 export const Image = styled.img`
-  max-width: 226px;
+  //max-width: 226px;
   object-fit: cover;
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  z-index: 3;
+  //position: absolute;
+  //bottom: 0;
+  //right: 0;
+  //z-index: 3;
 
   ${Media.large_phone`
     max-width: 300px;
   `}
 
   ${Media.tablet`
-    max-width: 409px;
+    max-width: 50%;
   `}
 `;
