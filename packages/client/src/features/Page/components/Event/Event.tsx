@@ -5,29 +5,16 @@ import Breadcrumb from '@beans/breadcrumb';
 
 import { ImageWrapperProvider } from 'context';
 import { Event } from 'features/Event';
-import { Page } from 'features/Page';
 
+import { getBackLink } from '../../utils';
 import BasePage from '../BasePage';
 import PageImageWrapper from '../PageImageWrapper';
 
 const TEST_ID = 'event-page';
 const IMAGE_WRAPPER_TEST_ID = 'mage-wrapper';
 
-const links = [
-  {
-    current: true,
-    text: 'Event',
-  },
-];
-
-const home = {
-  href: `/${Page.EVENTS}`,
-  text: 'Events',
-};
-
 const EventPage: FC<RouteComponentProps<{ id: string }>> = (props) => {
   const [imageRef, setImageRef] = useState<HTMLElement | null>(null);
-  const [navRef, setNavRef] = useState<HTMLElement | null>(null);
 
   return (
     <div data-testid={TEST_ID}>
@@ -52,7 +39,10 @@ const EventPage: FC<RouteComponentProps<{ id: string }>> = (props) => {
                         text: `${eventTitle}`,
                       },
                     ]}
-                    home={home}
+                    home={{
+                      href: getBackLink(),
+                      text: 'Events',
+                    }}
                   />
                 )}
               />

@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 import Media from 'styles/media';
-import { textXS } from 'styles';
+import { textXS, redDotStyles } from 'styles';
 
 export const Wrapper = styled.div`
   padding: 0 16px 24px;
@@ -99,8 +99,7 @@ export const TitleWrapper = styled.div`
     `}
 
     &::after {
-      content: '.';
-      color: ${({ theme }) => theme.colors.tescoRed};
+      ${redDotStyles};
     }
   }
 `;
