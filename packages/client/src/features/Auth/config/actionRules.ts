@@ -6,16 +6,12 @@ import { Rule, DynamicData } from './types';
 
 const actionRules: Record<UserRole, Rule> = {
   [UserRole.GUEST]: {
-    static: [
-      buildAction(Page.ABOUT, Action.VISIT),
-      // buildAction('postsArchived', Action.VISIT),
-    ],
+    static: [buildAction(Page.ABOUT, Action.VISIT)],
   },
   [UserRole.EMPLOYEE]: {
     static: [
       ...buildActions(Page.EVENTS, [Action.LIST, Action.CREATE]),
       buildAction(Page.ABOUT, Action.VISIT),
-      // buildAction('postsArchived', Action.VISIT)
     ],
     dynamic: {
       [buildAction(Page.EVENTS, Action.EDIT)]: ({
@@ -36,8 +32,6 @@ const actionRules: Record<UserRole, Rule> = {
         Action.DELETE,
       ]),
       buildAction(Page.ABOUT, Action.VISIT),
-      // buildAction('postsArchived', Action.VISIT)
-      // 'postsArchived:visit',
     ],
   },
   [UserRole.MANAGER]: {
@@ -49,7 +43,6 @@ const actionRules: Record<UserRole, Rule> = {
         Action.DELETE,
       ]),
       buildAction(Page.ABOUT, Action.VISIT),
-      // buildAction('postsArchived', Action.VISIT)
     ],
   },
 };

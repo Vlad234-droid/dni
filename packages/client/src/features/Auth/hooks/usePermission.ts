@@ -3,25 +3,6 @@ import { User, DefaultUser } from 'features/User';
 
 import actionRules from '../config/actionRules';
 import { DynamicData } from '../config/types';
-import { isAdmin, isManager } from '../../../utils/userRoles';
-
-export const useUserRoles: any = () => {
-  const user = useStore<DefaultUser | User>((s) => s.auth.user);
-
-  return user.roles;
-};
-
-export const useIsAdmin = () => {
-  const userRoles = useUserRoles();
-
-  return isAdmin(userRoles);
-};
-
-export const useIsManager = () => {
-  const userRoles = useUserRoles();
-
-  return isManager(userRoles);
-};
 
 export default (action: string, data?: DynamicData) => {
   const user = useStore<DefaultUser | User>((s) => s.auth.user);

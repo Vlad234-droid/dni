@@ -10,7 +10,6 @@ interface User {
   name: string;
   preferred_username: string;
   role: UserRole;
-  roles?: UserRole[];
   networks: number[];
   events: number[];
   params: {
