@@ -2,6 +2,7 @@ import React, { FC } from 'react';
 import styled from 'styled-components';
 import Link from '@beans/link';
 
+import { redDot } from 'styles';
 import Media from 'styles/media';
 import { useMedia } from 'context/InterfaceContext';
 import { CopyLink, TextWithEllipsis } from 'features/Common';
@@ -87,8 +88,7 @@ export const TitleWrapper = styled.div`
     `}
 
     &::after {
-      content: '.';
-      color: ${({ theme }) => theme.colors.tescoRed};
+      ${redDot};
     }
   }
 `;

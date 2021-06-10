@@ -1,5 +1,7 @@
 import styled from 'styled-components';
 
+import { redDot } from 'styles';
+
 export const Logo = styled.div`
   margin-left: 12px;
   margin-bottom: 25px;
@@ -9,9 +11,7 @@ export const Logo = styled.div`
   font-weight: bold;
 
   &::after {
-    content: '.';
-    color: ${({ theme }) => theme.colors.tescoRed};
-    font-weight: bold;
+    ${redDot};
   }
 `;
 
