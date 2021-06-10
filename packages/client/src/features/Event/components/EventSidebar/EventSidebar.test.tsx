@@ -7,7 +7,7 @@ import { DateTime } from 'luxon';
 import { isoDateToFormat, FULL_FORMAT } from 'utils/date';
 import { cleanup, act, renderWithProviders } from 'utils/testUtils';
 import Loading from 'types/loading';
-import { LARGE_TILE_TEST_ID, SMALL_TILE_TEST_ID } from 'features/Tile';
+import { VERTICAL_TILE_TEST_ID, HORIZONTAL_TILE_TEST_ID } from 'features/Tile';
 import { DEFAULT_FILTERS } from 'config/constants';
 
 import EventSidebar, { TEST_ID, FILTERS } from './EventSidebar';
@@ -102,8 +102,8 @@ describe('<EventSidebar />', () => {
       } = renderWithProviders(<EventSidebar {...newProps} />);
 
       expect(queryByTestId(TEST_ID)).toBeInTheDocument();
-      expect(queryAllByTestId(LARGE_TILE_TEST_ID)).toHaveLength(1);
-      expect(queryAllByTestId(SMALL_TILE_TEST_ID)).toHaveLength(0);
+      expect(queryAllByTestId(VERTICAL_TILE_TEST_ID)).toHaveLength(1);
+      expect(queryAllByTestId(HORIZONTAL_TILE_TEST_ID)).toHaveLength(0);
       expect(queryByText('All events')).toBeInTheDocument();
     });
 
@@ -126,8 +126,8 @@ describe('<EventSidebar />', () => {
       } = renderWithProviders(<EventSidebar {...newProps} />);
 
       expect(queryByTestId(TEST_ID)).toBeInTheDocument();
-      expect(queryAllByTestId(LARGE_TILE_TEST_ID)).toHaveLength(1);
-      expect(queryAllByTestId(SMALL_TILE_TEST_ID)).toHaveLength(1);
+      expect(queryAllByTestId(VERTICAL_TILE_TEST_ID)).toHaveLength(1);
+      expect(queryAllByTestId(HORIZONTAL_TILE_TEST_ID)).toHaveLength(1);
       expect(queryByText('All events')).toBeInTheDocument();
     });
 
@@ -150,8 +150,8 @@ describe('<EventSidebar />', () => {
       } = renderWithProviders(<EventSidebar {...newProps} />);
 
       expect(queryByTestId(TEST_ID)).toBeInTheDocument();
-      expect(queryAllByTestId(LARGE_TILE_TEST_ID)).toHaveLength(1);
-      expect(queryAllByTestId(SMALL_TILE_TEST_ID)).toHaveLength(2);
+      expect(queryAllByTestId(VERTICAL_TILE_TEST_ID)).toHaveLength(1);
+      expect(queryAllByTestId(HORIZONTAL_TILE_TEST_ID)).toHaveLength(2);
       expect(queryByText('All events')).toBeInTheDocument();
     });
 

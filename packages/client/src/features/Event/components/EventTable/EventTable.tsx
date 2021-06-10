@@ -11,7 +11,7 @@ import {
   EmptyContainer,
   Spinner,
   Error,
-  TitleWithEllipsis,
+  TextWithEllipsis,
 } from 'features/Common';
 import { Page } from 'features/Page';
 import Loading from 'types/loading';
@@ -69,12 +69,9 @@ const EventTable: FC = () => {
             {events.map(({ id, title, endDate, network }) => (
               <Row key={id}>
                 <Cell width='30%'>
-                  <TitleWithEllipsis
-                    titleHeight='30px'
-                    href={`${Page.EVENTS}/${id}`}
-                  >
+                  <TextWithEllipsis height='30px' href={`${Page.EVENTS}/${id}`}>
                     {title}
-                  </TitleWithEllipsis>
+                  </TextWithEllipsis>
                 </Cell>
                 <Cell width='30%' visible={!isMobile}>
                   {endDate}
@@ -90,12 +87,12 @@ const EventTable: FC = () => {
                           <img src={network.image!.url} />
                         </ImageWrapper>
                       )}
-                      <TitleWithEllipsis
-                        titleHeight='30px'
+                      <TextWithEllipsis
+                        height='30px'
                         href={`${Page.EVENTS}/${id}`}
                       >
                         {network.title}
-                      </TitleWithEllipsis>
+                      </TextWithEllipsis>
                     </NetworkWrapper>
                   )}
                 </Cell>
