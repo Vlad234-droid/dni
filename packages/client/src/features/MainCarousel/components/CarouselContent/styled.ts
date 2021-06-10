@@ -45,7 +45,7 @@ export const Title = styled.h2`
   margin: 0 0 24px;
 
   ${Media.tablet`
-    font-size: 44px;
+      font-size: 44px;
     line-height: 1.17;
     margin-bottom: 32px;
   `}

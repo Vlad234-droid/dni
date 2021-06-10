@@ -1,7 +1,6 @@
 import React, { FC, useState } from 'react';
 
-import Carousel from 'features/Carousel';
-import CarouselContent from './CarouselContent';
+import MainCarousel, { CarouselContent } from 'features/MainCarousel';
 
 import networks from '../../networks';
 
@@ -10,7 +9,11 @@ const NetworkCarousel: FC = () => {
   const handleClick = () => setIsOpen(!isOpen);
 
   return (
-    <Carousel id='networks-preview-carousel' fullWidth continuous>
+    <MainCarousel
+      id='networks-preview-carousel'
+      hideControls={false}
+      autoPlay={true}
+    >
       {networks.map(({ id, ...network }) => (
         <CarouselContent
           key={id}
@@ -19,7 +22,7 @@ const NetworkCarousel: FC = () => {
           {...network}
         />
       ))}
-    </Carousel>
+    </MainCarousel>
   );
 };
 
