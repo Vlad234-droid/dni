@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC } from 'react';
 import { PromoCarousel } from '@beans/carousel';
 import styled from 'styled-components';
 
@@ -6,6 +6,7 @@ import { ControlsContainer, Controls } from '../CarouselControls';
 
 const Wrapper = styled.div`
   position: relative;
+  background-color: ${({ theme }) => theme.colors.tescoBlue};
 `;
 
 const TEST_ID = 'main-carousel';
@@ -18,6 +19,8 @@ type Props = {
   rotationInterval?: number;
   autoPlay?: boolean;
   hideControls?: boolean;
+  onControlClick: () => void;
+  onChange: () => void;
 };
 
 const Carousel: FC<Props> = ({
@@ -26,19 +29,19 @@ const Carousel: FC<Props> = ({
   autoPlay = true,
   hideControls = false,
   children,
+  onControlClick,
+  onChange,
 }) => {
-  const [play, setPlay] = useState(autoPlay);
-  const onChange = () => setPlay(!play);
-
   return (
     <Wrapper data-testid={TEST_ID}>
       <PromoCarousel
         {...{
           id,
           rotationInterval,
-          autoPlay: play,
+          autoPlay: autoPlay,
           hideControls,
           onChange,
+          onControlClick,
         }}
       >
         {children}
