@@ -7,7 +7,7 @@ import { useMedia } from 'context/InterfaceContext';
 
 import EventAction from '../EventAction';
 import Event from '../../config/types';
-import { isEventOnAir } from '../../utils';
+import { isEventOnAir, isActionDisabled } from '../../utils';
 
 import {
   Wrapper,
@@ -31,11 +31,6 @@ const EventHeader: FC<Props> = ({ event, participants }) => {
   const isMobileView = isMobile || isLargeMobile;
   const isOnAir = isEventOnAir(startDate, endDate);
 
-  const memoizedDisabledAction = useMemo(
-    () => Boolean(maxParticipants) && participants >= maxParticipants!,
-    [participants],
-  );
-
   return (
     <Wrapper>
       <Inner>
@@ -50,7 +45,10 @@ const EventHeader: FC<Props> = ({ event, participants }) => {
         <Actions>
           {!isMobileView && <CopyLink />}
           <ButtonWrapper>
-            <EventAction id={id} disabled={memoizedDisabledAction} />
+            <EventAction
+              id={id}
+              disabled={isActionDisabled(participants, maxParticipants)}
+            />
           </ButtonWrapper>
         </Actions>
       </Inner>

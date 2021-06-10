@@ -4,7 +4,7 @@ import Icon from '@beans/icon';
 import { useMedia } from 'context/InterfaceContext';
 
 import { Wrapper, IconWrapper, Label } from './styled';
-import tescoVideo from '../../assets/tesco_video.mp4';
+import tescoVideo from 'assets/tesco_video.mp4';
 
 const IntroVideo: FC = () => {
   const { isMobile, isLargeMobile } = useMedia();

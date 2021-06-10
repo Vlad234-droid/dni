@@ -2,8 +2,6 @@ import React, { FC } from 'react';
 import styled from 'styled-components';
 import Link from '@beans/link';
 
-import Media from 'styles/media';
-
 type Props = {
   height?: string;
   maxWidth?: string;
@@ -28,13 +26,6 @@ const Title = styled.h5<{ height: string; maxWidth: string }>`
   max-width: ${({ maxWidth }) => maxWidth};
   display: inline-block;
   height: ${({ height }) => height};
-  //color: ${({ theme }) => theme.colors.tescoBlue};
-  //margin-right: 24px;
-
-  // ${Media.tablet`
-  //   font-size: 20px;
-  //   line-height: 1.4;
-  // `}
 
   a {
     text-decoration: none;

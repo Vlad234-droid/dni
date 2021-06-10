@@ -4,7 +4,7 @@ import Button from '@beans/button';
 import isEmpty from 'lodash.isempty';
 
 import { EmptyContainer, Spinner, Error } from 'features/Common';
-import { LargeTile, SmallTile, Type } from 'features/Tile';
+import { VerticalTile, HorizontalTile, Type } from 'features/Tile';
 import Loading from 'types/loading';
 import { EntityListPayload } from 'types/payload';
 import { Page } from 'features/Page';
@@ -13,6 +13,7 @@ import { DEFAULT_FILTERS } from 'config/constants';
 import { isActionDisabled, isEventOnAir, getPayloadWhere } from '../../utils';
 import Event from '../../config/types';
 import EventAction from '../EventAction';
+import EventParticipants from '../EventParticipants';
 import { List, Title, Wrapper } from './styled';
 
 const TEST_ID = 'events-sidebar';
@@ -86,14 +87,11 @@ const EventSidebar: FC<Props> = ({
             } = eventItem;
 
             return !index ? (
-              <LargeTile
+              <VerticalTile
                 key={id}
                 id={id}
                 title={title}
                 image={image}
-                participants={participants![id] || 0}
-                maxParticipants={maxParticipants}
-                hideMaxParticipants={false}
                 isOnAir={isEventOnAir(startDate, endDate)}
                 renderAction={() => (
                   <EventAction
@@ -105,19 +103,22 @@ const EventSidebar: FC<Props> = ({
                   />
                 )}
                 meta={startDate}
+                renderParticipants={() => (
+                  <EventParticipants
+                    maxParticipants={maxParticipants}
+                    participants={participants![id]}
+                  />
+                )}
                 link={Page.EVENTS}
-                imageHeight='unset'
               />
             ) : (
-              <SmallTile
+              <HorizontalTile
                 type={Type.NARROW}
                 key={id}
                 id={id}
                 title={title}
                 image={image}
                 isOnAir={isEventOnAir(startDate, endDate)}
-                participants={participants![id] || 0}
-                maxParticipants={maxParticipants}
                 renderAction={() => (
                   <EventAction
                     id={id}
@@ -128,8 +129,13 @@ const EventSidebar: FC<Props> = ({
                   />
                 )}
                 meta={startDate}
+                renderParticipants={() => (
+                  <EventParticipants
+                    maxParticipants={maxParticipants}
+                    participants={participants![id]}
+                  />
+                )}
                 link={Page.EVENTS}
-                imageHeight='136px'
               />
             );
           })}

@@ -5,9 +5,9 @@ import Tile from 'features/Tile';
 import { OnAir } from 'features/Common';
 
 import { Type } from '../../config/types';
-import { Wrapper, ActionContainer, StatusContainer } from './styled';
+import { Wrapper, ActionWrapper, StatusWrapper, Meta } from './styled';
 
-const TEST_ID = 'small-tile';
+const TEST_ID = 'horizontal-tile';
 
 type Props = {
   id: number;
@@ -20,53 +20,49 @@ type Props = {
   } | null;
   renderAction: () => JSX.Element;
   meta?: string;
+  renderParticipants?: () => JSX.Element;
   isOnAir?: boolean;
-  maxParticipants?: number;
-  hideMaxParticipants?: boolean;
-  imageHeight?: string;
   type: Type;
 };
 
-const SmallTile: FC<Props> = ({
-  type,
+const HorizontalTile: FC<Props> = ({
   title,
-  participants,
   image,
   renderAction,
-  link,
   meta,
-  maxParticipants,
-  hideMaxParticipants,
+  renderParticipants,
+  link,
   id,
   isOnAir,
-  imageHeight = '165px',
 }) => (
   <Wrapper data-testid={TEST_ID}>
     {isOnAir && (
-      <StatusContainer>
+      <StatusWrapper>
         <OnAir small />
-      </StatusContainer>
+      </StatusWrapper>
     )}
     <Tile
-      type={type}
       id={id}
       link={link}
-      renderAction={() => <ActionContainer>{renderAction()}</ActionContainer>}
-      meta={meta}
+      renderAction={() => <ActionWrapper>{renderAction()}</ActionWrapper>}
+      renderMeta={() => (
+        <Meta>
+          {meta && <div>{meta}</div>}
+          {renderParticipants && renderParticipants()}
+        </Meta>
+      )}
       title={title}
-      participants={participants}
-      maxParticipants={maxParticipants}
-      hideMaxParticipants={hideMaxParticipants}
       image={image}
       orientation={{
         aboveTablet: HORIZONTAL,
         belowTablet: HORIZONTAL,
       }}
-      imageHeight={imageHeight}
+      imageHeight='126px'
+      imageWidth='80px'
     />
   </Wrapper>
 );
 
 export { TEST_ID };
 
-export default SmallTile;
+export default HorizontalTile;

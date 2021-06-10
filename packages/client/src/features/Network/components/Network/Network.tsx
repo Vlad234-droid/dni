@@ -10,6 +10,7 @@ import InfoPanel, { InfoPanelType } from 'features/InfoPanel';
 import { PostList, BY_NETWORK } from 'features/Post';
 import { useImageWrapper } from 'context';
 import { EmptyContainer, Error, Spinner } from 'features/Common';
+import defaultImage from 'assets/pride-logo.jpg';
 
 import { byIdSelector, getOne } from '../../store';
 import NetworkPartners from './NetworkPartners';
@@ -86,10 +87,11 @@ const Network: FC<Props> = ({ id, renderBreadcrumb }) => {
               {renderBreadcrumb(network!.title)}
               <ResponsiveImage
                 key={id}
-                alt={image?.alternativeText}
-                src={image?.url}
-                fallbackSizeRatio='57%'
+                alt={image?.alternativeText || 'Tesco'}
+                src={image?.url || defaultImage}
+                positioning='center'
                 objectFit='cover'
+                fallbackSizeRatio='57%'
               />
             </>,
             imageWrapperEl,
