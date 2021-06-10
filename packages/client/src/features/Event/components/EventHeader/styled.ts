@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 import Media from 'styles/media';
-import { textXS, redDot } from 'styles';
+import { textXS, redDotStyles } from 'styles';
 
 export const Wrapper = styled.div`
   padding: 0 16px 24px;
@@ -99,7 +99,7 @@ export const TitleWrapper = styled.div`
     `}
 
     &::after {
-      ${redDot};
+      ${redDotStyles};
     }
   }
 `;

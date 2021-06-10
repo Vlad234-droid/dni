@@ -1,6 +1,6 @@
 import { css } from 'styled-components';
 
-export const redDot = css`
+export const redDotStyles = css`
   content: '.';
   color: ${({ theme }) => theme.colors.tescoRed};
   font-weight: bold;

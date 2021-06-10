@@ -1,7 +1,11 @@
 import styled, { css } from 'styled-components';
 
 import Media from 'styles/media';
-import { HEADER_HEIGHT_DESKTOP, HEADER_HEIGHT_MOBILE, redDot } from 'styles';
+import {
+  HEADER_HEIGHT_DESKTOP,
+  HEADER_HEIGHT_MOBILE,
+  redDotStyles,
+} from 'styles';
 
 export const Wrapper = styled.div`
   position: relative;
@@ -87,6 +91,6 @@ export const Title = styled.div`
   line-height: 26px;
 
   &::after {
-    ${redDot};
+    ${redDotStyles};
   }
 `;
