@@ -18,7 +18,7 @@ type Props = {
   image: {
     src: string;
   };
-  onClick: () => void;
+  onButtonClick: () => void;
   isOpen: boolean;
 };
 
@@ -26,7 +26,7 @@ const CarouselContent: FC<Props> = ({
   title,
   description,
   image: { src },
-  onClick,
+  onButtonClick,
   isOpen,
 }) => (
   <Wrapper>
@@ -41,12 +41,12 @@ const CarouselContent: FC<Props> = ({
           )}
         </Description>
       </DescriptionWrapper>
-      <Button inverse variant='primary' onClick={onClick}>
+      <Button inverse variant='primary' onClick={onButtonClick}>
         {isOpen ? 'Read less' : 'Read more'}
         <Icon graphic={isOpen ? 'contract' : 'expand'} size='xx' />
       </Button>
     </ContentWrapper>
-    <Image src={src} />
+    <Image src={src} isOpen={isOpen} />
   </Wrapper>
 );
 
