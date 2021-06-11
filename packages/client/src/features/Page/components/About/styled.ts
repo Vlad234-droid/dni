@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 
-import { textXX } from 'styles';
 import Media from 'styles/media';
 
 const InfoPanelReducer = styled.div`

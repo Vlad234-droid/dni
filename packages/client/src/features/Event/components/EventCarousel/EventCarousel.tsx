@@ -23,6 +23,7 @@ type Props = {
   participants?: Record<number, number>;
   error?: string;
   loadParticipants: () => void;
+  hasMore?: boolean;
 };
 
 const EventCarousel: FC<Props> = ({

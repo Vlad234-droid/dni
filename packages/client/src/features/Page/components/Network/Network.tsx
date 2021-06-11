@@ -9,7 +9,6 @@ import { ImageWrapperProvider } from 'context/ImageWrapperProvider';
 import { getBackLink } from '../../utils';
 import BasePage from '../BasePage';
 import PageImageWrapper from '../PageImageWrapper';
-import { Page } from '../../config/types';
 
 const TEST_ID = 'network-page';
 

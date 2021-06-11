@@ -2,8 +2,6 @@ import React, { FC } from 'react';
 import styled from 'styled-components';
 import MainMenu from '@beans/primary-navigation';
 
-import Media from 'styles/media';
-
 import {
   mainMenuItems,
   mainMenuItemMobile,
