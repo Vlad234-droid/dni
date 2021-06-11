@@ -166,20 +166,23 @@ const PostList: FC<Props> = ({ entityId, filter = ALL }) => {
     );
   }, [error, posts, loading, total]);
 
-  return isAdmin || isManager ? (
+  return (
     <>
-      {filter !== ALL && (
-        <FiltersContainer>
-          <ButtonFilter
-            initialFilters={byEventFilters}
-            onChange={(key) => handleByEventFilterChange(key as ByEntityFilter)}
-            name='posts'
-          />
-        </FiltersContainer>
-      )}
+      {isAdmin ||
+        (isManager && filter !== ALL && (
+          <FiltersContainer>
+            <ButtonFilter
+              initialFilters={byEventFilters}
+              onChange={(key) =>
+                handleByEventFilterChange(key as ByEntityFilter)
+              }
+              name='posts'
+            />
+          </FiltersContainer>
+        ))}
       {memoizedContent}
     </>
-  ) : null;
+  );
 };
 
 export default PostList;
