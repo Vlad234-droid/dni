@@ -2,8 +2,6 @@ import React, { FC } from 'react';
 import styled from 'styled-components';
 import Icon from '@beans/icon';
 
-import { TextWithEllipsis } from 'features/Common';
-
 type Props = {
   participants?: number;
   maxParticipants?: number;
@@ -15,9 +13,11 @@ const EventParticipants: FC<Props> = ({
 }) => (
   <Wrapper>
     <Icon graphic='account' size={'sm'} />
-    <Text>{`${participants} ${
-      maxParticipants && `/ ${maxParticipants}`
-    } participants`}</Text>
+    <Text>
+      <span>{participants}</span>
+      &nbsp;{maxParticipants && <span>{`/ ${maxParticipants}`}</span>}
+      &nbsp;participants
+    </Text>
   </Wrapper>
 );
 

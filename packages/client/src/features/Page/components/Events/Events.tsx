@@ -1,7 +1,6 @@
 import React, { FC, useCallback } from 'react';
 
 import { Page, PAGE_PREFIX } from 'features/Page';
-import { useMedia } from 'context/InterfaceContext';
 import { EventCarousel, EventList, EventTable } from 'features/Event';
 import { menuItemsDesktop } from 'features/Menu';
 
