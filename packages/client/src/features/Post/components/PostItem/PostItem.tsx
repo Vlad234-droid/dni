@@ -23,7 +23,6 @@ const PostItem: FC<PostItemProps> = ({ item }) => {
   const isAdmin = useIsAdmin();
   const isManager = useIsManager();
 
-  // @ts-ignore
   return (
     <PostItemWrapper data-testid={TEST_ID}>
       {archived ? (

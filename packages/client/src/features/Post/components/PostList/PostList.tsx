@@ -19,6 +19,7 @@ import { getList, getCount, listSelector, clear } from '../../store';
 import { getAllFilterPayload, getFilterPayload } from '../../utils';
 import PostItem from '../PostItem';
 import { FiltersContainer } from './styled';
+import { useIsAdmin, useIsManager } from '../../../Auth/hooks/usePermission';
 
 type Props = {
   filter?: Filter;
@@ -135,6 +136,9 @@ const PostList: FC<Props> = ({ entityId, filter = ALL }) => {
     loadPosts(filters);
   }, []);
 
+  const isAdmin = useIsAdmin();
+  const isManager = useIsManager();
+
   const memoizedContent = useMemo(() => {
     if (error) return <Error errorData={{ title: error }} fullWidth />;
 
@@ -162,7 +166,7 @@ const PostList: FC<Props> = ({ entityId, filter = ALL }) => {
     );
   }, [error, posts, loading, total]);
 
-  return (
+  return isAdmin || isManager ? (
     <>
       {filter !== ALL && (
         <FiltersContainer>
@@ -175,7 +179,7 @@ const PostList: FC<Props> = ({ entityId, filter = ALL }) => {
       )}
       {memoizedContent}
     </>
-  );
+  ) : null;
 };
 
 export default PostList;

@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import Icon from '@beans/icon';
 
 import { TextWithEllipsis } from 'features/Common';
+import { useIsAdmin, useIsManager } from '../../../Auth/hooks/usePermission';
 
 type Props = {
   participants?: number;
@@ -12,14 +13,18 @@ type Props = {
 const EventParticipants: FC<Props> = ({
   participants = 0,
   maxParticipants,
-}) => (
-  <Wrapper>
-    <Icon graphic='account' size={'sm'} />
-    <Text>{`${participants} ${
-      maxParticipants && `/ ${maxParticipants}`
-    } participants`}</Text>
-  </Wrapper>
-);
+}) => {
+  const isAdmin = useIsAdmin();
+  const isManager = useIsManager();
+  return isAdmin || isManager ? (
+    <Wrapper>
+      <Icon graphic='account' size={'sm'} />
+      <Text>{`${participants} ${
+        maxParticipants && `/ ${maxParticipants}`
+      } participants`}</Text>
+    </Wrapper>
+  ) : null;
+};
 
 const Wrapper = styled.div`
   max-width: 100%;
