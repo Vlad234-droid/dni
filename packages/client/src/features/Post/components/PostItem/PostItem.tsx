@@ -1,11 +1,12 @@
 import React, { FC } from 'react';
 import styled from 'styled-components';
 
-import { CanPerform } from 'features/Auth';
+import CanPerform from 'features/Auth';
 
 import { Post } from '../../config/types';
 import PostPublished from '../PostPublished';
 import PostArchived from '../PostArchived';
+import { useIsAdmin, useIsManager } from '../../../Auth/hooks/usePermission';
 
 const PostItemWrapper = styled.div`
   padding: 8px 0 0;
@@ -19,13 +20,18 @@ const TEST_ID = 'post-item';
 
 const PostItem: FC<PostItemProps> = ({ item }) => {
   const { archived } = item;
+  const isAdmin = useIsAdmin();
+  const isManager = useIsManager();
 
+  // @ts-ignore
   return (
     <PostItemWrapper data-testid={TEST_ID}>
       {archived ? (
         <CanPerform
           perform='postsArchived:visit'
-          yes={() => <PostArchived item={item} />}
+          yes={() =>
+            isAdmin || isManager ? <PostArchived item={item} /> : null
+          }
         />
       ) : (
         <PostPublished item={item} />

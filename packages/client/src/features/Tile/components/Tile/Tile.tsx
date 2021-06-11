@@ -1,4 +1,6 @@
 import React, { FC } from 'react';
+import isNumber from 'lodash.isnumber';
+import Icon from '@beans/icon';
 import { WindowResize } from '@beans/helpers';
 import ResponsiveImage from '@beans/responsive-image';
 import { HORIZONTAL, VERTICAL } from '@beans/constants';
