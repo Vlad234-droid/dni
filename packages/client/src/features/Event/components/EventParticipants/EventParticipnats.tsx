@@ -2,6 +2,8 @@ import React, { FC } from 'react';
 import styled from 'styled-components';
 import Icon from '@beans/icon';
 
+import { useIsAdmin, useIsManager } from '../../../Auth/hooks/usePermission';
+
 type Props = {
   participants?: number;
   maxParticipants?: number;
@@ -10,16 +12,20 @@ type Props = {
 const EventParticipants: FC<Props> = ({
   participants = 0,
   maxParticipants,
-}) => (
-  <Wrapper>
-    <Icon graphic='account' size={'sm'} />
-    <Text>
-      <span>{participants}</span>
-      &nbsp;{maxParticipants && <span>{`/ ${maxParticipants}`}</span>}
-      &nbsp;participants
-    </Text>
-  </Wrapper>
-);
+}) => {
+  const isAdmin = useIsAdmin();
+  const isManager = useIsManager();
+  return isAdmin || isManager ? (
+    <Wrapper>
+      <Icon graphic='account' size={'sm'} />
+      <Text>
+        <span>{participants}</span>
+        &nbsp;{maxParticipants && <span>{`/ ${maxParticipants}`}</span>}
+        &nbsp;participants
+      </Text>
+    </Wrapper>
+  ) : null;
+};
 
 const Wrapper = styled.div`
   max-width: 100%;
