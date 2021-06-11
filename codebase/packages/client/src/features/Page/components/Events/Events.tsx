@@ -1,7 +1,6 @@
 import React, { FC, useCallback } from 'react';
 
 import { Page, PAGE_PREFIX } from 'features/Page';
-import { useMedia } from 'context/InterfaceContext';
 import { EventCarousel, EventList, EventTable } from 'features/Event';
 import { menuItemsDesktop } from 'features/Menu';
 
@@ -11,8 +10,6 @@ import PageWrapper from '../PageWrapper';
 const TEST_ID = 'container-events';
 
 const Events: FC = () => {
-  const { isMobile } = useMedia();
-
   const renderMain = useCallback(
     () => (
       <div data-testid={TEST_ID}>
@@ -29,7 +26,7 @@ const Events: FC = () => {
         />
       </div>
     ),
-    [isMobile],
+    [],
   );
 
   return (

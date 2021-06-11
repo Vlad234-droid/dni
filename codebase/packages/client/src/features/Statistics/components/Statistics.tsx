@@ -2,7 +2,8 @@ import React, { ChangeEvent } from 'react';
 import styled from 'styled-components';
 import Checkbox from '@beans/checkbox';
 
-import { Decrease, Increase, TitleWithEllipsis } from 'features/Common';
+import { textSM } from 'styles';
+import { Decrease, Increase, TextWithEllipsis } from 'features/Common';
 
 type Props = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -10,8 +11,7 @@ type Props = {
   onChange: (id: string, checked: boolean) => void;
 };
 const Statistics = ({ data, onChange }: Props) => {
-  const handleChangeItem = (e: ChangeEvent<HTMLInputElement>) =>
-    onChange(e.target.id, e.target.checked);
+  const handleChangeItem = (e: ChangeEvent<HTMLInputElement>) => onChange(e.target.id, e.target.checked);
 
   return (
     <Table>
@@ -25,21 +25,15 @@ const Statistics = ({ data, onChange }: Props) => {
         {data.map((item) => (
           <Row key={item.id}>
             <Cell>
-              <Checkbox
-                checked={item.checked}
-                id={item.id}
-                onChange={handleChangeItem}
-              />
-              <TitleWithEllipsis>{item.name}</TitleWithEllipsis>
+              <Checkbox checked={item.checked} id={item.id} onChange={handleChangeItem} />
+              <TextWithEllipsis maxWidth='400px'>{item.name}</TextWithEllipsis>
             </Cell>
             <Cell>{item.members}</Cell>
             <Cell>
-              <Increase final={item.members} increase={item.subscribe} />{' '}
-              {item.subscribe}
+              <Increase final={item.members} increase={item.subscribe} /> {item.subscribe}
             </Cell>
             <Cell>
-              <Decrease final={item.members} decrease={item.leave} />{' '}
-              {item.leave}
+              <Decrease final={item.members} decrease={item.leave} /> {item.leave}
             </Cell>
           </Row>
         ))}
@@ -63,8 +57,6 @@ const Row = styled.tr`
 `;
 
 const Cell = styled.td`
-  vertical-align: middle;
-
   &:first-child {
     display: flex;
     align-items: center;
@@ -75,11 +67,9 @@ const Cell = styled.td`
   }
 
   h5 {
-    color: ${({ color }) => color};
     margin-left: 16px;
-    margin-right: 0;
-    font-weight: normal;
-    max-width: 400px;
+    color: ${({ theme }) => theme.colors.tescoBlue};
+    ${textSM}
   }
 `;
 

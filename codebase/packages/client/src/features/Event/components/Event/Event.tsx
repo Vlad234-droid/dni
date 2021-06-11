@@ -6,6 +6,7 @@ import { BY_EVENT, PostList } from 'features/Post';
 import { useImageWrapper } from 'context';
 import Loading from 'types/loading';
 import { EmptyContainer, Error, Spinner } from 'features/Common';
+import defaultImage from 'assets/pride-logo.jpg';
 
 import Event from '../../config/types';
 import EventHeader from '../EventHeader';
@@ -39,6 +40,7 @@ const EventComponent: FC<Props> = ({
 }) => {
   const imageWrapperEl = useImageWrapper();
   const isLoading = useMemo(() => loading !== Loading.SUCCEEDED && loading !== Loading.FAILED, [loading]);
+  const { image, title } = event || {};
 
   useEffect(() => {
     if (event) return;
@@ -47,7 +49,7 @@ const EventComponent: FC<Props> = ({
   }, [event]);
 
   useEffect(() => {
-    if (participants || participants === 0) return;
+    if (participants) return;
 
     loadParticipants();
   }, []);
@@ -65,12 +67,13 @@ const EventComponent: FC<Props> = ({
         {imageWrapperEl &&
           createPortal(
             <>
-              {renderBreadcrumb(event!.title)}
+              {title && renderBreadcrumb(title)}
               <ResponsiveImage
-                key={event!.id}
-                alt={event!.image?.alternativeText}
-                src={event!.image?.url}
+                key={id}
+                alt={image?.alternativeText || 'Tesco'}
+                src={image?.url || defaultImage}
                 fallbackSizeRatio='57%'
+                positioning='center'
                 objectFit='cover'
               />
             </>,

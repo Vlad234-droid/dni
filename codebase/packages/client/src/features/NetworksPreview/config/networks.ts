@@ -1,15 +1,13 @@
-import Network1 from '../assets/Network1.png';
-import Network2 from '../assets/Network2.png';
-import Network3 from '../assets/Network3.png';
+import Network1 from '../assets/priorities-1.jpg';
+import Network2 from '../assets/priorities-2.jpg';
+import Network3 from '../assets/priorities-3.jpg';
 
 export default [
   {
     id: 'network_1',
     imageSrc: Network1,
     title: 'Growing Colleague Network Membership',
-    description: [
-      'Grow the networks into all areas of the UK business to support as many colleagues as possible',
-    ],
+    description: ['Grow the networks into all areas of the UK business to support as many colleagues as possible'],
   },
   {
     id: 'network_2',

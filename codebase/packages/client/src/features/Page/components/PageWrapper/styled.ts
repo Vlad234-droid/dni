@@ -1,5 +1,6 @@
 import styled, { css } from 'styled-components';
 
+import { redDotStyles } from 'styles';
 import Media from 'styles/media';
 
 export const Header = styled.div`
@@ -14,8 +15,7 @@ export const Title = styled.h3`
   color: ${({ theme }) => theme.colors.tescoBlue};
 
   &::after {
-    content: '.';
-    color: ${({ theme }) => theme.colors.tescoRed};
+    ${redDotStyles};
   }
 
   ${Media.tablet`

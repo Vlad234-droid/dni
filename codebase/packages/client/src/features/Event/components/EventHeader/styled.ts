@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 import Media from 'styles/media';
-import { textXS } from 'styles';
+import { textXS, redDotStyles } from 'styles';
 
 export const Wrapper = styled.div`
   padding: 0 16px 24px;
@@ -18,7 +18,14 @@ export const Inner = styled.div`
 `;
 
 export const StatusWrapper = styled.div`
+  position: absolute;
+  top: -100px;
+  left: 10px;
   margin-right: 32px;
+
+  ${Media.tablet`
+     position: static;
+  `}
 `;
 
 export const TextIconWrapper = styled.div`
@@ -79,11 +86,10 @@ export const TitleWrapper = styled.div`
   align-items: center;
 
   h5 {
-    font-weight: bold;
     font-size: 32px;
     line-height: 45px;
-    margin-right: 0;
     padding: 22px 0;
+    color: ${({ theme }) => theme.colors.tescoBlue};
 
     ${Media.tablet`
       padding: 0;
@@ -93,8 +99,7 @@ export const TitleWrapper = styled.div`
     `}
 
     &::after {
-      content: '.';
-      color: ${({ theme }) => theme.colors.tescoRed};
+      ${redDotStyles};
     }
   }
 `;

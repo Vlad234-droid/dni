@@ -7,7 +7,7 @@ import isEmpty from 'lodash.isempty';
 import { Table, Body, Cell, Row } from 'features/Table';
 import { useMedia } from 'context/InterfaceContext';
 import useStore from 'hooks/useStore';
-import { EmptyContainer, Spinner, Error, TitleWithEllipsis } from 'features/Common';
+import { EmptyContainer, Spinner, Error, TextWithEllipsis } from 'features/Common';
 import { Page } from 'features/Page';
 import Loading from 'types/loading';
 import { DEFAULT_FILTERS } from 'config/constants';
@@ -19,7 +19,8 @@ import { Wrapper, Title, ButtonWrapper, ImageWrapper, NetworkWrapper } from './s
 const TEST_ID = 'events-table';
 
 const EventTable: FC = () => {
-  const { isMobile } = useMedia();
+  const { isMobile, isLargeMobile } = useMedia();
+  const isMobileView = isMobile || isLargeMobile;
   const { networks } = useStore((state) => state.auth.user);
   const [page, setPage] = useState<number>(0);
   const { participants } = useStore((state) => state.events);
@@ -44,19 +45,19 @@ const EventTable: FC = () => {
     return (
       <>
         <Table styles={styles}>
-          <Body zebraStripes={isMobile}>
+          <Body zebraStripes={isMobileView}>
             {events.map(({ id, title, endDate, network }) => (
               <Row key={id}>
                 <Cell width='30%'>
-                  <TitleWithEllipsis titleHeight='30px' href={`${Page.EVENTS}/${id}`}>
+                  <TextWithEllipsis height='30px' href={`${Page.EVENTS}/${id}`}>
                     {title}
-                  </TitleWithEllipsis>
+                  </TextWithEllipsis>
                 </Cell>
-                <Cell width='30%' visible={!isMobile}>
+                <Cell width='30%' visible={!isMobileView}>
                   {endDate}
                 </Cell>
-                <Cell width={isMobile ? '25%' : '15%'}>{participants.data[id]! || 0} members</Cell>
-                <Cell width='25%' visible={!isMobile}>
+                <Cell width={isMobileView ? '25%' : '15%'}>{participants.data[id]! || 0} members</Cell>
+                <Cell width='25%' visible={!isMobileView}>
                   {network && (
                     <NetworkWrapper>
                       {network.image && (
@@ -64,9 +65,9 @@ const EventTable: FC = () => {
                           <img src={network.image!.url} />
                         </ImageWrapper>
                       )}
-                      <TitleWithEllipsis titleHeight='30px' href={`${Page.EVENTS}/${id}`}>
+                      <TextWithEllipsis height='30px' href={`${Page.EVENTS}/${id}`}>
                         {network.title}
-                      </TitleWithEllipsis>
+                      </TextWithEllipsis>
                     </NetworkWrapper>
                   )}
                 </Cell>

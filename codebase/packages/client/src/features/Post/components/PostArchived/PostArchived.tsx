@@ -35,15 +35,9 @@ const PostArchived: FC<PostArchivedProps> = ({ item }) => {
   const media = useMedia();
 
   return (
-    <PostArchivedWrapper
-      onClick={onPostClick}
-      data-testid={TEST_ID}
-      isMobile={media.isMobile}
-    >
+    <PostArchivedWrapper onClick={onPostClick} data-testid={TEST_ID} isMobile={media.isMobile || media.isLargeMobile}>
       <PostHead>
-        <PostPublisherAvatarBox>
-          {/* <PostPublisherAvatar src={createdBy.avatarSrc} /> */}
-        </PostPublisherAvatarBox>
+        <PostPublisherAvatarBox>{/* <PostPublisherAvatar src={createdBy.avatarSrc} /> */}</PostPublisherAvatarBox>
         <PostPublisherName>{`${authorName}`}</PostPublisherName>
         <PostArchiveMark>
           <PostArchiveEllipse />

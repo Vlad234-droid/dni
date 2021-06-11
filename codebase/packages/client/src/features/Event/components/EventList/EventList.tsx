@@ -14,8 +14,9 @@ import { Type } from 'features/Tile';
 
 import Event, { Filter } from '../../config/types';
 import { initialListFilters } from '../../config/filters';
-import { getPayloadPeriod, getPayloadWhere } from '../../utils';
+import { getPayloadPeriod, getPayloadWhere, isActionDisabled } from '../../utils';
 import EventAction from '../EventAction';
+import EventParticipants from '../EventParticipants';
 import { Wrapper } from './styled';
 
 const TEST_ID = 'events-list';
@@ -99,9 +100,12 @@ const EventList: FC<Props> = ({
           link={Page.EVENTS}
           //@ts-ignore
           items={events}
-          hideMaxParticipants={false}
-          participants={participants}
-          renderAction={(id, disabled) => <EventAction id={id} disabled={disabled} />}
+          renderAction={(id, maxParticipants) => (
+            <EventAction id={id} disabled={isActionDisabled(participants![id], maxParticipants)} />
+          )}
+          renderParticipants={(id, maxParticipants) => (
+            <EventParticipants maxParticipants={maxParticipants} participants={participants![id]} />
+          )}
         />
         {isLoading && <Spinner />}
         {!isEmpty(events) && hasMore && (

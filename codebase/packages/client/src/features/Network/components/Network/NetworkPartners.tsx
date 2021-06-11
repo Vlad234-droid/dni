@@ -16,9 +16,9 @@ type Props = {
 };
 
 const NetworkPartners: FC<Props> = ({ email, partners }) => {
-  const { isMobile } = useMedia();
+  const { isMobile, isLargeMobile } = useMedia();
 
-  if (isMobile) {
+  if (isMobile || isLargeMobile) {
     return (
       <>
         <Title>Network Partnership</Title>

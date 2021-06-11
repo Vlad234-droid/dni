@@ -2,9 +2,10 @@ import React, { FC } from 'react';
 import styled from 'styled-components';
 import Link from '@beans/link';
 
+import { redDotStyles } from 'styles';
 import Media from 'styles/media';
 import { useMedia } from 'context/InterfaceContext';
-import { CopyLink, TitleWithEllipsis } from 'features/Common';
+import { CopyLink, TextWithEllipsis } from 'features/Common';
 
 import NetworkAction from '../NetworkAction';
 
@@ -17,18 +18,19 @@ type Props = {
 };
 
 const NetworkHeader: FC<Props> = ({ id, title, email, onLeave, onJoin }) => {
-  const { isMobile } = useMedia();
+  const { isMobile, isLargeMobile } = useMedia();
+  const isMobileView = isMobile || isLargeMobile;
 
   // TODO: use commented code to display network actions edit and archive
   return (
     <Wrapper>
       <TitleWrapper>
-        <TitleWithEllipsis>{title}</TitleWithEllipsis>
-        {isMobile && <CopyLink />}
+        <TextWithEllipsis>{title}</TextWithEllipsis>
+        {isMobileView && <CopyLink />}
       </TitleWrapper>
-      {isMobile && <Link href={`mailto: ${email}`}>{email}</Link>}
+      {isMobileView && <Link href={`mailto: ${email}`}>{email}</Link>}
       <Actions>
-        {!isMobile && <CopyLink />}
+        {!isMobileView && <CopyLink />}
         <ButtonWrapper>
           <NetworkAction {...{ id, onLeave, onJoin }} />
         </ButtonWrapper>
@@ -68,6 +70,7 @@ export const TitleWrapper = styled.div`
   display: flex;
   align-items: center;
   padding: 0 0 22px;
+  color: ${({ theme }) => theme.colors.tescoBlue};
 
   ${Media.tablet`
      padding: 0;
@@ -86,8 +89,7 @@ export const TitleWrapper = styled.div`
     `}
 
     &::after {
-      content: '.';
-      color: ${({ theme }) => theme.colors.tescoRed};
+      ${redDotStyles};
     }
   }
 `;

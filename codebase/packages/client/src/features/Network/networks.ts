@@ -1,8 +1,8 @@
-import armedImage from './assets/armedImage.png';
-import bameImage from './assets/bameImage.png';
-import disabilityImage from './assets/disabilityImage.png';
-import lgbtImage from './assets/lgbtImage.png';
-import womenImage from './assets/womenImage.png';
+import armedImage from './assets/armed-forces.jpg';
+import bameImage from './assets/bame.jpg';
+import disabilityImage from './assets/disability.jpg';
+import lgbtImage from './assets/lgbtq.jpg';
+import womenImage from './assets/women.jpg';
 
 export default [
   {

@@ -16,6 +16,7 @@ import {
   PostPublishedWrapper,
   PostPublishDate,
 } from './styled';
+import { Page } from 'features/Page';
 
 interface PostPublishedProps {
   item: Post;
@@ -28,7 +29,7 @@ const PostPublished: FC<PostPublishedProps> = ({ item }) => {
   const media = useMedia();
 
   return (
-    <PostPublishedWrapper data-testid={TEST_ID} isMobile={media.isMobile}>
+    <PostPublishedWrapper data-testid={TEST_ID} isMobile={media.isMobile || media.isLargeMobile}>
       <PostHead>
         <PostPublisher>
           <PostPublisherAvatarBox>{/* <PostPublisherAvatar src={createdBy.avatar} /> */}</PostPublisherAvatarBox>
@@ -42,7 +43,7 @@ const PostPublished: FC<PostPublishedProps> = ({ item }) => {
         <PostDescription>
           <RichTextRenderer source={content} />
         </PostDescription>
-        <CopyLink id={id} />
+        <CopyLink to={`/${Page.NETWORK_NEWS}/${id}`} />
         {/*<PostControls id={id} emotions={emotions} /> */}
       </PostContent>
     </PostPublishedWrapper>

@@ -1,9 +1,8 @@
 import React, { FC } from 'react';
 
-import { SmallTile, LargeTile, Type } from 'features/Tile';
+import { HorizontalTile, VerticalTile, Type } from 'features/Tile';
 import Event from 'features/Event';
 import Network from 'features/Network';
-import { Page } from 'features/Page';
 
 import { isEventOnAir } from '../Event/utils';
 import { useMedia } from '../../context/InterfaceContext';
@@ -15,14 +14,13 @@ type Props = {
   type?: Type;
   items: Entity[];
   link: string;
-  hideParticipants?: boolean;
-  hideMaxParticipants?: boolean;
-  participants?: Record<number, number>;
-  renderAction: (id: number, disabled: boolean) => JSX.Element;
+  renderAction: (id: number, maxParticipants?: number) => JSX.Element;
+  renderParticipants?: (id: number, maxParticipants?: number) => JSX.Element;
+  actionDisabled?: boolean;
 };
 
-const List: FC<Props> = ({ link, items, renderAction, hideParticipants, hideMaxParticipants, participants, type }) => {
-  const { isMobile } = useMedia();
+const List: FC<Props> = ({ link, items, renderAction, renderParticipants, type }) => {
+  const { isMobile, isLargeMobile } = useMedia();
   const propertiesExtractor = ({
     id,
     //@ts-ignore
@@ -36,28 +34,22 @@ const List: FC<Props> = ({ link, items, renderAction, hideParticipants, hideMaxP
     key: id,
     id,
     link,
-    renderAction: () =>
-      renderAction(
-        id,
-        hideParticipants || (Boolean(maxParticipants) && Boolean(participants) && participants![id] >= maxParticipants),
-      ),
-    meta: link === Page.NETWORKS ? undefined : startDate,
-    participants: !hideParticipants && (participants![id] || 0),
-    maxParticipants: maxParticipants,
-    hideMaxParticipants: hideMaxParticipants,
-    isOnAir: link === Page.EVENTS && isEventOnAir(startDate, endDate),
+    meta: startDate,
+    renderAction: () => renderAction(id, maxParticipants),
+    renderParticipants: () => renderParticipants && renderParticipants(id, maxParticipants),
+    isOnAir: startDate && endDate && isEventOnAir(startDate, endDate),
     ...rest,
   });
 
   return (
     <Wrapper>
       {items.map((entity: Entity) =>
-        isMobile ? (
+        isMobile || isLargeMobile ? (
           //@ts-ignore
-          <SmallTile {...propertiesExtractor(entity)} />
+          <HorizontalTile {...propertiesExtractor(entity)} />
         ) : (
           //@ts-ignore
-          <LargeTile hideParticipants={hideParticipants} type={type} {...propertiesExtractor(entity)} />
+          <VerticalTile type={type} {...propertiesExtractor(entity)} />
         ),
       )}
     </Wrapper>

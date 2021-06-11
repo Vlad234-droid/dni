@@ -7,7 +7,7 @@ import { DateTime } from 'luxon';
 import { isoDateToFormat, FULL_FORMAT } from 'utils/date';
 import { cleanup, act, renderWithProviders } from 'utils/testUtils';
 import Loading from 'types/loading';
-import { LARGE_TILE_TEST_ID, SMALL_TILE_TEST_ID } from 'features/Tile';
+import { VERTICAL_TILE_TEST_ID, HORIZONTAL_TILE_TEST_ID } from 'features/Tile';
 import { DEFAULT_FILTERS } from 'config/constants';
 
 import EventSidebar, { TEST_ID, FILTERS } from './EventSidebar';
@@ -34,9 +34,7 @@ describe('<EventSidebar />', () => {
     };
 
     it('should not render wrapper, if loading is not started', () => {
-      const { queryByTestId } = renderWithProviders(
-        <EventSidebar {...props} />,
-      );
+      const { queryByTestId } = renderWithProviders(<EventSidebar {...props} />);
 
       expect(queryByTestId(TEST_ID)).not.toBeInTheDocument();
     });
@@ -47,9 +45,7 @@ describe('<EventSidebar />', () => {
         loading: Loading.PENDING,
       };
 
-      const { queryByTestId } = renderWithProviders(
-        <EventSidebar {...newProps} />,
-      );
+      const { queryByTestId } = renderWithProviders(<EventSidebar {...newProps} />);
 
       expect(queryByTestId(TEST_ID)).toBeInTheDocument();
       expect(queryByTestId('spinner')).toBeInTheDocument();
@@ -61,9 +57,7 @@ describe('<EventSidebar />', () => {
         loading: Loading.FAILED,
       };
 
-      const { queryByTestId, getByText } = renderWithProviders(
-        <EventSidebar {...newProps} />,
-      );
+      const { queryByTestId, getByText } = renderWithProviders(<EventSidebar {...newProps} />);
 
       expect(queryByTestId(TEST_ID)).toBeInTheDocument();
       expect(getByText('Here some error')).toBeInTheDocument();
@@ -75,9 +69,7 @@ describe('<EventSidebar />', () => {
         loading: Loading.SUCCEEDED,
       };
 
-      const { queryByTestId, getByText } = renderWithProviders(
-        <EventSidebar {...newProps} />,
-      );
+      const { queryByTestId, getByText } = renderWithProviders(<EventSidebar {...newProps} />);
 
       expect(queryByTestId(TEST_ID)).toBeInTheDocument();
       expect(getByText('You have no events')).toBeInTheDocument();
@@ -95,15 +87,11 @@ describe('<EventSidebar />', () => {
         events,
       };
 
-      const {
-        queryByTestId,
-        queryAllByTestId,
-        queryByText,
-      } = renderWithProviders(<EventSidebar {...newProps} />);
+      const { queryByTestId, queryAllByTestId, queryByText } = renderWithProviders(<EventSidebar {...newProps} />);
 
       expect(queryByTestId(TEST_ID)).toBeInTheDocument();
-      expect(queryAllByTestId(LARGE_TILE_TEST_ID)).toHaveLength(1);
-      expect(queryAllByTestId(SMALL_TILE_TEST_ID)).toHaveLength(0);
+      expect(queryAllByTestId(VERTICAL_TILE_TEST_ID)).toHaveLength(1);
+      expect(queryAllByTestId(HORIZONTAL_TILE_TEST_ID)).toHaveLength(0);
       expect(queryByText('All events')).toBeInTheDocument();
     });
 
@@ -119,15 +107,11 @@ describe('<EventSidebar />', () => {
         events,
       };
 
-      const {
-        queryByTestId,
-        queryAllByTestId,
-        queryByText,
-      } = renderWithProviders(<EventSidebar {...newProps} />);
+      const { queryByTestId, queryAllByTestId, queryByText } = renderWithProviders(<EventSidebar {...newProps} />);
 
       expect(queryByTestId(TEST_ID)).toBeInTheDocument();
-      expect(queryAllByTestId(LARGE_TILE_TEST_ID)).toHaveLength(1);
-      expect(queryAllByTestId(SMALL_TILE_TEST_ID)).toHaveLength(1);
+      expect(queryAllByTestId(VERTICAL_TILE_TEST_ID)).toHaveLength(1);
+      expect(queryAllByTestId(HORIZONTAL_TILE_TEST_ID)).toHaveLength(1);
       expect(queryByText('All events')).toBeInTheDocument();
     });
 
@@ -143,15 +127,11 @@ describe('<EventSidebar />', () => {
         events,
       };
 
-      const {
-        queryByTestId,
-        queryAllByTestId,
-        queryByText,
-      } = renderWithProviders(<EventSidebar {...newProps} />);
+      const { queryByTestId, queryAllByTestId, queryByText } = renderWithProviders(<EventSidebar {...newProps} />);
 
       expect(queryByTestId(TEST_ID)).toBeInTheDocument();
-      expect(queryAllByTestId(LARGE_TILE_TEST_ID)).toHaveLength(1);
-      expect(queryAllByTestId(SMALL_TILE_TEST_ID)).toHaveLength(2);
+      expect(queryAllByTestId(VERTICAL_TILE_TEST_ID)).toHaveLength(1);
+      expect(queryAllByTestId(HORIZONTAL_TILE_TEST_ID)).toHaveLength(2);
       expect(queryByText('All events')).toBeInTheDocument();
     });
 
@@ -162,14 +142,8 @@ describe('<EventSidebar />', () => {
       const events = eventCRUD.findAll();
       const OnAirEvent = {
         ...events[0],
-        startDate: isoDateToFormat(
-          DateTime.now().minus({ days: 1 }).toISO(),
-          FULL_FORMAT,
-        ),
-        endDate: isoDateToFormat(
-          DateTime.now().plus({ days: 2 }).toISO(),
-          FULL_FORMAT,
-        ),
+        startDate: isoDateToFormat(DateTime.now().minus({ days: 1 }).toISO(), FULL_FORMAT),
+        endDate: isoDateToFormat(DateTime.now().plus({ days: 2 }).toISO(), FULL_FORMAT),
       };
 
       const newProps = {
@@ -178,9 +152,7 @@ describe('<EventSidebar />', () => {
         events: [OnAirEvent],
       };
 
-      const { queryByText } = renderWithProviders(
-        <EventSidebar {...newProps} />,
-      );
+      const { queryByText } = renderWithProviders(<EventSidebar {...newProps} />);
 
       expect(queryByText('On-Air')).toBeInTheDocument();
     });

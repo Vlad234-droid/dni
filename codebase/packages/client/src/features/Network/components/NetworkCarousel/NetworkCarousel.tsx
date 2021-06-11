@@ -3,7 +3,7 @@ import isEmpty from 'lodash.isempty';
 
 import Carousel from 'features/Carousel';
 import useFetch from 'hooks/useFetch';
-import { LargeTile } from 'features/Tile';
+import { VerticalTile } from 'features/Tile';
 import useStore from 'hooks/useStore';
 import { EmptyContainer, Error, Spinner } from 'features/Common';
 import { Page } from 'features/Page';
@@ -17,7 +17,7 @@ import NetworkAction from '../NetworkAction';
 import { Wrapper } from './styled';
 
 const NetworkCarousel: FC = () => {
-  const { isDesktop, isMobile } = useMedia();
+  const { isDesktop, isMobile, isLargeMobile } = useMedia();
 
   const [{ response: networks, loading, error }, doFetch] = useFetch<Network[]>([]);
   const { participants } = useStore((state) => state.networks);
@@ -43,15 +43,14 @@ const NetworkCarousel: FC = () => {
 
     if (!isDesktop) {
       return (
-        <Carousel itemWidth={isMobile ? '258px' : '278px'} id='network-carousel'>
+        <Carousel itemWidth={isMobile || isLargeMobile ? '258px' : '278px'} id='network-carousel' itemName='network'>
           {networks!.map(({ id, title, image }) => (
-            <LargeTile
+            <VerticalTile
               link='/networks'
               renderAction={() => <NetworkAction id={id} />}
               id={id}
               key={`networks-${id}`}
               title={title}
-              participants={120}
               image={image}
             />
           ))}
@@ -65,11 +64,11 @@ const NetworkCarousel: FC = () => {
         //@ts-ignore
         items={networks}
         renderAction={(id) => <NetworkAction id={id} />}
-        participants={participants}
+        participants={participants.data}
         hideParticipants={true}
       />
     );
-  }, [networks, loading, error]);
+  }, [networks, loading, error, participants]);
 
   return <Wrapper>{memoizedContent}</Wrapper>;
 };

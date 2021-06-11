@@ -6,9 +6,10 @@ import { GREEN_COLOR } from 'styles';
 const Wrapper = styled.div<{
   small: boolean;
 }>`
-  width: ${({ small }) => (small ? '60px' : '80px')};
+  display: flex;
+  width: ${({ small }) => (small ? '50px' : '80px')};
   border-radius: 20px;
-  padding: ${({ small }) => (small ? '2px 8px' : '5px 10px')};
+  padding: ${({ small }) => (small ? '4px' : '10px')};
   background: ${GREEN_COLOR};
 `;
 

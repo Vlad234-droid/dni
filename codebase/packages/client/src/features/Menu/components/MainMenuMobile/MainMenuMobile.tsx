@@ -2,6 +2,8 @@ import React, { FC } from 'react';
 import Icon from '@beans/icon';
 import Button from '@beans/button';
 
+import { LINKS } from 'config/constants';
+
 import { mainMenuItems } from '../../config/items';
 import HelpLink from '../HelpLink';
 import { Wrapper, Heading, LinkWrapper } from './styled';
@@ -26,7 +28,7 @@ const MainMenuMobile: FC<Props> = ({ onClose }) => (
           {item.text}
         </LinkWrapper>
       ))}
-      <LinkWrapper href='#'>Sign out</LinkWrapper>
+      <LinkWrapper href={LINKS.signOut}>Sign out</LinkWrapper>
     </>
   </Wrapper>
 );

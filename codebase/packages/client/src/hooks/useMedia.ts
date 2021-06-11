@@ -5,17 +5,15 @@ import createMediaListener from 'utils/createMediaListener';
 
 type Media = {
   isMobile: string;
+  isLargeMobile: string;
   isTablet: string;
   isDesktop: string;
 };
 
 const MediaQueries: Media = {
-  isMobile: `(min-width: ${ViewportSize.PHONE}px) and (max-width: ${
-    ViewportSize.TABLET - 1
-  }px)`,
-  isTablet: `(min-width: ${ViewportSize.TABLET}px) and (max-width: ${
-    ViewportSize.SMALL_DESKTOP - 1
-  }px)`,
+  isMobile: `(min-width: ${ViewportSize.PHONE}px) and (max-width: ${ViewportSize.LARGE_PHONE - 1}px)`,
+  isLargeMobile: `(min-width: ${ViewportSize.LARGE_PHONE}px) and (max-width: ${ViewportSize.TABLET - 1}px)`,
+  isTablet: `(min-width: ${ViewportSize.TABLET}px) and (max-width: ${ViewportSize.SMALL_DESKTOP - 1}px)`,
   isDesktop: `(min-width: ${ViewportSize.SMALL_DESKTOP}px)`,
 };
 
@@ -25,10 +23,13 @@ const useMedia = () => {
   const [viewport, setViewport] = useState<ViewportSize>(ViewportSize.PHONE);
 
   const calculateViewport = useCallback((media) => {
-    const { isMobile, isTablet, isDesktop } = media;
+    const { isMobile, isLargeMobile, isTablet, isDesktop } = media;
     switch (true) {
       case isMobile:
         setViewport(ViewportSize.PHONE);
+        return;
+      case isLargeMobile:
+        setViewport(ViewportSize.LARGE_PHONE);
         return;
       case isTablet:
         setViewport(ViewportSize.TABLET);

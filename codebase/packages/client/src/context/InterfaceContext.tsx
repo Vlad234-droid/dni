@@ -5,6 +5,7 @@ import __useMedia from 'hooks/useMedia';
 interface InterfaceContext {
   viewport: ViewportSize;
   isMobile: boolean;
+  isLargeMobile: boolean;
   isTablet: boolean;
   isDesktop: boolean;
   lt: (size: number) => boolean;
@@ -18,6 +19,7 @@ export { ViewportSize };
 const defaultInterfaceContext: InterfaceContext = {
   viewport: ViewportSize.PHONE,
   isMobile: true,
+  isLargeMobile: true,
   isTablet: false,
   isDesktop: true,
   lt: (size: number) => ViewportSize.PHONE < size,
@@ -26,13 +28,12 @@ const defaultInterfaceContext: InterfaceContext = {
   gte: (size: number) => ViewportSize.PHONE >= size,
 };
 
-const InterfaceContext = createContext<InterfaceContext>(
-  defaultInterfaceContext,
-);
+const InterfaceContext = createContext<InterfaceContext>(defaultInterfaceContext);
 
 export const InterfaceProvider: FC = ({ children }) => {
   const viewport = __useMedia();
   const isMobile = viewport === ViewportSize.PHONE;
+  const isLargeMobile = viewport === ViewportSize.LARGE_PHONE;
   const isTablet = viewport === ViewportSize.TABLET;
   const isDesktop = viewport === ViewportSize.SMALL_DESKTOP;
   const lt = useCallback((size: number) => viewport < size, [viewport]);
@@ -45,6 +46,7 @@ export const InterfaceProvider: FC = ({ children }) => {
       value={{
         viewport,
         isMobile,
+        isLargeMobile,
         isTablet,
         isDesktop,
         lt,

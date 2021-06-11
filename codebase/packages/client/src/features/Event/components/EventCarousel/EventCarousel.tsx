@@ -2,14 +2,16 @@ import React, { FC, useEffect, useMemo } from 'react';
 import isEmpty from 'lodash.isempty';
 
 import Carousel from 'features/Carousel';
-import { LargeTile } from 'features/Tile';
+import { VerticalTile } from 'features/Tile';
 import { EmptyContainer, Error, Spinner } from 'features/Common';
 import { Page } from 'features/Page';
 import Loading from 'types/loading';
+import { useMedia } from 'context/InterfaceContext';
 
 import { isEventOnAir, isActionDisabled } from '../../utils';
 import Event from '../../config/types';
 import EventAction from '../EventAction';
+import EventParticipants from '../EventParticipants';
 import { Wrapper, ErrorWrapper } from './styled';
 
 const CONTENT_HEIGHT = '483px';
@@ -21,9 +23,11 @@ type Props = {
   participants?: Record<number, number>;
   error?: string;
   loadParticipants: () => void;
+  hasMore?: boolean;
 };
 
 const EventCarousel: FC<Props> = ({ events, loading, participants, error, loadParticipants }) => {
+  const { isMobile } = useMedia();
   const isLoading = useMemo(() => loading !== Loading.SUCCEEDED && loading !== Loading.FAILED, [loading]);
 
   useEffect(() => {
@@ -43,19 +47,19 @@ const EventCarousel: FC<Props> = ({ events, loading, participants, error, loadPa
     if (loading === Loading.SUCCEEDED && isEmpty(events)) return <EmptyContainer description='Nothing to show' />;
 
     return (
-      <Carousel itemWidth='278px' id='event-carousel'>
+      <Carousel itemWidth={isMobile ? '260px' : '266px'} id='event-carousel' itemName='event'>
         {events.map(({ id, title, maxParticipants, image, startDate, endDate }) => (
-          <LargeTile
+          <VerticalTile
             key={id}
             id={id}
             title={title}
-            participants={participants![id] || 0}
-            maxParticipants={maxParticipants}
             link={Page.EVENTS}
-            meta={startDate}
             isOnAir={isEventOnAir(startDate, endDate)}
-            wrapperHeight={CONTENT_HEIGHT}
             renderAction={() => <EventAction id={id} disabled={isActionDisabled(participants![id], maxParticipants)} />}
+            meta={startDate}
+            renderParticipants={() => (
+              <EventParticipants maxParticipants={maxParticipants} participants={participants![id]} />
+            )}
             image={image}
           />
         ))}

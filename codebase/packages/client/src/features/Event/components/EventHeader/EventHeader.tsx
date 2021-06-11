@@ -1,13 +1,13 @@
-import React, { FC, useMemo } from 'react';
+import React, { FC } from 'react';
 import Icon from '@beans/icon';
 import ICalendarLink from 'react-icalendar-link';
 
-import { OnAir, CopyLink, TitleWithEllipsis } from 'features/Common';
+import { OnAir, CopyLink, TextWithEllipsis } from 'features/Common';
 import { useMedia } from 'context/InterfaceContext';
 
 import EventAction from '../EventAction';
 import Event from '../../config/types';
-import { isEventOnAir } from '../../utils';
+import { isEventOnAir, isActionDisabled } from '../../utils';
 
 import {
   Wrapper,
@@ -27,18 +27,15 @@ type Props = {
 
 const EventHeader: FC<Props> = ({ event, participants }) => {
   const { id, title, description, maxParticipants, startDate, endDate } = event;
-  const { isMobile } = useMedia();
+  const { isMobile, isLargeMobile } = useMedia();
+  const isMobileView = isMobile || isLargeMobile;
   const isOnAir = isEventOnAir(startDate, endDate);
-
-  const memoizedDisabledAction = useMemo(() => Boolean(maxParticipants) && participants >= maxParticipants!, [
-    participants,
-  ]);
 
   return (
     <Wrapper>
       <Inner>
         <TitleWrapper>
-          <TitleWithEllipsis>{title}</TitleWithEllipsis>
+          <TextWithEllipsis>{title}</TextWithEllipsis>
           {isOnAir && (
             <StatusWrapper>
               <OnAir />
@@ -46,9 +43,9 @@ const EventHeader: FC<Props> = ({ event, participants }) => {
           )}
         </TitleWrapper>
         <Actions>
-          {!isMobile && <CopyLink />}
+          {!isMobileView && <CopyLink />}
           <ButtonWrapper>
-            <EventAction id={id} disabled={memoizedDisabledAction} />
+            <EventAction id={id} disabled={isActionDisabled(participants, maxParticipants)} />
           </ButtonWrapper>
         </Actions>
       </Inner>
@@ -74,7 +71,7 @@ const EventHeader: FC<Props> = ({ event, participants }) => {
             <span>
               {participants} are participating. {maxParticipants && `${maxParticipants} is maximum capacity.`}
             </span>
-            {isMobile && <CopyLink />}
+            {isMobileView && <CopyLink />}
           </TextIconWrapper>
         </Inner>
         <p>{description}</p>

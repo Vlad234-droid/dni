@@ -4,15 +4,20 @@ import Button from '@beans/button';
 import Icon from '@beans/icon';
 
 type Props = {
-  id?: number;
+  to?: string;
   showNotification: () => void;
   hideNotification: () => void;
 };
 
-const CopyLink: FC<Props> = ({ id, showNotification, hideNotification }) => {
+const CopyLink: FC<Props> = ({ showNotification, hideNotification, to }) => {
   const handleClick = useCallback(() => {
     const { host, pathname } = window.location;
-    const url = id ? `${host}${pathname}/${id}` : `${host}${pathname}`;
+    const pathArray = pathname.split('/');
+    // delete 2 items from the end
+    pathArray.splice(-2, 2);
+
+    const path = to ? `${pathArray.join('/')}${to}` : pathname;
+    const url = `${host}${path}`;
 
     copy(url);
 
