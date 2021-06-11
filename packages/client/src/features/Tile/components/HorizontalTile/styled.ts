@@ -13,10 +13,11 @@ export const Wrapper = styled.div`
   }
 
   & .beans-base-tile__panel-container {
+    width: 70%;
     padding: 8px 8px 14px;
 
     ${Media.large_phone`
-        padding: 8px 16px 16px;
+        padding: 8px 16px 15px;
     `}
   }
 

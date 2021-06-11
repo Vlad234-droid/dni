@@ -12,14 +12,20 @@ type Props = {
 const EventParticipants: FC<Props> = ({
   participants = 0,
   maxParticipants,
-}) => (
-  <Wrapper>
-    <Icon graphic='account' size={'sm'} />
-    <Text>{`${participants} ${
-      maxParticipants && `/ ${maxParticipants}`
-    } participants`}</Text>
-  </Wrapper>
-);
+}) => {
+  console.log('participants', participants);
+  console.log('maxParticipants', maxParticipants);
+  return (
+    <Wrapper>
+      <Icon graphic='account' size={'sm'} />
+      <Text>
+        <span>{participants}</span>
+        &nbsp;{maxParticipants && <span>{`/ ${maxParticipants}`}</span>}
+        &nbsp;participants
+      </Text>
+    </Wrapper>
+  );
+};
 
 const Wrapper = styled.div`
   max-width: 100%;
