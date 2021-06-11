@@ -43,9 +43,9 @@ const getLinkHref = (url: string) =>
 export const supportedSourceHTMLTags = new Set(['img', 'u']);
 
 export const RichTextRenderer = (props: RichTextComponentProps) => {
-  const { isMobile } = useMedia();
+  const { isMobile, isLargeMobile } = useMedia();
   return (
-    <Vertical fontSize={isMobile ? [16, 'px'] : [18, 'px']}>
+    <Vertical fontSize={isMobile || isLargeMobile ? [16, 'px'] : [18, 'px']}>
       <MarkdownContainer>
         <MarkdownRenderer source={props.text} />
       </MarkdownContainer>

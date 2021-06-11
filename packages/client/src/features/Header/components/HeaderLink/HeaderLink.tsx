@@ -2,15 +2,15 @@ import React, { FC } from 'react';
 import styled from 'styled-components';
 import Link from '@beans/link';
 
-const HeaderLink: FC = () => {
-  return (
-    <Wrapper>
-      <Link href='#' inverse>
-        Sign out
-      </Link>
-    </Wrapper>
-  );
-};
+import { LINKS } from 'config/constants';
+
+const HeaderLink: FC = () => (
+  <Wrapper>
+    <Link href={LINKS.signOut} inverse>
+      Sign out
+    </Link>
+  </Wrapper>
+);
 
 const Wrapper = styled.div`
   a {

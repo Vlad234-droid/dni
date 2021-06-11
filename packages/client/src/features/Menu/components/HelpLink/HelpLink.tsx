@@ -18,9 +18,11 @@ const HelpLink: FC = () => (
 );
 
 const Wrapper = styled.div`
+  width: 90px;
+  height: 40px;
   border: 1px solid ${({ theme }) => theme.colors.lines.base};
   border-radius: 45px;
-  padding: 8px 11px 0;
+  padding: 0 11px;
 
   &:hover {
     border: 1px solid ${({ theme }) => theme.colors.link.active};
@@ -30,17 +32,25 @@ const Wrapper = styled.div`
     }
   }
 
+  .beans-link__anchor {
+    height: 100%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+  }
+
   .beans-button__text {
     color: ${({ theme }) => theme.colors.grayscale};
     font-size: 14px;
     line-height: 20px;
     font-weight: normal;
-    margin-left: 6px;
+    margin-left: 8px;
   }
 
   .beans-icon__svg {
-    width: 30px;
-    height: 30px;
+    width: 24px;
+    height: 24px;
   }
 `;
 

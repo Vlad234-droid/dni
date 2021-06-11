@@ -6,16 +6,12 @@ import Breadcrumb from '@beans/breadcrumb';
 import { Network } from 'features/Network';
 import { ImageWrapperProvider } from 'context/ImageWrapperProvider';
 
+import { getBackLink } from '../../utils';
 import BasePage from '../BasePage';
 import PageImageWrapper from '../PageImageWrapper';
 import { Page } from '../../config/types';
 
 const TEST_ID = 'network-page';
-
-const home = {
-  href: `/${Page.NETWORKS}`,
-  text: 'Networks',
-};
 
 const NetworkPage: FC<RouteComponentProps<{ id: string }>> = (props) => {
   const [ref, setRef] = useState<HTMLDivElement | null>(null);
@@ -43,7 +39,10 @@ const NetworkPage: FC<RouteComponentProps<{ id: string }>> = (props) => {
                         text: `${networkTitle}`,
                       },
                     ]}
-                    home={home}
+                    home={{
+                      href: getBackLink(),
+                      text: 'Networks',
+                    }}
                   />
                 )}
               />

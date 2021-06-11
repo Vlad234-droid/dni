@@ -4,16 +4,10 @@ import Media from 'styles/media';
 import { Heading } from 'features/Common';
 
 export const Title = styled(Heading)`
-  margin: 0 0 32px;
-
   &:last-child {
     max-width: 714px;
     margin: 0 auto;
   }
-
-  ${Media.tablet`
-    margin-bottom: 60px;
-  `}
 `;
 
 export const List = styled.div`
@@ -21,9 +15,9 @@ export const List = styled.div`
   flex-direction: column;
 
   ${Media.tablet`
-      flex-wrap: nowrap;
-      flex-direction: row;
-      margin-bottom: 24px;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    margin-bottom: 24px;
   `}
 `;
 
@@ -31,9 +25,9 @@ export const IconsWrapper = styled.div`
   display: none;
 
   ${Media.tablet`
-      display: flex;
-      margin-bottom: 40px;
-      padding: 0 2px;
+    display: flex;
+    margin-bottom: 40px;
+    padding: 0 2px;
   `}
 `;
 

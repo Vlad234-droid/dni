@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import styled from 'styled-components';
 
-import CanPerform from 'features/Auth';
+import { CanPerform } from 'features/Auth';
 
 import { Post } from '../../config/types';
 import PostPublished from '../PostPublished';
