@@ -1,7 +1,5 @@
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import Link from '@beans/link';
-
-import Media from 'styles/media';
 
 export const Wrapper = styled.div`
   position: fixed;

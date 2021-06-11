@@ -16,7 +16,7 @@ type Props = {
 };
 
 const Graphics = ({ active, data }: Props) => {
-  const [period, setPeriod] = useState<Period>(Period.CURRENT_YEAR);
+  const [, setPeriod] = useState<Period>(Period.CURRENT_YEAR);
 
   const handleFilterChange = useCallback((event) => {
     event.preventDefault();

@@ -42,7 +42,6 @@ const NetworkList: FC = () => {
   const scrollContainer = useScrollContainer();
 
   const {
-    participants,
     meta: { total, error: countError },
     loading,
     error: listError,

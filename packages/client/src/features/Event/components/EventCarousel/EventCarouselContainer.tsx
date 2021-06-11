@@ -25,6 +25,7 @@ const EventCarouselContainer: FC = () => {
     endDate_gte: new Date(),
     startDate_lte: addDuration({ weeks: 2 }),
   });
+
   const [loading, list, hasMore, listError, countError] = useFetchEvents(
     filters,
   );
@@ -41,6 +42,7 @@ const EventCarouselContainer: FC = () => {
       loading={loading}
       error={errorMessage}
       loadParticipants={loadParticipants}
+      hasMore={hasMore}
     />
   );
 };

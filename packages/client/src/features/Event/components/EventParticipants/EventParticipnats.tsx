@@ -2,7 +2,6 @@ import React, { FC } from 'react';
 import styled from 'styled-components';
 import Icon from '@beans/icon';
 
-import { TextWithEllipsis } from 'features/Common';
 import { useIsAdmin, useIsManager } from '../../../Auth/hooks/usePermission';
 
 type Props = {
@@ -19,9 +18,11 @@ const EventParticipants: FC<Props> = ({
   return isAdmin || isManager ? (
     <Wrapper>
       <Icon graphic='account' size={'sm'} />
-      <Text>{`${participants} ${
-        maxParticipants && `/ ${maxParticipants}`
-      } participants`}</Text>
+      <Text>
+        <span>{participants}</span>
+        &nbsp;{maxParticipants && <span>{`/ ${maxParticipants}`}</span>}
+        &nbsp;participants
+      </Text>
     </Wrapper>
   ) : null;
 };

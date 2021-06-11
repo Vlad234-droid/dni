@@ -1,8 +1,6 @@
 import React, { FC } from 'react';
 import Icon from '@beans/icon';
 
-import { useMedia } from 'context/InterfaceContext';
-
 import { Type } from '../../config/types';
 import { CustomIconWrapper, IconWrapper } from './styled';
 

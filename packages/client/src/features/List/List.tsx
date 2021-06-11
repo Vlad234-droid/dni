@@ -15,7 +15,6 @@ type Props = {
   items: Entity[];
   link: string;
   renderAction: (id: number, maxParticipants?: number) => JSX.Element;
-  meta?: string;
   renderParticipants?: (id: number, maxParticipants?: number) => JSX.Element;
   actionDisabled?: boolean;
 };
@@ -24,7 +23,6 @@ const List: FC<Props> = ({
   link,
   items,
   renderAction,
-  meta,
   renderParticipants,
   type,
 }) => {
