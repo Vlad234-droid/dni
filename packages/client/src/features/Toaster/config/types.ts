@@ -12,6 +12,8 @@ enum ToastSkin {
   ENTITY_CREATE_SUCCESS = 'ENTITY_CREATE_SUCCESS',
   ENTITY_CREATE_ERROR = 'ENTITY_CREATE_ERROR',
   LINK_COPY_SUCCESS = 'LINK_COPY_SUCCESS',
+  INTERVAL_LIMIT = 'INTERVAL_LIMIT',
+  WRONG_INTERVAL = 'WRONG_INTERVAL',
 }
 
 type Toast = {
@@ -20,6 +22,7 @@ type Toast = {
   data?: Partial<{
     id: Id;
   }>;
+  timeout: number;
 };
 
 export { ToastVariant, ToastSkin };

@@ -4,5 +4,5 @@ export { default as EventList } from './components/EventList';
 export { default as EventSidebar } from './components/EventSidebar';
 export { default as EventTable } from './components/EventTable';
 export { default as Event, TEST_ID } from './components/Event';
-export { default as eventsReducer } from './store';
+export { default as eventsReducer, getList } from './store';
 export type { default } from './config/types';

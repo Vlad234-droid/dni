@@ -5,6 +5,7 @@ import Icon from '@beans/icon';
 import { MenuDesktop, MainMenuMobile } from 'features/Menu';
 import Toaster from 'features/Toaster';
 import { useMedia } from 'context/InterfaceContext';
+import Notification, { NotificationRing } from 'features/Notification';
 
 import {
   Wrapper,
@@ -32,15 +33,10 @@ const Header: FC = () => {
         </MenuWrapper>
       )}
       {!isDesktop && isOpened && <MainMenuMobile onClose={handleCloseMenu} />}
-      {!isDesktop && <Title>Diversity & Inclusion</Title>}
+      {!isDesktop && <Title>{'Diversity & Inclusion'}</Title>}
       <Icons>
         <IconWrapper>
-          <Link
-            href={'/'}
-            icon={{ graphic: 'notification', position: { global: 'right' } }}
-            inverse={!isDesktop}
-            variant='iconButton'
-          />
+          <NotificationRing inverse={!isDesktop} />
         </IconWrapper>
         {/*<IconWrapper>*/}
         {/*  <Link*/}
@@ -58,6 +54,7 @@ const Header: FC = () => {
       </Icons>
       <ToasterWrapper>
         <Toaster />
+        <Notification />
       </ToasterWrapper>
     </Wrapper>
   );

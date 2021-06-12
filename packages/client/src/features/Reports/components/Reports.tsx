@@ -1,44 +1,77 @@
-import { FC, useCallback, useEffect, useState } from 'react';
-import filter from 'lodash.filter';
-import keyBy from 'lodash.keyby';
+import React, { FC } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
-import Statistics from 'features/Statistics';
-
-import { chartData, statisticsData } from '../config/data';
+import Statistics from '../components/Statistics';
+import ButtonFilter from '../components/ButtonFilter';
 import Graphics from './Graphics';
+import store from 'store';
+
+import { actions } from '../store';
+import * as T from '../config/types';
+
+const entityButtons = [
+  {
+    key: T.Entity.NETWORK,
+    title: 'Network',
+  },
+  {
+    key: T.Entity.EVENT,
+    title: 'Event',
+  },
+];
 
 export const REPORT_TEST_ID = 'report-component';
 
-type Props = {
-  showed: string;
-};
+const Reports: FC = () => {
+  const dispatch = useDispatch();
 
-const Reports: FC<Props> = ({ showed }: Props) => {
-  const [chart, updateChar] = useState(chartData);
-  const [statistics, updateStatistics] = useState(statisticsData);
+  const { entityType } = useSelector(() => store.getState().reports);
 
-  useEffect(() => {
-    updateChar({
-      ...chart,
-      elements: keyBy(filter(statistics, ['checked', true]), (o) => o.name),
-    });
-  }, [statistics]);
+  const { filter } = useSelector(() => store.getState().reports[entityType]);
 
-  const handleUpdateStatistics = useCallback(
-    (id: string, checked: boolean) => {
-      updateStatistics(
-        statistics.map((item) =>
-          item.id === id ? { ...item, checked } : item,
-        ),
-      );
-    },
-    [statistics],
+  const filterFilter = useSelector(
+    () => store.getState().reports[entityType][filter].filter,
   );
+
+  const { chart, statistics, dateInterval } = useSelector(
+    () => store.getState().reports[entityType][filter][filterFilter],
+  );
+
+  const handleUpdateStatistics = (id: string, checked: boolean) => {
+    dispatch(
+      actions.updateStatistics({
+        entityType,
+        filter,
+        filterFilter,
+        checked,
+        id,
+      }),
+    );
+  };
 
   return (
     <div data-testid={REPORT_TEST_ID}>
-      <Graphics active={showed} data={chart} />
-      <Statistics data={statistics} onChange={handleUpdateStatistics} />
+      <Graphics
+        entityType={entityType}
+        filter={filter}
+        filterFilter={filterFilter}
+        dateInterval={dateInterval}
+        data={chart}
+      />
+      <ButtonFilter
+        value={entityType}
+        initialFilters={entityButtons}
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        onChange={(event: any) =>
+          dispatch(actions.setEntityType({ entityType: event.target.value }))
+        }
+        name='entities'
+      />
+      <Statistics
+        entityType={entityType}
+        data={statistics}
+        onChange={handleUpdateStatistics}
+      />
     </div>
   );
 };

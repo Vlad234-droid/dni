@@ -17,6 +17,7 @@ export const Title = styled.div`
   font-size: 20px;
   line-height: 28px;
   font-weight: bold;
+  padding: 16px;
 `;
 
 export const List = styled.div`

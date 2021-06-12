@@ -25,7 +25,7 @@ interface PostArchivedProps {
 const TEST_ID = 'post-archived';
 
 const PostArchived: FC<PostArchivedProps> = ({ item }) => {
-  const { title, content, authorName } = item;
+  const { title, content, authorName, network, event } = item;
   const [isContentVisible, setVisible] = useState(false);
 
   const onPostClick = () => {
@@ -44,7 +44,14 @@ const PostArchived: FC<PostArchivedProps> = ({ item }) => {
         <PostPublisherAvatarBox>
           {/* <PostPublisherAvatar src={createdBy.avatarSrc} /> */}
         </PostPublisherAvatarBox>
-        <PostPublisherName>{`${authorName}`}</PostPublisherName>
+        <PostPublisherName>
+          {`${
+            authorName ||
+            network?.title ||
+            event?.title ||
+            'Diversity and Inclusion'
+          }`}
+        </PostPublisherName>
         <PostArchiveMark>
           <PostArchiveEllipse />
           <PostArchiveLabel>Archived</PostArchiveLabel>

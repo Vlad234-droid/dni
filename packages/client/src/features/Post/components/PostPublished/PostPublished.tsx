@@ -26,7 +26,16 @@ interface PostPublishedProps {
 const TEST_ID = 'post-published';
 
 const PostPublished: FC<PostPublishedProps> = ({ item }) => {
-  const { title, content, authorName, attachments, id, published_at } = item;
+  const {
+    title,
+    content,
+    authorName,
+    attachments,
+    id,
+    published_at,
+    network,
+    event,
+  } = item;
   const media = useMedia();
 
   return (
@@ -39,7 +48,14 @@ const PostPublished: FC<PostPublishedProps> = ({ item }) => {
           <PostPublisherAvatarBox>
             {/* <PostPublisherAvatar src={createdBy.avatar} /> */}
           </PostPublisherAvatarBox>
-          <PostPublisherName>{`${authorName}`}</PostPublisherName>
+          <PostPublisherName>
+            {`${
+              authorName ||
+              network?.title ||
+              event?.title ||
+              'Diversity and Inclusion'
+            }`}
+          </PostPublisherName>
         </PostPublisher>
         <PostPublishDate>
           {new Date(published_at).toDateString()}

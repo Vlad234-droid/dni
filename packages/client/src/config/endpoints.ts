@@ -78,8 +78,8 @@ export default (httpClient: AxiosInstance) => ({
       httpClient.get<T>(Endpoint.POSTS_COUNT, { params: data }),
   },
   report: {
-    timePeriods: <T>(data: Config = {}) =>
-      httpClient.get<T>(Endpoint.REPORT_TIME_PERIODS, { params: data }),
+    timePeriods: <T>(query: string) =>
+      httpClient.get<T>(Endpoint.REPORT_TIME_PERIODS, { params: query }),
     printPdf: <T>(data: T) =>
       httpClient.post<Blob>(Endpoint.REPORT_PRINT_PDF, data, {
         responseType: 'blob',

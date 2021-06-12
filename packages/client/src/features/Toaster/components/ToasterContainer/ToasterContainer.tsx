@@ -16,8 +16,8 @@ const ToasterContainer: FC = () => {
 
   return (
     <div data-testid={toasterContainerTestId}>
-      {items.map(({ id, skin, data }) => (
-        <ToasterItem key={id} {...{ id, skin, data }} />
+      {items.map(({ id, skin, data, timeout }) => (
+        <ToasterItem key={id} {...{ id, skin, data, timeout }} />
       ))}
     </div>
   );

@@ -70,13 +70,14 @@ export const ButtonWrapper = styled.div`
   left: 16px;
   right: 16px;
   z-index: 100;
+  margin-right: 16px;
 
   & > button {
     width: 100%;
   }
 
   ${Media.tablet`
-     position: static;
+    position: static;
   `}
 `;
 

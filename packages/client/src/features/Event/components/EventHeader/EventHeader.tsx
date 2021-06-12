@@ -1,4 +1,5 @@
 import React, { FC } from 'react';
+import Button from '@beans/button';
 import Icon from '@beans/icon';
 import ICalendarLink from 'react-icalendar-link';
 
@@ -50,6 +51,20 @@ const EventHeader: FC<Props> = ({ event, participants }) => {
               disabled={isActionDisabled(participants, maxParticipants)}
             />
           </ButtonWrapper>
+          <ICalendarLink
+            filename={`${event.title} event.ics`}
+            event={{
+              title: event.title,
+              description: event.description,
+              startTime: event.startDate.replace('at', ''),
+              endTime: event.endDate.replace('at', ''),
+              location: '',
+            }}
+          >
+            <Button>
+              <Icon graphic='download' />
+            </Button>
+          </ICalendarLink>
         </Actions>
       </Inner>
       <Description>
