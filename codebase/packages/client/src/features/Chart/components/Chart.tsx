@@ -23,6 +23,9 @@ const Chart = ({ data, type }: Props) => {
   const [{ response, loading }, doFetch] = useFetch<Blob>();
   const isLoading = useMemo(() => loading !== Loading.SUCCEEDED && loading !== Loading.FAILED, [loading]);
 
+  //console.log(`--- CHART (${type}) ---`);
+  //console.log(data);
+
   useEffect(() => {
     if (response && !isLoading) {
       const file = window.URL.createObjectURL(response);

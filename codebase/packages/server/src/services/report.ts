@@ -1,12 +1,8 @@
 import { getManager } from '@dni/database';
 
-const getReportBy = async (
-  entityType: string,
-  entityIds: string[],
-  groupBy: string,
-  from: string,
-  to: string,
-) => {
+const getReportBy = async (entityType: string, entityIds: string[], groupBy: string, from: string, to: string) => {
+  //console.log(`entityIds: ${entityIds}`);
+
   return (
     await getManager().connection.query(
       `with params as (select $1 as entity_type,

@@ -5,31 +5,23 @@ import { Readable } from 'stream';
 
 interface ReportFilter {
   entityType: string;
-  entityIds: string[];
+  entityIds: string;
   groupBy: string;
   from: string;
   to: string;
 }
 
-const getReportByFilters = (
-  req: Request<{}, {}, {}, ReportFilter>,
-  res: Response,
-) => {
+const getReportByFilters = (req: Request<{}, {}, {}, ReportFilter>, res: Response) => {
   const { entityType, entityIds, groupBy, from, to } = req.query;
+  console.log(`req entityIds: ${entityIds}`);
+
+  const entityIdsArray = entityIds && entityIds.length > 0 ? entityIds.split(',') : [];
+  console.log(`req entityIds array: ${entityIdsArray}`);
+
   return executeSafe(res, async () =>
-    res
-      .status(200)
-      .json(await getReportBy(entityType, entityIds, groupBy, from, to)),
+    res.status(200).json(await getReportBy(entityType, entityIdsArray, groupBy, from, to)),
   );
 };
-
-interface ReportFilter {
-  entityType: string;
-  entityIds: string[];
-  groupBy: string;
-  from: string;
-  to: string;
-}
 
 const printPDF = async (req: Request<{}, {}, PrintParams>, res: Response) => {
   const buffer = await getPDFBuffer(req.body);
