@@ -1,4 +1,7 @@
 import React, { FC } from 'react';
+import Button from '@beans/button';
+import Icon from '@beans/icon';
+import Link from '@beans/link';
 
 import { Wrapper, Header, Title, Content } from './styled';
 
@@ -15,6 +18,13 @@ const PageWrapper: FC<Props> = ({ renderHeaderFilters, renderContent, pageName, 
   <Wrapper data-testid={TEST_ID}>
     <Header>
       <Title>{pageName}</Title>
+      {['events', 'networks'].includes(pageName.toLowerCase()) && (
+        <Link title={'strappi | sso'} href={'https://ppe.ourtesco.com/colleague-cms/admin/'}>
+          <Button>
+            <Icon graphic='externalLink' />
+          </Button>
+        </Link>
+      )}
       {renderHeaderFilters && renderHeaderFilters()}
     </Header>
     <Content withBorder={withBorder}>{renderContent()}</Content>

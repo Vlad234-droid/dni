@@ -1,10 +1,5 @@
 import { ToastSkin, ToastVariant } from './types';
-import {
-  ContentExample,
-  ContentSuccessEntity,
-  ContentErrorEntity,
-  ContentSuccessCopyLink,
-} from '../components/ToasterSkinContent';
+import * as C from '../components/ToasterSkinContent';
 
 const skins: Record<
   ToastSkin,
@@ -20,23 +15,33 @@ const skins: Record<
 > = {
   [ToastSkin.EXAMPLE]: {
     variant: ToastVariant.INFORMATION,
-    Content: ContentExample,
+    Content: C.ContentExample,
     timeout: 10000,
   },
   [ToastSkin.ENTITY_CREATE_SUCCESS]: {
     variant: ToastVariant.SUCCESS,
-    Content: ContentSuccessEntity,
+    Content: C.ContentSuccessEntity,
     timeout: 5000,
   },
   [ToastSkin.ENTITY_CREATE_ERROR]: {
     variant: ToastVariant.ERROR,
-    Content: ContentErrorEntity,
+    Content: C.ContentErrorEntity,
     timeout: 5000,
   },
   [ToastSkin.LINK_COPY_SUCCESS]: {
     variant: ToastVariant.SUCCESS,
-    Content: ContentSuccessCopyLink,
+    Content: C.ContentSuccessCopyLink,
     timeout: 5000,
+  },
+  [ToastSkin.INTERVAL_LIMIT]: {
+    variant: ToastVariant.ERROR,
+    Content: C.IntervalLimit,
+    timeout: 4000,
+  },
+  [ToastSkin.WRONG_INTERVAL]: {
+    variant: ToastVariant.ERROR,
+    Content: C.WrongInterval,
+    timeout: 4000,
   },
 };
 

@@ -1,17 +1,13 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import styled from 'styled-components';
 import Notification from '@beans/notification';
-
-import { GREEN_COLOR } from 'styles';
 
 import { actions } from '../../store/slice';
 import { skins } from '../../config/skins';
 import { ToastSkin } from '../../config/types';
 
 const MyNotification = styled(Notification)`
-  // handle custom colors for toaster, when get different Toaster types
-  background: ${GREEN_COLOR};
   padding: 18px 0;
 `;
 
@@ -31,38 +27,34 @@ interface ToasterItemProps {
   data?: Partial<{
     id: Id;
   }>;
+  timeout: number;
 }
 
 const toasterItemTestId = 'toaster-item-test-id';
 
-const ToasterItem: FC<ToasterItemProps> = ({ id, skin, data }) => {
+const ToasterItem: FC<ToasterItemProps> = ({ id, skin, data, timeout }) => {
   const dispatch = useDispatch();
 
-  const { variant, Content, timeout } = skins[skin];
-  const [timeToDestruct, setTime] = useState(timeout || Infinity);
+  const { variant, Content } = skins[skin];
 
   useEffect(() => {
-    if (timeout) {
+    if (timeout >= 0 && timeout < Infinity) {
       let timer: ReturnType<typeof setTimeout>;
 
-      if (timeToDestruct <= 0) {
+      if (timeout <= 0) {
         dispatch(actions.deleteToast({ id }));
       } else {
         timer = setTimeout(() => {
-          setTime(timeToDestruct - 1000);
+          dispatch(actions.updateToastTime({ id, timeout: timeout - 1000 }));
         }, 1000);
       }
 
       return () => clearTimeout(timer);
     }
-  }, [timeToDestruct, timeout]);
+  }, [timeout]);
 
   return (
-    <MyNotification
-      variant={variant}
-      showIcon={false}
-      data-testid={toasterItemTestId}
-    >
+    <MyNotification variant={variant} showIcon={false} data-testid={toasterItemTestId}>
       <ToastContent>{Content && <Content {...data} />}</ToastContent>
     </MyNotification>
   );

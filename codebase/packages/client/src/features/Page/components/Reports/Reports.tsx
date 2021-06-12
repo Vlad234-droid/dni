@@ -1,17 +1,37 @@
-import React, { FC, useState } from 'react';
+import React, { FC } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 
 import { Page, PAGE_PREFIX } from 'features/Page';
-import ButtonFilter from 'features/ButtonFilter';
-import Reports, { Filter, PERIOD, filters } from 'features/Reports';
+import Reports, { PERIOD, REGION, FORMAT, actions, ButtonFilter, Entity } from 'features/Reports';
 import { menuItemsDesktop } from 'features/Menu';
+import store from 'store';
 
 import BasePage from '../BasePage';
 import PageWrapper from '../PageWrapper';
 import { TEST_ID } from '../Networks/Networks';
 
+const filterButtons = [
+  {
+    key: PERIOD,
+    title: 'Time period',
+  },
+  {
+    key: REGION,
+    title: 'Region',
+  },
+  {
+    key: FORMAT,
+    title: 'Format',
+  },
+];
+
 const ReportPage: FC = () => {
-  const [filter, setFilter] = useState<Filter>(PERIOD);
+  const dispatch = useDispatch();
+
+  const { entityType } = useSelector(() => store.getState().reports);
+
+  const { filter } = useSelector(() => store.getState().reports[entityType]);
 
   return (
     <BasePage
@@ -21,11 +41,17 @@ const ReportPage: FC = () => {
           <PageWrapper
             renderContent={() => (
               <ContentWrapper>
-                <Reports showed={filter} />
+                {entityType === Entity.NETWORK && <Reports />}
+                {entityType === Entity.EVENT && <Reports />}
               </ContentWrapper>
             )}
             renderHeaderFilters={() => (
-              <ButtonFilter initialFilters={filters} onChange={(key) => setFilter(key as Filter)} name='reports' />
+              <ButtonFilter
+                value={filter}
+                initialFilters={filterButtons}
+                onChange={(event: any) => dispatch(actions.setFilter({ key: event.target.value }))}
+                name='filters'
+              />
             )}
             pageName={menuItemsDesktop[Page.REPORTS]}
           />

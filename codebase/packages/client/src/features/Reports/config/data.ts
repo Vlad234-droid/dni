@@ -1,6 +1,6 @@
 import { FULL_DAY_FORMAT, isoDateToFormat } from 'utils/date';
 
-export const statisticsData = [
+export const getStatisticsData = () => [
   {
     id: '1',
     name: 'Armed Forces at Tesco',
@@ -9,6 +9,9 @@ export const statisticsData = [
     leave: 3745,
     color: '#008800',
     checked: true,
+    subscribersAPS: 666,
+    subscribersAPE: 666,
+    percentages: 666,
   },
   {
     id: '2',
@@ -18,10 +21,13 @@ export const statisticsData = [
     leave: 3745,
     color: '#00539F',
     checked: true,
+    subscribersAPS: 666,
+    subscribersAPE: 666,
+    percentages: 666,
   },
 ];
 
-export const chartData = {
+export const getChartData = () => ({
   elements: {},
   regions: [
     {
@@ -102,4 +108,4 @@ export const chartData = {
       'LGBTQ+ at Tesco at Tesco': 130,
     },
   ],
-};
+});

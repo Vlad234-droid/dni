@@ -5,6 +5,8 @@ import { networksReducer } from 'features/Network';
 import { eventsReducer } from 'features/Event';
 import { postReducer } from 'features/Post';
 import { toasterReducer } from 'features/Toaster';
+import { reportsReducer } from 'features/Reports';
+import { notificationReducer } from 'features/Notification';
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -12,6 +14,8 @@ const rootReducer = combineReducers({
   events: eventsReducer,
   posts: postReducer,
   toaster: toasterReducer,
+  reports: reportsReducer,
+  notification: notificationReducer,
   // TODO: add other reducers
 });
 
