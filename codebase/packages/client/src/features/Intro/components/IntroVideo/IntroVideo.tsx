@@ -5,7 +5,7 @@ import theme from 'theme';
 import { useMedia } from 'context/InterfaceContext';
 
 import { Wrapper, IconWrapper, Label } from './styled';
-import tescoVideo from 'assets/tesco_video.mp4';
+import tescoVideo from 'assets/video/tesco.mp4';
 
 const IntroVideo: FC = () => {
   const { isMobile, isLargeMobile } = useMedia();
@@ -21,7 +21,7 @@ const IntroVideo: FC = () => {
           <IconWrapper>
             <Icon graphic='curveArrow' size='sm' stroke={iconColor} />
           </IconWrapper>
-          <span>A quick video about D&I</span>
+          <span>A quick video about D&amp;I</span>
         </Label>
       </div>
     </Wrapper>
