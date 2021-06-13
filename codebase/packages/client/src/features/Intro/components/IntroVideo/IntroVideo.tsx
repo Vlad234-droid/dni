@@ -5,7 +5,9 @@ import theme from 'theme';
 import { useMedia } from 'context/InterfaceContext';
 
 import { Wrapper, IconWrapper, Label } from './styled';
-import tescoVideo from 'assets/video/tesco.mp4';
+
+import tescoVideo720 from 'assets/video/tesco_720p.mp4';
+import tescoVideo1080 from 'assets/video/tesco_1080p.mp4';
 
 const IntroVideo: FC = () => {
   const { isMobile, isLargeMobile } = useMedia();
@@ -15,7 +17,7 @@ const IntroVideo: FC = () => {
     <Wrapper>
       <div>
         <video width='439' height='275' controls>
-          <source src={tescoVideo} />
+          <source src={isMobile ? tescoVideo720 : tescoVideo1080} />
         </video>
         <Label>
           <IconWrapper>
