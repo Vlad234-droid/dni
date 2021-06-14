@@ -70,7 +70,7 @@ export const ActionWrapper = styled(BaseElement)<{ type: Type }>`
   align-items: center;
   border-top: ${({ theme }) => `1px solid ${theme.colors.lines.base}`};
   padding: 16px;
-  margin-top: ${({ type }) => (type == Type.WIDE ? '32px' : '16px')};
+  margin-top: ${({ type }) => (type == Type.WIDE ? '28px' : '16px')};
 
   ${Media.large_tablet`
     padding: 16px;

@@ -3,6 +3,7 @@ import { Route as ReactRoute, Switch, Redirect } from 'react-router';
 
 import { routes } from '../config/routes';
 
+// TODO: filter routes to render only available by role
 const Routes: FC = () => (
   <Switch>
     {routes.map(({ path, exact, Component }) => (

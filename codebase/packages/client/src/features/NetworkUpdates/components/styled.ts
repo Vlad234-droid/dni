@@ -13,11 +13,11 @@ export const Wrapper = styled.nav.attrs({
 
 export const Title = styled.div`
   margin-bottom: 10px;
+  margin-right: 4px;
   color: ${({ theme }) => theme.colors.text.dark};
   font-size: 20px;
   line-height: 28px;
   font-weight: bold;
-  padding: 16px;
 `;
 
 export const List = styled.div`

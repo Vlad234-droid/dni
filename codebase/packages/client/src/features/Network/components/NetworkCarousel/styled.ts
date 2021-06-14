@@ -8,4 +8,8 @@ const Wrapper = styled.div`
   `}
 `;
 
-export { Wrapper };
+const ParticipantsWrapper = styled.div`
+  margin-top: 12px;
+`;
+
+export { Wrapper, ParticipantsWrapper };

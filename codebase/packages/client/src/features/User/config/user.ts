@@ -1,7 +1,7 @@
 import { DefaultUser, UserRole } from './types';
 
 const defaultUserState: DefaultUser = {
-  role: UserRole.GUEST,
+  roles: [UserRole.GUEST],
 };
 
 export { defaultUserState };
