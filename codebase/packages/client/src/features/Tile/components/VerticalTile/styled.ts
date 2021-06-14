@@ -11,14 +11,14 @@ export const WideTileStyles = css`
 
 export const NarrowTileStyles = css`
   margin: 0 8px;
+
+  & div:not(:last-child) {
+    height: 44px;
+  }
 `;
 
 export const Wrapper = styled.div<{ type: Type }>`
   position: relative;
-
-  .beans-base-tile__panel-container {
-    flex-grow: unset;
-  }
 
   & h5 {
     font-size: 20px;
