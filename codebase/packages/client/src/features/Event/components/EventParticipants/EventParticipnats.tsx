@@ -10,9 +10,7 @@ type Props = {
 };
 
 const EventParticipants: FC<Props> = ({ participants = 0, maxParticipants }) => {
-  const isAdmin = useIsAdmin();
-  const isManager = useIsManager();
-  return isAdmin || isManager ? (
+  return (
     <Wrapper>
       <Icon graphic='account' size={'sm'} />
       <Text>
@@ -21,7 +19,7 @@ const EventParticipants: FC<Props> = ({ participants = 0, maxParticipants }) => 
         &nbsp;participants
       </Text>
     </Wrapper>
-  ) : null;
+  );
 };
 
 const Wrapper = styled.div`
