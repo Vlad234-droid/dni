@@ -32,7 +32,7 @@ ENV PUBLIC_URL=$PUBLIC_URL
 
 ENV SKIP_PREFLIGHT_CHECK=true
 
-RUN ls -l ./packages/client/src/assets/video
+RUN ls -l ./packages/client/src/assets/videos
 
 RUN yarn build:prod
 
