@@ -9,11 +9,11 @@ import Loading from 'types/loading';
 import { EntityListPayload } from 'types/payload';
 import { Page } from 'features/Page';
 import { DEFAULT_FILTERS } from 'config/constants';
+import Participants from 'features/Participants';
 
 import { isActionDisabled, isEventOnAir, getPayloadWhere } from '../../utils';
 import Event from '../../config/types';
 import EventAction from '../EventAction';
-import EventParticipants from '../../../Participants';
 import { List, Title, Wrapper } from './styled';
 
 const TEST_ID = 'events-sidebar';
@@ -87,7 +87,7 @@ const EventSidebar: FC<Props> = ({
                 )}
                 meta={startDate}
                 renderParticipants={() => (
-                  <EventParticipants maxParticipants={maxParticipants} participants={participants![id]} />
+                  <Participants maxParticipants={maxParticipants} participants={participants![id]} />
                 )}
                 link={Page.EVENTS}
               />
@@ -104,7 +104,7 @@ const EventSidebar: FC<Props> = ({
                 )}
                 meta={startDate}
                 renderParticipants={() => (
-                  <EventParticipants maxParticipants={maxParticipants} participants={participants![id]} />
+                  <Participants maxParticipants={maxParticipants} participants={participants![id]} />
                 )}
                 link={Page.EVENTS}
               />
