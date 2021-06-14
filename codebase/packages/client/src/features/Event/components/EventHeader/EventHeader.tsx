@@ -3,7 +3,7 @@ import Button from '@beans/button';
 import Icon from '@beans/icon';
 import ICalendarLink from 'react-icalendar-link';
 
-import { OnAir, CopyLink, TextWithEllipsis } from 'features/Common';
+import { OnAir, CopyLink, TextWithEllipsis, RichTextRenderer } from 'features/Common';
 import { useMedia } from 'context/InterfaceContext';
 
 import EventAction from '../EventAction';
@@ -28,6 +28,7 @@ type Props = {
 
 const EventHeader: FC<Props> = ({ event, participants }) => {
   const { id, title, description, maxParticipants, startDate, endDate } = event;
+  console.log('description', description);
   const { isMobile, isLargeMobile } = useMedia();
   const isMobileView = isMobile || isLargeMobile;
   const isOnAir = isEventOnAir(startDate, endDate);
@@ -89,7 +90,7 @@ const EventHeader: FC<Props> = ({ event, participants }) => {
             {isMobileView && <CopyLink />}
           </TextIconWrapper>
         </Inner>
-        <p>{description}</p>
+        {description && <RichTextRenderer source={description} />}
       </Description>
     </Wrapper>
   );

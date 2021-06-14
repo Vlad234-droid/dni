@@ -11,7 +11,8 @@ import InfoPanelContent from '../InfoPanelContent';
 type Props = {
   customIcon?: string;
   title: string;
-  content: string[];
+  renderContent?: () => JSX.Element;
+  content?: string[];
   footnote?: {
     title: string;
     link: string;
@@ -23,7 +24,17 @@ type Props = {
   isSmall?: boolean;
 };
 
-const InfoPanel: FC<Props> = ({ type, title, content, footnote, infoLink, customIcon, onClose, isSmall = false }) => (
+const InfoPanel: FC<Props> = ({
+  type,
+  title,
+  content,
+  renderContent,
+  footnote,
+  infoLink,
+  customIcon,
+  onClose,
+  isSmall = false,
+}) => (
   <Wrapper type={type} isSmall={isSmall} canClose={!!onClose}>
     {onClose && (
       <CloseIcon isSmall={isSmall}>
@@ -33,7 +44,7 @@ const InfoPanel: FC<Props> = ({ type, title, content, footnote, infoLink, custom
     <InfoPanelIcon type={type} customIcon={customIcon} />
     <Content type={type} isSmall={isSmall}>
       <Title isSmall={isSmall}>{title}</Title>
-      <InfoPanelContent content={content} isSmall={isSmall} />
+      <InfoPanelContent content={content} renderContent={renderContent} isSmall={isSmall} />
       {footnote && <InfoPanelFootnote footnote={footnote} />}
       {!(type === Type.INFO) && (
         <Link href={infoLink} icon={{ graphic: 'externalLink', position: { global: 'right' } }} variant='textButton'>
