@@ -4,6 +4,7 @@ import useStore from 'hooks/useStore';
 import useDispatch from 'hooks/useDispatch';
 import { Spinner, Error } from 'features/Common';
 import Loading from 'types/loading';
+import { getUserRole, UserRole } from 'features/User';
 
 import { FetchUserAction } from '../../config/types';
 import { profile, State as AuthState } from '../../store';
@@ -23,10 +24,6 @@ const Auth: FC = ({ children }) => {
 
   if (error || networkError || eventError) return <Error errorData={{ title: error }} />;
   if (isLoading) return <Spinner height='100vh' />;
-
-  // TODO: remove in future
-  // to avoid requests when networks ids are not loaded and display content before role is reassigned
-  if (user.role === 'guest') return <Spinner height='100vh' />;
 
   return (
     <AuthProvider

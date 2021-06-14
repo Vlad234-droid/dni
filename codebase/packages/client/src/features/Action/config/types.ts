@@ -8,4 +8,10 @@ enum Action {
   GET_SELF = 'getSelf',
 }
 
-export { Action };
+enum Component {
+  POST_ARCHIVED = 'postArchived',
+  NETWORK_PARTICIPANTS = 'networkParticipants',
+  CMS_LINK = 'CMSLink',
+}
+
+export { Action, Component };

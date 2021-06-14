@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 import styled from 'styled-components';
+import Link from '@beans/link';
 
 import Layout, { ExtraLayoutProps } from 'features/Layout';
 import { Header, HeaderMain, HeaderLink } from 'features/Header';
@@ -25,6 +26,9 @@ const BasePage: FC<ExtraLayoutProps> = (props) => {
                 <UpdatesWrapper>
                   <NetworkUpdates />
                 </UpdatesWrapper>
+                <Link href='https://www.ourtesco.com/colleague/terms-and-conditions' target='_blank'>
+                  Terms & Conditions
+                </Link>
               </>
             ) : (
               <MenuMobile />

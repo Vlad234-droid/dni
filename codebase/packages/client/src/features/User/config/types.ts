@@ -1,16 +1,15 @@
 enum UserRole {
-  ADMIN = 'admin',
-  MANAGER = 'manager',
-  EMPLOYEE = 'employee',
-  GUEST = 'guest',
+  ADMIN = 'Admin',
+  MANAGER = 'Manager',
+  EMPLOYEE = 'Employee',
+  GUEST = 'Guest',
 }
 
 interface User {
   id: number;
   name: string;
   preferred_username: string;
-  role: UserRole;
-  roles?: UserRole[];
+  roles: UserRole[];
   networks: number[];
   events: number[];
   params: {
@@ -19,7 +18,7 @@ interface User {
 }
 
 interface DefaultUser extends Partial<User> {
-  role: UserRole.GUEST;
+  roles: [UserRole.GUEST];
 }
 
 export type { User, DefaultUser };

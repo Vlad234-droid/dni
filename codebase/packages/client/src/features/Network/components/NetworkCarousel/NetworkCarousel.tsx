@@ -10,11 +10,14 @@ import { Page } from 'features/Page';
 import List from 'features/List';
 import Loading from 'types/loading';
 import { useMedia } from 'context/InterfaceContext';
+import Participants from 'features/Participants';
+import { CanPerform } from 'features/Auth';
+import { Action, buildAction, Component } from 'features/Action';
 
 import { Network } from '../../config/types';
 import { serializer } from '../../store';
 import NetworkAction from '../NetworkAction';
-import { Wrapper } from './styled';
+import { Wrapper, ParticipantsWrapper } from './styled';
 
 const NetworkCarousel: FC = () => {
   const { isDesktop, isMobile, isLargeMobile } = useMedia();
@@ -64,7 +67,16 @@ const NetworkCarousel: FC = () => {
         //@ts-ignore
         items={networks}
         renderAction={(id) => <NetworkAction id={id} />}
-        participants={participants.data}
+        renderParticipants={(id) => (
+          <CanPerform
+            perform={buildAction(Component.NETWORK_PARTICIPANTS, Action.LIST)}
+            yes={() => (
+              <ParticipantsWrapper>
+                <Participants participants={participants!.data[id]} />
+              </ParticipantsWrapper>
+            )}
+          />
+        )}
         hideParticipants={true}
       />
     );

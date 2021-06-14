@@ -3,6 +3,9 @@ import React, { FC } from 'react';
 import { Page, PAGE_PREFIX } from 'features/Page';
 import { NetworkList, NetworkCarousel } from 'features/Network';
 import { menuItemsDesktop } from 'features/Menu';
+import { CMSLink } from 'features/Common';
+import { CanPerform } from 'features/Auth';
+import { Action, buildAction, Component } from 'features/Action';
 
 import BasePage from '../BasePage';
 import PageWrapper from '../PageWrapper';
@@ -23,6 +26,9 @@ const Networks: FC = () => {
               </>
             )}
             pageName={menuItemsDesktop[Page.NETWORKS]}
+            renderLink={() => (
+              <CanPerform perform={buildAction(Component.CMS_LINK, Action.LIST)} yes={() => <CMSLink />} />
+            )}
             withBorder
           />
         </div>

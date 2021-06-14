@@ -14,12 +14,15 @@ import { EmptyContainer, Error, Spinner } from 'features/Common';
 import { Page } from 'features/Page';
 import Loading from 'types/loading';
 import { RootState } from 'store/rootReducer';
+import Participants from 'features/Participants';
+import { CanPerform } from 'features/Auth';
+import { Action, buildAction, Component } from 'features/Action';
 
 import { Filter } from '../../config/types';
 import { initialListFilters, ALL, YOUR_NETWORKS } from '../../config/filters';
 import { getList, getCount, listSelector, clear, getParticipants } from '../../store';
 import NetworkAction from '../NetworkAction';
-import { Wrapper, ListContainer } from './styled';
+import { Wrapper, ListContainer, ParticipantsWrapper } from './styled';
 
 const TEST_ID = 'networks-list';
 
@@ -36,6 +39,7 @@ const NetworkList: FC = () => {
   const scrollContainer = useScrollContainer();
 
   const {
+    participants,
     meta: { total, error: countError },
     loading,
     error: listError,
@@ -148,6 +152,16 @@ const NetworkList: FC = () => {
             //@ts-ignore
             items={networksList}
             renderAction={(id) => <NetworkAction id={id} />}
+            renderParticipants={(id) => (
+              <CanPerform
+                perform={buildAction(Component.NETWORK_PARTICIPANTS, Action.LIST)}
+                yes={() => (
+                  <ParticipantsWrapper>
+                    <Participants participants={participants!.data[id]} />
+                  </ParticipantsWrapper>
+                )}
+              />
+            )}
           />
         </InfiniteScroll>
       </ListContainer>

@@ -13,7 +13,7 @@ import { DEFAULT_FILTERS } from 'config/constants';
 import { isActionDisabled, isEventOnAir, getPayloadWhere } from '../../utils';
 import Event from '../../config/types';
 import EventAction from '../EventAction';
-import EventParticipants from '../EventParticipants';
+import EventParticipants from '../../../Participants';
 import { List, Title, Wrapper } from './styled';
 
 const TEST_ID = 'events-sidebar';
