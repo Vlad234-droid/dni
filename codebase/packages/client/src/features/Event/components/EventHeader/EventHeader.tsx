@@ -28,7 +28,6 @@ type Props = {
 
 const EventHeader: FC<Props> = ({ event, participants }) => {
   const { id, title, description, maxParticipants, startDate, endDate } = event;
-  console.log('description', description);
   const { isMobile, isLargeMobile } = useMedia();
   const isMobileView = isMobile || isLargeMobile;
   const isOnAir = isEventOnAir(startDate, endDate);
