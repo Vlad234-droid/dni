@@ -55,11 +55,11 @@
       },
       "ISSUER_URL": {
         "type": "plain",
-        "value": "https://loginppe.ourtesco.com/oidc/2"
+        "value": "https://login.ourtesco.com/oidc/2"
       },
       "REGISTERED_CALLBACK_URL_ROOT": {
         "type": "plain",
-        "value": "https://ppe.ourtesco.com"
+        "value": "https://www.ourtesco.com"
       },
       "REGISTERED_CALLBACK_URL_PATH": {
         "type": "plain",
@@ -67,7 +67,7 @@
       },
       "REDIRECT_AFTER_LOGOUT_URL": {
         "type": "plain",
-        "value": "https://loginppe.ourtesco.com/logout"
+        "value": "https://login.ourtesco.com/logout"
       },
       "REFRESH_TOKEN_SECRET": {
         "type": "secret",
