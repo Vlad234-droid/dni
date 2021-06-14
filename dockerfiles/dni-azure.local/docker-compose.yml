@@ -1,0 +1,46 @@
+version: '3'
+services:
+    dni:
+        image: dni_local:latest
+        container_name: 'azure_dni'
+        environment:
+            - NODE_ENV=ppe
+            - NODE_PORT=9000
+            - PUBLIC_URL=/
+            - WITH_ONE_LOGIN=true
+            - OIDC_CLIENT_ID=cc1a44c0-7b26-0139-86ba-06f79909864e37548
+            - OIDC_CLIENT_SECRET=1aaaab9d7016c7b2ad0497d2fd55260dddb8ea6f1d8d38fcab79e17c6764d29e
+            - ISSUER_URL=https://loginppe.ourtesco.com/oidc/2
+            - REGISTERED_CALLBACK_URL_ROOT=http://localhost:9000
+            - REGISTERED_CALLBACK_URL_PATH=/auth/openid/callback
+            - REDIRECT_AFTER_LOGOUT_URL=https://loginppe.ourtesco.com/logout
+            - REFRESH_TOKEN_SECRET=c8E3Q6qEFWSkzBJaYDZ6mybtTQm4R6aB
+            - IDENTITY_CLIENT_ID=181739bc-937d-438f-a15a-aa63095f8205
+            - IDENTITY_CLIENT_SECRET=801787eb-f6b4-4801-93c5-a7bd696111a6
+            - IDENTITY_USER_SCOPED_TOKEN_COOKIE_SECRET=aa63095f8205801787eba15a937d4801
+            - IDENTITY_USER_SCOPED_TOKEN_COOKIE_NAME=identity-user-token
+            - TYPEORM_TYPE=postgres
+            - TYPEORM_HOST=postgres
+            - TYPEORM_PORT=5432
+            - TYPEORM_DATABASE=dni_database
+            - TYPEORM_USERNAME=dni
+            - TYPEORM_PASSWORD=dn1
+            - TYPEORM_SSL=false
+            - TYPEORM_RUN_MIGRATION=true
+            - COOKIE_SESSION_KEY=dni_cookie
+            - COOKIE_USER_KEY=user_data
+        ports:
+            - 9000:9000
+        restart: always
+    postgres:
+        image: postgres:12.5
+        container_name: 'azure_dni_postgres'
+        environment:
+            - POSTGRES_USER=dni
+            - POSTGRES_PASSWORD=dn1
+            - POSTGRES_DB=dni_database
+        volumes:
+            - ./postgres/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+        ports:
+            - 5433:5432
+    

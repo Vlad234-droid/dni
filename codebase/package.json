@@ -1,0 +1,94 @@
+{
+  "name": "dni",
+  "version": "1.0.0",
+  "license": "MIT",
+  "private": true,
+  "engines": {
+    "node": ">=14.4.x",
+    "yarn": "1.22.x"
+  },
+  "workspaces": [
+    "packages/**/*"
+  ],
+  "scripts": {
+    "bootstrap": "yarn install --frozen-lockfile && lerna bootstrap",
+    "build:prod": "cross-env BUILD_ENV=production lerna run --parallel build:prod",
+    "build:dev": "lerna run --parallel build:dev",
+    "build:test": "lerna run --parallel build:test",
+    "clean": "lerna run --parallel clean",
+    "clean:all": "lerna run --parallel clean:all && rimraf node_modules",
+    "lint": "prettier --write --config ./prettier.config.js './packages/*/src/**/*.{ts,tsx}'",
+    "on-pre-push": "commitlint --from=$(git merge-base master $(git rev-parse --abbrev-ref HEAD)) --to=HEAD",
+    "run:dev": "lerna run --parallel run:dev --scope @dni/client --scope @dni/server",
+    "run:prod": "cross-env BUILD_ENV=production lerna run --parallel run:prod",
+    "run:server": "lerna run --parallel run:server",
+    "run:local:dev": "lerna run --parallel run:dev --scope @dni/server --scope @dni/client --scope @dni/mock-server",
+    "ws:server": "yarn workspace @dni/server",
+    "ws:mock-server": "yarn workspace @dni/mock-server",
+    "ws:client": "yarn workspace @dni/client",
+    "ws:connector:colleague": "yarn workspace @dni-connectors/colleague-api",
+    "ws:connector:identity": "yarn workspace @dni-connectors/identity-api",
+    "ws:connector:colleague-cms": "yarn workspace @dni-connectors/colleague-cms-api",
+    "ws:connector:common": "yarn workspace @dni-connectors/common",
+    "ws:connector:confirmit": "yarn workspace @dni-connectors/confirmit-api",
+    "ws:db": "yarn workspace @dni/database",
+    "client": "lerna run --scope @dni/client",
+    "server": "lerna run --scope @dni/server",
+    "run:dev:server": "yarn server run:dev --stream",
+    "run:dev:client": "yarn client run:dev --stream",
+    "docker:build:prod": "sh ./scripts/build-docker.sh dni-prod production",
+    "docker:run:prod": "docker run --publish 9000:9000 dni-prod",
+    "test": "lerna run test --stream --scope @dni/client",
+    "test:coverage": "lerna run test:coverage --stream --scope @dni/client",
+    "npmrc:create": "bash ./scripts/create-npmrc.sh"
+  },
+  "devDependencies": {
+    "@babel/preset-env": "^7.12.11",
+    "@commitlint/cli": "^11.0.0",
+    "@commitlint/config-conventional": "^11.0.0",
+    "@commitlint/config-lerna-scopes": "^11.0.0",
+    "@typescript-eslint/eslint-plugin": "^4.10.0",
+    "@typescript-eslint/parser": "^4.10.0",
+    "babel-jest": "^26.6.3",
+    "commitizen": "^4.2.2",
+    "core-js": "^2.6.5",
+    "cross-env": "^7.0.3",
+    "cz-conventional-changelog": "^3.3.0",
+    "eslint-config-prettier": "^7.1.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-prettier": "^3.3.0",
+    "eslint-plugin-react": "^7.21.5",
+    "husky": "^4.3.7",
+    "jest-environment-jsdom-sixteen": "^1.0.3",
+    "lerna": "^3.22.1",
+    "lint-staged": "^10.5.3",
+    "lodash": "^4.17.20",
+    "prettier": "^2.2.1",
+    "rimraf": "^3.0.2",
+    "ts-jest": "^26.4.4"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
+      "pre-commit": "yarn lint-staged",
+      "pre-push": "yarn on-pre-push"
+    }
+  },
+  "lint-staged": {
+    "*.{js,ts,tsx}": [
+      "eslint --fix"
+    ],
+    "*.{ts,tsx,md,json}": [
+      "prettier --write"
+    ]
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
+  },
+  "volta": {
+    "node": "14.15.4",
+    "yarn": "1.22.10"
+  }
+}

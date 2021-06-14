@@ -4,19 +4,20 @@
 
 .dockerignore
 
-Dockerfile*
-docker-compose*
-README.md
-LICENSE
+**/.gitignore
+**/Dockerfile*
+**/docker-compose*
+**/README.md
+**/LICENSE
 
 cicd
 dockerfiles
 docs
-node_modules
-scripts
 
 npm-debug.log
 
-packages/*/coverage
-packages/*/build
-packages/*/node_modules
+codebase/**/.env
+codebase/**/.env.example
+codebase/**/coverage
+codebase/**/build
+codebase/**/node_modules
