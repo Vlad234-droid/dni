@@ -4,7 +4,6 @@ import useStore from 'hooks/useStore';
 import useDispatch from 'hooks/useDispatch';
 import { Spinner, Error } from 'features/Common';
 import Loading from 'types/loading';
-import { getUserRole, UserRole } from 'features/User';
 
 import { FetchUserAction } from '../../config/types';
 import { profile, State as AuthState } from '../../store';

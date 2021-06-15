@@ -19,7 +19,9 @@ enum Period {
 
 type State = {
   entityType: Entity;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [Entity.NETWORK]: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [Entity.EVENT]: any;
   loading: Loading;
   error?: string;
