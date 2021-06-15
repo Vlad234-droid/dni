@@ -16,6 +16,9 @@ docs
 
 npm-debug.log
 
+codebase/**/yarn.lock
+codebase/**/yarn*.log
+
 codebase/**/.env
 codebase/**/.env.example
 codebase/**/coverage
