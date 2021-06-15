@@ -7,6 +7,7 @@ const CMSLink = () => (
   <Link title={'strappi | sso'} href={'https://ppe.ourtesco.com/colleague-cms/admin/'}>
     <Button>
       <Icon graphic='externalLink' />
+      {'Create New'}
     </Button>
   </Link>
 );

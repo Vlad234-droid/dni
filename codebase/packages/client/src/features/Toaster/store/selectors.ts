@@ -7,8 +7,6 @@ const toasterAdapter = createEntityAdapter<Toast>({
   selectId: (toast) => toast.id,
 });
 
-const toasterItemsSelector = toasterAdapter.getSelectors<ToasterState>(
-  (state) => state.all,
-).selectAll;
+const toasterItemsSelector = toasterAdapter.getSelectors<ToasterState>((state) => state.all).selectAll;
 
 export { toasterAdapter, toasterItemsSelector };
