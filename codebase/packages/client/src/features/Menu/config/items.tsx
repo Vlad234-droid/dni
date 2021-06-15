@@ -57,7 +57,7 @@ export const mainMenuItems = [
     text: 'Health and Wellbeing',
   },
   {
-    href: '/',
+    href: `/${process.env.PUBLIC_URL}`,
     id: 'diversity-and-inclusion',
     text: 'Diversity and Inclusion',
     active: true,
