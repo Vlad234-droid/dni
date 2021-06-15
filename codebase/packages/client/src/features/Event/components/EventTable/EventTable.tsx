@@ -32,6 +32,7 @@ const EventTable: FC = () => {
   const [loading, events, hasMore, listError, countError] = useFetchEvents(filters, page);
   const isLoading = useMemo(() => loading !== Loading.SUCCEEDED && loading !== Loading.FAILED, [loading]);
   const error = useMemo(() => listError || countError || participants.error, [participants, listError, countError]);
+  const tooltipPosition = { top: '38px', left: '32px' };
 
   const memoizedContent = useMemo(() => {
     if (error) return <Error errorData={{ title: error }} />;
@@ -49,7 +50,7 @@ const EventTable: FC = () => {
             {events.map(({ id, title, endDate, network }) => (
               <Row key={id}>
                 <Cell width='30%'>
-                  <TextWithEllipsis height='30px' href={`${Page.EVENTS}/${id}`}>
+                  <TextWithEllipsis height='30px' href={`${Page.EVENTS}/${id}`} tooltipPosition={tooltipPosition}>
                     {title}
                   </TextWithEllipsis>
                 </Cell>
@@ -65,7 +66,7 @@ const EventTable: FC = () => {
                           <img src={network.image!.url} />
                         </ImageWrapper>
                       )}
-                      <TextWithEllipsis height='30px' href={`${Page.EVENTS}/${id}`}>
+                      <TextWithEllipsis height='30px' href={`${Page.EVENTS}/${id}`} tooltipPosition={tooltipPosition}>
                         {network.title}
                       </TextWithEllipsis>
                     </NetworkWrapper>

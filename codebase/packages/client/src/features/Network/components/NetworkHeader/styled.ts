@@ -1,43 +1,7 @@
-import React, { FC } from 'react';
 import styled from 'styled-components';
-import Link from '@beans/link';
 
 import { redDotStyles } from 'styles';
 import Media from 'styles/media';
-import { useMedia } from 'context/InterfaceContext';
-import { CopyLink, TextWithEllipsis } from 'features/Common';
-
-import NetworkAction from '../NetworkAction';
-
-type Props = {
-  id: number;
-  title: string;
-  email: string;
-  onLeave: () => void;
-  onJoin: () => void;
-};
-
-const NetworkHeader: FC<Props> = ({ id, title, email, onLeave, onJoin }) => {
-  const { isMobile, isLargeMobile } = useMedia();
-  const isMobileView = isMobile || isLargeMobile;
-
-  // TODO: use commented code to display network actions edit and archive
-  return (
-    <Wrapper>
-      <TitleWrapper>
-        <TextWithEllipsis>{title}</TextWithEllipsis>
-        {isMobileView && <CopyLink />}
-      </TitleWrapper>
-      {isMobileView && <Link href={`mailto: ${email}`}>{email}</Link>}
-      <Actions>
-        {!isMobileView && <CopyLink />}
-        <ButtonWrapper>
-          <NetworkAction {...{ id, onLeave, onJoin }} />
-        </ButtonWrapper>
-      </Actions>
-    </Wrapper>
-  );
-};
 
 export const Wrapper = styled.div`
   padding: 24px 16px;
@@ -103,5 +67,3 @@ export const Actions = styled.div`
     margin-right: 16px;
   }
 `;
-
-export default NetworkHeader;

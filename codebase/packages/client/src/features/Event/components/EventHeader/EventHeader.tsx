@@ -36,7 +36,7 @@ const EventHeader: FC<Props> = ({ event, participants }) => {
     <Wrapper>
       <Inner>
         <TitleWrapper>
-          <TextWithEllipsis>{title}</TextWithEllipsis>
+          <TextWithEllipsis tooltipPosition={{ left: '24px', top: '67px' }}>{title}</TextWithEllipsis>
           {isOnAir && (
             <StatusWrapper>
               <OnAir />
