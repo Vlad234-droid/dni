@@ -11,14 +11,14 @@ export const WideTileStyles = css`
 
 export const NarrowTileStyles = css`
   margin: 0 8px;
+
+  & div:not(:last-child) {
+    height: 44px;
+  }
 `;
 
 export const Wrapper = styled.div<{ type: Type }>`
   position: relative;
-
-  .beans-base-tile__panel-container {
-    flex-grow: unset;
-  }
 
   & h5 {
     font-size: 20px;
@@ -70,7 +70,7 @@ export const ActionWrapper = styled(BaseElement)<{ type: Type }>`
   align-items: center;
   border-top: ${({ theme }) => `1px solid ${theme.colors.lines.base}`};
   padding: 16px;
-  margin-top: ${({ type }) => (type == Type.WIDE ? '32px' : '16px')};
+  margin-top: ${({ type }) => (type == Type.WIDE ? '28px' : '16px')};
 
   ${Media.large_tablet`
     padding: 16px;

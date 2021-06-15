@@ -4,6 +4,8 @@ import InfiniteScroll from 'react-infinite-scroller';
 import isEmpty from 'lodash.isempty';
 import Omit from 'lodash.omit';
 
+import { CanPerform } from 'features/Auth';
+import { Action, buildAction, Component } from 'features/Action';
 import useDispatch from 'hooks/useDispatch';
 import useStore from 'hooks/useStore';
 import { FilterPayload } from 'types/payload';
@@ -19,7 +21,6 @@ import { getList, getCount, listSelector, clear } from '../../store';
 import { getAllFilterPayload, getFilterPayload } from '../../utils';
 import PostItem from '../PostItem';
 import { FiltersContainer } from './styled';
-import { useIsAdmin, useIsManager } from '../../../Auth/hooks/usePermission';
 
 type Props = {
   filter?: Filter;
@@ -131,9 +132,6 @@ const PostList: FC<Props> = ({ entityId, filter = ALL }) => {
     loadPosts(filters);
   }, []);
 
-  const isAdmin = useIsAdmin();
-  const isManager = useIsManager();
-
   const memoizedContent = useMemo(() => {
     if (error) return <Error errorData={{ title: error }} fullWidth />;
 
@@ -162,16 +160,22 @@ const PostList: FC<Props> = ({ entityId, filter = ALL }) => {
 
   return (
     <>
-      {isAdmin ||
-        (isManager && filter !== ALL && (
-          <FiltersContainer>
-            <ButtonFilter
-              initialFilters={byEventFilters}
-              onChange={(key) => handleByEventFilterChange(key as ByEntityFilter)}
-              name='posts'
-            />
-          </FiltersContainer>
-        ))}
+      <CanPerform
+        perform={buildAction(Component.POST_ARCHIVED, Action.LIST)}
+        yes={() => (
+          <>
+            {filter !== ALL && (
+              <FiltersContainer>
+                <ButtonFilter
+                  initialFilters={byEventFilters}
+                  onChange={(key) => handleByEventFilterChange(key as ByEntityFilter)}
+                  name='posts'
+                />
+              </FiltersContainer>
+            )}
+          </>
+        )}
+      />
       {memoizedContent}
     </>
   );

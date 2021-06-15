@@ -19,4 +19,8 @@ const Wrapper = styled.div`
   `}
 `;
 
-export { Wrapper, ListContainer };
+const ParticipantsWrapper = styled.div`
+  margin-top: 12px;
+`;
+
+export { Wrapper, ListContainer, ParticipantsWrapper };

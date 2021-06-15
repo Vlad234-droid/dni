@@ -21,6 +21,7 @@ type EventApiParams = {
   startDate_lgte?: string;
   endDate_gte?: string;
   endDate_lt?: string;
+  network_eq?: string;
 } & BaseApiParams;
 
 type EventBody = Omit<Network, 'id'>;

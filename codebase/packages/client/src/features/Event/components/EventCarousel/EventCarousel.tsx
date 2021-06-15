@@ -7,11 +7,11 @@ import { EmptyContainer, Error, Spinner } from 'features/Common';
 import { Page } from 'features/Page';
 import Loading from 'types/loading';
 import { useMedia } from 'context/InterfaceContext';
+import Participants from 'features/Participants';
 
 import { isEventOnAir, isActionDisabled } from '../../utils';
 import Event from '../../config/types';
 import EventAction from '../EventAction';
-import EventParticipants from '../EventParticipants';
 import { Wrapper, ErrorWrapper } from './styled';
 
 const CONTENT_HEIGHT = '483px';
@@ -58,7 +58,7 @@ const EventCarousel: FC<Props> = ({ events, loading, participants, error, loadPa
             renderAction={() => <EventAction id={id} disabled={isActionDisabled(participants![id], maxParticipants)} />}
             meta={startDate}
             renderParticipants={() => (
-              <EventParticipants maxParticipants={maxParticipants} participants={participants![id]} />
+              <Participants maxParticipants={maxParticipants} participants={participants![id]} />
             )}
             image={image}
           />

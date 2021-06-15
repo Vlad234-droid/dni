@@ -29,6 +29,8 @@ const PostPublished: FC<PostPublishedProps> = ({ item }) => {
   const { title, content, authorName, attachments, id, published_at, network, event } = item;
   const media = useMedia();
 
+  console.log('content', content);
+
   return (
     <PostPublishedWrapper data-testid={TEST_ID} isMobile={media.isMobile || media.isLargeMobile}>
       <PostHead>
