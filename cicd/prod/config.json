@@ -3,7 +3,7 @@
     "name": "diversity-and-inclusion"
   },
   "build": {
-    "dockerFileDirectory": "./dockerfiles/dni-frontend_docker_build.Dockerfile",
+    "dockerFileDirectory": "./dockerfiles/dni-frontend_docker_build_prod.Dockerfile",
     "args": {
       "NEXUS_ACCESS_TOKEN": {
         "type": "secret",
