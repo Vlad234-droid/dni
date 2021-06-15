@@ -32,8 +32,6 @@ ENV SKIP_PREFLIGHT_CHECK=true
 
 RUN yarn bootstrap
 
-RUN yarn add cross-env --ignore-workspace-root-check
-
 RUN yarn build:prod
 
 # ==========================================
