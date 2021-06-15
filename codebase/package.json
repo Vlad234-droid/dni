@@ -11,7 +11,7 @@
     "packages/**/*"
   ],
   "scripts": {
-    "bootstrap": "yarn install --frozen-lockfile && lerna bootstrap",
+    "bootstrap": "yarn install --frozen-lockfile --production && lerna bootstrap",
     "build:prod": "cross-env BUILD_ENV=production lerna run --parallel build:prod",
     "build:dev": "lerna run --parallel build:dev",
     "build:test": "lerna run --parallel build:test",
