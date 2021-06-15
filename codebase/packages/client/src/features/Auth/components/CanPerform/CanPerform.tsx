@@ -13,8 +13,6 @@ type Props = {
 const CanPerform: FC<Props> = ({ perform, data, yes, no }) => {
   const hasPermission = usePermission(perform, data);
 
-  console.log('hasPermission', hasPermission);
-
   return hasPermission ? yes() : no ? no() : null;
 };
 

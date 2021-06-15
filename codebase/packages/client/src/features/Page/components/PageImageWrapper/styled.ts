@@ -16,7 +16,7 @@ export const Wrapper = styled.div`
     z-index: 100;
 
     ${Media.small_desktop`
-      top: 232px;
+      top: 230px;
     `}
   }
 `;
