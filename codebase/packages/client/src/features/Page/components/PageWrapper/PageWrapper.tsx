@@ -1,6 +1,5 @@
 import React, { FC } from 'react';
 
-import { CMSLink } from 'features/Common';
 import { Wrapper, Header, Title, Content } from './styled';
 
 const TEST_ID = 'page-wrapper';
@@ -17,7 +16,6 @@ const PageWrapper: FC<Props> = ({ renderHeaderFilters, renderContent, renderLink
   <Wrapper data-testid={TEST_ID}>
     <Header>
       <Title>{pageName}</Title>
-      {['networks', 'events'].includes(pageName.toLowerCase()) && <CMSLink />}
       {renderLink && renderLink()}
       {renderHeaderFilters && renderHeaderFilters()}
     </Header>
