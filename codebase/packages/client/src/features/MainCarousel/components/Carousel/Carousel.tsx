@@ -25,7 +25,7 @@ type Props = {
 
 const Carousel: FC<Props> = ({
   id,
-  rotationInterval = 5000,
+  rotationInterval = 10000,
   autoPlay = true,
   hideControls = false,
   children,
