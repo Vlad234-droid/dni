@@ -5,10 +5,13 @@ import Notification from '@beans/notification';
 
 import { actions } from '../../store/slice';
 import { skins } from '../../config/skins';
-import { ToastSkin } from '../../config/types';
+import * as T from '../../config/types';
 
-const MyNotification = styled(Notification)`
+const MyNotification = styled(Notification)<{
+  bgColor: string;
+}>`
   padding: 18px 0;
+  background-color: ${({ bgColor }) => bgColor};
 `;
 
 const ToastContent = styled.div`
@@ -19,11 +22,18 @@ const ToastContent = styled.div`
   line-height: 22px;
 `;
 
+const config = {
+  [T.ToastVariant.ERROR]: '#cc0000',
+  [T.ToastVariant.WARNING]: '#fcd700',
+  [T.ToastVariant.SUCCESS]: '#009900',
+  [T.ToastVariant.INFORMATION]: '#f6f6f6',
+};
+
 type Id = number | string;
 
 interface ToasterItemProps {
   id: Id;
-  skin: ToastSkin;
+  skin: T.ToastSkin;
   data?: Partial<{
     id: Id;
   }>;
@@ -54,7 +64,12 @@ const ToasterItem: FC<ToasterItemProps> = ({ id, skin, data, timeout }) => {
   }, [timeout]);
 
   return (
-    <MyNotification variant={variant} showIcon={false} data-testid={toasterItemTestId}>
+    <MyNotification
+      variant={variant}
+      showIcon={false}
+      bgColor={config[variant || T.ToastVariant.INFORMATION]}
+      data-testid={toasterItemTestId}
+    >
       <ToastContent>{Content && <Content {...data} />}</ToastContent>
     </MyNotification>
   );
