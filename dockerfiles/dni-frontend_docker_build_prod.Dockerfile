@@ -20,14 +20,11 @@ ENV NEXUS_ACCESS_TOKEN=$NEXUS_ACCESS_TOKEN
 
 RUN dos2unix ./run.sh && dos2unix ./create-npmrc.sh && bash ./create-npmrc.sh --token $NEXUS_ACCESS_TOKEN
 
-# Install required tools
-RUN yarn global add lerna cross-env env-cmd
-
 RUN yarn bootstrap
 
+# Explicitly set env to production
 ENV BUILD_ENV=production
-
-ENV NODE_ENV=$NODE_ENV
+ENV NODE_ENV=production
 
 ENV REACT_APP_API_URL=$REACT_APP_API_URL
 ENV REACT_APP_WS_URL=$REACT_APP_WS_URL
@@ -40,6 +37,7 @@ RUN yarn build:prod
 # ==========================================
 # These ENV variable must be set to run app:
 # ==========================================
+
 # By default turn on SSO
 ENV WITH_ONE_LOGIN=true
 
