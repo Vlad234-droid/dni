@@ -9,7 +9,7 @@ import useStore from 'hooks/useStore';
 import InfoPanel, { InfoPanelType } from 'features/InfoPanel';
 import { PostList, BY_NETWORK } from 'features/Post';
 import { useImageWrapper } from 'context';
-import { EmptyContainer, Error, Spinner } from 'features/Common';
+import { EmptyContainer, Error, Spinner, RichTextRenderer } from 'features/Common';
 import defaultImage from 'assets/pride-logo.jpg';
 
 import { byIdSelector, getOne } from '../../store';
@@ -20,6 +20,8 @@ import { Wrapper, Content, LeftContent, RightContent } from './styled';
 const TEST_ID = 'network';
 const ERROR_TITLE = 'Request ID not found';
 const ERROR_MESSAGE = 'We can not find the network ID you are looking for, please try again.';
+const JOINED_DESCRIPTION =
+  'Just to know you better, please fill “This is me” survey. Your personal information won’t be disclosed.';
 
 type Props = {
   id: number;
@@ -103,14 +105,7 @@ const Network: FC<Props> = ({ id, renderBreadcrumb }) => {
             type={infoPanelType}
             infoLink='/'
             title={isJoined ? 'You have joined the Network!' : `Join ${title}`}
-            //@ts-ignore
-            content={
-              isJoined
-                ? [
-                    'Just to know you better, please fill “This is me” survey. Your personal information won’t be disclosed.',
-                  ]
-                : [description]
-            }
+            renderContent={() => (isJoined ? <p>{JOINED_DESCRIPTION}</p> : <RichTextRenderer source={description!} />)}
             onClose={isJoined ? handleCloseInfoPanel : undefined}
           />
         )}
