@@ -20,6 +20,10 @@ ENV NEXUS_ACCESS_TOKEN=$NEXUS_ACCESS_TOKEN
 
 RUN dos2unix ./run.sh && dos2unix ./create-npmrc.sh && bash ./create-npmrc.sh --token $NEXUS_ACCESS_TOKEN
 
+RUN yarn --version
+
+RUN lerna --version
+
 RUN yarn bootstrap
 
 ENV BUILD_ENV=production
