@@ -22,7 +22,7 @@ RUN dos2unix ./run.sh && dos2unix ./create-npmrc.sh && bash ./create-npmrc.sh --
 
 # Explicitly set env to production
 ENV BUILD_ENV=production
-ENV NODE_ENV=production
+ENV NODE_ENV=ppe
 
 ENV REACT_APP_API_URL=$REACT_APP_API_URL
 ENV REACT_APP_WS_URL=$REACT_APP_WS_URL
@@ -31,6 +31,8 @@ ENV PUBLIC_URL=$PUBLIC_URL
 ENV SKIP_PREFLIGHT_CHECK=true
 
 RUN yarn bootstrap
+
+ENV NODE_ENV=production
 
 RUN yarn build:prod
 

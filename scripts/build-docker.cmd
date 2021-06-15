@@ -15,6 +15,7 @@ if "%NEXUS_ACCESS_TOKEN%"=="" (
 )
 
 docker build ^
+   --progress plain ^
    --tag dni_local:latest ^
    --build-arg NEXUS_ACCESS_TOKEN=%NEXUS_ACCESS_TOKEN% ^
    --build-arg NODE_ENV=ppe ^
