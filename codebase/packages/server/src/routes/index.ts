@@ -13,6 +13,7 @@ import {
   deleteEventFromEmployee,
   // notification
   handleHook,
+  handleCepHook,
   // networks
   getNetworksParticipants,
   // events
@@ -22,7 +23,7 @@ import {
   printPDF,
   //utils
   getEnvironmentVariablesMiddleware,
-  getTypeOrmConnectionOptionsMiddleware
+  getTypeOrmConnectionOptionsMiddleware,
 } from '../controllers';
 
 import { cmsAuth } from '../middlewares/cms-auth';
@@ -47,6 +48,7 @@ api.get('/events/participants', getEventsParticipants);
 api.get('/networks/participants', getNetworksParticipants);
 
 api.post('/notifications', cmsAuth, handleHook);
+api.post('/cms-events', handleCepHook);
 
 api.get('/reports/time-periods', getReportByFilters);
 api.post('/reports/print-pdf', printPDF);
