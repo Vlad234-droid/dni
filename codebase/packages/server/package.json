@@ -4,7 +4,6 @@
   "main": "src/app.ts",
   "license": "MIT",
   "scripts": {
-    "build:prod": "tsc -p .",
     "run:dev": "env-cmd -f .env nodemon --watch \"src/**/*\" -e ts,tsx --exec \"ts-node --files\" src/app.ts",
     "run:prod": "env-cmd --silent --no-override --fallback -f .env.${BUILD_ENV} ts-node --transpile-only -- src/app.ts",
     "clean": "rimraf build coverage",
