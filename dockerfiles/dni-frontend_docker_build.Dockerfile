@@ -20,11 +20,11 @@ ENV NEXUS_ACCESS_TOKEN=$NEXUS_ACCESS_TOKEN
 
 RUN dos2unix ./lerna.json && dos2unix package.json && dos2unix ./run.sh && dos2unix ./create-npmrc.sh && bash ./create-npmrc.sh --token $NEXUS_ACCESS_TOKEN
 
+# Install required tools
+RUN npm install --g lerna cross-env env-cmd tsc
+
 RUN npm --version
 RUN yarn --version
-
-RUN npm install --g lerna cross-env env-cmd
-
 RUN lerna --version
 
 RUN yarn bootstrap
