@@ -18,16 +18,12 @@ type Props = {
 const NetworkHeader: FC<Props> = ({ id, title, email, onLeave, onJoin }) => {
   const { isMobile, isLargeMobile } = useMedia();
   const isMobileView = isMobile || isLargeMobile;
-  const asidePadding = isMobile ? '16px' : '24px';
-  const titleHeight = isMobile ? '45px' : '71px';
 
   // TODO: use commented code to display network actions edit and archive
   return (
-    <Wrapper asidePadding={asidePadding}>
-      <TitleWrapper height={titleHeight}>
-        <TextWithEllipsis left={asidePadding} top={titleHeight}>
-          {title}
-        </TextWithEllipsis>
+    <Wrapper>
+      <TitleWrapper>
+        <TextWithEllipsis tooltipPosition={{ left: '24px', top: '86px' }}>{title}</TextWithEllipsis>
         {isMobileView && <CopyLink />}
       </TitleWrapper>
       {isMobileView && <Link href={`mailto: ${email}`}>{email}</Link>}

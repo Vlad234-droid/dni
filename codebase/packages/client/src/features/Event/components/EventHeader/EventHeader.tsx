@@ -31,13 +31,12 @@ const EventHeader: FC<Props> = ({ event, participants }) => {
   const { isMobile, isLargeMobile } = useMedia();
   const isMobileView = isMobile || isLargeMobile;
   const isOnAir = isEventOnAir(startDate, endDate);
-  const asidePadding = isMobile ? '16px' : '24px';
 
   return (
-    <Wrapper asidePadding={asidePadding}>
+    <Wrapper>
       <Inner>
         <TitleWrapper>
-          <TextWithEllipsis left={asidePadding}>{title}</TextWithEllipsis>
+          <TextWithEllipsis tooltipPosition={{ left: '24px', top: '67px' }}>{title}</TextWithEllipsis>
           {isOnAir && (
             <StatusWrapper>
               <OnAir />

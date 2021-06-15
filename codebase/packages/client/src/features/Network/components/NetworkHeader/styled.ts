@@ -1,17 +1,15 @@
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 
 import { redDotStyles } from 'styles';
 import Media from 'styles/media';
 
-export const Wrapper = styled.div<{ asidePadding: string }>`
-  padding: 24px ${({ asidePadding }) => asidePadding};
+export const Wrapper = styled.div`
+  padding: 24px 16px;
 
-  ${({ asidePadding }) => css`
-    ${Media.tablet`
-      display: flex;
-      justify-content: space-between;
-      padding: 24px ${asidePadding}
-    `}
+  ${Media.tablet`
+    display: flex;
+    justify-content: space-between;
+    padding: 24px;
   `}
 `;
 
@@ -31,7 +29,7 @@ export const ButtonWrapper = styled.div`
   `}
 `;
 
-export const TitleWrapper = styled.div<{ height: string }>`
+export const TitleWrapper = styled.div`
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -45,15 +43,13 @@ export const TitleWrapper = styled.div<{ height: string }>`
   h5 {
     font-weight: bold;
     font-size: 32px;
-    line-height: ${({ height }) => height};
+    line-height: 45px;
     margin-right: 0;
 
-    ${({ height }) => css`
-      ${Media.tablet`
-        margin-right: 24px;
-        font-size: 50px;
-        line-height: ${height};
-      `}
+    ${Media.tablet`
+      margin-right: 24px;
+      font-size: 50px;
+      line-height: 71px;
     `}
 
     &::after {

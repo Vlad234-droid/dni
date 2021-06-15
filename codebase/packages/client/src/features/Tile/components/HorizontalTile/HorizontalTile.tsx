@@ -50,6 +50,7 @@ const HorizontalTile: FC<Props> = ({ title, image, renderAction, meta, renderPar
       }}
       imageHeight='126px'
       imageWidth='80px'
+      tooltipPosition={{ top: '30px', left: '16px' }}
     />
   </Wrapper>
 );

@@ -35,6 +35,9 @@ const VerticalTile: FC<Props> = ({
   id,
   type = Type.WIDE,
 }) => {
+  console.log('type', type);
+  const tooltipPosition = type === Type.WIDE ? { top: '44px', left: '16px' } : { top: '42px', left: '8px' };
+
   return (
     <Wrapper data-testid={TEST_ID} type={type}>
       {isOnAir && (
@@ -59,6 +62,7 @@ const VerticalTile: FC<Props> = ({
           belowTablet: VERTICAL,
         }}
         imageHeight='140px'
+        tooltipPosition={tooltipPosition}
       />
     </Wrapper>
   );

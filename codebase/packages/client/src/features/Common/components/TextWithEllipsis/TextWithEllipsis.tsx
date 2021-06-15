@@ -9,14 +9,14 @@ type Props = {
   fullWidthTooltip?: boolean;
   left?: string;
   top?: string;
+  tooltipPosition?: { top: string; left: string };
 };
 
 const TextWithEllipsis: FC<Props> = ({
   height = 'auto',
   maxWidth = '100%',
   fullWidthTooltip = false,
-  left = '0',
-  top = '0',
+  tooltipPosition = { top: '32px', left: '16px' },
   href,
   children,
 }) => (
@@ -24,7 +24,7 @@ const TextWithEllipsis: FC<Props> = ({
     <Title height={height} maxWidth={maxWidth} wideButton={!href}>
       {href ? <Link href={href}>{children}</Link> : children}
     </Title>
-    <Tooltip className='tooltip' fullWidth={fullWidthTooltip} left={left} top={top}>
+    <Tooltip className='tooltip' fullWidth={fullWidthTooltip} position={tooltipPosition}>
       {children}
     </Tooltip>
   </>
@@ -68,48 +68,17 @@ const Title = styled.h5<{ height: string; maxWidth: string; wideButton: boolean 
     opacity: 1;
     z-index: 500;
   }
-
-  //&:hover {
-  //  white-space: normal;
-  //
-  //  span {
-  //    visibility: visible;
-  //  }
-  //}
-
-  //&:hover {
-  //  position: relative;
-  //  z-index: 20000;
-  //  overflow: visible;
-  //  width: auto;
-  //
-  //  a {
-  //    background: white;
-  //    padding: 4px 8px 4px 0;
-  //  }
-  //}
 `;
 
-const Tooltip = styled.span<{ fullWidth: boolean; left: string; top: string }>`
-  //visibility: hidden;
-  //position: absolute;
-  //z-index: 20000000;
-  //left: 0;
-  //top: 0;
-  //background: white;
-  //font-size: 14px;
-  ////padding: 4px 8px;
-  //width: 100%;
-  //font-weight: bold;
-
+const Tooltip = styled.span<{ fullWidth: boolean; position: { top: string; left: string } }>`
   width: ${({ fullWidth }) => (fullWidth ? '100%' : 'auto')};
   position: absolute;
-  top: ${({ top }) => top};
-  left: ${({ left }) => left};
+  top: ${({ position }) => position.top};
+  left: ${({ position }) => position.left};
   visibility: hidden;
   background-color: ${({ theme }) => theme.colors.white};
   padding: 8px;
-  -webkit-box-shadow: 0 0 50px 0 rgba(0, 0, 0, 0.3);
+  box-shadow: 1px 1px 6px 0 ${({ theme }) => theme.colors.lines.base};
   opacity: 0;
   transition: opacity 0.5s ease;
 `;

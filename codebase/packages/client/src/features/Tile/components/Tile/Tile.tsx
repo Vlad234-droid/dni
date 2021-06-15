@@ -27,6 +27,7 @@ type Props = {
   };
   imageHeight?: string;
   imageWidth?: string;
+  tooltipPosition: { top: string; left: string };
 };
 
 const Tile: FC<Props> = ({
@@ -40,6 +41,7 @@ const Tile: FC<Props> = ({
   id,
   imageHeight,
   imageWidth = '100%',
+  tooltipPosition,
 }) => {
   return (
     <Wrapper>
@@ -62,7 +64,7 @@ const Tile: FC<Props> = ({
           />
         }
         title={
-          <TextWithEllipsis href={`${link}/${id}`} fullWidthTooltip>
+          <TextWithEllipsis href={`${link}/${id}`} fullWidthTooltip tooltipPosition={tooltipPosition}>
             {title}
           </TextWithEllipsis>
         }
