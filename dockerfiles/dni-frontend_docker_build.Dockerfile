@@ -18,11 +18,11 @@ COPY --chmod=0755 ./scripts/run.sh ./run.sh
 
 ENV NEXUS_ACCESS_TOKEN=$NEXUS_ACCESS_TOKEN
 
-RUN dos2unix ./run.sh && dos2unix ./create-npmrc.sh && bash ./create-npmrc.sh --token $NEXUS_ACCESS_TOKEN
+RUN dos2unix ./lerna.json && dos2unix package.json && dos2unix yarn.lock && dos2unix ./run.sh && dos2unix ./create-npmrc.sh && bash ./create-npmrc.sh --token $NEXUS_ACCESS_TOKEN
 
 RUN yarn --version
 
-RUN lerna --version
+#RUN lerna --version
 
 RUN yarn bootstrap
 
