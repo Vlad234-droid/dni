@@ -19,7 +19,6 @@ const NetworkHeader: FC<Props> = ({ id, title, email, onLeave, onJoin }) => {
   const { isMobile, isLargeMobile } = useMedia();
   const isMobileView = isMobile || isLargeMobile;
 
-  // TODO: use commented code to display network actions edit and archive
   return (
     <Wrapper>
       <TitleWrapper>

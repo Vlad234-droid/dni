@@ -7,8 +7,6 @@ type Props = {
   maxWidth?: string;
   href?: string;
   fullWidthTooltip?: boolean;
-  left?: string;
-  top?: string;
   tooltipPosition?: { top: string; left: string };
 };
 
