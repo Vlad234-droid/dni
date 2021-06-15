@@ -31,12 +31,13 @@ const EventHeader: FC<Props> = ({ event, participants }) => {
   const { isMobile, isLargeMobile } = useMedia();
   const isMobileView = isMobile || isLargeMobile;
   const isOnAir = isEventOnAir(startDate, endDate);
+  const asidePadding = isMobile ? '16px' : '24px';
 
   return (
-    <Wrapper>
+    <Wrapper asidePadding={asidePadding}>
       <Inner>
         <TitleWrapper>
-          <TextWithEllipsis>{title}</TextWithEllipsis>
+          <TextWithEllipsis left={asidePadding}>{title}</TextWithEllipsis>
           {isOnAir && (
             <StatusWrapper>
               <OnAir />

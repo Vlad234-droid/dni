@@ -14,7 +14,7 @@ import defaultImage from 'assets/pride-logo.jpg';
 
 import { byIdSelector, getOne } from '../../store';
 import NetworkPartners from './NetworkPartners';
-import NetworkHeader from './NetworkHeader';
+import NetworkHeader from '../NetworkHeader';
 import { Wrapper, Content, LeftContent, RightContent } from './styled';
 
 const TEST_ID = 'network';

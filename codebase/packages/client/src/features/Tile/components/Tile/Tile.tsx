@@ -61,7 +61,11 @@ const Tile: FC<Props> = ({
             objectFit={image?.url ? 'cover' : 'contain'}
           />
         }
-        title={<TextWithEllipsis href={`${link}/${id}`}>{title}</TextWithEllipsis>}
+        title={
+          <TextWithEllipsis href={`${link}/${id}`} fullWidthTooltip>
+            {title}
+          </TextWithEllipsis>
+        }
       >
         {description && (
           <DescriptionContainer>

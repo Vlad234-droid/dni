@@ -1,14 +1,16 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 import Media from 'styles/media';
 import { textXS, redDotStyles } from 'styles';
 
-export const Wrapper = styled.div`
-  padding: 0 16px 24px;
+export const Wrapper = styled.div<{ asidePadding: string }>`
+  padding: 0 ${({ asidePadding }) => asidePadding} 24px;
   border-bottom: ${({ theme }) => `1px solid ${theme.colors.lines.base}`};
 
-  ${Media.tablet`
-     padding: 0 24px;
+  ${({ asidePadding }) => css`
+    ${Media.tablet`
+      padding: 0 ${asidePadding}
+    `}
   `}
 `;
 
