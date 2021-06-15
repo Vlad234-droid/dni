@@ -23,7 +23,7 @@ RUN dos2unix ./lerna.json && dos2unix package.json && dos2unix ./run.sh && dos2u
 RUN npm --version
 RUN yarn --version
 
-RUN npm install --g lerna cross-env
+RUN npm install --g lerna cross-env env-cmd
 
 RUN lerna --version
 
