@@ -1,5 +1,6 @@
 export interface ExtraLayoutProps {
   renderMain: () => JSX.Element;
+  renderBreadcrumb?: () => JSX.Element;
 }
 
 export interface LayoutProps extends ExtraLayoutProps {

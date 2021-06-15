@@ -1,11 +1,13 @@
 import React, { FC, useEffect, useMemo } from 'react';
 import { createPortal } from 'react-dom';
 import ResponsiveImage from '@beans/responsive-image';
+import Breadcrumb from '@beans/breadcrumb';
 
 import { BY_EVENT, PostList } from 'features/Post';
-import { useImageWrapper } from 'context';
+import { useImageWrapper, useBreadcrumbWrapper } from 'context';
 import Loading from 'types/loading';
 import { EmptyContainer, Error, Spinner } from 'features/Common';
+import { getBackLink } from 'features/Page';
 import defaultImage from 'assets/pride-logo.jpg';
 
 import Event from '../../config/types';
@@ -22,23 +24,14 @@ type Props = {
   event?: Event;
   participants: number;
   error?: string;
-  renderBreadcrumb: (eventTitle: string) => void;
 };
 
 const ERROR_TITLE = 'Request ID not found';
 const ERROR_MESSAGE = 'We can not find the event ID you are looking for, please try again.';
 
-const EventComponent: FC<Props> = ({
-  id,
-  event,
-  loadEvent,
-  loadParticipants,
-  loading,
-  participants,
-  error,
-  renderBreadcrumb,
-}) => {
+const EventComponent: FC<Props> = ({ id, event, loadEvent, loadParticipants, loading, participants, error }) => {
   const imageWrapperEl = useImageWrapper();
+  const breadcrumbWrapperEl = useBreadcrumbWrapper();
   const isLoading = useMemo(() => loading !== Loading.SUCCEEDED && loading !== Loading.FAILED, [loading]);
   const { image, title } = event || {};
 
@@ -64,19 +57,32 @@ const EventComponent: FC<Props> = ({
 
     return (
       <>
+        {breadcrumbWrapperEl &&
+          createPortal(
+            <Breadcrumb
+              links={[
+                {
+                  current: true,
+                  text: `${title}`,
+                },
+              ]}
+              home={{
+                href: getBackLink(),
+                text: 'Events',
+              }}
+            />,
+            breadcrumbWrapperEl,
+          )}
         {imageWrapperEl &&
           createPortal(
-            <>
-              {title && renderBreadcrumb(title)}
-              <ResponsiveImage
-                key={id}
-                alt={image?.alternativeText || 'Tesco'}
-                src={image?.url || defaultImage}
-                fallbackSizeRatio='57%'
-                positioning='center'
-                objectFit='cover'
-              />
-            </>,
+            <ResponsiveImage
+              key={id}
+              alt={image?.alternativeText || 'Tesco'}
+              src={image?.url || defaultImage}
+              fallbackSizeRatio='57%'
+              positioning='center'
+              objectFit='cover'
+            />,
             imageWrapperEl,
           )}
         <EventHeader event={event!} participants={participants} />

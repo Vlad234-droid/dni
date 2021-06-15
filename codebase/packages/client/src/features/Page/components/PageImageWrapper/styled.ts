@@ -7,18 +7,6 @@ export const Wrapper = styled.div`
   & .beans-responsive-image__image {
     max-height: 250px;
   }
-
-  & .beans-breadcrumb__container {
-    background: ${GREY_COLOR};
-    position: fixed;
-    top: 43px;
-    width: 100%;
-    z-index: 100;
-
-    ${Media.small_desktop`
-      top: 230px;
-    `}
-  }
 `;
 
 export const Content = styled.div`
