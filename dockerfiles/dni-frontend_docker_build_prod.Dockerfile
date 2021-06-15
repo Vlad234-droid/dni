@@ -20,8 +20,6 @@ ENV NEXUS_ACCESS_TOKEN=$NEXUS_ACCESS_TOKEN
 
 RUN dos2unix ./run.sh && dos2unix ./create-npmrc.sh && bash ./create-npmrc.sh --token $NEXUS_ACCESS_TOKEN
 
-RUN yarn bootstrap
-
 # Explicitly set env to production
 ENV BUILD_ENV=production
 ENV NODE_ENV=production
@@ -31,6 +29,10 @@ ENV REACT_APP_WS_URL=$REACT_APP_WS_URL
 ENV PUBLIC_URL=$PUBLIC_URL
 
 ENV SKIP_PREFLIGHT_CHECK=true
+
+RUN yarn bootstrap
+
+RUN yarn add cross-env
 
 RUN yarn build:prod
 
