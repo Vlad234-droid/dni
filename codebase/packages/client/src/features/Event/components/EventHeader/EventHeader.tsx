@@ -5,6 +5,7 @@ import ICalendarLink from 'react-icalendar-link';
 
 import { OnAir, CopyLink, TextWithEllipsis, RichTextRenderer } from 'features/Common';
 import { useMedia } from 'context/InterfaceContext';
+import useStore from 'hooks/useStore';
 
 import EventAction from '../EventAction';
 import Event from '../../config/types';
@@ -27,7 +28,9 @@ type Props = {
 };
 
 const EventHeader: FC<Props> = ({ event, participants }) => {
+  const { events = [] } = useStore((state) => state.auth.user);
   const { id, title, description, maxParticipants, startDate, endDate } = event;
+  const isJoined = events.includes(+id);
   const { isMobile, isLargeMobile } = useMedia();
   const isMobileView = isMobile || isLargeMobile;
   const isOnAir = isEventOnAir(startDate, endDate);
@@ -45,7 +48,7 @@ const EventHeader: FC<Props> = ({ event, participants }) => {
         </TitleWrapper>
         <Actions>
           {!isMobileView && <CopyLink />}
-          <ButtonWrapper>
+          <ButtonWrapper isJoined={isJoined}>
             <EventAction id={id} disabled={isActionDisabled(participants, maxParticipants)} />
           </ButtonWrapper>
           <ICalendarLink
@@ -84,7 +87,8 @@ const EventHeader: FC<Props> = ({ event, participants }) => {
           <TextIconWrapper>
             <Icon graphic='account' />
             <span>
-              {participants} are participating. {maxParticipants && `${maxParticipants} is maximum capacity.`}
+              {participants} {participants === 1 ? 'is' : 'are'} participating.{' '}
+              {maxParticipants && `${maxParticipants} is maximum capacity.`}
             </span>
             {isMobileView && <CopyLink />}
           </TextIconWrapper>

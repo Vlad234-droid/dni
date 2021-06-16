@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 import Media from 'styles/media';
 import { textXS, redDotStyles } from 'styles';
@@ -64,8 +64,8 @@ export const Actions = styled.div`
   }
 `;
 
-export const ButtonWrapper = styled.div`
-  position: fixed;
+export const ButtonWrapper = styled.div<{ isJoined: boolean }>`
+  position: ${({ isJoined }) => (isJoined ? 'static' : 'fixed')};
   bottom: 76px;
   left: 16px;
   right: 16px;
