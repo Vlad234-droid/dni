@@ -23,8 +23,6 @@ const NetworkAction: FC<Props> = ({ id, events, onLeave, onJoin }) => {
   const employeeNumber = params?.employeeNumber;
   const isJoined = networks.includes(+id);
 
-  console.log('events', events);
-
   const handleJoin = () => setIsModalOpen(true);
   const handleLeave = () => setIsModalOpen(true);
   const handleModalClose = () => setIsModalOpen(false);
