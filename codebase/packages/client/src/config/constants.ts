@@ -49,3 +49,5 @@ export const LINKS = {
   signOut: 'https://www.ourtesco.com/colleague/sso/logout',
   thisIsMeSurvey: 'https://colleague-help.ourtesco.com/hc/en-us/articles/360050055471-This-is-Me',
 };
+
+export const ROOT_PATH = 'diversity-and-inclusion';

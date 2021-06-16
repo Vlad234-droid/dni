@@ -3,13 +3,13 @@ import copy from 'copy-to-clipboard';
 import Button from '@beans/button';
 import Icon from '@beans/icon';
 
+import { ROOT_PATH } from 'config/constants';
+
 type Props = {
   to?: string;
   showNotification: () => void;
   hideNotification: () => void;
 };
-
-const ROOT_PATH = 'diversity-and-inclusion';
 
 const getPathname = (pathname: string, to: string) => (pathname.includes(ROOT_PATH) ? `${ROOT_PATH}${to}` : to);
 
