@@ -33,6 +33,10 @@
         "type": "plain",
         "value": "production"
       },
+      "NODE_CONFIG_ENV": {
+        "type": "plain",
+        "value": "prod"
+      },
       "NODE_PORT": {
         "type": "plain",
         "value": "9000"
