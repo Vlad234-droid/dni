@@ -116,13 +116,15 @@ export const HeaderContainer = styled.div.attrs({
 
   ${({ theme }) => css`
     ${Media.large_tablet`
-        box-shadow: none;
-        border-bottom: 1px solid ${theme.colors.lines.base};
+      box-shadow: none;
+      border-bottom: 1px solid ${theme.colors.lines.base};
     `}
   `}
 `;
 
 export const HeaderReducer = styled.div`
+  position: relative;
+
   ${Media.small_desktop`
     grid-area: header-reducer;
   `}
@@ -133,6 +135,31 @@ export const TopHeaderReducer = styled(HeaderReducer)`
     display: flex;
     align-items: center;
     justify-content: flex-end;
+  `}
+`;
+
+export const BreadCrumbContainer = styled.div`
+  position: absolute;
+  left: 0;
+  top: 100%;
+  width: 100%;
+  box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.15);
+
+  & .beans-breadcrumb__container {
+    background-color: ${GREY_COLOR};
+
+    ${({ theme }) => css`
+      ${Media.large_tablet`
+          border-top: 1px solid ${theme.colors.lines.base};
+          border-left: 1px solid ${theme.colors.lines.base};
+      `}
+    `}
+  }
+
+  ${Media.small_desktop`
+     left: ${SIDEBAR_WIDTH};
+     width: calc(100% - ${SIDEBAR_WIDTH});
+     box-shadow: none;
   `}
 `;
 

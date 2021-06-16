@@ -1,3 +1,5 @@
+import { Event } from '@dni-connectors/colleague-cms-api';
+
 import { File } from '../built-in';
 import { Organization } from '../organization';
 import { Question } from '../question';
@@ -11,6 +13,7 @@ type Network = {
   contact: string;
   partners?: Organization[];
   questions?: Question[];
+  events: Event[];
 } & BaseType;
 
 type NetworkApiParams = {

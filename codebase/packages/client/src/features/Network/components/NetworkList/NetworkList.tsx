@@ -151,7 +151,7 @@ const NetworkList: FC = () => {
             link={Page.NETWORKS}
             //@ts-ignore
             items={networksList}
-            renderAction={(id) => <NetworkAction id={id} />}
+            renderAction={(id) => <NetworkAction id={id} events={networksList![id].events} />}
             renderParticipants={(id) => (
               <CanPerform
                 perform={buildAction(Component.NETWORK_PARTICIPANTS, Action.LIST)}

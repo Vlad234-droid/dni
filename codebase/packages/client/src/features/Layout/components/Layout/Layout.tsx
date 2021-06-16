@@ -1,6 +1,7 @@
 import React, { FC, useRef } from 'react';
 
 import { ScrollContainerProvider } from 'context/ScrollContainerContext';
+import { useMedia } from 'context/InterfaceContext';
 
 import { LayoutProps } from '../../config/types';
 import {
@@ -14,6 +15,7 @@ import {
   MainContainer,
   MainContent,
   LeftContent,
+  BreadCrumbContainer,
 } from './styled';
 
 const Layout: FC<LayoutProps> = ({
@@ -35,13 +37,15 @@ const Layout: FC<LayoutProps> = ({
         <HeaderReducer>{renderMainHeader()}</HeaderReducer>
       </MainHeaderContainer>
       <HeaderContainer>
-        <HeaderReducer>{renderHeader()}</HeaderReducer>
+        <HeaderReducer>
+          {renderHeader()}
+          {renderBreadcrumb && <BreadCrumbContainer>{renderBreadcrumb()}</BreadCrumbContainer>}
+        </HeaderReducer>
       </HeaderContainer>
       <LeftContainer>
         <LeftContent>{renderLeft()}</LeftContent>
       </LeftContainer>
       <MainContainer ref={mainContainer}>
-        {renderBreadcrumb && renderBreadcrumb()}
         <ScrollContainerProvider value={mainContainer}>
           <MainContent>{renderMain()}</MainContent>
         </ScrollContainerProvider>

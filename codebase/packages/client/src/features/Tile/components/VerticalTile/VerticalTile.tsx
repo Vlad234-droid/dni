@@ -35,7 +35,6 @@ const VerticalTile: FC<Props> = ({
   id,
   type = Type.WIDE,
 }) => {
-  console.log('type', type);
   const tooltipPosition = type === Type.WIDE ? { top: '44px', left: '16px' } : { top: '42px', left: '8px' };
 
   return (
