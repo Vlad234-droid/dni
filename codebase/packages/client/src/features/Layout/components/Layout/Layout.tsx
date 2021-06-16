@@ -16,7 +16,14 @@ import {
   LeftContent,
 } from './styled';
 
-const Layout: FC<LayoutProps> = ({ renderTopHeader, renderMainHeader, renderHeader, renderLeft, renderMain }) => {
+const Layout: FC<LayoutProps> = ({
+  renderTopHeader,
+  renderMainHeader,
+  renderHeader,
+  renderLeft,
+  renderMain,
+  renderBreadcrumb,
+}) => {
   const mainContainer = useRef<HTMLDivElement>(null);
 
   return (
@@ -34,6 +41,7 @@ const Layout: FC<LayoutProps> = ({ renderTopHeader, renderMainHeader, renderHead
         <LeftContent>{renderLeft()}</LeftContent>
       </LeftContainer>
       <MainContainer ref={mainContainer}>
+        {renderBreadcrumb && renderBreadcrumb()}
         <ScrollContainerProvider value={mainContainer}>
           <MainContent>{renderMain()}</MainContent>
         </ScrollContainerProvider>

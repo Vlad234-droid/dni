@@ -1,55 +1,54 @@
 import React, { useState, FC } from 'react';
 import styled from 'styled-components';
 import { RouteComponentProps } from 'react-router-dom';
-import Breadcrumb from '@beans/breadcrumb';
 
-import { ImageWrapperProvider } from 'context';
+import { ImageWrapperProvider, BreadcrumbWrapperProvider } from 'context';
 import { Event } from 'features/Event';
+import { GREY_COLOR } from 'styles';
 
-import { getBackLink } from '../../utils';
 import BasePage from '../BasePage';
 import PageImageWrapper from '../PageImageWrapper';
 
 const TEST_ID = 'event-page';
-const IMAGE_WRAPPER_TEST_ID = 'mage-wrapper';
+const IMAGE_WRAPPER_TEST_ID = 'image-wrapper';
 
 const EventPage: FC<RouteComponentProps<{ id: string }>> = (props) => {
   const [imageRef, setImageRef] = useState<HTMLElement | null>(null);
+  const [breadcrumbRef, setBreadcrumbRef] = useState<HTMLElement | null>(null);
 
   return (
     <div data-testid={TEST_ID}>
-      <BasePage
-        renderMain={() => (
-          <ImageWrapperProvider value={imageRef}>
-            <PageImageWrapper
-              renderImage={() => (
-                <ImageWrapper data-testid={IMAGE_WRAPPER_TEST_ID} ref={(newRef) => setImageRef(newRef)} />
-              )}
-            >
-              <Event
-                id={parseInt(props.match.params.id, 10)}
-                renderBreadcrumb={(eventTitle) => (
-                  <Breadcrumb
-                    links={[
-                      {
-                        current: true,
-                        text: `${eventTitle}`,
-                      },
-                    ]}
-                    home={{
-                      href: getBackLink(),
-                      text: 'Events',
-                    }}
-                  />
+      <BreadcrumbWrapperProvider value={breadcrumbRef}>
+        <BasePage
+          renderBreadcrumb={() => (
+            <BreadcrumbWrapper data-testid='breadcrumb-wrapper' ref={(newRef) => setBreadcrumbRef(newRef)} />
+          )}
+          renderMain={() => (
+            <ImageWrapperProvider value={imageRef}>
+              <PageImageWrapper
+                renderImage={() => (
+                  <ImageWrapper data-testid={IMAGE_WRAPPER_TEST_ID} ref={(newRef) => setImageRef(newRef)} />
                 )}
-              />
-            </PageImageWrapper>
-          </ImageWrapperProvider>
-        )}
-      />
+              >
+                <Event id={parseInt(props.match.params.id, 10)} />
+              </PageImageWrapper>
+            </ImageWrapperProvider>
+          )}
+        />
+      </BreadcrumbWrapperProvider>
     </div>
   );
 };
+
+const BreadcrumbWrapper = styled.div`
+  position: absolute;
+  width: 100%;
+  z-index: 100;
+
+  & .beans-breadcrumb__container {
+    background-color: ${GREY_COLOR};
+  }
+`;
 
 const ImageWrapper = styled.div`
   position: absolute;

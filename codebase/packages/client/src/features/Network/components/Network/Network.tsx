@@ -2,14 +2,16 @@ import React, { FC, useEffect, useCallback, useState, useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import { createPortal } from 'react-dom';
 import ResponsiveImage from '@beans/responsive-image';
+import Breadcrumb from '@beans/breadcrumb';
 
 import Loading from 'types/loading';
 import useDispatch from 'hooks/useDispatch';
 import useStore from 'hooks/useStore';
 import InfoPanel, { InfoPanelType } from 'features/InfoPanel';
 import { PostList, BY_NETWORK } from 'features/Post';
-import { useImageWrapper } from 'context';
+import { useBreadcrumbWrapper, useImageWrapper } from 'context';
 import { EmptyContainer, Error, Spinner, RichTextRenderer } from 'features/Common';
+import { getBackLink } from 'features/Page';
 import defaultImage from 'assets/pride-logo.jpg';
 
 import { byIdSelector, getOne } from '../../store';
@@ -25,10 +27,9 @@ const JOINED_DESCRIPTION =
 
 type Props = {
   id: number;
-  renderBreadcrumb: (networkTitle: string) => void;
 };
 
-const Network: FC<Props> = ({ id, renderBreadcrumb }) => {
+const Network: FC<Props> = ({ id }) => {
   const dispatch = useDispatch();
   const network = useSelector(byIdSelector(id));
   const { partners, description, title, image, contact } = network || {};
@@ -38,6 +39,7 @@ const Network: FC<Props> = ({ id, renderBreadcrumb }) => {
   const [infoPanelType, setInfoPanelType] = useState(InfoPanelType.INFO);
   const { loading, error } = useStore((state) => state.networks);
   const imageWrapperEl = useImageWrapper();
+  const breadcrumbWrapperEl = useBreadcrumbWrapper();
   const isLoading = useMemo(() => loading !== Loading.SUCCEEDED && loading !== Loading.FAILED, [loading]);
 
   useEffect(() => {
@@ -76,19 +78,32 @@ const Network: FC<Props> = ({ id, renderBreadcrumb }) => {
 
     return (
       <>
+        {breadcrumbWrapperEl &&
+          createPortal(
+            <Breadcrumb
+              links={[
+                {
+                  current: true,
+                  text: `${network!.title}`,
+                },
+              ]}
+              home={{
+                href: getBackLink(),
+                text: 'Networks',
+              }}
+            />,
+            breadcrumbWrapperEl,
+          )}
         {imageWrapperEl &&
           createPortal(
-            <>
-              {renderBreadcrumb(network!.title)}
-              <ResponsiveImage
-                key={id}
-                alt={image?.alternativeText || 'Tesco'}
-                src={image?.url || defaultImage}
-                positioning='center'
-                objectFit='cover'
-                fallbackSizeRatio='57%'
-              />
-            </>,
+            <ResponsiveImage
+              key={id}
+              alt={image?.alternativeText || 'Tesco'}
+              src={image?.url || defaultImage}
+              positioning='center'
+              objectFit='cover'
+              fallbackSizeRatio='57%'
+            />,
             imageWrapperEl,
           )}
         <NetworkHeader

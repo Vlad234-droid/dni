@@ -8,10 +8,9 @@ import { getParticipants, getOne, byIdSelector } from '../../store';
 
 type Props = {
   id: number;
-  renderBreadcrumb: (eventTitle: string) => void;
 };
 
-const EventContainer: FC<Props> = ({ id, renderBreadcrumb }) => {
+const EventContainer: FC<Props> = ({ id }) => {
   const dispatch = useDispatch();
   const event = useSelector(byIdSelector(id));
   const { loading, participants, error } = useStore((state) => state.events);
@@ -32,7 +31,6 @@ const EventContainer: FC<Props> = ({ id, renderBreadcrumb }) => {
       loadEvent={loadEvent}
       loadParticipants={loadParticipants}
       error={errorMessage}
-      renderBreadcrumb={renderBreadcrumb}
     />
   );
 };
