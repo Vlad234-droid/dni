@@ -39,7 +39,7 @@ export const SwipeWrapper = styled.div`
   ${swipeJsCss};
 `;
 
-export const CarouselWrapper = styled.div`
+export const CarouselWrapper = styled.div<{ hideControls?: boolean }>`
   position: relative;
   width: 100%;
   margin-top: 32px;
@@ -56,6 +56,11 @@ export const CarouselWrapper = styled.div`
     ${Media.tablet`
       margin: 0 -10px;
     `}
+
+    .beans-carousel__backward-control,
+    .beans-carousel__forward-control {
+      display: ${({ hideControls }) => (hideControls ? 'none' : 'flex')};
+    }
   }
 
   .beans-carousel__backward-control,
