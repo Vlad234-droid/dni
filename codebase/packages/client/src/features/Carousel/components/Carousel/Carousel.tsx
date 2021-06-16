@@ -65,7 +65,7 @@ const Carousel: FC<Props> = ({
   }
 
   return (
-    <CarouselWrapper data-testid='carousel'>
+    <CarouselWrapper data-testid='carousel' hideControls={childCount < 4}>
       <ContentCarousel {...rest} itemName={itemName} itemWidth={itemWidth}>
         {children}
       </ContentCarousel>
