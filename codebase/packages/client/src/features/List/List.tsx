@@ -8,13 +8,13 @@ import { isEventOnAir } from '../Event/utils';
 import { useMedia } from '../../context/InterfaceContext';
 import { Wrapper } from './styled';
 
-type Entity = Event | Network;
+type Entity = Event & Network;
 
 type Props = {
   type?: Type;
   items: Entity[];
   link: string;
-  renderAction: (id: number, maxParticipants?: number) => JSX.Element;
+  renderAction: (id: number, data?: number, events?: Event[]) => JSX.Element;
   renderParticipants?: (id: number, maxParticipants?: number) => JSX.Element;
   actionDisabled?: boolean;
 };
@@ -29,13 +29,14 @@ const List: FC<Props> = ({ link, items, renderAction, renderParticipants, type }
     startDate,
     //@ts-ignore
     endDate,
+    events,
     ...rest
   }: Entity) => ({
     key: id,
     id,
     link,
     meta: startDate,
-    renderAction: () => renderAction(id, maxParticipants),
+    renderAction: () => renderAction(id, maxParticipants, events),
     renderParticipants: () => renderParticipants && renderParticipants(id, maxParticipants),
     isOnAir: startDate && endDate && isEventOnAir(startDate, endDate),
     ...rest,

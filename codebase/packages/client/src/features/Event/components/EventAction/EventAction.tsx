@@ -4,7 +4,7 @@ import Button from '@beans/button';
 import useStore from 'hooks/useStore';
 import useDispatch from 'hooks/useDispatch';
 
-import { joinEvent, leaveEvent } from 'features/Auth/store';
+import { joinEvent, leaveEvent } from 'features/Auth';
 import { joinParticipant, leaveParticipant } from '../../store';
 
 type Props = {
@@ -44,11 +44,7 @@ const EventAction: FC<Props> = ({ id, disabled }) => {
       Leave
     </Button>
   ) : (
-    <Button
-      disabled={disabled}
-      variant='primary'
-      onClick={() => handleJoin(id)}
-    >
+    <Button disabled={disabled} variant='primary' onClick={() => handleJoin(id)}>
       Join
     </Button>
   );

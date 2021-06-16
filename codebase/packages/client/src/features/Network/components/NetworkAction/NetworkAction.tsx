@@ -3,7 +3,7 @@ import Button from '@beans/button';
 
 import useStore from 'hooks/useStore';
 import useDispatch from 'hooks/useDispatch';
-import { joinNetwork, leaveNetwork } from 'features/Auth';
+import { joinNetwork, leaveNetwork, leaveEvent } from 'features/Auth';
 import Event from 'features/Event';
 
 import { ModalJoin, ModalLeave } from '../Modal';
@@ -24,24 +24,37 @@ const NetworkAction: FC<Props> = ({ id, events, onLeave, onJoin }) => {
   const isJoined = networks.includes(+id);
 
   const handleJoin = () => setIsModalOpen(true);
-  const handleLeave = () => setIsModalOpen(true);
+  const handleLeave = () => {
+    if (events.length) {
+      setIsModalOpen(true);
+    } else {
+      handleConfirmLeave();
+    }
+  };
   const handleModalClose = () => setIsModalOpen(false);
 
   const handleConfirmLeave = useCallback(async () => {
     setIsModalOpen(false);
+
     if (employeeNumber) {
+      events.forEach(({ id }) => {
+        dispatch(leaveEvent({ employeeNumber, eventId: id }));
+      });
       await dispatch(leaveNetwork({ employeeNumber, networkId: id }));
       dispatch(leaveParticipant(id));
     }
+
     onLeave && onLeave();
   }, [employeeNumber]);
 
   const handleConfirmJoin = useCallback(async () => {
     setIsModalOpen(false);
+
     if (employeeNumber) {
       await dispatch(joinNetwork({ employeeNumber, networkId: id }));
       dispatch(joinParticipant(id));
     }
+
     onJoin && onJoin();
   }, [employeeNumber]);
 
