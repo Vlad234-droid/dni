@@ -26,8 +26,6 @@ const Layout: FC<LayoutProps> = ({
   renderMain,
   renderBreadcrumb,
 }) => {
-  const { isMobile, isLargeMobile } = useMedia();
-  const isMobileView = isMobile || isLargeMobile;
   const mainContainer = useRef<HTMLDivElement>(null);
 
   return (

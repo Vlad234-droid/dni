@@ -32,7 +32,6 @@ type Props = {
 const Network: FC<Props> = ({ id }) => {
   const dispatch = useDispatch();
   const network = useSelector(byIdSelector(id));
-  console.log('network', network);
   const { partners, description, title, image, contact, events } = network || {};
   const { networks = [] } = useStore((state) => state.auth.user);
   const isJoined = networks.includes(+id);
