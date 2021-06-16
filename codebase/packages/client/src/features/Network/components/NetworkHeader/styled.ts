@@ -13,8 +13,8 @@ export const Wrapper = styled.div`
   `}
 `;
 
-export const ButtonWrapper = styled.div`
-  position: fixed;
+export const ButtonWrapper = styled.div<{ isJoined: boolean }>`
+  position: ${({ isJoined }) => (isJoined ? 'static' : 'fixed')};
   bottom: 76px;
   left: 16px;
   right: 16px;
@@ -56,6 +56,12 @@ export const TitleWrapper = styled.div`
       ${redDotStyles};
     }
   }
+`;
+
+export const ActionWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 `;
 
 export const Actions = styled.div`

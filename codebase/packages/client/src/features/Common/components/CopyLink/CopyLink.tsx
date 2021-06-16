@@ -11,7 +11,7 @@ type Props = {
   hideNotification: () => void;
 };
 
-const getPathname = (pathname: string, to: string) => (pathname.includes(ROOT_PATH) ? `${ROOT_PATH}${to}` : to);
+const getPathname = (pathname: string, to: string) => (pathname.includes(ROOT_PATH) ? `/${ROOT_PATH}${to}` : to);
 
 const CopyLink: FC<Props> = ({ showNotification, hideNotification, to }) => {
   const handleClick = useCallback(() => {
