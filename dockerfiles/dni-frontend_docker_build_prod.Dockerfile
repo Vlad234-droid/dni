@@ -20,11 +20,9 @@ ENV NEXUS_ACCESS_TOKEN=$NEXUS_ACCESS_TOKEN
 
 RUN dos2unix ./run.sh && dos2unix ./create-npmrc.sh && bash ./create-npmrc.sh --token $NEXUS_ACCESS_TOKEN
 
-RUN yarn bootstrap
-
+# Explicitly set env to production
 ENV BUILD_ENV=production
-
-ENV NODE_ENV=$NODE_ENV
+ENV NODE_ENV=ppe
 
 ENV REACT_APP_API_URL=$REACT_APP_API_URL
 ENV REACT_APP_WS_URL=$REACT_APP_WS_URL
@@ -32,11 +30,16 @@ ENV PUBLIC_URL=$PUBLIC_URL
 
 ENV SKIP_PREFLIGHT_CHECK=true
 
+RUN yarn bootstrap
+
+ENV NODE_ENV=production
+
 RUN yarn build:prod
 
 # ==========================================
 # These ENV variable must be set to run app:
 # ==========================================
+
 # By default turn on SSO
 ENV WITH_ONE_LOGIN=true
 

@@ -1,0 +1,146 @@
+{
+  "app": {
+    "name": "diversity-and-inclusion"
+  },
+  "build": {
+    "dockerFileDirectory": "./dockerfiles/dni-frontend_docker_build_prod.Dockerfile",
+    "args": {
+      "NEXUS_ACCESS_TOKEN": {
+        "type": "secret",
+        "name": "nexus_access_token"
+      },
+      "NODE_ENV": {
+        "type": "plain",
+        "value": "production"
+      },
+      "REACT_APP_API_URL": {
+        "type": "plain",
+        "value": "/api"
+      },
+      "REACT_APP_WS_URL": {
+        "type": "plain",
+        "value": "/socket.io"
+      },
+      "PUBLIC_URL": {
+        "type": "plain",
+        "value": "/diversity-and-inclusion"
+      }
+    }
+  },
+  "deployment": {
+    "envs": {
+      "NODE_ENV": {
+        "type": "plain",
+        "value": "production"
+      },
+      "NODE_PORT": {
+        "type": "plain",
+        "value": "9000"
+      },
+      "PUBLIC_URL": {
+        "type": "plain",
+        "value": "/diversity-and-inclusion"
+      },
+      "WITH_ONE_LOGIN": {
+        "type": "plain",
+        "value": "true"
+      },
+      "OIDC_CLIENT_ID": {
+        "type": "secret",
+        "name": "oidc_client_id"
+      },
+      "OIDC_CLIENT_SECRET": {
+        "type": "secret",
+        "name": "oidc_client_secret"
+      },
+      "ISSUER_URL": {
+        "type": "plain",
+        "value": "https://login.ourtesco.com/oidc/2"
+      },
+      "REGISTERED_CALLBACK_URL_ROOT": {
+        "type": "plain",
+        "value": "https://www.ourtesco.com"
+      },
+      "REGISTERED_CALLBACK_URL_PATH": {
+        "type": "plain",
+        "value": "/auth/openid/callback"
+      },
+      "REDIRECT_AFTER_LOGOUT_URL": {
+        "type": "plain",
+        "value": "https://login.ourtesco.com/logout"
+      },
+      "REFRESH_TOKEN_SECRET": {
+        "type": "secret",
+        "value": "refresh_token_secret"
+      },
+      "IDENTITY_CLIENT_ID": {
+        "type": "secret",
+        "value": "identity_client_id"
+      },
+      "IDENTITY_CLIENT_SECRET": {
+        "type": "secret",
+        "value": "identity_client_secret"
+      },
+      "IDENTITY_USER_SCOPED_TOKEN_COOKIE_SECRET": {
+        "type": "secret",
+        "value": "identity_user_scoped_token_cookie_secret"
+      },
+      "IDENTITY_USER_SCOPED_TOKEN_COOKIE_NAME": {
+        "type": "plain",
+        "value": "identity-user-token"
+      },
+      "TYPEORM_TYPE": {
+        "type": "plain",
+        "value": "postgres"
+      },
+      "TYPEORM_HOST": {
+        "type": "plain",
+        "value": "eun-prod-213-dai-dipostgres.postgres.database.azure.com"
+      },
+      "TYPEORM_PORT": {
+        "type": "plain",
+        "value": "5432"
+      },
+      "TYPEORM_DATABASE": {
+        "type": "plain",
+        "value": "di_database"
+      },
+      "TYPEORM_USERNAME": {
+        "type": "secret",
+        "name": "typeorm_username"
+      },
+      "TYPEORM_PASSWORD": {
+        "type": "secret",
+        "name": "typeorm_password"
+      },
+      "TYPEORM_SSL": {
+        "type": "plain",
+        "value": "true"
+      },
+      "TYPEORM_SYNCHRONIZE": {
+        "type": "plain",
+        "value": "false"
+      },
+      "TYPEORM_LOGGING": {
+        "type": "plain",
+        "value": "true"
+      },
+      "TYPEORM_RUN_MIGRATION": {
+        "type": "plain",
+        "value": "true"
+      },
+      "COOKIE_SESSION_KEY": {
+        "type": "plain",
+        "value": "dni_cookie"
+      },
+      "COOKIE_USER_KEY": {
+        "type": "plain",
+        "value": "user_data"
+      },
+      "WEB_HOOKS_SECRET": {
+        "type": "secret",
+        "value": "web_hooks_secret"
+      }
+    }
+  }
+}
