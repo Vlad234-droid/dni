@@ -32,7 +32,8 @@ type Props = {
 const Network: FC<Props> = ({ id }) => {
   const dispatch = useDispatch();
   const network = useSelector(byIdSelector(id));
-  const { partners, description, title, image, contact } = network || {};
+  console.log('network', network);
+  const { partners, description, title, image, contact, events } = network || {};
   const { networks = [] } = useStore((state) => state.auth.user);
   const isJoined = networks.includes(+id);
   const [showInfoPanel, setShowInfoPanel] = useState(true);
@@ -114,6 +115,7 @@ const Network: FC<Props> = ({ id }) => {
           email={contact}
           onLeave={handleLeave}
           onJoin={handleJoin}
+          events={events || []}
         />
         {showInfoPanel && (
           <InfoPanel

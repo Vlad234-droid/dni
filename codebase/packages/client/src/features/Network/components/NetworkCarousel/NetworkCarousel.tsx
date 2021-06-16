@@ -47,10 +47,10 @@ const NetworkCarousel: FC = () => {
     if (!isDesktop) {
       return (
         <Carousel itemWidth={isMobile || isLargeMobile ? '258px' : '278px'} id='network-carousel' itemName='network'>
-          {networks!.map(({ id, title, image }) => (
+          {networks!.map(({ id, title, image, events }) => (
             <VerticalTile
               link='/networks'
-              renderAction={() => <NetworkAction id={id} />}
+              renderAction={() => <NetworkAction id={id} events={events} />}
               id={id}
               key={`networks-${id}`}
               title={title}
@@ -66,7 +66,7 @@ const NetworkCarousel: FC = () => {
         link={Page.NETWORKS}
         //@ts-ignore
         items={networks}
-        renderAction={(id) => <NetworkAction id={id} />}
+        renderAction={(id) => <NetworkAction id={id} events={networks![id].events} />}
         renderParticipants={(id) => (
           <CanPerform
             perform={buildAction(Component.NETWORK_PARTICIPANTS, Action.LIST)}

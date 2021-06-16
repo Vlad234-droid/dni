@@ -40,6 +40,7 @@ export const supportedSourceHTMLTags = new Set(['img', 'u']);
 
 export const RichTextRenderer = (props: RichTextComponentProps) => {
   const { isMobile, isLargeMobile } = useMedia();
+
   return (
     <Vertical fontSize={isMobile || isLargeMobile ? [16, 'px'] : [18, 'px']}>
       <MarkdownContainer>

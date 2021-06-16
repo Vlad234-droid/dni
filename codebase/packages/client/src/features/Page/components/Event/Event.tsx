@@ -20,9 +20,7 @@ const EventPage: FC<RouteComponentProps<{ id: string }>> = (props) => {
     <div data-testid={TEST_ID}>
       <BreadcrumbWrapperProvider value={breadcrumbRef}>
         <BasePage
-          renderBreadcrumb={() => (
-            <BreadcrumbWrapper data-testid='breadcrumb-wrapper' ref={(newRef) => setBreadcrumbRef(newRef)} />
-          )}
+          renderBreadcrumb={() => <div data-testid='breadcrumb-wrapper' ref={(newRef) => setBreadcrumbRef(newRef)} />}
           renderMain={() => (
             <ImageWrapperProvider value={imageRef}>
               <PageImageWrapper
@@ -39,16 +37,6 @@ const EventPage: FC<RouteComponentProps<{ id: string }>> = (props) => {
     </div>
   );
 };
-
-const BreadcrumbWrapper = styled.div`
-  position: absolute;
-  width: 100%;
-  z-index: 100;
-
-  & .beans-breadcrumb__container {
-    background-color: ${GREY_COLOR};
-  }
-`;
 
 const ImageWrapper = styled.div`
   position: absolute;
