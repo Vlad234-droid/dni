@@ -50,7 +50,7 @@ const NetworkCarousel: FC = () => {
           {networks!.map(({ id, title, image, events }) => (
             <VerticalTile
               link='/networks'
-              renderAction={() => <NetworkAction id={id} events={events} />}
+              renderAction={() => <NetworkAction id={id} events={[]} />}
               id={id}
               key={`networks-${id}`}
               title={title}
@@ -66,7 +66,7 @@ const NetworkCarousel: FC = () => {
         link={Page.NETWORKS}
         //@ts-ignore
         items={networks}
-        renderAction={(id) => <NetworkAction id={id} events={networks![id].events} />}
+        renderAction={(id) => <NetworkAction id={id} events={[]} />}
         renderParticipants={(id) => (
           <CanPerform
             perform={buildAction(Component.NETWORK_PARTICIPANTS, Action.LIST)}
