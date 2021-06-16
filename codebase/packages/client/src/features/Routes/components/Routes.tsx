@@ -3,6 +3,7 @@ import { Route as ReactRoute, Switch, Redirect } from 'react-router';
 
 import { usePermission } from 'features/Auth';
 import { Action, buildAction } from 'features/Action';
+
 import { routes } from '../config/routes';
 
 const Routes: FC = () => {
