@@ -136,8 +136,6 @@ const NetworkList: FC = () => {
       return <EmptyContainer description='Nothing to show' />;
     }
 
-    console.log('networksList', networksList);
-
     return (
       <ListContainer>
         <InfiniteScroll
@@ -153,7 +151,7 @@ const NetworkList: FC = () => {
             link={Page.NETWORKS}
             //@ts-ignore
             items={networksList}
-            renderAction={(id) => <NetworkAction id={id} events={[]} />}
+            renderAction={(id, _, events) => <NetworkAction id={id} events={events!} />}
             renderParticipants={(id) => (
               <CanPerform
                 perform={buildAction(Component.NETWORK_PARTICIPANTS, Action.LIST)}
