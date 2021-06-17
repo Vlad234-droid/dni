@@ -7,7 +7,7 @@ import BasePage from '../BasePage';
 
 const ERROR_DATA = {
   title: 'Unauthorized user',
-  message: 'Please, login too get access',
+  message: 'Please, login to get access',
 };
 
 const Unauthorized: FC = () => (
