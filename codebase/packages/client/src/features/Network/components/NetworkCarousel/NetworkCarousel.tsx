@@ -64,8 +64,7 @@ const NetworkCarousel: FC = () => {
     return (
       <List
         link={Page.NETWORKS}
-        //@ts-ignore
-        items={networks}
+        items={networks!}
         renderAction={(id, _, events) => <NetworkAction id={id} events={events!} />}
         renderParticipants={(id) => (
           <CanPerform
@@ -77,7 +76,6 @@ const NetworkCarousel: FC = () => {
             )}
           />
         )}
-        hideParticipants={true}
       />
     );
   }, [networks, loading, error, participants]);

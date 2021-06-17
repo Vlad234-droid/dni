@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 
+import { headingSM, textXS } from 'styles';
 import Media from 'styles/media';
 
 export const Wrapper = styled.div`
@@ -33,5 +34,38 @@ export const RightContent = styled.div`
   ${Media.tablet`
     margin-bottom: 0;
     margin-left: 32px;
+  `}
+`;
+
+export const DescriptionWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px 40px;
+  background: ${({ theme }) => theme.colors.background.info};
+  text-align: center;
+  ${textXS};
+
+  p {
+    margin-bottom: 8px;
+  }
+
+  ${Media.tablet`
+    padding: 32px 42px 64px 49px;
+    font-size: 20px;
+    line-height: 28px;
+  `}
+`;
+
+export const DescriptionTitle = styled.h5`
+  color: ${({ theme }) => theme.colors.tescoBlue};
+  margin-bottom: 16px;
+  ${headingSM};
+
+  ${Media.tablet`
+    margin-bottom: 8px;
+    font-size: 32px;
+    line-height: 45px;
   `}
 `;

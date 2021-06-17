@@ -1,13 +1,4 @@
-import React, {
-  useMemo,
-  useState,
-  useRef,
-  useEffect,
-  FC,
-  ChangeEvent,
-  KeyboardEvent,
-  FocusEvent,
-} from 'react';
+import React, { useMemo, useState, useRef, useEffect, FC, ChangeEvent, KeyboardEvent, FocusEvent } from 'react';
 import Input from '@beans/input';
 import { KEY_CODES } from 'config/constants';
 import FormGroup from '@beans/form-group';
@@ -34,13 +25,7 @@ const VALID_TIME: Record<TimePart, number> = {
   mm: 60,
 };
 
-const TimeInput: FC<Props & Partial<Registrable>> = ({
-  date,
-  name,
-  onChange,
-  label,
-  ...methods
-}) => {
+const TimeInput: FC<Props & Partial<Registrable>> = ({ date, name, onChange, label, ...methods }) => {
   const inputHRefs = useRef<HTMLInputElement>();
   const inputMRefs = useRef<HTMLInputElement>();
   const currentValue = useRef<Time>();
@@ -122,12 +107,10 @@ const TimeInput: FC<Props & Partial<Registrable>> = ({
   };
 
   const focusNextInput = () => {
-    // @ts-ignore
     inputMRefs.current && inputMRefs.current?.focus({ preventScroll: true });
   };
 
   const focusPrevInput = () => {
-    // @ts-ignore
     inputHRefs.current && inputHRefs.current?.focus({ preventScroll: true });
   };
 
@@ -177,9 +160,7 @@ const TimeInput: FC<Props & Partial<Registrable>> = ({
           bare={true}
           styles={fragmentStyles['hh']}
         />
-        <DateSeparator data-testid={`separator`}>
-          {VISIBLE_TIME_SEPARATOR}
-        </DateSeparator>
+        <DateSeparator data-testid={`separator`}>{VISIBLE_TIME_SEPARATOR}</DateSeparator>
         <Input
           dataTestid={`${name}-input-mm`}
           autoComplete={'off'}

@@ -11,14 +11,14 @@ import Carousel from 'features/Carousel';
 import NetworkPartnersList from './NetworkPartnersList';
 
 type Props = {
-  email: string;
-  partners: Organization[];
+  email?: string;
+  partners?: Organization[];
 };
 
 const NetworkPartners: FC<Props> = ({ email, partners }) => {
   const { isMobile, isLargeMobile } = useMedia();
 
-  if (isMobile || isLargeMobile) {
+  if (partners && (isMobile || isLargeMobile)) {
     return (
       <>
         <Title>Network Partnership</Title>

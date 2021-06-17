@@ -12,17 +12,18 @@ import { PostList, BY_NETWORK } from 'features/Post';
 import { useBreadcrumbWrapper, useImageWrapper } from 'context';
 import { EmptyContainer, Error, Spinner, RichTextRenderer } from 'features/Common';
 import { getBackLink } from 'features/Page';
+import { LINKS } from 'config/constants';
 import defaultImage from 'assets/pride-logo.jpg';
 
 import { byIdSelector, getOne } from '../../store';
 import NetworkPartners from './NetworkPartners';
 import NetworkHeader from '../NetworkHeader';
-import { Wrapper, Content, LeftContent, RightContent } from './styled';
+import { Wrapper, Content, LeftContent, RightContent, DescriptionWrapper, DescriptionTitle } from './styled';
 
 const TEST_ID = 'network';
 const ERROR_TITLE = 'Request ID not found';
 const ERROR_MESSAGE = 'We can not find the network ID you are looking for, please try again.';
-const JOINED_DESCRIPTION =
+const INFO_PANEL_TEXT =
   'Just to know you better, please fill “This is me” survey. Your personal information won’t be disclosed.';
 
 type Props = {
@@ -32,10 +33,9 @@ type Props = {
 const Network: FC<Props> = ({ id }) => {
   const dispatch = useDispatch();
   const network = useSelector(byIdSelector(id));
-  const { partners, description, title, image, contact, events } = network || {};
   const { networks = [] } = useStore((state) => state.auth.user);
   const isJoined = networks.includes(+id);
-  const [showInfoPanel, setShowInfoPanel] = useState(true);
+  const [showInfoPanel, setShowInfoPanel] = useState(false);
   const [infoPanelType, setInfoPanelType] = useState(InfoPanelType.INFO);
   const { loading, error } = useStore((state) => state.networks);
   const imageWrapperEl = useImageWrapper();
@@ -52,11 +52,12 @@ const Network: FC<Props> = ({ id }) => {
 
   const handleJoin = useCallback(() => {
     setInfoPanelType(InfoPanelType.SUCCESS);
+    setShowInfoPanel(true);
   }, []);
 
   const handleLeave = useCallback(() => {
     setInfoPanelType(InfoPanelType.INFO);
-    setShowInfoPanel(true);
+    setShowInfoPanel(false);
   }, []);
 
   const handleCloseInfoPanel = useCallback(() => {
@@ -98,8 +99,8 @@ const Network: FC<Props> = ({ id }) => {
           createPortal(
             <ResponsiveImage
               key={id}
-              alt={image?.alternativeText || 'Tesco'}
-              src={image?.url || defaultImage}
+              alt={network!.image?.alternativeText || 'Tesco'}
+              src={network!.image?.url || defaultImage}
               positioning='center'
               objectFit='cover'
               fallbackSizeRatio='57%'
@@ -108,34 +109,32 @@ const Network: FC<Props> = ({ id }) => {
           )}
         <NetworkHeader
           id={id}
-          //@ts-ignore
-          title={title}
-          //@ts-ignore
-          email={contact}
+          title={network!.title}
+          email={network!.contact}
           onLeave={handleLeave}
           onJoin={handleJoin}
-          events={events || []}
+          events={network!.events}
         />
-        {showInfoPanel && (
+        {showInfoPanel ? (
           <InfoPanel
             type={infoPanelType}
-            infoLink='/'
-            title={isJoined ? 'You have joined the Network!' : `Join ${title}`}
-            renderContent={() => (isJoined ? <p>{JOINED_DESCRIPTION}</p> : <RichTextRenderer source={description!} />)}
-            onClose={isJoined ? handleCloseInfoPanel : undefined}
+            infoLink={LINKS.thisIsMeSurvey}
+            title='You have joined the Network!'
+            content={[INFO_PANEL_TEXT]}
+            onClose={handleCloseInfoPanel}
           />
+        ) : (
+          <DescriptionWrapper>
+            {!isJoined && <DescriptionTitle>{`Join ${network!.title}`}</DescriptionTitle>}
+            <RichTextRenderer source={network!.description} />
+          </DescriptionWrapper>
         )}
         <Content>
           <LeftContent>
             <PostList entityId={id} filter={BY_NETWORK} />
           </LeftContent>
           <RightContent>
-            <NetworkPartners
-              //@ts-ignore
-              partners={partners}
-              //@ts-ignore
-              email={contact}
-            />
+            <NetworkPartners partners={network!.partners} email={network!.contact} />
           </RightContent>
         </Content>
       </>

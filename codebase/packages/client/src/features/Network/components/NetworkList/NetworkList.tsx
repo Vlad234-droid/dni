@@ -26,13 +26,11 @@ import { Wrapper, ListContainer, ParticipantsWrapper } from './styled';
 
 const TEST_ID = 'networks-list';
 
-type Filters = FilterPayload & { id_in?: number[] };
-
 const NetworkList: FC = () => {
   const dispatch = useDispatch();
   const { networks } = useStore((state) => state.auth.user);
   const [filter, setFilter] = useState<Filter>(YOUR_NETWORKS);
-  const [filters, setFilters] = useState<Filters>({
+  const [filters, setFilters] = useState<FilterPayload>({
     id_in: [...(networks || []), -1],
   });
 
@@ -50,7 +48,7 @@ const NetworkList: FC = () => {
   const error = useMemo(() => listError || countError, [listError, countError]);
 
   const loadNetworks = useCallback(
-    (filters: Filters) => {
+    (filters: FilterPayload) => {
       dispatch(
         getList({
           ...filters,
@@ -121,7 +119,6 @@ const NetworkList: FC = () => {
         id_in: [...(networks || []), -1],
       };
 
-      //@ts-ignore
       dispatch(getCount(filters));
       loadNetworks(filters);
     }
@@ -149,7 +146,6 @@ const NetworkList: FC = () => {
         >
           <List
             link={Page.NETWORKS}
-            //@ts-ignore
             items={networksList}
             renderAction={(id, _, events) => <NetworkAction id={id} events={events!} />}
             renderParticipants={(id) => (

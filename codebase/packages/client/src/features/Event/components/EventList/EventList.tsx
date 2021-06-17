@@ -98,8 +98,7 @@ const EventList: FC<Props> = ({
         <List
           type={Type.NARROW}
           link={Page.EVENTS}
-          //@ts-ignore
-          items={events}
+          items={events!}
           renderAction={(id, maxParticipants) => (
             <EventAction id={id} disabled={isActionDisabled(participants![id], maxParticipants)} />
           )}

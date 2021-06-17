@@ -1,10 +1,11 @@
 import React, { FC, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
-// import Link from '@beans/link';
 import Icon from '@beans/icon';
 
+import { Page } from 'features/Page';
+import { ROOT_PATH } from 'config/constants';
+
 import { menuItemsMobile } from '../../config/items';
-import { getPageByPath } from '../../utils';
 import MenuItemMobile, { IconWrapper } from '../MenuItemMobile';
 import { ItemsList, HomeLink } from './styled';
 
@@ -13,7 +14,16 @@ export const TEST_ID = 'menu-mobile';
 const MenuMobile: FC = () => {
   const location = useLocation();
 
-  const isItemActive = useCallback((page: string) => getPageByPath(location.pathname) === page, [location]);
+  const isItemActive = useCallback(
+    (page: string) => {
+      if (page === Page.ABOUT) {
+        return location.pathname === '/' || location.pathname === `/${ROOT_PATH}/`;
+      }
+
+      return location.pathname.includes(page);
+    },
+    [location],
+  );
 
   return (
     <div data-testid={TEST_ID}>

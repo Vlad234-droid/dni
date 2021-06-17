@@ -8,7 +8,7 @@ import { isEventOnAir } from '../Event/utils';
 import { useMedia } from '../../context/InterfaceContext';
 import { Wrapper } from './styled';
 
-type Entity = Event & Network;
+type Entity = Event | Network;
 
 type Props = {
   type?: Type;
@@ -29,6 +29,7 @@ const List: FC<Props> = ({ link, items, renderAction, renderParticipants, type }
     startDate,
     //@ts-ignore
     endDate,
+    //@ts-ignore
     events,
     ...rest
   }: Entity) => ({

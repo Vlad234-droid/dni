@@ -1,9 +1,6 @@
 import React, { FC, HTMLProps, useEffect, useState } from 'react';
 
-// @ts-ignore
-import MultiSelectDropdown, {
-  CheckboxOption,
-} from '@beans/multiselect-dropdown';
+import MultiSelectDropdown, { CheckboxOption } from '@beans/multiselect-dropdown';
 import FormGroup from '@beans/form-group';
 
 import { FieldProps } from '../../config/types';
@@ -13,9 +10,7 @@ type Options = {
   options: Array<Record<string, any>>;
 };
 
-type Props = HTMLProps<HTMLScriptElement> &
-  FieldProps &
-  Options & { onChange: (d: Array<string>) => void };
+type Props = HTMLProps<HTMLScriptElement> & FieldProps & Options & { onChange: (d: Array<string>) => void };
 
 export type Values = Record<string, boolean>;
 
@@ -36,27 +31,16 @@ export const formatValues = (values: Values) =>
 
 export const TEST_ID = 'common_multiselect';
 
-const Multiselect: FC<Props> = ({
-  label,
-  error,
-  options,
-  placeholder,
-  onChange,
-}) => {
+const Multiselect: FC<Props> = ({ label, error, options, placeholder, onChange }) => {
   const [isOpen, setOpen] = useState(false);
   const [values, changeValues] = useState<Values>(getSelectedValues(options));
 
   useEffect(() => {
-    // @ts-ignore
     onChange(formatValues(values) as Array<string>);
   }, [values]);
 
   const handleToggleOpen = () => setOpen(!isOpen);
-  const handleChange = ({
-    selectedValues,
-  }: {
-    selectedValues: Record<string, boolean>;
-  }) => {
+  const handleChange = ({ selectedValues }: { selectedValues: Record<string, boolean> }) => {
     changeValues(selectedValues);
   };
 
