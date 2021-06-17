@@ -23,7 +23,7 @@ RUN dos2unix ./run.sh && dos2unix ./create-npmrc.sh && bash ./create-npmrc.sh --
 # Explicitly set env to development to install all dependencies
 ENV NODE_ENV=development
 
-# Install lerna, versio 3.22.1 globally
+# Install lerna, version 3.22.1 globally
 RUN yarn global add lerna@3.22.1 --prefix=/usr
 
 RUN which lerna
