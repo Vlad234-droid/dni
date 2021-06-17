@@ -1,12 +1,23 @@
 {
   "name": "@dni-connectors/colleague-cms-api",
   "version": "1.0.0",
-  "main": "src/index.ts",
+  "license": "MIT",
+  "private": "false",
+  "files": [
+    "build"
+  ],
+  "main": "./build/index.js",
+  "types": "./build/index.d.ts",
+  "scripts": {
+    "build:prod": "tsc -p .",
+    "clean": "rimraf build coverage storybook-static .eslintcache",
+    "clean:all": "yarn clean && rimraf node_modules"
+  },
   "dependencies": {
-    "@energon-connectors/core": "^0.7.6",
-    "@energon/fetch-client": "^0.10.1",
-    "@energon/rest-api-consumer": "^0.6.1",
-    "@energon/rest-api-definition": "^0.4.1",
+    "@energon-connectors/core": "^0.8.7",
+    "@energon/fetch-client": "^0.12.7",
+    "@energon/rest-api-consumer": "^0.7.7",
+    "@energon/rest-api-definition": "^0.5.7",
     "lodash.merge": "^4.6.2",
     "qs": "^6.10.1"
   },

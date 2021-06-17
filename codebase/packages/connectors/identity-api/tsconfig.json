@@ -1,0 +1,17 @@
+{
+  "extends": "../../../tsconfig.json",
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "typeRoots": ["../../../node_modules/@types"],
+    "baseUrl": "./src",
+    "outDir": "./build",
+    "noEmit": false,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "declaration": true,
+    "declarationMap": true,
+    "strictPropertyInitialization": false
+  },
+  "include": ["./src/**/*"]
+}
