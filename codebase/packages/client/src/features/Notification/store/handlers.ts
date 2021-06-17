@@ -7,7 +7,7 @@ import { ToastSkin, toasterActions } from 'features/Toaster';
 import { socket } from 'config/notification';
 
 const onSocketConnect = () => {
-  socket.emit(EmitType.ALL);
+  socket && socket.emit(EmitType.ALL);
 };
 
 const onNotificationAll = (data: []) => {
@@ -32,11 +32,11 @@ const onNotificationDelete = (ids: []) => {
 
 const onSocketDisconnect = () => {
   store.dispatch(actions.setSocketDisconnect());
-  console.log(`Client connected: ${socket.id}`);
+  console.log(`Client connected: ${socket && socket.id}`);
 };
 
 const onNotificationCloserClick = ({ id }: { id: Id }) => {
-  socket.emit(EmitType.DELETE, [id]);
+  socket && socket.emit(EmitType.DELETE, [id]);
 };
 
 const onEntityRender = ({ id, entityType }: { id: Id; entityType: EntityType }) => {
@@ -49,17 +49,25 @@ const onEntityRender = ({ id, entityType }: { id: Id; entityType: EntityType }) 
 
   const { ids } = entity.notifications;
 
-  socket.emit(EmitType.DELETE, ids);
+  socket && socket.emit(EmitType.DELETE, ids);
 };
 
-socket.on('connection', () => {
-  console.log(`Client connected: ${socket.id}`);
-});
+const onCmsEvent = (body: string) => {
+  console.log(`CMS_EVENT received: ${body}`);
+};
 
-socket.on('connect', onSocketConnect);
-socket.on(EmitType.ALL, onNotificationAll);
-socket.on(EmitType.CREATE, onNotificationCreate);
-socket.on(EmitType.DELETE, onNotificationDelete);
-socket.on('disconnect', onSocketDisconnect);
+if (socket) {
+  socket.on('connection', () => {
+    socket && console.log(`Client connected: ${socket.id}`);
+  });
+
+  socket.on('connect', onSocketConnect);
+  socket.on(EmitType.ALL, onNotificationAll);
+  socket.on(EmitType.CREATE, onNotificationCreate);
+  socket.on(EmitType.DELETE, onNotificationDelete);
+  socket.on('disconnect', onSocketDisconnect);
+
+  socket.on('CMS_EVENT', onCmsEvent);
+}
 
 export { onNotificationAll, onNotificationCreate, onNotificationDelete, onNotificationCloserClick, onEntityRender };

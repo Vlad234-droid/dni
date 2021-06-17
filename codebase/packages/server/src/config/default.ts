@@ -1,8 +1,8 @@
 export const defaultConfig = {
-  appName: 'DiversityAndInclusion',
+  appName: 'Diversity-And-Inclusion',
   defaultRole: 'Employee',
-  port: 8000,
-  uploadSize: 50, // MB
+  port: 9000,
+  uploadSize: 50, // Maximum allowed upload size in MB
   groupsWithAccess: [
     'GG-UK-TescoGlobal-DiversityAndInclusion-Admin',
     'GG-UK-TescoGlobal-DiversityAndInclusion-ContentManager',

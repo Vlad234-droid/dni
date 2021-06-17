@@ -1,5 +1,5 @@
 import path from 'path';
-import { SnakeNamingStrategy, getPackageDistFolder } from './src/utils';
+import { SnakeNamingStrategy, getPackageDistFolder } from './utils';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -18,7 +18,7 @@ const {
 
 const root = getPackageDistFolder('@dni/database', ['', '']);
 const buildPath = (...paths: string[]) => path.join(...paths);
-const buildPathWithExt = (dir: string, ext = '*.ts') => buildPath(dir, ext);
+const buildPathWithExt = (dir: string, ext = '*{.ts,.js}') => buildPath(dir, ext);
 const ENTITIES_DIR = buildPath(root, 'entities');
 const SUBSCRIBERS_DIR = buildPath(root, 'subscribers');
 const MIGRATIONS_DIR = buildPath(root, 'migrations');
@@ -26,7 +26,7 @@ const SCHEMAS_DIR = buildPath(root, 'schemas');
 
 const sslOpt = { ssl: TYPEORM_SSL === 'true' };
 
-const typeOrmConfig =  {
+const typeOrmConfig = {
   ...sslOpt,
   type: TYPEORM_TYPE,
   host: TYPEORM_HOST,

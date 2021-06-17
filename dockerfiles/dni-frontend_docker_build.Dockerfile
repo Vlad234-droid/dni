@@ -20,6 +20,12 @@ ENV NEXUS_ACCESS_TOKEN=$NEXUS_ACCESS_TOKEN
 
 RUN dos2unix ./run.sh && dos2unix ./create-npmrc.sh && bash ./create-npmrc.sh --token $NEXUS_ACCESS_TOKEN
 
+# Install lerna, version 3.22.1 globally
+RUN yarn global add lerna@3.22.1 --prefix=/usr
+
+RUN which lerna
+RUN lerna --version
+
 RUN yarn bootstrap
 
 ENV BUILD_ENV=production

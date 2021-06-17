@@ -16,12 +16,12 @@ const generateNetwork = () => {
     contact: faker.internet.email(),
     partners: generateOrganizations(4),
     questions: [],
+    events: [],
   };
 
   return network;
 };
 
-const generateNetworks = (length: number) =>
-  generateArray(length).map(() => generateNetwork());
+const generateNetworks = (length: number) => generateArray(length).map(() => generateNetwork());
 
 export { generateNetwork, generateNetworks };

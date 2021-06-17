@@ -20,9 +20,16 @@ ENV NEXUS_ACCESS_TOKEN=$NEXUS_ACCESS_TOKEN
 
 RUN dos2unix ./run.sh && dos2unix ./create-npmrc.sh && bash ./create-npmrc.sh --token $NEXUS_ACCESS_TOKEN
 
-# Explicitly set env to production
-ENV BUILD_ENV=production
-ENV NODE_ENV=ppe
+# Explicitly set env to development to install all dependencies
+ENV NODE_ENV=development
+
+# Install lerna, version 3.22.1 globally
+RUN yarn global add lerna@3.22.1 --prefix=/usr
+
+RUN which lerna
+RUN lerna --version
+
+RUN yarn bootstrap
 
 ENV REACT_APP_API_URL=$REACT_APP_API_URL
 ENV REACT_APP_WS_URL=$REACT_APP_WS_URL
@@ -30,8 +37,7 @@ ENV PUBLIC_URL=$PUBLIC_URL
 
 ENV SKIP_PREFLIGHT_CHECK=true
 
-RUN yarn bootstrap
-
+ENV BUILD_ENV=production
 ENV NODE_ENV=production
 
 RUN yarn build:prod
@@ -57,9 +63,6 @@ ENV TYPEORM_TYPE=postgres
 #   TYPEORM_PORT = 5432
 ENV TYPEORM_SYNCHRONIZE=false
 ENV TYPEORM_LOGGING=false
-
-#   WITH_ONE_LOGIN
-#   COOKIE_USER_KEY
 
 #ENTRYPOINT [ "yarn", "run:prod" ]
 CMD ./run.sh

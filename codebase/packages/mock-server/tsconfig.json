@@ -4,7 +4,14 @@
     "target": "es6",
     "module": "commonjs",
     "typeRoots": ["./src/types", "../../node_modules/@types"],
-    "baseUrl": "./src"
+    "baseUrl": "./src",
+    "outDir": "./build",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "strictPropertyInitialization": false
   },
   "include": ["./src/**/*"]
 }

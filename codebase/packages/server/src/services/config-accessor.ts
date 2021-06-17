@@ -4,6 +4,7 @@ import { defaultConfig } from '../config/default';
 type ProcessConfig = {
   // general
   appName: string;
+  buildEnvironment: string;
   environment: string;
   port: string;
   publicUrl: string;
@@ -39,6 +40,7 @@ class ConfigAccessor {
 
   private constructor(processEnv: ProcessEnv) {
     const {
+      BUILD_ENV: buildEnvironment,
       NODE_ENV: environment,
       NODE_PORT: port,
       PUBLIC_URL: publicUrl,
@@ -62,6 +64,7 @@ class ConfigAccessor {
 
     this.data = {
       ...defaultConfig,
+      buildEnvironment,
       environment,
       port,
       // if root "/" needs to be converted to an empty string
@@ -72,7 +75,7 @@ class ConfigAccessor {
       cookieUserKey,
       issuerUrl,
       refreshTokenSecret,
-      withOneLogin: (withOneLogin === 'true'),
+      withOneLogin: withOneLogin === 'true',
       registeredCallbackUrlPath,
       registeredCallbackUrlRoot,
       redirectAfterLogoutUrl,

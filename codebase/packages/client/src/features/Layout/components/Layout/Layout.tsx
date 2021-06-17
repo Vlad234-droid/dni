@@ -1,7 +1,6 @@
 import React, { FC, useRef } from 'react';
 
 import { ScrollContainerProvider } from 'context/ScrollContainerContext';
-import { useMedia } from 'context/InterfaceContext';
 
 import { LayoutProps } from '../../config/types';
 import {

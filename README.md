@@ -22,15 +22,16 @@ Check that Yarn is installed by running: `yarn --version`
 
 Check that NodeJS is installed by running: `node --version`
 
-- Volta JS - https://volta.sh
+- Lerna JS - https://lerna.js.org/
 
-Check that Volta is installed by running: `volta --version`
+Check that Lerna is installed by running: `lerna --version`
+
 
 ### 2. Login into the private npm registry
 
 Login into our private npm repository with your TPX (in lower case) and password
 
-Run `yarn npmrc:create '<TPX>:<password>'`
+Run from project root: `./scripts/create-nmprc.sh --token '<YOUR_NEXUS_ACCESS_TOKEN>'`
 
 ### 3. Install dependencies
 
@@ -38,7 +39,7 @@ All projects are managed by Lerna with Yarn Workspaces. Before
 starting any of the applications, do the following to ensure all
 dependencies are satisfied.
 
-1.  Ensure you are in the top level root directory.
+1.  Ensure you are in `codebase` directory of the project.
 2.  Install top level packages by running: `yarn bootstrap`
 
 ## Configuration
@@ -51,7 +52,7 @@ dependencies are satisfied.
 
 Ensure you are in the top level root directory.
 
-### Running project in development mode
+### Running project in different modes
 
 - Run `yarn run:dev` to start in the development mode.
 - Run `yarn run:local:dev` to start in the development mode with mock-server.
@@ -63,9 +64,9 @@ Ensure you are in the top level root directory.
 
 ### Building project
 
-- Run `yarn build:prod` in production mode.
 - Run `yarn build:dev` in dev mode.
 - Run `yarn build:test` in test mode.
+- Run `yarn build:prod` in production mode.
 
 ### Bootstrap the packages in the repo. Installs all of their dependencies and links any cross-dependencies.
 
@@ -112,10 +113,3 @@ mocked data store.
 - Run `yarn ws:connector:colleague-cms add [-D] [PACKAGE]` to add dependency to package `colleague-cms-api`
 - Run `yarn ws:connector:confirmit add [-D] [PACKAGE]` to add dependency to package `confirmit-api`
 - Run `yarn ws:connector:common add [-D] [PACKAGE]` to add dependency to package `common`
-
-## Docker
-
-Your TPX (in lower case) and password
-
-- Run `yarn docker:build:prod '<TPX>:<password>'` to build image
-- Run `yarn docker:run:prod` to run docker image

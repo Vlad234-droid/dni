@@ -1,12 +1,19 @@
 {
   "name": "@dni/database",
   "version": "1.0.0",
-  "main": "src/index.ts",
   "license": "MIT",
+  "private": "false",
+  "files": [
+    "build"
+  ],
+  "main": "./build/index.js",
+  "types": "./build/index.d.ts",
   "scripts": {
-    "clean:all": "rimraf node_modules",
+    "build:prod": "tsc -p .",
+    "clean": "rimraf build coverage storybook-static .eslintcache",
+    "clean:all": "yarn clean && rimraf node_modules",
     "start": "ts-node src/index.ts",
-    "typeorm": "ts-node --transpile-only ../../node_modules/typeorm/cli.js --config ormconfig.ts",
+    "typeorm": "ts-node --transpile-only ../../node_modules/typeorm/cli.js --config ./src/ormconfig.ts",
     "entity:create": "yarn typeorm entity:create -n",
     "subscriber:create": "yarn typeorm subscriber:create -n",
     "query": "yarn typeorm query",
@@ -27,6 +34,7 @@
   "dependencies": {
     "dotenv": "^8.2.0",
     "pg": "^8.6.0",
+    "pino": "^6.11.3",
     "reflect-metadata": "^0.1.13",
     "typeorm": "^0.2.32"
   },

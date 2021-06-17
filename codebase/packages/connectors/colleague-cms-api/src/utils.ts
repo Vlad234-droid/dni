@@ -1,33 +1,27 @@
 import { fetchClient, resolveBaseUrl } from '@energon-connectors/core';
 import { createApiConsumer } from '@energon/rest-api-consumer';
-import {
-  ApiDefinition,
-  EndpointDefinition,
-} from '@energon/rest-api-definition';
+import { ApiDefinition, EndpointDefinition } from '@energon/rest-api-definition';
 import qs from 'qs';
 import merge from 'lodash.merge';
 
 import { DNI_CMS_API_URLS } from './config';
 import { DniCmsApiContext } from './types';
+import { SimpleFetchClient } from '@energon/fetch-client';
 
-const buildApiConsumer = <T extends ApiDefinition>(
-  ctx: DniCmsApiContext,
-  apiDef: T,
-) => {
+const buildApiConsumer = <T extends ApiDefinition>(ctx: DniCmsApiContext, apiDef: T) => {
   const client = buildClient(ctx);
   return createApiConsumer(apiDef, client);
 };
 
-const buildClient = (ctx: DniCmsApiContext) => {
-  const baseUrl =
-    process.env.COLLEAGUE_CMS_URL || resolveBaseUrl(DNI_CMS_API_URLS, ctx);
+function buildClient(ctx: DniCmsApiContext): SimpleFetchClient {
+  const baseUrl = process.env.COLLEAGUE_CMS_URL || resolveBaseUrl(DNI_CMS_API_URLS, ctx);
 
   const headers = {
     Auth: () => `Bearer ${ctx.identityClientToken()}`,
   };
 
   return fetchClient(baseUrl, headers, ctx);
-};
+}
 
 const buildParams = <T, U = unknown>(
   params: T,
@@ -57,11 +51,7 @@ const buildFetchParams = <U = unknown>(
 const buildFetchClient = (ctx: DniCmsApiContext) => {
   const client = buildClient(ctx);
 
-  return <T, U = unknown>(
-    def: EndpointDefinition,
-    qsParams: U,
-    fetchParams = {},
-  ) => {
+  return <T, U = unknown>(def: EndpointDefinition, qsParams: U, fetchParams = {}) => {
     const { path: defPath, method } = def;
 
     const queryString = qs.stringify(qsParams);
@@ -78,10 +68,4 @@ const buildFetchClient = (ctx: DniCmsApiContext) => {
   };
 };
 
-export {
-  buildApiConsumer,
-  buildParams,
-  buildClient,
-  buildFetchParams,
-  buildFetchClient,
-};
+export { buildApiConsumer, buildParams, buildClient, buildFetchParams, buildFetchClient };

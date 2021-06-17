@@ -1,4 +1,4 @@
-import { io } from 'socket.io-client';
+import { io, Socket } from 'socket.io-client';
 import { PUBLIC_URL, SOCKET_URL } from 'config/api';
 
 let socketUrl = SOCKET_URL;
@@ -13,7 +13,17 @@ const NOTIFICATIONS = 'notifications';
 const NOTIFICATION_CREATE = 'notification-create';
 const NOTIFICATION_REMOVE = 'notification-remove';
 
-const socket = io('/', defaultProps);
+let socket: Socket | undefined = undefined;
+
+try {
+  console.log(`Trying to establish WS sonnection to: ${socketUrl}`);
+  socket = io('/', defaultProps);
+  console.log(`WS connection established`);
+  console.log(console);
+} catch (e) {
+  console.error(`Can not establish WS connection`);
+  console.error(e);
+}
 
 export {
   socket,

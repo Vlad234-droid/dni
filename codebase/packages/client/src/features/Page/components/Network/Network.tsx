@@ -2,7 +2,6 @@ import React, { useState, FC } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import styled from 'styled-components';
 
-import { GREY_COLOR } from 'styles';
 import { Network } from 'features/Network';
 import { BreadcrumbWrapperProvider, ImageWrapperProvider } from 'context';
 

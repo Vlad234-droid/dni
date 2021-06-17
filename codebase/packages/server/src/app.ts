@@ -5,7 +5,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import { isDEV } from './config/env';
 
-import { envAccessor, ConfigAccessor, establishConnection } from './services';
+import { envAccessor, ConfigAccessor, initializeWebSockets } from './services';
 import { healthCheck, api } from './routes';
 import {
   clientStaticFolder,
@@ -19,8 +19,8 @@ import {
   fakeUserExtractor,
 } from './middlewares';
 import { buildContext } from './context';
-import { buildIO } from './config/notification';
-import './config/db';
+import { buildWebSocketsServer } from './config/notification';
+import { initializeTypeOrm } from './config/db';
 
 // validate if all required process env variables exist
 envAccessor.validate();
@@ -35,24 +35,31 @@ const PORT = config.port;
 
 const context = buildContext(config);
 
-// ws connection
-establishConnection(buildIO(server));
-
-const { openId, openIdCookieParser, clientScopedToken } = openIdConfig(config);
-const fakeLogin = fakeLoginConfig(context, config);
-
 const startServer = async () => {
   try {
-    // middlewares
-    app.use(cors());
+    console.log(`Current build environment: ${config.buildEnvironment}`);
+    console.log(`Current infrastructure environment: ${config.environment}`);
+
+    // initialize connection to DB
+    await initializeTypeOrm();
+
+    // setup middlewares
+    app.use(
+      cors({
+        credentials: true,
+      }),
+    );
+
     app.use('/', healthCheck);
 
-    if (isDEV(config.environment) || !config.withOneLogin) {
+    if (isDEV(config.buildEnvironment) || !config.withOneLogin) {
+      console.log(`WARNING! Authentication is turned off. Fake Login is used.`);
       // fake login behavior
       app.use(cookieParser());
-      app.use(fakeLogin);
+      app.use(fakeLoginConfig(context, config));
       app.use(fakeUserExtractor);
     } else {
+      const { openId, openIdCookieParser, clientScopedToken } = openIdConfig(config);
       app.use(openIdCookieParser);
       app.use(clientScopedToken());
       app.use(await openId);
@@ -63,6 +70,7 @@ const startServer = async () => {
     app.use('/api/upload', upload.any(), formData);
     app.use('/api', api, apiMiddleware(context));
     app.use('/api/*', (_, res) => res.sendStatus(404));
+
     app.use(clientStaticFolder);
     app.use(publicStaticFolder);
     app.use(clientStaticFile);
@@ -70,6 +78,12 @@ const startServer = async () => {
 
     server.listen(PORT, () => {
       console.log(`⚡️[server]: Server is running at http://localhost:${PORT}`);
+
+      // ws connection
+      initializeWebSockets(
+        buildWebSocketsServer(server)
+        );
+
     });
   } catch (error) {
     console.log(error);
