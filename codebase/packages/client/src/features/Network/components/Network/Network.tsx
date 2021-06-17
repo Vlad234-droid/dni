@@ -33,7 +33,6 @@ type Props = {
 const Network: FC<Props> = ({ id }) => {
   const dispatch = useDispatch();
   const network = useSelector(byIdSelector(id));
-  const { partners, description, title, image, contact, events } = network || {};
   const { networks = [] } = useStore((state) => state.auth.user);
   const isJoined = networks.includes(+id);
   const [showInfoPanel, setShowInfoPanel] = useState(false);
@@ -100,8 +99,8 @@ const Network: FC<Props> = ({ id }) => {
           createPortal(
             <ResponsiveImage
               key={id}
-              alt={image?.alternativeText || 'Tesco'}
-              src={image?.url || defaultImage}
+              alt={network!.image?.alternativeText || 'Tesco'}
+              src={network!.image?.url || defaultImage}
               positioning='center'
               objectFit='cover'
               fallbackSizeRatio='57%'
@@ -110,13 +109,11 @@ const Network: FC<Props> = ({ id }) => {
           )}
         <NetworkHeader
           id={id}
-          //@ts-ignore
-          title={title}
-          //@ts-ignore
-          email={contact}
+          title={network!.title}
+          email={network!.contact}
           onLeave={handleLeave}
           onJoin={handleJoin}
-          events={events || []}
+          events={network!.events}
         />
         {showInfoPanel ? (
           <InfoPanel
@@ -128,8 +125,8 @@ const Network: FC<Props> = ({ id }) => {
           />
         ) : (
           <DescriptionWrapper>
-            {!isJoined && <DescriptionTitle>{`Join ${title}`}</DescriptionTitle>}
-            <RichTextRenderer source={description!} />
+            {!isJoined && <DescriptionTitle>{`Join ${network!.title}`}</DescriptionTitle>}
+            <RichTextRenderer source={network!.description} />
           </DescriptionWrapper>
         )}
         <Content>
@@ -137,12 +134,7 @@ const Network: FC<Props> = ({ id }) => {
             <PostList entityId={id} filter={BY_NETWORK} />
           </LeftContent>
           <RightContent>
-            <NetworkPartners
-              //@ts-ignore
-              partners={partners}
-              //@ts-ignore
-              email={contact}
-            />
+            <NetworkPartners partners={network!.partners} email={network!.contact} />
           </RightContent>
         </Content>
       </>

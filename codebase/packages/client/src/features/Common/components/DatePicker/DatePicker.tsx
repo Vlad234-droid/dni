@@ -1,12 +1,4 @@
-import React, {
-  FC,
-  useCallback,
-  useMemo,
-  useRef,
-  useState,
-  useEffect,
-  MouseEvent,
-} from 'react';
+import React, { FC, useCallback, useMemo, useRef, useState, useEffect, MouseEvent } from 'react';
 import styled, { css } from 'styled-components';
 import SingleDatePicker from '@beans/date-picker';
 import DateInputGroup from '@beans/date-input-group';
@@ -48,14 +40,7 @@ type DateValue = {
 };
 
 // TODO: style calendar date items (Maybe ID is important)
-const DatePicker: FC<Props & Partial<Registrable>> = ({
-  onChange,
-  date,
-  label,
-  name,
-  error,
-  ...methods
-}) => {
+const DatePicker: FC<Props & Partial<Registrable>> = ({ onChange, date, label, name, error, ...methods }) => {
   const [value, updateValue] = useState<DateValue['date']>();
   const wrapperRef = useRef<HTMLDivElement | null>(null);
   const [isValid, setValid] = useState(true);
@@ -72,7 +57,6 @@ const DatePicker: FC<Props & Partial<Registrable>> = ({
   const handleClickOutside = useCallback(
     (event: MouseEvent<HTMLElement>) => {
       const element = event?.target as HTMLElement;
-      // @ts-ignore
       if (isOpen && element && !wrapperRef.current?.contains(element)) {
         setOpen(false);
       }
@@ -95,9 +79,7 @@ const DatePicker: FC<Props & Partial<Registrable>> = ({
   }, [value]);
 
   const handleChangeDate = ({ date, valid }: DateValue) => {
-    const isValidDate = valid
-      ? !Object.values(valid).some((valid) => !valid)
-      : true;
+    const isValidDate = valid ? !Object.values(valid).some((valid) => !valid) : true;
     setValid(isValidDate);
     updateValue(date);
   };

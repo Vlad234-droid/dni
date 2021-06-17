@@ -9,6 +9,8 @@ type FilterPayload = {
 
   // sorting
   _sort?: string;
+
+  id_in?: number[];
 };
 
 type EntityListPayload = FilterPayload & PaginationPayload;
