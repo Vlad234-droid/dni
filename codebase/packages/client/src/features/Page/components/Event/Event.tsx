@@ -4,7 +4,6 @@ import { RouteComponentProps } from 'react-router-dom';
 
 import { ImageWrapperProvider, BreadcrumbWrapperProvider } from 'context';
 import { Event } from 'features/Event';
-import { GREY_COLOR } from 'styles';
 
 import BasePage from '../BasePage';
 import PageImageWrapper from '../PageImageWrapper';

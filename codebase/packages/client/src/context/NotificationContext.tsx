@@ -1,19 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import React, {
-  useContext,
-  useCallback,
-  createContext,
-  FC,
-  useState,
-  useEffect,
-} from 'react';
+import React, { useContext, useCallback, createContext, FC, useState, useEffect } from 'react';
 
-import {
-  socket,
-  NOTIFICATIONS,
-  NOTIFICATION_CREATE,
-  NOTIFICATION_REMOVE,
-} from 'config/notification';
+import { socket, NOTIFICATIONS, NOTIFICATION_CREATE, NOTIFICATION_REMOVE } from 'config/notification';
 
 interface NotificationContext {
   notifications: Notification[];
@@ -25,9 +13,7 @@ const defaultNotificationContext: NotificationContext = {
   removeNotificationBy: (_: number[]) => null,
 };
 
-const NotificationContext = createContext<NotificationContext>(
-  defaultNotificationContext,
-);
+const NotificationContext = createContext<NotificationContext>(defaultNotificationContext);
 
 enum ActionType {
   // Feed
@@ -65,38 +51,42 @@ type Notification = {
 export const NotificationProvider: FC = ({ children }) => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [newNotifications, setNewNotifications] = useState<Notification[]>([]);
-  const [removedNotifications, setRemovedNotifications] = useState<
-    Notification[]
-  >([]);
+  const [removedNotifications, setRemovedNotifications] = useState<Notification[]>([]);
 
   useEffect(() => {
-    socket.on('connection', () => {
-      console.log(`Client connected: ${socket.id}`);
-    });
+    if (socket) {
+      socket.on('connection', () => {
+        console.log(`Client connected: ${socket && socket.id}`);
+      });
 
-    socket.on('connect', () => {
-      socket.emit(NOTIFICATIONS);
-    });
+      socket.on('connect', () => {
+        console.log(`Got 'connect' event`);
+        socket && socket.emit(NOTIFICATIONS);
+      });
 
-    socket.on(NOTIFICATIONS, (data) => {
-      setNotifications(data);
-    });
+      socket.on(NOTIFICATIONS, (data) => {
+        console.log(`Got ${NOTIFICATIONS} event`);
+        setNotifications(data);
+      });
 
-    socket.on(NOTIFICATION_CREATE, (data) => {
-      setNewNotifications(data);
-    });
+      socket.on(NOTIFICATION_CREATE, (data) => {
+        console.log(`Got ${NOTIFICATION_CREATE} event`);
+        setNewNotifications(data);
+      });
 
-    socket.on(NOTIFICATION_REMOVE, (data) => {
-      setRemovedNotifications(data);
-    });
+      socket.on(NOTIFICATION_REMOVE, (data) => {
+        console.log(`Got ${NOTIFICATION_REMOVE} event`);
+        setRemovedNotifications(data);
+      });
 
-    socket.on('disconnect', () => {
-      console.log('Client disconnected');
-    });
+      socket.on('disconnect', () => {
+        console.log('Client disconnected');
+      });
+    }
   }, []);
 
   const removeNotificationBy = useCallback((ids: number[]) => {
-    socket.emit(NOTIFICATION_REMOVE, ids);
+    socket && socket.emit(NOTIFICATION_REMOVE, ids);
   }, []);
 
   return (

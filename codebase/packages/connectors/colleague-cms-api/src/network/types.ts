@@ -1,4 +1,4 @@
-import { Event } from '@dni-connectors/colleague-cms-api';
+import { Event } from '../event';
 
 import { File } from '../built-in';
 import { Organization } from '../organization';

@@ -1,4 +1,4 @@
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 
 import Media from 'styles/media';
 import { textXS, redDotStyles } from 'styles';

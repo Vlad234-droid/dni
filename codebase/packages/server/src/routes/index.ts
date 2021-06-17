@@ -31,6 +31,7 @@ import { cmsAuth } from '../middlewares/cms-auth';
 // controllers
 const healthCheck = express.Router();
 const api = express.Router();
+//const cepApi = express.Router();
 
 healthCheck.get('/_status', (_: Request, res: Response) => res.sendStatus(200));
 
@@ -47,13 +48,13 @@ api.delete('/employees/events', deleteEventFromEmployee);
 api.get('/events/participants', getEventsParticipants);
 api.get('/networks/participants', getNetworksParticipants);
 
-api.post('/notifications', cmsAuth, handleHook);
-api.post('/cms-events', handleCepHook);
-
 api.get('/reports/time-periods', getReportByFilters);
 api.post('/reports/print-pdf', printPDF);
 
 api.get('/utils/env', getEnvironmentVariablesMiddleware);
 api.get('/utils/type-orm-options', getTypeOrmConnectionOptionsMiddleware);
+
+api.post('/notifications', cmsAuth, handleHook);
+api.post('/cms-events', handleCepHook);
 
 export { healthCheck, api };

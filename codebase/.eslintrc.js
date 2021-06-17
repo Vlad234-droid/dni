@@ -18,6 +18,9 @@ module.exports = {
       },
     },
   },
+  ignorePatterns: [
+    '**/setupProxy.js'
+  ],
   extends: [
     'eslint:recommended', // base eslint rules
     'plugin:import/errors',

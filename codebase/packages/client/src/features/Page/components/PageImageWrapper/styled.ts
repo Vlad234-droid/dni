@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 
-import { GREY_COLOR } from 'styles';
 import Media from 'styles/media';
 
 export const Wrapper = styled.div`

@@ -2,7 +2,7 @@ import { DateString, File } from '../built-in';
 import { Network } from '../network';
 import { BaseApiParams, BaseType } from '../types';
 
-type Event = {
+export type Event = {
   title: string;
   network: Network;
   maxParticipants: number;
@@ -14,7 +14,7 @@ type Event = {
   image?: File;
 } & BaseType;
 
-type EventApiParams = {
+export type EventApiParams = {
   id: string;
   startDate_lte?: string;
   startDate_gte?: string;
@@ -24,6 +24,6 @@ type EventApiParams = {
   network_eq?: string;
 } & BaseApiParams;
 
-type EventBody = Omit<Network, 'id'>;
+export type EventBody = Omit<Network, 'id'>;
 
-export type { EventApiParams, Event, EventBody };
+export default Event;

@@ -1,9 +1,9 @@
-import { handleData } from '../services/notification';
+import { handleData, emitWsData } from '../services/notification';
 
 export const handleHook: Middleware = async (req, res) => {
   try {
-    // console.log(JSON.stringify(req.body, null, 2));
-    handleData(req.body);
+    console.log('handleHook:\n%s', JSON.stringify(req.body, null, 2));
+    await handleData(req.body);
     return res.status(200).json('ok');
   } catch (e) {
     console.log(e);
@@ -13,7 +13,9 @@ export const handleHook: Middleware = async (req, res) => {
 
 export const handleCepHook: Middleware = async (req, res) => {
   try {
-    console.log('CEP request body:\n%s', JSON.stringify(req.body, null, 2));
+    const payload: string = JSON.stringify(req.body, null, 2);
+    console.log('handleCepHook:\n%s', payload);
+    await emitWsData('CMS_EVENT', payload);
     return res.status(200).json('ok');
   } catch (e) {
     console.log(e);

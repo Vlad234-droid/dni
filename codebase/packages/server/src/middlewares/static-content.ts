@@ -9,10 +9,8 @@ const processEnv = envAccessor.getData();
 
 // prepare static artifact
 const clientDistFolder = getPackageDistFolder('@dni/client', ['src', 'build']);
-const serverPublicFolder = getPackageDistFolder('@dni/server', [
-  'src',
-  'public',
-]);
+const serverPublicFolder = getPackageDistFolder('@dni/server', ['src', 'public']);
+
 const htmlFilePath = path.join(clientDistFolder, 'index.html');
 
 if (processEnv.NODE_ENV !== 'test' && !fs.existsSync(htmlFilePath)) {
