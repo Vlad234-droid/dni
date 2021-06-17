@@ -3,20 +3,17 @@ import styled, { css } from 'styled-components';
 import Button from '@beans/button';
 
 import Media from 'styles/media';
-import { headingXS } from 'styles';
+import { textXS } from 'styles';
 
 type Props = {
   content?: string[];
-  renderContent?: () => JSX.Element;
   isSmall: boolean;
 };
 
-const InfoPanelContent: FC<Props> = ({ content, renderContent, isSmall }) => {
+const InfoPanelContent: FC<Props> = ({ content, isSmall }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const memoizedContent = useMemo(() => {
-    if (renderContent) return renderContent();
-
     if (content)
       return (
         <>
@@ -28,7 +25,7 @@ const InfoPanelContent: FC<Props> = ({ content, renderContent, isSmall }) => {
           )}
         </>
       );
-  }, [isOpen, content, renderContent]);
+  }, [isOpen, content]);
 
   return <Wrapper isSmall={isSmall}>{memoizedContent}</Wrapper>;
 };
@@ -36,16 +33,16 @@ const InfoPanelContent: FC<Props> = ({ content, renderContent, isSmall }) => {
 export const Wrapper = styled.div<{ isSmall: boolean }>`
   color: ${({ theme }) => theme.colors.base};
   margin-bottom: 16px;
-  ${headingXS};
+  ${textXS};
 
   ${({ isSmall }) =>
     !isSmall &&
     css`
       ${Media.tablet`
-      font-size: 20px;
-      line-height: 28px;
-      margin-bottom: 24px;
-    `}
+        font-size: 20px;
+        line-height: 28px;
+        margin-bottom: 24px;
+      `}
     `}
 
   p {
