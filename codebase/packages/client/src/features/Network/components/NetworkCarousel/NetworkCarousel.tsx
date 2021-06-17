@@ -49,7 +49,7 @@ const NetworkCarousel: FC = () => {
         <Carousel itemWidth={isMobile || isLargeMobile ? '258px' : '278px'} id='network-carousel' itemName='network'>
           {networks!.map(({ id, title, image, events }) => (
             <VerticalTile
-              link='/networks'
+              link={Page.NETWORKS}
               renderAction={() => <NetworkAction id={id} events={events} />}
               id={id}
               key={`networks-${id}`}
