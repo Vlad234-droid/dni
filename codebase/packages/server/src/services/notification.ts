@@ -17,14 +17,14 @@ type Input = {
 
 let socketServer: Server;
 
-const establishConnection = (io: Server) => {
+const initializeWebSockets = (io: Server) => {
   socketServer = io;
   console.log(`⚡️[ws-server]: Socket server initialized at path: ${io.path()}`);
   //console.log(socketServer);
 
   io.on('connection', (socket: Socket) => {
     console.log(
-      `Console WS connection established: ${socket.id}, ` +
+      `WebSockets connection established: ${socket.id}, ` +
         `url: ${socket.handshake.url}, ` +
         `secured: ${socket.handshake.secure}, ` +
         `address: ${socket.handshake.address}`,
@@ -154,4 +154,4 @@ const findAllNotifications = () => {
   });
 };
 
-export { establishConnection, analyze, handleData, emitWsData };
+export { initializeWebSockets, analyze, handleData, emitWsData };
