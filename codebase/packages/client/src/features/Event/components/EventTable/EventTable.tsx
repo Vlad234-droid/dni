@@ -10,8 +10,8 @@ import useStore from 'hooks/useStore';
 import { EmptyContainer, Spinner, Error, TextWithEllipsis } from 'features/Common';
 import { Page } from 'features/Page';
 import Loading from 'types/loading';
-import { DEFAULT_FILTERS } from 'config/constants';
 
+import { DEFAULT_FILTERS } from 'config/constants';
 import useFetchEvents from '../../hooks/useFetchEvents';
 import { getPayloadWhere } from '../../utils';
 import { Wrapper, Title, ButtonWrapper, ImageWrapper, NetworkWrapper } from './styled';

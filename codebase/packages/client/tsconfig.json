@@ -1,9 +1,12 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
+    "target": "es6",
+    "module": "esnext",
     "typeRoots": ["./src/types", "./node_modules/@types", "../../node_modules/@types"],
     "baseUrl": "./src",
     "jsx": "react-jsx"
   },
-  "include": ["./src/**/*"]
+  "include": ["./src/**/*"],
+  "exclude": ["node_modules", "**/*.spec.ts", "./src/setupProxy.js"]
 }
