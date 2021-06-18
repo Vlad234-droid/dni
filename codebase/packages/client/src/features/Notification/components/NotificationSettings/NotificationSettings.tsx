@@ -13,7 +13,7 @@ import { Wrapper, Content, Title } from './styled';
 const NotificationSettings: FC = () => {
   const [isFormVisible, setFormVisible] = useState(false);
   const [email, setEmail] = useState('test@tesco.com');
-  const { handleSubmit, errors, register, control } = useForm({
+  const { handleSubmit, errors, register } = useForm({
     resolver: yupResolver(schema),
   });
 
