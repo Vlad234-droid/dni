@@ -19,9 +19,7 @@ enum Period {
 
 type State = {
   entityType: Entity;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [Entity.NETWORK]: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [Entity.EVENT]: any;
   loading: Loading;
   error?: string;
@@ -62,12 +60,12 @@ type ChartItem = {
 };
 
 type StatisticsItem = {
-  id: string;
+  entityId: string;
   name: string;
   members: number;
   subscribe: number;
   leave: number;
-  color?: string;
+  color: string;
   checked: boolean;
   subscribersAPS: number;
   subscribersAPE: number;
@@ -78,6 +76,9 @@ type GraphicsItem = {
   chart: ChartItem;
   statistics: StatisticsItem[];
   dateInterval: Interval;
+  color: {
+    [key: string]: boolean;
+  };
 };
 
 type EntityItem = {
@@ -100,11 +101,15 @@ type EntityItem = {
 };
 
 type EntityData = {
-  id: number | string;
+  entityId: number | string;
   entityType: string;
   members: number;
+  startMembers: number;
+  endMembers: number;
   subscribe: number;
   leave: number;
+  name: string;
+  color: string;
 };
 
 type ReportsMiddlewareArgs = {
@@ -119,6 +124,7 @@ type FulfilledArgs = {
   entityType: Entity;
   filter: Filter;
   filterFilter: Period;
+  entities: { [key: string]: { id: number; title: string } };
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: any;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
