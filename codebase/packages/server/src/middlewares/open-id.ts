@@ -85,7 +85,7 @@ export const openIdConfig = ({
     logger: defaultLogger,
 
     /** If true sets idToken and encRefreshToken in 'authData' cookie. */
-    requireIdToken: true,
+    requireIdToken: false,
 
     /**
      * Absolute url that we will redirect to after logout, that can lead to onelogin session termination ednpoint .
