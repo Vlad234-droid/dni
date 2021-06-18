@@ -9,14 +9,7 @@ const NetworkCarousel: FC = () => {
   const [play, setPlay] = useState(!isOpen);
 
   const handleButtonClick = () => {
-    isOpen && setPlay(true);
-    !isOpen && setPlay(false);
-
     setIsOpen(!isOpen);
-  };
-
-  const handleControlClick = () => {
-    isOpen && setIsOpen(false);
   };
 
   const handlePlayClick = () => setPlay(!play);
@@ -26,7 +19,6 @@ const NetworkCarousel: FC = () => {
       id='networks-preview-carousel'
       hideControls={false}
       autoPlay={play}
-      onControlClick={handleControlClick}
       onChange={handlePlayClick}
     >
       {networks.map(({ id, ...network }) => (
