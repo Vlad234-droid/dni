@@ -6,28 +6,30 @@ import networks from '../../networks';
 
 const NetworkCarousel: FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [play, setPlay] = useState(!isOpen);
+  const [play, setPlay] = useState(true);
+  const [forcePlay, setForcePlay] = useState(!isOpen);
 
   const handleButtonClick = () => {
-    isOpen && setPlay(true);
-    !isOpen && setPlay(false);
-
     setIsOpen(!isOpen);
+    !isOpen && setForcePlay(false);
+    isOpen && setForcePlay(true);
   };
 
   const handleControlClick = () => {
     isOpen && setIsOpen(false);
   };
 
-  const handlePlayClick = () => setPlay(!play);
+  const handlePlayClick = () => {
+    setPlay(!play);
+  };
 
   return (
     <MainCarousel
       id='networks-preview-carousel'
       hideControls={false}
-      autoPlay={play}
-      onControlClick={handleControlClick}
+      autoPlay={isOpen ? forcePlay : play}
       onChange={handlePlayClick}
+      onControlClick={handleControlClick}
     >
       {networks.map(({ id, ...network }) => (
         <CarouselContent key={id} onButtonClick={handleButtonClick} isOpen={isOpen} {...network} />
