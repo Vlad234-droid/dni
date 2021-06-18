@@ -8,7 +8,7 @@ if (PUBLIC_URL && PUBLIC_URL !== '/') {
 }
 
 const defaultProps = {
-  transports: ['polling', 'websocket'],
+  //transports: ['polling', 'websocket'],
   path: socketUrl,
 };
 
