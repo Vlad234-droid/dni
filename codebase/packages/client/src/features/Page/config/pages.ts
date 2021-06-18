@@ -13,6 +13,7 @@ import Unauthorized from '../components/Unauthorized';
 import Forbidden from '../components/Forbidden';
 import Reports from '../components/Reports';
 import Profile from '../components/Profile';
+import Notifications from '../components/Notifications';
 
 const pages: Record<Page, PageElement> = {
   [Page.HOME]: About,
@@ -25,6 +26,7 @@ const pages: Record<Page, PageElement> = {
   [Page.NETWORK_POST]: NetworkNews,
   [Page.REPORTS]: Reports,
   [Page.PROFILE]: Profile,
+  [Page.NOTIFICATIONS]: Notifications,
   [Page.UNAUTHORIZED]: Unauthorized,
   [Page.FORBIDDEN]: Forbidden,
   [Page.SERVER_ERROR]: ServerError,

@@ -11,6 +11,7 @@ const routes = [
   Page.NETWORK_POST,
   Page.REPORTS,
   Page.PROFILE,
+  Page.NOTIFICATIONS,
   Page.UNAUTHORIZED,
   Page.FORBIDDEN,
   Page.SERVER_ERROR,

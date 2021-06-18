@@ -29,7 +29,7 @@ interface NotificationerRingProps {
   inverse: boolean;
 }
 
-const NotificationerRing: FC<NotificationerRingProps> = ({ inverse }) => {
+const NotificationRing: FC<NotificationerRingProps> = ({ inverse }) => {
   const dispatch = useDispatch();
 
   const notifications = useSelector(() => notificationItemsSelector(store.getState().notification), shallowEqual);
@@ -58,5 +58,5 @@ const NotificationerRing: FC<NotificationerRingProps> = ({ inverse }) => {
   );
 };
 
-export default NotificationerRing;
+export default NotificationRing;
 export { notificationRingTestId };
