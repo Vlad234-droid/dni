@@ -7,7 +7,10 @@ if (PUBLIC_URL && PUBLIC_URL !== '/') {
   socketUrl = `${PUBLIC_URL}${socketUrl}`;
 }
 
-const defaultProps = { transports: ['websocket', 'polling'], path: socketUrl };
+const defaultProps = {
+  transports: ['polling', 'websocket'],
+  path: socketUrl,
+};
 
 const NOTIFICATIONS = 'notifications';
 const NOTIFICATION_CREATE = 'notification-create';
@@ -16,12 +19,10 @@ const NOTIFICATION_REMOVE = 'notification-remove';
 let socket: Socket | undefined = undefined;
 
 try {
-  console.log(`Trying to establish WS sonnection to: ${socketUrl}`);
+  console.log(`Initializing WebSocket connection to: ${socketUrl}`);
   socket = io('/', defaultProps);
-  console.log(`WS connection established`);
-  console.log(console);
 } catch (e) {
-  console.error(`Can not establish WS connection`);
+  console.error(`Can not initialize WebSocket connection. `);
   console.error(e);
 }
 

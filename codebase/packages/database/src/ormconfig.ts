@@ -17,6 +17,8 @@ const {
 } = process.env;
 
 const root = getPackageDistFolder('@dni/database', ['', '']);
+console.log(`PackageDistFolder of '@dni/database': ${root}`);
+
 const buildPath = (...paths: string[]) => path.join(...paths);
 const buildPathWithExt = (dir: string, ext = '*{.ts,.js}') => buildPath(dir, ext);
 const ENTITIES_DIR = buildPath(root, 'entities');

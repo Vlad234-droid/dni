@@ -6,11 +6,11 @@ export const buildWebSocketsServer = (server: http.Server) =>
     path: '/socket.io/',
     pingTimeout: 40000,
     pingInterval: 30000,
-    transports: [ 'polling' ],
+    transports: ['polling', 'websocket'],
     allowUpgrades: false,
     cors: {
       origin: '*',
-      methods: [ 'GET', 'POST', 'HEAD', 'PUT' ],
+      methods: ['GET', 'POST', 'HEAD', 'PUT'],
       credentials: true,
     },
   });
