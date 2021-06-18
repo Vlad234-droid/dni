@@ -12,6 +12,7 @@ declare module '@beans/radio-button-group';
 declare module '@beans/primary-navigation';
 declare module '@beans/breadcrumb';
 declare module '@beans/tabs';
+declare module '@beans/checkbox-with-label';
 declare module '*.mp4' {
   const src: string;
   export default src;

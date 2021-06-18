@@ -1,11 +1,7 @@
 import React, { FC } from 'react';
 
 import { Page, PAGE_PREFIX } from 'features/Page';
-import { NetworkList, NetworkCarousel } from 'features/Network';
-import { menuItemsDesktop } from 'features/Menu';
-import { CMSLink } from 'features/Common';
-import { CanPerform } from 'features/Auth';
-import { Action, buildAction, Component } from 'features/Action';
+import { NotificationSettings } from 'features/Notification';
 
 import BasePage from '../BasePage';
 import PageWrapper from '../PageWrapper';
@@ -20,7 +16,7 @@ const Notifications: FC = () => {
         <div data-testid={TEST_ID}>
           <PageWrapper
             renderContent={() => (
-              <div>Test content</div>
+              <NotificationSettings />
             )}
             pageName={'Notifications'}
             withBorder

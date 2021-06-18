@@ -1,6 +1,5 @@
 import styled from 'styled-components';
 
-
 export const Wrapper = styled.div`
   padding: 24px;
   box-sizing: border-box;
@@ -18,12 +17,12 @@ export const TitleWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: 16px;
 `;
 
 export const Title = styled.div`
   font-size: 20px;
   line-height: 28px;
   font-weight: 700;
-  padding-bottom: 16px;
   color: ${({ theme }) => theme.colors.heading};
 `;

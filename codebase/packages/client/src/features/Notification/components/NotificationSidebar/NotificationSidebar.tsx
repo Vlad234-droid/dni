@@ -7,14 +7,14 @@ import store from 'store';
 import { Page } from 'features/Page';
 
 import { notificationItemsSelector } from '../../store/selectors';
+import { actions } from '../../store/slice';
 import NotificationItem from '../NotificationItem';
 import { Wrapper, Title, TitleWrapper } from './styled';
-import {actions} from "../../store/slice";
 
 
 const notificationContainerTestId = 'notification-container-test-id';
 
-const Notification: FC = () => {
+const NotificationSidebar: FC = () => {
   const dispatch = useDispatch();
   const items = useSelector(() => notificationItemsSelector(store.getState().notification), shallowEqual);
 
@@ -33,7 +33,7 @@ const Notification: FC = () => {
       <TitleWrapper>
         <Title>Notifications</Title>
         <Link to={Page.NOTIFICATIONS}>
-          <Button variant='secondary' onClick={handleSettingsClick}>Settings</Button>
+          <Button variant='primary' onClick={handleSettingsClick}>Settings</Button>
         </Link>
       </TitleWrapper>
       {items.map((item) => {
@@ -59,5 +59,5 @@ const Notification: FC = () => {
   );
 };
 
-export default Notification;
+export default NotificationSidebar;
 export { notificationContainerTestId };

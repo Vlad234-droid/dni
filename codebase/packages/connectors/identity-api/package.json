@@ -1,5 +1,5 @@
 {
-  "name": "@dni-connectors/identity-api",
+  "name": "@dni-connectors/identity-api", //
   "version": "1.0.0",
   "license": "MIT",
   "private": "false",
