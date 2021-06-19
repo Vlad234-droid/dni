@@ -27,6 +27,7 @@ const NetworkPartners: FC<Props> = ({ email, partners }) => {
             <ResponsiveImage
               key={id}
               alt={image?.alternativeText}
+              title={image?.alternativeText}
               src={image?.url}
               fallbackSizeRatio='57%'
               maxWidth='170px'

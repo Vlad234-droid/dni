@@ -20,14 +20,15 @@ const PostPublishedAttachmentWrapper = styled.div`
 
 const postPublishedAttachmentTestId = 'post-published-attachment-test-id';
 
-const PostPublishedAttachment: FC<Attachment> = ({ ext, name, url }) => {
+const PostPublishedAttachment: FC<Attachment> = ({ ext, name, url, alternativeText }) => {
   const nameToView = cutString({ name, format: ext, maxLength: 24 });
 
   return (
     <PostPublishedAttachmentWrapper data-testid={postPublishedAttachmentTestId}>
-      <PostAttachmentSuccess name={nameToView} path={url} format={ext} />
+      <PostAttachmentSuccess name={nameToView} path={url} alt={alternativeText} format={ext} />
       <PostAttachmentDownloadLink
         href={url}
+        title={alternativeText}
         onClick={(event) => {
           event.preventDefault();
         }}

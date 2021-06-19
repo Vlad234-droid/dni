@@ -78,6 +78,7 @@ const EventComponent: FC<Props> = ({ id, event, loadEvent, loadParticipants, loa
             <ResponsiveImage
               key={id}
               alt={image?.alternativeText || 'Tesco'}
+              title={image?.alternativeText}
               src={image?.url || defaultImage}
               fallbackSizeRatio='57%'
               positioning='center'

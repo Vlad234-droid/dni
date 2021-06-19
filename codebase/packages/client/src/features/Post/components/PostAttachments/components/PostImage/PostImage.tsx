@@ -1,29 +1,30 @@
 import React, { FC } from 'react';
 import styled from 'styled-components';
+import ResponsiveImage from '@beans/responsive-image';
 
-const PostImageWrapper = styled.div<{
-  path: string;
-}>`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  position: relative;
+const PostImageWrapper = styled(ResponsiveImage)`
   min-height: 186px;
-  background-position: center;
-  background-size: cover;
-  background-color: ${({ theme }) => theme.colors.white};
-  background-image: url(${({ path }) => path});
 `;
 
 interface PostImageProps {
   path: string;
+  alt: string;
 }
 
 const postImageTestId = 'post-image-test-id';
 
-const PostImage: FC<PostImageProps> = ({ path }) => {
-  return <PostImageWrapper data-testid={postImageTestId} path={path} />;
+const PostImage: FC<PostImageProps> = ({ path, alt }) => {
+  return (
+    <PostImageWrapper
+      src={path}
+      alt={alt}
+      title={alt}
+      data-testid={postImageTestId}
+      fallbackSizeRatio='57%'
+      positioning='center'
+      objectFit='cover'
+    />
+  );
 };
 
 export default PostImage;

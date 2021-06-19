@@ -135,7 +135,9 @@ export const MarkdownRenderer = ({ source }: { source: string }) => (
             <blockquote>{props.children}</blockquote>
           </Box>
         ),
-        image: (props) => <ResponsiveImage height={null} source={props.src} />,
+        image: (props) => (
+          <ResponsiveImage height={null} source={props.src} alt={props.alternativeText} title={props.alternativeText} />
+        ),
       }}
     />
   </MarkdownRendererContainer>

@@ -53,6 +53,7 @@ const Tile: FC<Props> = ({
         responsiveImage={
           <ResponsiveImage
             alt={image?.alternativeText || 'Tesco'}
+            title={image?.alternativeText}
             src={image?.url || defaultImage}
             fallbackSizeRatio='57%'
             minHeight={imageHeight}
