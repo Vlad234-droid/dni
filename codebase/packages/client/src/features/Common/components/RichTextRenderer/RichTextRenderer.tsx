@@ -32,6 +32,64 @@ const MarkdownRendererContainer = styled(Box)`
     margin-top: 1em;
     margin-bottom: 1em;
   }
+  h1 {
+    font-size: 2em;
+    margin: 0.67em 0;
+  }
+  h2 {
+    font-size: 1.5em;
+    margin: 0.75em 0;
+  }
+  h3 {
+    font-size: 1.17em;
+    margin: 0.83em 0;
+  }
+  h4 {
+    margin: 1.12em 0;
+  }
+  h5 {
+    font-size: 0.83em;
+    margin: 1.5em 0;
+  }
+  h6 {
+    font-size: 0.75em;
+    margin: 1.67em 0;
+  }
+  table {
+    border-collapse: collapse;
+    border-spacing: 0;
+  }
+  thead {
+    background: rgb(243, 243, 243) none repeat scroll 0% 0%;
+  }
+  table thead tr {
+    height: 43px;
+    border: 1px solid rgb(198, 203, 209);
+  }
+  table th,
+  table td {
+    padding: 0px 25px;
+    border-color: currentcolor rgb(198, 203, 209);
+    border-style: none solid;
+    border-width: 0px 1px;
+    border-image: none 100% / 1 / 0 stretch;
+  }
+  table tbody tr {
+    height: 54px;
+  }
+  table tr {
+    border: 1px solid rgb(198, 203, 209);
+  }
+  code {
+    border-radius: 3px;
+    background-color: rgb(0, 43, 54);
+  }
+  p > code,
+  pre > code,
+  td > code {
+    font-size: 13px;
+    color: rgb(131, 148, 150);
+  }
 `;
 
 const getLinkHref = (url: string) => (url.indexOf('http') === -1 ? `https://${url}` : url);
