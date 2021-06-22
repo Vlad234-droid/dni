@@ -11,7 +11,6 @@ import { actions } from '../../store/slice';
 import NotificationItem from '../NotificationItem';
 import { Wrapper, Title, TitleWrapper } from './styled';
 
-
 const notificationContainerTestId = 'notification-container-test-id';
 
 const NotificationSidebar: FC = () => {
@@ -32,7 +31,7 @@ const NotificationSidebar: FC = () => {
     <Wrapper data-testid={notificationContainerTestId}>
       <TitleWrapper>
         <Title>Notifications</Title>
-        <Link to={Page.NOTIFICATIONS}>
+        <Link to={`/${Page.NOTIFICATIONS}`}>
           <Button variant='primary' onClick={handleSettingsClick}>Settings</Button>
         </Link>
       </TitleWrapper>
