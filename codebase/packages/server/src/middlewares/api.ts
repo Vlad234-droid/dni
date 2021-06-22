@@ -11,7 +11,7 @@ import {
   TENANT_KEY as tenantkey,
 } from '@dni-connectors/colleague-cms-api';
 
-import { contactApiConnector, ApiParams, ApiBody, ApiInput } from '@dni-connectors/contact-api';
+import { contactApiConnector, ApiParams, ApiMsgBody, ApiEmailAddressBody, ApiInput } from '@dni-connectors/contact-api';
 
 import { apiDefinition } from '../api-definition';
 
@@ -23,7 +23,17 @@ const api = (requestCtx: ContextProvider<any>) =>
   )({
     sendMessages: ({ params }, ctx) => {
       return contactApiConnector(ctx)
-        .sendMessages(params as unknown as ApiInput<ApiParams, ApiBody>)
+        .sendMessages(params as unknown as ApiInput<ApiParams, ApiMsgBody>)
+        .then(unsafelyUnpackResponseData);
+    },
+    getEmailAddresses: ({ params }, ctx) => {
+      return contactApiConnector(ctx)
+        .getEmailAddresses(params as unknown as ApiInput<ApiParams>)
+        .then(unsafelyUnpackResponseData);
+    },
+    updateEmailAddress: ({ params }, ctx) => {
+      return contactApiConnector(ctx)
+        .updateEmailAddress(params as unknown as ApiInput<ApiParams, ApiEmailAddressBody>)
         .then(unsafelyUnpackResponseData);
     },
     // Emojis
