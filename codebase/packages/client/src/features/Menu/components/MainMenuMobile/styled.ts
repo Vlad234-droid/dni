@@ -31,7 +31,14 @@ export const LinkWrapper = styled(Link)<{ active?: boolean }>`
   line-height: 26px;
   text-decoration: none;
 
-  &:last-child {
+  &:nth-last-child(2) {
     color: ${({ theme }) => theme.colors.tescoRed} !important;
+  }
+
+  &:last-child {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    text-align: center;
   }
 `;
