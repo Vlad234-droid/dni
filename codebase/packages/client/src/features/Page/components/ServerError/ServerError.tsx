@@ -15,7 +15,7 @@ const ServerError: FC = () => (
     <BasePage
       renderMain={() => (
         <>
-          <Error errorData={ERROR_DATA} showButton />
+          <Error errorData={ERROR_DATA} />
         </>
       )}
     />
