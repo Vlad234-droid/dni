@@ -10,10 +10,6 @@
   "workspaces": {
     "packages": [
       "packages/**/*"
-    ],
-    "nohoist": [
-      "**/server",
-      "**/server/**"
     ]
   },
   "scripts": {
