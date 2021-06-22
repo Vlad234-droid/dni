@@ -1,3 +1,4 @@
+import { useSelector } from 'react-redux';
 import keyBy from 'lodash.keyby';
 import sort from 'lodash.filter';
 
@@ -6,6 +7,14 @@ import API from 'utils/api';
 import store from 'store';
 
 import * as T from '../config/types';
+
+const colorConfig = {
+  '#009900': false,
+  '#FF0000': false,
+  black: false,
+  brown: false,
+  purple: false,
+};
 
 const getDatePointState = () =>
   ({
@@ -33,6 +42,9 @@ const getGraphicsState = () =>
     chart: getChartState(),
     statistics: getStatisticsState(),
     dateInterval: getDateIntervalState(),
+    color: {
+      ...colorConfig,
+    },
   } as T.GraphicsItem);
 
 const getEntityState = () =>
@@ -59,7 +71,6 @@ const getEntityState = () =>
   } as T.EntityItem);
 
 const buildTimePeriodQuery = ({ entityType, groupBy, from, to, ids }: T.Params) => {
-  //return `?entityType=${entityType}&groupBy=${groupBy}&from=${from}&to=${to}&entityIds=${ids}`;
   const requestQuery = {
     entityType: entityType == 0 ? 'NETWORK' : 'EVENT',
     groupBy,
@@ -123,12 +134,15 @@ const reportsMiddleware = async ({ entityType, filter, filterFilter, from, to }:
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data, metadata } = await API.report.timePeriods<any>(query);
 
+  const { entities } = store.getState()[entityType === 0 ? 'networks' : 'events'];
+
   return {
     entityType,
     filter,
     filterFilter,
     data,
     metadata,
+    entities,
   };
 };
 
@@ -141,12 +155,12 @@ const setGraphicsState = ({
   group,
   data = [],
   metadata = [],
+  entities = {},
 }: {
   group: ReturnType<typeof getGraphicsState>;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   metadata: any;
+  entities: { [key: string]: { id: number; title: string } };
 }) => {
   group.chart = getChartState();
 
@@ -157,44 +171,54 @@ const setGraphicsState = ({
       [key: string]: number | string;
     };
 
-    entities.forEach(({ id, entityType, subscribe }) => {
-      point[`${entityType}-${id}`] = subscribe;
+    entities.forEach(({ entityId, entityType, subscribe }) => {
+      point[entityId] = subscribe;
     });
 
     return point;
   });
 
-  group.statistics = metadata.entities.map(({ id, entityType, subscribe, leave }: T.EntityData) => {
-    const row = {
-      id,
-      entityType,
-      subscribe,
-      leave,
-    } as T.EntityData & {
-      subscribersAPS: number;
-      subscribersAPE: number;
-      percentages: number;
-      checked: boolean;
-    };
+  group.statistics = metadata.entities.map(
+    ({ entityId, entityType, startMembers, endMembers, subscribe, leave }: T.EntityData) => {
+      const row = {
+        entityId,
+        entityType,
+        startMembers,
+        endMembers,
+        subscribe,
+        leave,
+      } as T.EntityData & {
+        percentages: number;
+        checked: boolean;
+      };
 
-    const indexFirst = 0;
-    const indexLast = data.length - 1;
+      let start = startMembers;
+      let end = endMembers;
 
-    row.subscribersAPS = data[indexFirst].entities.filter((el: T.EntityData) => el.id === id).subscribe;
-    row.subscribersAPE = data[indexLast].entities.filter((el: T.EntityData) => el.id === id).subscribe;
+      if (start === 0 && end === 0) {
+        row.percentages = 0;
+      } else {
+        if (start === 0) {
+          start += end;
+          end *= 2;
+        }
 
-    const { subscribersAPS, subscribersAPE } = row;
+        row.percentages = Math.round((end * 100) / start - 100);
+      }
 
-    row.percentages = 100 * Math.abs((subscribersAPS - subscribersAPE) / ((subscribersAPS + subscribersAPE) / 2));
+      const rowState = group.statistics.find((element) => element.entityId == row.entityId);
 
-    row.checked = true;
+      row.name = entities[entityId].title || 'Default entity name';
+      row.checked = typeof rowState?.['checked'] === 'boolean' ? rowState.checked : false;
+      row.color = typeof rowState?.['color'] === 'string' ? rowState.color : '';
 
-    return row;
-  });
+      return row;
+    },
+  );
 
   group.chart.elements = keyBy(
     sort(group.statistics, ['checked', true]),
-    (o: Partial<{ id: number; name: string }>) => o.name,
+    (o: Partial<{ entityId: number; name: string }>) => o.entityId,
   );
 };
 

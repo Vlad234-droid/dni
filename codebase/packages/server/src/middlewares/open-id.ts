@@ -42,7 +42,7 @@ export const openIdConfig = ({
   };
 
   const enrichUserInfo = (userInfo: OpenIdUserInfo) => {
-    console.log(` ---> OpenIdUserInfo: ${JSON.stringify(userInfo)}`);
+    //console.log(` ---> OpenIdUserInfo: ${JSON.stringify(userInfo)}`);
 
     const userGroups = (
       Array.isArray(userInfo.groups) ? userInfo.groups : ((userInfo.groups as unknown as string) || '').split(',') || []
@@ -52,7 +52,7 @@ export const openIdConfig = ({
         (group) => groupFiltersRegex && groupFiltersRegex.length > 0 && groupFiltersRegex.some((rr) => rr.test(group)),
       );
 
-    console.log(` ---> User groups: [${userGroups}]`);
+    //console.log(` ---> User groups: [${userGroups}]`);
 
     let userRoles = [defaultConfig.defaultRole];
 
@@ -63,7 +63,7 @@ export const openIdConfig = ({
       userRoles = [...userRoles, 'Admin'];
     }
 
-    console.log(` ---> User roles: [${userRoles}]`);
+    //console.log(` ---> User roles: [${userRoles}]`);
 
     const userData = {
       ...userInfo,
@@ -78,7 +78,7 @@ export const openIdConfig = ({
       roles: userRoles,
     };
 
-    console.log(` ---> User data: ${JSON.stringify(userData)}`);
+    //console.log(` ---> User data: ${JSON.stringify(userData)}`);
 
     return userData;
   };

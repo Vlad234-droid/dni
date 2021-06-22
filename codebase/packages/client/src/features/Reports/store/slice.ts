@@ -59,14 +59,46 @@ const slice = createSlice({
 
       const group = state[entityType][filter][filterFilter];
 
-      group.statistics = group.statistics.map((item: T.StatisticsItem) =>
-        item.id === id ? { ...item, checked } : item,
-      );
+      let count = 0;
 
-      group.chart = {
-        ...group.chart,
-        elements: keyBy(sort(group.statistics, ['checked', true]), (o) => o.name),
-      };
+      group.statistics.forEach(({ checked }: { checked: boolean }) => {
+        if (checked === true) {
+          count += 1;
+        }
+      });
+
+      if (count === 5 && checked === true) {
+        return;
+      }
+
+      group.statistics = group.statistics.map((item: T.StatisticsItem) => {
+        if (item.entityId != id) {
+          return item;
+        }
+
+        let color;
+
+        if (checked === true) {
+          color = Object.keys(group.color).find((key) => {
+            if (group.color[key] === false) {
+              return (group.color[key] = true);
+            }
+
+            return false;
+          });
+        }
+
+        if (checked === false) {
+          group.color[item.color] = false;
+        }
+
+        return { ...item, checked, color };
+      });
+
+      group.chart.elements = keyBy(
+        sort(group.statistics, ['checked', true]),
+        (o: Partial<{ entityId: number; name: string }>) => o.entityId,
+      );
     },
   },
   extraReducers: (builder) => {
@@ -79,7 +111,6 @@ const slice = createSlice({
       state.loading = Loading.SUCCEEDED;
     };
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const setFailed = (state: T.State, payload: any) => {
       state.loading = Loading.FAILED;
       state.error = payload.error.message;
@@ -88,21 +119,17 @@ const slice = createSlice({
     builder
       .addCase(getReports.pending, setPending)
       .addCase(getReports.fulfilled, (state: T.State, { payload }) => {
-        const { entityType, filter, filterFilter, data, metadata } = payload as T.FulfilledArgs;
+        const { entityType, filter, filterFilter, data, metadata, entities } = payload as T.FulfilledArgs;
 
         const group = state[entityType][filter][filterFilter];
 
         if ([data, metadata].includes(null)) {
           setDefaultGraphicsState({ group });
         } else {
-          setGraphicsState({ group, data, metadata });
+          setGraphicsState({ group, data, metadata, entities });
         }
 
         setSucceeded(state);
-        console.table({
-          data,
-          metadata,
-        });
       })
       .addCase(getReports.rejected, setFailed)
       .addDefaultCase((state) => state);
