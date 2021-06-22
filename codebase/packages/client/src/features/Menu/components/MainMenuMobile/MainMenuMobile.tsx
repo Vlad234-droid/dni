@@ -1,6 +1,7 @@
 import React, { FC } from 'react';
 import Icon from '@beans/icon';
 import Button from '@beans/button';
+import Link from '@beans/link';
 
 import { LINKS } from 'config/constants';
 
@@ -30,6 +31,11 @@ const MainMenuMobile: FC<Props> = ({ onClose }) => (
       ))}
       <LinkWrapper href={LINKS.signOut}>Sign out</LinkWrapper>
     </>
+    <LinkWrapper>
+      <Link href='https://www.ourtesco.com/colleague/terms-and-conditions' target='_blank'>
+        Terms & Conditions
+      </Link>
+    </LinkWrapper>
   </Wrapper>
 );
 
