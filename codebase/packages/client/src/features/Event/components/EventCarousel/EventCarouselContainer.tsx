@@ -10,8 +10,6 @@ import useFetchEvents from '../../hooks/useFetchEvents';
 import EventCarousel from './EventCarousel';
 import { getParticipants } from '../../store';
 
-const MAX_VISIBLE_ITEMS = 5;
-
 const EventCarouselContainer: FC = () => {
   const dispatch = useDispatch();
   const { participants } = useStore((state) => state.events);
@@ -20,8 +18,6 @@ const EventCarouselContainer: FC = () => {
   const [filters] = useState({
     ...getPayloadWhere(networks),
     ...DEFAULT_FILTERS,
-    _start: 0,
-    _limit: MAX_VISIBLE_ITEMS,
     endDate_gte: new Date(),
     startDate_lte: addDuration({ weeks: 2 }),
   });

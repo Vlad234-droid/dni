@@ -10,7 +10,7 @@ import useStore from 'hooks/useStore';
 import { EmptyContainer, Spinner, Error, TextWithEllipsis } from 'features/Common';
 import { Page } from 'features/Page';
 import Loading from 'types/loading';
-import { DEFAULT_FILTERS } from 'config/constants';
+import { DEFAULT_FILTERS, DEFAULT_PAGINATION } from 'config/constants';
 
 import useFetchEvents from '../../hooks/useFetchEvents';
 import { getPayloadWhere } from '../../utils';
@@ -27,6 +27,7 @@ const EventTable: FC = () => {
   const filters = {
     ...getPayloadWhere(networks),
     ...DEFAULT_FILTERS,
+    ...DEFAULT_PAGINATION,
     endDate_lt: new Date(),
   };
   const [loading, events, hasMore, listError, countError] = useFetchEvents(filters, page);
