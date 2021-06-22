@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "src/app.ts",
   "license": "MIT",
+  "private": true,
   "scripts": {
     "build:prod": "tsc -p .",
     "run:dev": "cross-env NODE_PATH=./src nodemon --watch \"src/**/*\" -e ts,tsx --exec \"ts-node --files\" src/app.ts",

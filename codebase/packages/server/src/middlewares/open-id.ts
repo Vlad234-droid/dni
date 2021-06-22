@@ -4,10 +4,11 @@ import {
   userDataPlugin,
   identityClientScopedTokenPlugin,
   defaultLogger,
+  OpenIdUserInfo,
 } from '@energon/onelogin';
 import cookieParser from 'cookie-parser';
 import { isPROD } from '../config/env';
-
+import { defaultConfig } from '../config/default';
 import { ProcessConfig } from 'services/config-accessor';
 
 export const openIdConfig = ({
@@ -26,8 +27,9 @@ export const openIdConfig = ({
   identityClientSecret,
   identityUserScopedTokenCookieSecret,
   identityUserScopedTokenCookieName,
-  groupsWithAccess,
-  appName,
+  groupFiltersRegex,
+  adminGroups,
+  managerGroups,
 }: ProcessConfig) => {
   const openIdCookieParser = cookieParser(cookieKey);
   const isProduction = isPROD(environment);
@@ -38,7 +40,49 @@ export const openIdConfig = ({
       cache: true,
     });
   };
-  const regExp = new RegExp(`.*${appName}-(PPE-)?`);
+
+  const enrichUserInfo = (userInfo: OpenIdUserInfo) => {
+    console.log(` ---> OpenIdUserInfo: ${JSON.stringify(userInfo)}`);
+
+    const userGroups = (
+      Array.isArray(userInfo.groups) ? userInfo.groups : ((userInfo.groups as unknown as string) || '').split(',') || []
+    )
+      .filter(Boolean)
+      .filter(
+        (group) => groupFiltersRegex && groupFiltersRegex.length > 0 && groupFiltersRegex.some((rr) => rr.test(group)),
+      );
+
+    console.log(` ---> User groups: [${userGroups}]`);
+
+    let userRoles = [defaultConfig.defaultRole];
+
+    if (managerGroups.some((g) => userGroups.includes(g))) {
+      userRoles = [...userRoles, 'Manager'];
+    }
+    if (adminGroups.some((g) => userGroups.includes(g))) {
+      userRoles = [...userRoles, 'Admin'];
+    }
+
+    console.log(` ---> User roles: [${userRoles}]`);
+
+    const userData = {
+      ...userInfo,
+      fullName: userInfo.name,
+      firstName: userInfo.given_name || userInfo.name.split(/\s+/)[0],
+      email: userInfo.preferred_username,
+      params: {
+        ...userInfo.params,
+        employeeNumber: (userInfo.params?.employeeNumber || userInfo.params?.EmployeeNumber) as string,
+      },
+      groups: userGroups,
+      roles: userRoles,
+    };
+
+    console.log(` ---> User data: ${JSON.stringify(userData)}`);
+
+    return userData;
+  };
+
   const openId = getOpenidMiddleware({
     /** The OneLogin generated Client ID for your OpenID Connect app */
     clientId: oidcClientId,
@@ -112,28 +156,7 @@ export const openIdConfig = ({
           httpOnly: true,
           secure: false,
           signed: false,
-          cookieShapeResolver: (userInfo) => {
-            const userData = {
-              ...userInfo,
-              fullName: userInfo.name,
-              firstName: userInfo.given_name || userInfo.name.split(/\s+/)[0],
-              email: userInfo.preferred_username,
-              params: {
-                ...userInfo.params,
-                employeeNumber: (userInfo.params?.employeeNumber || userInfo.params?.EmployeeNumber) as string,
-              },
-              groups: (Array.isArray(userInfo.groups)
-                ? userInfo.groups
-                : ((userInfo.groups as unknown as string) || '').split(',') || []
-              )
-                .filter(Boolean)
-                .filter((group) => groupsWithAccess.includes(group)),
-            };
-            return {
-              ...userData,
-              roles: userData.groups.map((group: string) => group.replace(regExp, '')),
-            };
-          },
+          cookieShapeResolver: (userInfo) => enrichUserInfo(userInfo),
         },
       }),
     ],

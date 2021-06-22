@@ -1,7 +1,7 @@
 import { ProcessEnv } from './env-accessor';
 import { defaultConfig } from '../config/default';
 
-type ProcessConfig = {
+export type ProcessConfig = {
   // general
   appName: string;
   buildEnvironment: string;
@@ -27,14 +27,17 @@ type ProcessConfig = {
   identityUserScopedTokenCookieName: string;
   identityUserScopedTokenCookieSecret: string;
   // default
-  groupsWithAccess: string[];
+  groupFiltersRegex: RegExp[];
   // mock
   mockServerUrl?: string;
   // confirmit
   confirmitPassword: string;
+  // roles group assigments
+  adminGroups: string[];
+  managerGroups: string[];
 };
 
-class ConfigAccessor {
+export class ConfigAccessor {
   private static instance: ConfigAccessor;
   private data = {} as ProcessConfig;
 
@@ -60,6 +63,8 @@ class ConfigAccessor {
       IDENTITY_USER_SCOPED_TOKEN_COOKIE_NAME: identityUserScopedTokenCookieName,
       MOCK_SERVER_URL: mockServerUrl,
       CONFIRMIT_PASSWORD: confirmitPassword,
+      OIDC_GROUPS_ADMIN_ROLE: adminGroupsCsv,
+      OIDC_GROUPS_MANAGER_ROLE: managerGroupsCsv,
     } = processEnv;
 
     this.data = {
@@ -85,6 +90,8 @@ class ConfigAccessor {
       identityUserScopedTokenCookieName,
       mockServerUrl,
       confirmitPassword,
+      adminGroups: adminGroupsCsv ? adminGroupsCsv.split(',') : [],
+      managerGroups: managerGroupsCsv ? managerGroupsCsv.split(',') : [],
     };
   }
 
@@ -96,11 +103,9 @@ class ConfigAccessor {
     return this.instance;
   }
 
-  public getData() {
+  public getData(): ProcessConfig {
     return this.data;
   }
 }
 
-export type { ProcessConfig };
-
-export { ConfigAccessor };
+export const configAccessor: ConfigAccessor = ConfigAccessor.getInstance(process.env as ProcessEnv);

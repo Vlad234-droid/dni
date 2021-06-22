@@ -43,7 +43,9 @@ Why it is required? becuase you will need to encrypt/decrypt secrets using Azure
 
 1. To login into Azure account, open console and type:
 
-        az login
+   ```
+   az login
+   ```
 
     Then follow instructions on web-page.
 
@@ -55,8 +57,12 @@ Why it is required? becuase you will need to encrypt/decrypt secrets using Azure
 
    Then open console and type:
 
-        az acr login --subscription 213-DEV-APP-1 -n euwdev213daicontainerregistry
+   ```
+   az acr login --subscription 213-DEV-APP-1 -n euwdev213daicontainerregistry
+   ```
 
    Now you shoud be able to pull docker images from registry. To do it just open console and type:
 
-        docker pull euwdev213daicontainerregistry.azurecr.io/dev/<IMAGE_NAME_WITH_TAG>
+   ```
+   docker pull euwdev213daicontainerregistry.azurecr.io/dev/<IMAGE_NAME_WITH_TAG>
+   ```

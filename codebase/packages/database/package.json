@@ -2,7 +2,7 @@
   "name": "@dni/database",
   "version": "1.0.0",
   "license": "MIT",
-  "private": "false",
+  "private": true,
   "files": [
     "build"
   ],

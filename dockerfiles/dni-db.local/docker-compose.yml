@@ -1,0 +1,15 @@
+version: '3'
+services:
+    postgres:
+        # https://docs.microsoft.com/en-us/azure/postgresql/concepts-supported-versions
+        image: postgres:11.6
+        container_name: 'azure_dni_postgres_local'
+        environment:
+            - POSTGRES_USER=dni
+            - POSTGRES_PASSWORD=dn1
+            - POSTGRES_DB=dni_database
+        volumes:
+            - ./postgres/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+        ports:
+            - 6543:5432
+    

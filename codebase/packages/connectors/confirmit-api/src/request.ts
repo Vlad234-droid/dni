@@ -1,11 +1,9 @@
-import { RequestCtx } from '@dni-connectors/common';
+import { RequestCtx } from '@dni-common/connector-utils';
 
 import { ConfirmitConfig } from './connector';
 import { resolveReportConfig } from './constants';
 
-export const getLogonRequestBody = (
-  ctx: Pick<RequestCtx<ConfirmitConfig>, 'apiEnv' | 'config'>,
-): string => {
+export const getLogonRequestBody = (ctx: Pick<RequestCtx<ConfirmitConfig>, 'apiEnv' | 'config'>): string => {
   const username = resolveReportConfig(ctx).user;
   const { confirmitPassword } = ctx.config();
 

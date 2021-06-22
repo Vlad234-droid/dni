@@ -2,7 +2,6 @@
   "name": "@dni-connectors/confirmit-api",
   "version": "1.0.0",
   "license": "MIT",
-  "private": "false",
   "files": [
     "build"
   ],
@@ -14,7 +13,7 @@
     "clean:all": "yarn clean && rimraf node_modules"
   },
   "dependencies": {
-    "@dni-connectors/common": "1.0.0",
+    "@dni-common/connector-utils": "1.0.0",
     "@energon-connectors/core": "^0.8.7",
     "@energon/rest-api-consumer": "^0.7.7"
   }
