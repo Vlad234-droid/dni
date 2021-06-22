@@ -41,6 +41,7 @@ export const getPayloadPeriod = (filter: Filter) => {
       const firstDayOfThisMonth = firstDayOf('week').toJSDate();
       const lastDayOfThisMonth = lastDayOf('week').toJSDate();
       where = {
+        endDate_gte: new Date(),
         startDate_gte: firstDayOfThisMonth,
         startDate_lte: lastDayOfThisMonth,
       };
@@ -50,6 +51,7 @@ export const getPayloadPeriod = (filter: Filter) => {
       const firstDayOfThisMonth = firstDayOf('month').toJSDate();
       const lastDayOfThisMonth = lastDayOf('month').toJSDate();
       where = {
+        endDate_gte: new Date(),
         startDate_gte: firstDayOfThisMonth,
         startDate_lte: lastDayOfThisMonth,
       };
