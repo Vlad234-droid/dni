@@ -11,6 +11,8 @@ import {
   TENANT_KEY as tenantkey,
 } from '@dni-connectors/colleague-cms-api';
 
+import { contactApiConnector, ApiParams, ApiBody, ApiInput } from '@dni-connectors/contact-api';
+
 import { apiDefinition } from '../api-definition';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -19,11 +21,14 @@ const api = (requestCtx: ContextProvider<any>) =>
     apiDefinition,
     requestCtx,
   )({
+    sendMessages: ({ params }, ctx) => {
+      return contactApiConnector(ctx)
+        .sendMessages(params as unknown as ApiInput<ApiParams, ApiBody>)
+        .then(unsafelyUnpackResponseData);
+    },
     // Emojis
     getEmoji: ({ params }, ctx) => {
-      return cmsEmojisApiConnector(ctx)
-        .getEmoji({ params, tenantkey })
-        .then(unsafelyUnpackResponseData);
+      return cmsEmojisApiConnector(ctx).getEmoji({ params, tenantkey }).then(unsafelyUnpackResponseData);
     },
     getEmojis: ({ params }, ctx) => {
       return cmsEmojisApiConnector(ctx)
@@ -54,16 +59,12 @@ const api = (requestCtx: ContextProvider<any>) =>
         .then(unsafelyUnpackResponseData);
     },
     deleteEmotion: ({ params }, ctx) => {
-      return cmsEmotionsApiConnector(ctx)
-        .deleteEmotion({ params, tenantkey })
-        .then(unsafelyUnpackResponseData);
+      return cmsEmotionsApiConnector(ctx).deleteEmotion({ params, tenantkey }).then(unsafelyUnpackResponseData);
     },
 
     // Posts
     getPost: ({ params }, ctx) => {
-      return cmsPostsApiConnector(ctx)
-        .getPost({ params, tenantkey })
-        .then(unsafelyUnpackResponseData);
+      return cmsPostsApiConnector(ctx).getPost({ params, tenantkey }).then(unsafelyUnpackResponseData);
     },
     getPosts: ({ params }, ctx) => {
       return cmsPostsApiConnector(ctx)
@@ -74,9 +75,7 @@ const api = (requestCtx: ContextProvider<any>) =>
         .then(unsafelyUnpackResponseData);
     },
     getPostsCount: ({ params }, ctx) => {
-      return cmsPostsApiConnector(ctx)
-        .getPostsCount({ params, tenantkey })
-        .then(unsafelyUnpackResponseData);
+      return cmsPostsApiConnector(ctx).getPostsCount({ params, tenantkey }).then(unsafelyUnpackResponseData);
     },
     postPost: ({ params, body }, ctx) => {
       return cmsPostsApiConnector(ctx)
@@ -97,16 +96,12 @@ const api = (requestCtx: ContextProvider<any>) =>
         .then(unsafelyUnpackResponseData);
     },
     deletePost: ({ params }, ctx) => {
-      return cmsPostsApiConnector(ctx)
-        .deletePost({ params, tenantkey })
-        .then(unsafelyUnpackResponseData);
+      return cmsPostsApiConnector(ctx).deletePost({ params, tenantkey }).then(unsafelyUnpackResponseData);
     },
 
     // Events
     getEvent: ({ params }, ctx) => {
-      return cmsEventsApiConnector(ctx)
-        .getEvent({ params, tenantkey })
-        .then(unsafelyUnpackResponseData);
+      return cmsEventsApiConnector(ctx).getEvent({ params, tenantkey }).then(unsafelyUnpackResponseData);
     },
     getEvents: ({ params }, ctx) => {
       return cmsEventsApiConnector(ctx)
@@ -117,9 +112,7 @@ const api = (requestCtx: ContextProvider<any>) =>
         .then(unsafelyUnpackResponseData);
     },
     getEventsCount: ({ params }, ctx) => {
-      return cmsEventsApiConnector(ctx)
-        .getEventsCount({ params, tenantkey })
-        .then(unsafelyUnpackResponseData);
+      return cmsEventsApiConnector(ctx).getEventsCount({ params, tenantkey }).then(unsafelyUnpackResponseData);
     },
     postEvent: ({ params, body }, ctx) => {
       return cmsEventsApiConnector(ctx)
@@ -140,16 +133,12 @@ const api = (requestCtx: ContextProvider<any>) =>
         .then(unsafelyUnpackResponseData);
     },
     deleteEvent: ({ params }, ctx) => {
-      return cmsEventsApiConnector(ctx)
-        .deleteEvent({ params, tenantkey })
-        .then(unsafelyUnpackResponseData);
+      return cmsEventsApiConnector(ctx).deleteEvent({ params, tenantkey }).then(unsafelyUnpackResponseData);
     },
 
     // Networks
     getNetwork: ({ params }, ctx) => {
-      return cmsNetworksApiConnector(ctx)
-        .getNetwork({ params, tenantkey })
-        .then(unsafelyUnpackResponseData);
+      return cmsNetworksApiConnector(ctx).getNetwork({ params, tenantkey }).then(unsafelyUnpackResponseData);
     },
     getNetworks: ({ params }, ctx) => {
       return cmsNetworksApiConnector(ctx)
@@ -160,9 +149,7 @@ const api = (requestCtx: ContextProvider<any>) =>
         .then(unsafelyUnpackResponseData);
     },
     getNetworksCount: ({ params }, ctx) => {
-      return cmsNetworksApiConnector(ctx)
-        .getNetworksCount({ params, tenantkey })
-        .then(unsafelyUnpackResponseData);
+      return cmsNetworksApiConnector(ctx).getNetworksCount({ params, tenantkey }).then(unsafelyUnpackResponseData);
     },
     postNetwork: ({ params, body }, ctx) => {
       return cmsNetworksApiConnector(ctx)
@@ -183,23 +170,17 @@ const api = (requestCtx: ContextProvider<any>) =>
         .then(unsafelyUnpackResponseData);
     },
     deleteNetwork: ({ params }, ctx) => {
-      return cmsNetworksApiConnector(ctx)
-        .deleteNetwork({ params, tenantkey })
-        .then(unsafelyUnpackResponseData);
+      return cmsNetworksApiConnector(ctx).deleteNetwork({ params, tenantkey }).then(unsafelyUnpackResponseData);
     },
 
     // Routing
     getRoutingConfig: (_, ctx) => {
-      return cmsRoutingApiConnector(ctx)
-        .getRoutingConfig(tenantkey)
-        .then(unsafelyUnpackResponseData);
+      return cmsRoutingApiConnector(ctx).getRoutingConfig(tenantkey).then(unsafelyUnpackResponseData);
     },
 
     // Organizations
     getOrganization: ({ params }, ctx) => {
-      return cmsOrganizationsApiConnector(ctx)
-        .getOrganization({ params, tenantkey })
-        .then(unsafelyUnpackResponseData);
+      return cmsOrganizationsApiConnector(ctx).getOrganization({ params, tenantkey }).then(unsafelyUnpackResponseData);
     },
     getOrganizations: ({ params }, ctx) => {
       return cmsOrganizationsApiConnector(ctx)
@@ -235,9 +216,7 @@ const api = (requestCtx: ContextProvider<any>) =>
 
     // Upload
     getFile: ({ params }, ctx) => {
-      return cmsUploadApiConnector(ctx)
-        .getFile({ params, tenantkey })
-        .then(unsafelyUnpackResponseData);
+      return cmsUploadApiConnector(ctx).getFile({ params, tenantkey }).then(unsafelyUnpackResponseData);
     },
     getFiles: ({ params }, ctx) => {
       return cmsUploadApiConnector(ctx)
@@ -257,14 +236,11 @@ const api = (requestCtx: ContextProvider<any>) =>
         .then(unsafelyUnpackResponseData);
     },
     deleteFile: ({ params }, ctx) => {
-      return cmsUploadApiConnector(ctx)
-        .deleteFile({ params, tenantkey })
-        .then(unsafelyUnpackResponseData);
+      return cmsUploadApiConnector(ctx).deleteFile({ params, tenantkey }).then(unsafelyUnpackResponseData);
     },
   });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const apiMiddleware = <T extends ContextProvider<any>>(context: T) =>
-  api(context);
+export const apiMiddleware = <T extends ContextProvider<any>>(context: T) => api(context);
 
 const unsafelyUnpackResponseData = <T>(res: { data: T }) => res.data;
