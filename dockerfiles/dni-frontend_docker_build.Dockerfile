@@ -10,7 +10,7 @@ ARG PUBLIC_URL=/
 
 WORKDIR /home/app
 
-RUN apk --update add bash && apk --no-cache add dos2unix df
+RUN apk --update add bash && apk --no-cache add dos2unix
 
 COPY --chmod=0644 ./codebase ./
 COPY --chmod=0755 ./scripts/create-npmrc.sh ./create-npmrc.sh
@@ -20,8 +20,8 @@ ENV NEXUS_ACCESS_TOKEN=$NEXUS_ACCESS_TOKEN
 
 RUN dos2unix ./run.sh && dos2unix ./create-npmrc.sh && bash ./create-npmrc.sh --token $NEXUS_ACCESS_TOKEN
 
-# Show information about the file system o
-RUN df -H
+# Show information about the file system
+RUN df -h
 
 # Install lerna, version 3.22.1 globally
 RUN yarn global add lerna@3.22.1 --prefix=/usr
