@@ -19,7 +19,7 @@ type Props = {
   rotationInterval?: number;
   autoPlay?: boolean;
   hideControls?: boolean;
-  onControlClick: () => void;
+  onControlClick?: () => void;
   onChange: () => void;
 };
 

@@ -4,7 +4,7 @@ import Icon from '@beans/icon';
 import { MenuDesktop, MainMenuMobile } from 'features/Menu';
 import Toaster from 'features/Toaster';
 import { useMedia } from 'context/InterfaceContext';
-import Notification, { NotificationRing } from 'features/Notification';
+import NotificationSidebar, { NotificationRing } from 'features/Notification';
 
 import { Wrapper, Icons, IconWrapper, ToasterWrapper, MenuWrapper, Title } from './styled';
 
@@ -46,7 +46,7 @@ const Header: FC = () => {
       </Icons>
       <ToasterWrapper>
         <Toaster />
-        <Notification />
+        <NotificationSidebar />
       </ToasterWrapper>
     </Wrapper>
   );

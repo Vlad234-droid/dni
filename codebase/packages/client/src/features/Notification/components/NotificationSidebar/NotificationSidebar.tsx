@@ -1,36 +1,25 @@
 import React, { FC } from 'react';
-import { useSelector, shallowEqual } from 'react-redux';
-import styled from 'styled-components';
+import { useSelector, shallowEqual, useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
+import Button from '@beans/button';
 
 import store from 'store';
+import { Page } from 'features/Page';
+
 import { notificationItemsSelector } from '../../store/selectors';
+import { actions } from '../../store/slice';
 import NotificationItem from '../NotificationItem';
-
-const NotificationTitle = styled.div`
-  font-size: 20px;
-  line-height: 28px;
-  font-weight: 700;
-  padding-bottom: 16px;
-  color: ${({ theme }) => theme.colors.heading};
-`;
-
-const NotificationWrapper = styled.div`
-  padding: 24px;
-  box-sizing: border-box;
-  position: absolute;
-  right: 0;
-  top: 0;
-  width: 100%;
-  max-width: 408px;
-  height: calc(100vh - 226px);
-  border-left: 1px solid ${({ theme }) => theme.colors.lines.base};
-  background-color: ${({ theme }) => theme.colors.white};
-`;
+import { Wrapper, Title, TitleWrapper } from './styled';
 
 const notificationContainerTestId = 'notification-container-test-id';
 
-const NotificationContainer: FC = () => {
+const NotificationSidebar: FC = () => {
+  const dispatch = useDispatch();
   const items = useSelector(() => notificationItemsSelector(store.getState().notification), shallowEqual);
+
+  const handleSettingsClick = () => {
+    dispatch(actions.toggleNotificationSidebar());
+  };
 
   const isSidebarOpened = useSelector(() => store.getState().notification.isSidebarOpened);
 
@@ -39,8 +28,15 @@ const NotificationContainer: FC = () => {
   }
 
   return (
-    <NotificationWrapper data-testid={notificationContainerTestId}>
-      <NotificationTitle>Notifications</NotificationTitle>
+    <Wrapper data-testid={notificationContainerTestId}>
+      <TitleWrapper>
+        <Title>Notifications</Title>
+        <Link to={Page.NOTIFICATIONS}>
+          <Button variant='primary' onClick={handleSettingsClick}>
+            Settings
+          </Button>
+        </Link>
+      </TitleWrapper>
       {items.map((item) => {
         const { id, href, name, avatar, createdAt, actionType, entityType, entity } = item;
 
@@ -60,9 +56,9 @@ const NotificationContainer: FC = () => {
           />
         );
       })}
-    </NotificationWrapper>
+    </Wrapper>
   );
 };
 
-export default NotificationContainer;
+export default NotificationSidebar;
 export { notificationContainerTestId };

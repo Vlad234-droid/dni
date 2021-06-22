@@ -1402,7 +1402,7 @@
     "@beans/selectors" "^18.0.0"
     "@beans/typography" "^18.0.0"
 
-"@beans/checkbox-with-label@^18.0.0":
+"@beans/checkbox-with-label@^18.0.0", "@beans/checkbox-with-label@^18.5.2":
   version "18.5.2"
   resolved "https://nexus.ourtesco.com/repository/online-web-group/@beans/checkbox-with-label/-/checkbox-with-label-18.5.2.tgz#1e3b9ac0642e6ae747527e290dcbb0e303028695"
   integrity sha512-/N8bULqdVadrTSlaLkEdvelMuJPepjrBlYNIpvaKP4un73+23xo7/ibFxaAAWqlPP2MlzSI/hSrXgtxxOkNZ6w==

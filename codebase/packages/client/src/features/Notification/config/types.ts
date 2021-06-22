@@ -113,3 +113,7 @@ export type {
   Groups,
   SkinContentProps,
 };
+
+export interface FormData {
+  email: string;
+}

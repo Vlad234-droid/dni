@@ -100,6 +100,7 @@ const Network: FC<Props> = ({ id }) => {
             <ResponsiveImage
               key={id}
               alt={network!.image?.alternativeText || 'Tesco'}
+              title={network!.image?.alternativeText}
               src={network!.image?.url || defaultImage}
               positioning='center'
               objectFit='cover'

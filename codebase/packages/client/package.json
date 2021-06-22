@@ -27,6 +27,7 @@
     "@beans/calendar": "^18.3.3",
     "@beans/carousel": "^18.2.3",
     "@beans/checkbox": "^18.4.0",
+    "@beans/checkbox-with-label": "^18.5.2",
     "@beans/constants": "^18.2.1",
     "@beans/content-group": "^18.2.3",
     "@beans/date-input": "^18.2.3",

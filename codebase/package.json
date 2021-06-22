@@ -20,7 +20,7 @@
     "bootstrap": "yarn install --production=false --frozen-lockfile && lerna bootstrap",
     "bootstrap:prod": "yarn install --production --frozen-lockfile && lerna bootstrap",
     "build:prod": "lerna run build:prod --include-dependencies --stream",
-    "build:dev": "lerna run build:dev",
+    "build:dev": "lerna run build:dev --include-dependencies --stream",
     "build:test": "lerna run --parallel build:test",
     "clean": "lerna run --parallel clean",
     "clean:all": "lerna run --parallel clean:all && rimraf node_modules",

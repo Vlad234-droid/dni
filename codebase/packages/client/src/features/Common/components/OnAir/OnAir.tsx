@@ -7,7 +7,6 @@ const Wrapper = styled.div<{
   small: boolean;
 }>`
   display: flex;
-  width: ${({ small }) => (small ? '50px' : '80px')};
   border-radius: 20px;
   padding: ${({ small }) => (small ? '4px' : '10px')};
   background: ${GREEN_COLOR};
@@ -23,8 +22,8 @@ const Content = styled.span<{
   &::before {
     content: '';
     display: inline-block;
-    width: ${({ small }) => (small ? '8px' : '10px')};
-    height: ${({ small }) => (small ? '8px' : '10px')};
+    width: ${({ small }) => (small ? '7px' : '10px')};
+    height: ${({ small }) => (small ? '7px' : '10px')};
     border-radius: 50%;
     background: ${({ theme }) => theme.colors.background.base};
     margin-right: ${({ small }) => (small ? '4px' : '8px')};

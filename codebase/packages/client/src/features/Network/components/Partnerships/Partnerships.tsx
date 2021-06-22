@@ -17,6 +17,7 @@ const Partnerships: FC<Props> = ({ partnerships }) => (
         <div key={id}>
           <ResponsiveImage
             alt={image.alternativeText}
+            title={image.alternativeText}
             src={image.url}
             fallbackSizeRatio='57%'
             maxWidth='170px'

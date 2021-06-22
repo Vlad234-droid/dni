@@ -1,8 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import useFetch from 'hooks/useFetch';
-
-import { DEFAULT_PAGINATION } from 'config/constants';
 import Loading from 'types/loading';
 
 import Event from '../config/types';
@@ -28,8 +26,7 @@ export default function useFetchEvents(
           (api) =>
             api.events.fetchAll({
               ...filters,
-              ...DEFAULT_PAGINATION,
-              _start: page * DEFAULT_PAGINATION._limit,
+              _start: filters._limit ? page * filters._limit : 0,
             }),
           (res) => res.map((i) => serializer(i)!),
         );
