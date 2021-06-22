@@ -38,5 +38,6 @@ export const Right = styled.aside`
   ${Media.desktop`
     display: block;
     position: relative;
+    margin-top: -24px;
   `}
 `;
