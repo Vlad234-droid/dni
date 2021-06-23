@@ -27,24 +27,20 @@ const NetworkCarousel: FC = () => {
     setIsOpen(false);
   }
 
-  console.log('swipeHeight', swipeHeight);
-
   return (
-    <Wrapper>
-      <Carousel
-        id='networks-preview-carousel'
-        isOpen={isOpen}
-        onChange={handleOnChange}
-        interval={AUTO_SLIDE_INTERVAL}
-        height={swipeHeight}
-        fullWidth
-        continuous
-      >
-        {networks.map(({ id, ...network }, index) => (
-          <CarouselContent key={id} index={index} onButtonClick={() => handleButtonClick(index)} isOpen={isOpen} {...network} />
-        ))}
-      </Carousel>
-    </Wrapper>
+    <Carousel
+      id='networks-preview-carousel'
+      isOpen={isOpen}
+      onChange={handleOnChange}
+      interval={AUTO_SLIDE_INTERVAL}
+      height={swipeHeight}
+      fullWidth
+      continuous
+    >
+      {networks.map(({ id, ...network }, index) => (
+        <CarouselContent key={id} index={index} onButtonClick={() => handleButtonClick(index)} isOpen={isOpen} {...network} />
+      ))}
+    </Carousel>
   );
 };
 
