@@ -167,6 +167,15 @@ export const LeftContainer = styled.div.attrs({
   'data-testid': 'left-content',
 })`
   grid-area: left;
+  position: fixed;
+  z-index: 2000;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  ${Media.small_desktop`
+    position: static;
+  `}
 `;
 
 export const MainContainer = styled.div.attrs({
