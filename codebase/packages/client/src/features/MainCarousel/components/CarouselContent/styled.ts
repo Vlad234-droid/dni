@@ -56,6 +56,10 @@ export const Description = styled.div<{ isOpen: boolean }>`
   &:not(:last-child) {
     margin-bottom: 16px;
   }
+
+  p {
+    display: contents !important;
+  }
 `;
 
 export const DescriptionWrapper = styled.div`
