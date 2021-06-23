@@ -1,12 +1,5 @@
-import { Server, Socket } from 'socket.io';
 import { getRepository, Notification, NotificationActionType, NotificationEntityType } from '@dni/database';
 import { Network, Event, Post } from '@dni-connectors/colleague-cms-api';
-import server from 'app';
-
-// events
-const NOTIFICATIONS = 'notifications';
-const NOTIFICATION_CREATE = 'notification-create';
-const NOTIFICATION_REMOVE = 'notification-remove';
 
 type Input = {
   event: 'entry.update' | 'entry.create' | 'entry.delete';
@@ -15,54 +8,12 @@ type Input = {
   entry: Network | Event | Post;
 };
 
-let socketServer: Server;
-
-const initializeWebSockets = (io: Server) => {
-  socketServer = io;
-  console.log(`⚡️[ws-server]: Socket server initialized at path: ${io.path()}`);
-  //console.log(socketServer);
-
-  io.on('connection', (socket: Socket) => {
-    console.log(
-      `WebSockets connection established: ${socket.id}, ` +
-        `url: ${socket.handshake.url}, ` +
-        `secured: ${socket.handshake.secure}, ` +
-        `address: ${socket.handshake.address}`,
-    );
-
-    socket.on(NOTIFICATIONS, async () => {
-      socket.emit(NOTIFICATIONS, await findAllNotifications());
-    });
-
-    socket.on(NOTIFICATION_REMOVE, async (ids: number[]) => {
-      await getRepository(Notification).delete(ids);
-      socket.emit(NOTIFICATION_REMOVE, ids);
-      socket.emit(NOTIFICATIONS, await findAllNotifications());
-    });
-  });
-};
-
-const emitWsData = async (wsEvent: string, data: string) => {
-  try {
-    if (socketServer) {
-      console.log(`Emiting event: ${wsEvent}`);
-      socketServer.emit(wsEvent, data);
-    }
-  } catch (e) {
-    console.log(e);
-  }
-};
-
 const handleData = async (data: Input) => {
   try {
     const preparedData = analyze(data);
 
     if (preparedData) {
-      const result = await getRepository(Notification).save(preparedData);
-      if (socketServer) {
-        socketServer.emit(NOTIFICATIONS, await findAllNotifications());
-        socketServer.emit(NOTIFICATION_CREATE, [result]);
-      }
+      getRepository(Notification).save(preparedData);
     }
   } catch (e) {
     console.log(e);
@@ -154,4 +105,4 @@ const findAllNotifications = () => {
   });
 };
 
-export { initializeWebSockets, analyze, handleData, emitWsData };
+export { analyze, handleData, findAllNotifications };
