@@ -28,7 +28,7 @@ export type ApiParams = {
 
 export type ApiInput<T, U = unknown> = {
   params: T;
-  body: U;
+  body?: U;
 };
 
 export type ApiMsgOutput = {
@@ -67,4 +67,8 @@ export type ApiEmailAddressOutput = {
   errors: string[];
 };
 
-export type ContactApiContext = Pick<ConnectorContext, 'apiEnv' | 'markApiCall'>;
+export type ContactAPIHeaders = {
+  Authorization: () => string;
+};
+
+export type ContactApiContext = Pick<ConnectorContext, 'identityClientToken' | 'apiEnv' | 'markApiCall'>;

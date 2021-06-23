@@ -11,7 +11,8 @@ import {
   TENANT_KEY as tenantkey,
 } from '@dni-connectors/colleague-cms-api';
 
-import { contactApiConnector, ApiParams, ApiMsgBody, ApiEmailAddressBody, ApiInput } from '@dni-connectors/contact-api';
+import { contactApiConnector } from '@dni-connectors/contact-api';
+import { colleagueApiConnector } from '@dni-connectors/colleague-api';
 
 import { apiDefinition } from '../api-definition';
 
@@ -21,20 +22,26 @@ const api = (requestCtx: ContextProvider<any>) =>
     apiDefinition,
     requestCtx,
   )({
-    sendMessages: ({ params }, ctx) => {
-      return contactApiConnector(ctx)
-        .sendMessages(params as unknown as ApiInput<ApiParams, ApiMsgBody>)
-        .then(unsafelyUnpackResponseData);
+    getColleague: (payload, ctx) => {
+      return (
+        colleagueApiConnector(ctx)
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          .v1.getColleague(payload as any)
+          .then(unsafelyUnpackResponseData)
+      );
+    },
+    getColleagueV2: ({ params }, ctx) => {
+      return colleagueApiConnector(ctx).v2.getColleague({ params }).then(unsafelyUnpackResponseData);
+    },
+    // contact api
+    sendMessages: (payload, ctx) => {
+      return contactApiConnector(ctx).sendMessages(payload).then(unsafelyUnpackResponseData);
     },
     getEmailAddresses: ({ params }, ctx) => {
-      return contactApiConnector(ctx)
-        .getEmailAddresses(params as unknown as ApiInput<ApiParams>)
-        .then(unsafelyUnpackResponseData);
+      return contactApiConnector(ctx).getEmailAddresses({ params }).then(unsafelyUnpackResponseData);
     },
     updateEmailAddress: ({ params }, ctx) => {
-      return contactApiConnector(ctx)
-        .updateEmailAddress(params as unknown as ApiInput<ApiParams, ApiEmailAddressBody>)
-        .then(unsafelyUnpackResponseData);
+      return contactApiConnector(ctx).updateEmailAddress({ params }).then(unsafelyUnpackResponseData);
     },
     // Emojis
     getEmoji: ({ params }, ctx) => {

@@ -1,12 +1,8 @@
-import {
-  appErrorFromUnknown,
-  toResponseStatus,
-  toResponseMessage,
-  toHTMLResponse,
-} from '../utils/errors';
+import { appErrorFromUnknown, toResponseStatus, toResponseMessage, toHTMLResponse } from '../utils/errors';
 import path from 'path';
 
 export const errorHandler: ErrorMiddleware = (err: unknown, req, res, _) => {
+  console.log(err);
   const error = appErrorFromUnknown(err);
 
   res.status(toResponseStatus(error));
