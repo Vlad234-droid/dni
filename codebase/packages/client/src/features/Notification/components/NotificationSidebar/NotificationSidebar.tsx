@@ -5,6 +5,7 @@ import Button from '@beans/button';
 
 import store from 'store';
 import { Page } from 'features/Page';
+import { getRootPath } from 'utils/path';
 
 import { notificationItemsSelector } from '../../store/selectors';
 import { actions } from '../../store/slice';
@@ -31,7 +32,7 @@ const NotificationSidebar: FC = () => {
     <Wrapper data-testid={notificationContainerTestId}>
       <TitleWrapper>
         <Title>Notifications</Title>
-        <Link to={`/${Page.NOTIFICATIONS}`}>
+        <Link to={`${getRootPath()}${Page.NOTIFICATIONS}`}>
           <Button variant='primary' onClick={handleSettingsClick}>Settings</Button>
         </Link>
       </TitleWrapper>
