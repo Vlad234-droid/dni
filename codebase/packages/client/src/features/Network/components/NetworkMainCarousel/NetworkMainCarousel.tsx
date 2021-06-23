@@ -1,5 +1,4 @@
 import React, { FC, useState, useEffect } from 'react';
-import styled from 'styled-components';
 
 import { CarouselContent } from 'features/MainCarousel';
 import Carousel from 'features/Carousel';
@@ -43,11 +42,5 @@ const NetworkCarousel: FC = () => {
     </Carousel>
   );
 };
-
-const Wrapper = styled.div`
-  .swipe-item {
-    display: block;
-  }
-`;
 
 export default NetworkCarousel;
