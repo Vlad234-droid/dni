@@ -36,6 +36,7 @@ export const SwipeWrapper = styled.div<{ height: string; }>`
   border: none;
   background-color: ${({ theme }) => theme.colors.white};
   width: 100%;
+  height: fit-content;
   ${swipeJsCss};
 `;
 

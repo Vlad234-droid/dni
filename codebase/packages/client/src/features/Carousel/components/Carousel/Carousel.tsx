@@ -20,8 +20,6 @@ type Props = {
   height?: string;
 };
 
-const CLOSED_CHILD_HEIGHT = 140;
-
 const Carousel: FC<Props> = ({
   children,
   itemName = 'item',
@@ -69,8 +67,6 @@ const Carousel: FC<Props> = ({
           speed={TRANSITION_SPEED}
           continuous={continuous}
           ref={swipe}
-          autoHeight={true}
-          height='1000px'
         >
           {Children.map(children, (child, index) => (
             <SwipeItem key={index}>{child}</SwipeItem>

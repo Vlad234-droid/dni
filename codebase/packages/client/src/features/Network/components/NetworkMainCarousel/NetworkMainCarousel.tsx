@@ -10,15 +10,13 @@ const AUTO_SLIDE_INTERVAL = 10000;
 
 const NetworkCarousel: FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [swipeHeight, setSwipeHeight] = useState(0);
-  const getChildHeight = (index: number) => document.getElementById(`carousel-content-${index}`)?.clientHeight || 0;
-  const height = isOpen ? `${swipeHeight}px` : 'auto';
+  const [swipeHeight, setSwipeHeight] = useState<string>('auto');
+  const getChildHeight = (index: number) => document.getElementById(`carousel-content-${index}`)?.clientHeight;
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
-    if (isOpen)
-    setSwipeHeight(getChildHeight(index));
-  }, [isOpen]);
+    setSwipeHeight(isOpen ? `calc(${getChildHeight(index)}px + 140px)` : 'auto');
+  }, [isOpen, index]);
 
   const handleButtonClick = (index: number) => {
     setIsOpen(!isOpen);
@@ -38,7 +36,7 @@ const NetworkCarousel: FC = () => {
         isOpen={isOpen}
         onChange={handleOnChange}
         interval={AUTO_SLIDE_INTERVAL}
-        height={height}
+        height={swipeHeight}
         fullWidth
         continuous
       >
