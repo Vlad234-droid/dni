@@ -16,6 +16,7 @@ type Props = {
   continuous?: boolean;
   onChange?: () => void;
   isOpen?: boolean;
+  interval?: number;
 };
 
 const Carousel: FC<Props> = ({
@@ -26,6 +27,7 @@ const Carousel: FC<Props> = ({
   continuous = false,
   onChange,
   isOpen = false,
+  interval = AUTO_SLIDE_INTERVAL,
   ...rest
 }) => {
   const { isMobile } = useMedia();
@@ -55,7 +57,7 @@ const Carousel: FC<Props> = ({
     return (
       <SwipeWrapper data-testid='carousel'>
         <Swipe
-          auto={AUTO_SLIDE_INTERVAL}
+          auto={interval}
           callback={handleSwipe}
           speed={TRANSITION_SPEED}
           continuous={continuous}

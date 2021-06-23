@@ -5,6 +5,8 @@ import Carousel from 'features/Carousel';
 
 import networks from '../../networks';
 
+const AUTO_SLIDE_INTERVAL = 10000;
+
 const NetworkCarousel: FC = () => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -21,6 +23,7 @@ const NetworkCarousel: FC = () => {
       id='networks-preview-carousel'
       isOpen={isOpen}
       onChange={handleOnChange}
+      interval={AUTO_SLIDE_INTERVAL}
       fullWidth
       continuous
     >
