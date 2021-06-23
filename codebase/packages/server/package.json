@@ -22,6 +22,7 @@
     "@dni-connectors/colleague-cms-api": "1.0.0",
     "@dni-connectors/confirmit-api": "1.0.0",
     "@dni-connectors/identity-api": "1.0.0",
+    "@dni-connectors/contact-api": "1.0.0",
     "@dni/database": "1.0.0",
     "@energon-connectors/contact-api": "^0.4.7",
     "@energon-connectors/core": "^0.8.7",
