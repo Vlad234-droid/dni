@@ -17,11 +17,17 @@ enum Period {
   PICK_PERIOD = 'Pick period',
 }
 
+enum Region {
+  ALL = 'All',
+}
+
+enum Format {
+  ALL = 'All',
+}
+
 type State = {
   entityType: Entity;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [Entity.NETWORK]: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [Entity.EVENT]: any;
   loading: Loading;
   error?: string;
@@ -62,12 +68,12 @@ type ChartItem = {
 };
 
 type StatisticsItem = {
-  id: string;
+  entityId: string;
   name: string;
   members: number;
   subscribe: number;
   leave: number;
-  color?: string;
+  color: string;
   checked: boolean;
   subscribersAPS: number;
   subscribersAPE: number;
@@ -78,6 +84,10 @@ type GraphicsItem = {
   chart: ChartItem;
   statistics: StatisticsItem[];
   dateInterval: Interval;
+  color: {
+    [key: string]: boolean;
+  };
+  counter: number;
 };
 
 type EntityItem = {
@@ -90,21 +100,26 @@ type EntityItem = {
     [Period.PICK_PERIOD]: GraphicsItem;
   };
   [REGION]: {
-    filter: Period;
-    [Period.THIS_YEAR]: GraphicsItem;
+    filter: Region;
+    [Region.ALL]: GraphicsItem;
   };
   [FORMAT]: {
-    filter: Period;
-    [Period.THIS_YEAR]: GraphicsItem;
+    filter: Format;
+    [Format.ALL]: GraphicsItem;
   };
 };
 
 type EntityData = {
-  id: number | string;
+  entityId: number | string;
   entityType: string;
   members: number;
+  startMembers: number;
+  endMembers: number;
   subscribe: number;
   leave: number;
+  name: string;
+  color: string;
+  title: string;
 };
 
 type ReportsMiddlewareArgs = {
@@ -119,10 +134,17 @@ type FulfilledArgs = {
   entityType: Entity;
   filter: Filter;
   filterFilter: Period;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  metadata: any;
+};
+
+type Point = {
+  name: string;
+  [key: string]: number | string;
+};
+
+type RowData = EntityData & {
+  percentages: number;
+  checked: boolean;
 };
 
 export type {
@@ -138,7 +160,9 @@ export type {
   EntityData,
   ReportsMiddlewareArgs,
   FulfilledArgs,
+  Point,
+  RowData,
 };
 
-export { Entity, Period, GroupBy };
+export { Entity, Period, Region, Format, GroupBy };
 export { PERIOD, REGION, FORMAT };
