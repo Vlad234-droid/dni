@@ -1,4 +1,4 @@
-import React, { FC, useRef, Children, useCallback } from 'react';
+import React, { FC, useRef, Children, useCallback, useEffect, useState } from 'react';
 import Swipe, { SwipeItem, SwipeInstance } from 'swipejs/react';
 import { ContentCarousel } from '@beans/carousel';
 
@@ -14,6 +14,10 @@ type Props = {
   itemName?: string;
   fullWidth?: boolean;
   continuous?: boolean;
+  onChange?: () => void;
+  isOpen?: boolean;
+  interval?: number;
+  height?: string;
 };
 
 const Carousel: FC<Props> = ({
@@ -22,25 +26,43 @@ const Carousel: FC<Props> = ({
   itemWidth = 'auto',
   fullWidth = false,
   continuous = false,
+  onChange,
+  isOpen = false,
+  interval = AUTO_SLIDE_INTERVAL,
+  height = 'auto',
   ...rest
 }) => {
   const { isMobile } = useMedia();
   const swipe = useRef<SwipeInstance>(null);
-  const [activeIndex, syncActiveIndex] = React.useState(0);
+  const [activeIndex, syncActiveIndex] = useState(0);
   const childCount = React.Children.count(children);
+
+  useEffect(() => {
+    if (isOpen) {
+      swipe?.current?.instance?.stop();
+    } else {
+      swipe?.current?.instance?.enable();
+    }
+  }, [isOpen, activeIndex]);
 
   const handleSwipe = useCallback(
     (index) => {
       syncActiveIndex(index);
+      onChange && onChange();
     },
     [activeIndex],
   );
 
+  const handleDotClick = (index: number) => {
+    syncActiveIndex(index);
+    swipe?.current?.instance?.slide(index);
+  }
+
   if (fullWidth || isMobile) {
     return (
-      <SwipeWrapper data-testid='carousel'>
+      <SwipeWrapper data-testid='carousel' height={height}>
         <Swipe
-          auto={AUTO_SLIDE_INTERVAL}
+          auto={interval}
           callback={handleSwipe}
           speed={TRANSITION_SPEED}
           continuous={continuous}
@@ -55,6 +77,7 @@ const Carousel: FC<Props> = ({
             <ActiveItemControl
               itemsCount={childCount}
               activeItem={activeIndex}
+              onDotClick={handleDotClick}
               next={swipe?.current?.instance?.next}
               prev={swipe?.current?.instance?.prev}
             />

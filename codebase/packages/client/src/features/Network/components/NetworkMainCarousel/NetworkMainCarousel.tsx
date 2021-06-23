@@ -1,40 +1,45 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 
-import MainCarousel, { CarouselContent } from 'features/MainCarousel';
+import { CarouselContent } from 'features/MainCarousel';
+import Carousel from 'features/Carousel';
 
 import networks from '../../networks';
 
+const AUTO_SLIDE_INTERVAL = 10000;
+
 const NetworkCarousel: FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [play, setPlay] = useState(true);
-  const [forcePlay, setForcePlay] = useState(!isOpen);
+  const [swipeHeight, setSwipeHeight] = useState<string>('auto');
+  const getChildHeight = (index: number) => document.getElementById(`carousel-content-${index}`)?.clientHeight;
+  const [index, setIndex] = useState(0);
 
-  const handleButtonClick = () => {
+  useEffect(() => {
+    setSwipeHeight(isOpen ? `calc(${getChildHeight(index)}px + 140px)` : 'auto');
+  }, [isOpen, index]);
+
+  const handleButtonClick = (index: number) => {
     setIsOpen(!isOpen);
-    !isOpen && setForcePlay(false);
-    isOpen && setForcePlay(true);
+    setIndex(index);
   };
 
-  const handleControlClick = () => {
-    isOpen && setIsOpen(false);
-  };
-
-  const handlePlayClick = () => {
-    setPlay(!play);
-  };
+  const handleOnChange = () => {
+    setIsOpen(false);
+  }
 
   return (
-    <MainCarousel
+    <Carousel
       id='networks-preview-carousel'
-      hideControls={false}
-      autoPlay={isOpen ? forcePlay : play}
-      onChange={handlePlayClick}
-      onControlClick={handleControlClick}
+      isOpen={isOpen}
+      onChange={handleOnChange}
+      interval={AUTO_SLIDE_INTERVAL}
+      height={swipeHeight}
+      fullWidth
+      continuous
     >
-      {networks.map(({ id, ...network }) => (
-        <CarouselContent key={id} onButtonClick={handleButtonClick} isOpen={isOpen} {...network} />
+      {networks.map(({ id, ...network }, index) => (
+        <CarouselContent key={id} index={index} onButtonClick={() => handleButtonClick(index)} isOpen={isOpen} {...network} />
       ))}
-    </MainCarousel>
+    </Carousel>
   );
 };
 

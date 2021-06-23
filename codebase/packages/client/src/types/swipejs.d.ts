@@ -9,7 +9,13 @@ declare module 'swipejs/react' {
   export const SwipeItem: React.FC<SwipeItemProps>;
 
   export type SwipeInstance = {
-    instance: { prev: () => void; next: () => void };
+    instance: {
+      prev: () => void;
+      next: () => void;
+      stop: () => void;
+      enable: () => void;
+      slide: (index: number) => void;
+    };
   };
 
   export type SwipeProps = {
@@ -50,6 +56,12 @@ declare module 'swipejs/react' {
     transitionEnd?: (index: number, currentElement: HTMLElement) => void;
 
     ref?: Ref<SwipeInstance>;
+
+    autoHeight?: boolean;
+
+    height?: string;
+
+    current?: SwipeInstance;
   };
 
   const Swipe: React.FC<SwipeProps>;
