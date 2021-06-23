@@ -1,4 +1,4 @@
-import React, {FC, useRef, Children, useCallback, useEffect} from 'react';
+import React, { FC, useRef, Children, useCallback, useEffect } from 'react';
 import Swipe, { SwipeItem, SwipeInstance } from 'swipejs/react';
 import { ContentCarousel } from '@beans/carousel';
 
@@ -36,10 +36,10 @@ const Carousel: FC<Props> = ({
   useEffect(() => {
     if (isOpen) {
       // @ts-ignore
-      swipe && swipe.current && swipe.current.instance && swipe.current.instance.stop();
+      swipe?.current?.instance?.stop();
     } else {
       // @ts-ignore
-      swipe && swipe.current && swipe.current.instance && swipe.current.instance.enable();
+      swipe?.current?.instance?.enable();
     }
   }, [isOpen]);
 
