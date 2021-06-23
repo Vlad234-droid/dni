@@ -5,7 +5,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import { isDEV } from './config/env';
 
-import { envAccessor, ConfigAccessor, initializeWebSockets } from './services';
+import { envAccessor, ConfigAccessor } from './services';
 import { healthCheck, api } from './routes';
 import {
   clientStaticFolder,
@@ -19,7 +19,6 @@ import {
   fakeUserExtractor,
 } from './middlewares';
 import { buildContext } from './context';
-import { buildWebSocketsServer } from './config/notification';
 import { initializeTypeOrm } from './config/db';
 
 // validate if all required process env variables exist
@@ -78,12 +77,6 @@ const startServer = async () => {
 
     server.listen(PORT, () => {
       console.log(`⚡️[server]: Server is running at http://localhost:${PORT}`);
-
-      // ws connection
-      initializeWebSockets(
-        buildWebSocketsServer(server)
-        );
-
     });
   } catch (error) {
     console.log(error);

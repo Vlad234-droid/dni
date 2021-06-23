@@ -6,12 +6,6 @@ import { Post } from 'features/Post';
 
 type Id = number | string;
 
-enum EmitType {
-  ALL = 'notifications',
-  CREATE = 'notification-create',
-  DELETE = 'notification-remove',
-}
-
 enum ActionType {
   POST_CREATED = 'POST_CREATED',
   POST_UPDATED = 'POST_UPDATED',
@@ -101,7 +95,7 @@ interface SkinContentProps {
   entity: any;
 }
 
-export { EmitType, ActionType, EntityType, PostAs };
+export { ActionType, EntityType, PostAs };
 
 export type {
   Id,

@@ -1,4 +1,4 @@
-import { handleData, emitWsData } from '../services/notification';
+import { handleData } from '../services/notification';
 
 export const handleHook: Middleware = async (req, res) => {
   try {
@@ -15,7 +15,6 @@ export const handleCepHook: Middleware = async (req, res) => {
   try {
     const payload: string = JSON.stringify(req.body, null, 2);
     console.log('handleCepHook:\n%s', payload);
-    await emitWsData('CMS_EVENT', payload);
     return res.status(200).json('ok');
   } catch (e) {
     console.log(e);

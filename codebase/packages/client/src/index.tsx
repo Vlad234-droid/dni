@@ -5,7 +5,6 @@ import { Router } from 'react-router-dom';
 import { ThemeProvider } from '@beans/theme';
 
 import { InterfaceProvider } from 'context/InterfaceContext';
-import { NotificationProvider } from 'context/NotificationContext';
 import store from 'store';
 import theme from 'theme';
 import GlobalStyle from 'styles';
@@ -26,14 +25,12 @@ ReactDOM.render(
     <Provider store={store}>
       <Auth>
         <InterfaceProvider>
-          <NotificationProvider>
-            <Router history={history}>
-              <React.StrictMode>
-                <GlobalStyle />
-                <Routes />
-              </React.StrictMode>
-            </Router>
-          </NotificationProvider>
+          <Router history={history}>
+            <React.StrictMode>
+              <GlobalStyle />
+              <Routes />
+            </React.StrictMode>
+          </Router>
         </InterfaceProvider>
       </Auth>
     </Provider>
