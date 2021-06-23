@@ -13,7 +13,7 @@ import store from 'store';
 
 import RangeDateTimePicker from '../components/RangeDateTimePicker';
 import { DropdownWrapper } from './styled';
-import { actions, getReports } from '../store';
+import { actions, getReportsByTime, getReportsByRegion, getReportsByFormat } from '../store';
 import * as T from '../config/types';
 
 const RangeWrapper = styled.div`
@@ -71,7 +71,6 @@ type Props = {
   filter: T.Filter;
   filterFilter: T.Period;
   dateInterval: T.Interval;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: any;
 };
 
@@ -80,7 +79,6 @@ const Graphics: FC<Props> = ({ entityType, filter, filterFilter, dateInterval, d
 
   const { ids } = useSelector(() => store.getState()[entityType === 0 ? 'networks' : 'events']);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handlePeriodButtonClick = (event: any) => {
     event.preventDefault();
 
@@ -99,15 +97,23 @@ const Graphics: FC<Props> = ({ entityType, filter, filterFilter, dateInterval, d
       return;
     }
 
-    if ([T.Period.THIS_YEAR, T.Period.LAST_MONTH, T.Period.LAST_WEEK].includes(filterFilter)) {
+    if (filter === T.PERIOD && [T.Period.THIS_YEAR, T.Period.LAST_MONTH, T.Period.LAST_WEEK].includes(filterFilter)) {
       dispatch(
-        getReports({
+        getReportsByTime({
           entityType,
           filter,
           filterFilter,
           ids,
         }),
       );
+    }
+
+    if (filter === T.REGION) {
+      dispatch(getReportsByRegion({}));
+    }
+
+    if (filter === T.FORMAT) {
+      dispatch(getReportsByFormat({}));
     }
   };
 
@@ -162,7 +168,7 @@ const Graphics: FC<Props> = ({ entityType, filter, filterFilter, dateInterval, d
     }
 
     dispatch(
-      getReports({
+      getReportsByTime({
         entityType,
         filter,
         filterFilter,

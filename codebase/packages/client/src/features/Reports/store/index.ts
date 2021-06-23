@@ -1,2 +1,2 @@
-export { default, actions, getReports } from './slice';
+export { default, actions, getReportsByTime, getReportsByRegion, getReportsByFormat } from './slice';
 export * from '../config/types';

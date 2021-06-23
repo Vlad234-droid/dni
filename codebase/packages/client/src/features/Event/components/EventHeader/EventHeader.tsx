@@ -9,7 +9,7 @@ import useStore from 'hooks/useStore';
 
 import EventAction from '../EventAction';
 import Event from '../../config/types';
-import { isEventOnAir, isActionDisabled } from '../../utils';
+import { isEventOnAir, isActionDisabled, isPastEvent } from '../../utils';
 
 import {
   Wrapper,
@@ -34,6 +34,7 @@ const EventHeader: FC<Props> = ({ event, participants }) => {
   const { isMobile, isLargeMobile } = useMedia();
   const isMobileView = isMobile || isLargeMobile;
   const isOnAir = isEventOnAir(startDate, endDate);
+  const isPast = isPastEvent(endDate);
 
   return (
     <Wrapper>
@@ -48,39 +49,32 @@ const EventHeader: FC<Props> = ({ event, participants }) => {
         </TitleWrapper>
         <Actions>
           {!isMobileView && <CopyLink />}
-          <ButtonWrapper isJoined={isJoined}>
-            <EventAction id={id} disabled={isActionDisabled(participants, maxParticipants)} />
-          </ButtonWrapper>
-          <ICalendarLink
-            filename={`${event.title} event.ics`}
-            event={{
-              title: event.title,
-              description: event.description,
-              startTime: event.startDate.replace('at', ''),
-              endTime: event.endDate.replace('at', ''),
-              location: '',
-            }}
-          >
-            <Button>
-              <Icon graphic='download' />
-            </Button>
-          </ICalendarLink>
+          {!isPast && (
+            <ButtonWrapper isJoined={isJoined}>
+              <EventAction id={id} disabled={isActionDisabled(participants, maxParticipants)} />
+            </ButtonWrapper>
+          )}
+          {!isPast && (
+            <ICalendarLink
+              filename={`${event.title} event.ics`}
+              event={{
+                title: event.title,
+                description: event.description,
+                startTime: event.startDate.replace('at', ''),
+                endTime: event.endDate.replace('at', ''),
+                location: '',
+              }}
+            >
+              <Button>
+                <Icon graphic='download' />
+              </Button>
+            </ICalendarLink>
+          )}
         </Actions>
       </Inner>
       <Description>
         <TextIconWrapper>
-          <ICalendarLink
-            filename={`${event.title} event.ics`}
-            event={{
-              title: event.title,
-              description: event.description,
-              startTime: event.startDate.replace('at', ''),
-              endTime: event.endDate.replace('at', ''),
-              location: '',
-            }}
-          >
-            <Icon graphic='datePicker' />
-          </ICalendarLink>
+          <Icon graphic='datePicker' />
           {startDate}
         </TextIconWrapper>
         <Inner>

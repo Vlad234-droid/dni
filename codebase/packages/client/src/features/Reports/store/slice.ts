@@ -6,7 +6,12 @@ import Loading from 'types/loading';
 
 import * as T from '../config/types';
 import * as A from './actionTypes';
-import { getEntityState, reportsMiddleware, setDefaultGraphicsState, setGraphicsState } from '../utils';
+import {
+  getEntityState,
+  reportsByTimeMiddleware,
+  reportsByRegionMiddleware,
+  reportsByFormatMiddleware,
+} from '../utils';
 
 const initialState: T.State = {
   entityType: T.Entity.NETWORK,
@@ -17,7 +22,9 @@ const initialState: T.State = {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const getReports = createAsyncThunk<any, any>(A.GET_REPORTS, reportsMiddleware);
+const getReportsByTime = createAsyncThunk<any, any>(A.GET_REPORTS_BY_TIME, reportsByTimeMiddleware);
+const getReportsByRegion = createAsyncThunk<any, any>(A.GET_REPORTS_BY_REGION, reportsByRegionMiddleware);
+const getReportsByFormat = createAsyncThunk<any, any>(A.GET_REPORTS_BY_FORMAT, reportsByFormatMiddleware);
 
 const slice = createSlice({
   name: A.ROOT,
@@ -59,15 +66,7 @@ const slice = createSlice({
 
       const group = state[entityType][filter][filterFilter];
 
-      let count = 0;
-
-      group.statistics.forEach(({ checked }: { checked: boolean }) => {
-        if (checked === true) {
-          count += 1;
-        }
-      });
-
-      if (count === 5 && checked === true) {
+      if (group.counter === 5 && checked === true) {
         return;
       }
 
@@ -81,7 +80,10 @@ const slice = createSlice({
         if (checked === true) {
           color = Object.keys(group.color).find((key) => {
             if (group.color[key] === false) {
-              return (group.color[key] = true);
+              group.color[key] = true;
+              group.counter += 1;
+
+              return true;
             }
 
             return false;
@@ -90,15 +92,13 @@ const slice = createSlice({
 
         if (checked === false) {
           group.color[item.color] = false;
+          group.counter -= 1;
         }
 
         return { ...item, checked, color };
       });
 
-      group.chart.elements = keyBy(
-        sort(group.statistics, ['checked', true]),
-        (o: Partial<{ entityId: number; name: string }>) => o.entityId,
-      );
+      group.chart.elements = keyBy(sort(group.statistics, ['checked', true]), (o: Partial<{ name: string }>) => o.name);
     },
   },
   extraReducers: (builder) => {
@@ -117,27 +117,34 @@ const slice = createSlice({
     };
 
     builder
-      .addCase(getReports.pending, setPending)
-      .addCase(getReports.fulfilled, (state: T.State, { payload }) => {
-        const { entityType, filter, filterFilter, data, metadata, entities } = payload as T.FulfilledArgs;
+      .addCase(getReportsByTime.pending, setPending)
+      .addCase(getReportsByTime.fulfilled, (state: T.State, { payload }) => {
+        const { entityType, filter, filterFilter, data } = payload as T.FulfilledArgs;
 
-        const group = state[entityType][filter][filterFilter];
-
-        if ([data, metadata].includes(null)) {
-          setDefaultGraphicsState({ group });
-        } else {
-          setGraphicsState({ group, data, metadata, entities });
-        }
+        state[entityType][filter][filterFilter] = data;
 
         setSucceeded(state);
       })
-      .addCase(getReports.rejected, setFailed)
+      .addCase(getReportsByTime.rejected, setFailed)
+
+      .addCase(getReportsByRegion.pending, setPending)
+      .addCase(getReportsByRegion.fulfilled, (state: T.State, { payload }) => {
+        setSucceeded(state);
+      })
+      .addCase(getReportsByRegion.rejected, setFailed)
+
+      .addCase(getReportsByFormat.pending, setPending)
+      .addCase(getReportsByFormat.fulfilled, (state: T.State, { payload }) => {
+        setSucceeded(state);
+      })
+      .addCase(getReportsByFormat.rejected, setFailed)
+
       .addDefaultCase((state) => state);
   },
 });
 
 export const { actions } = slice;
 
-export { getReports };
+export { getReportsByTime, getReportsByRegion, getReportsByFormat };
 
 export default slice.reducer;

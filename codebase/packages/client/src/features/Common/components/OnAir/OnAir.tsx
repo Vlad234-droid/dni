@@ -18,6 +18,7 @@ const Content = styled.span<{
   color: ${({ theme }) => theme.colors.white};
   font-size: ${({ small }) => (small ? '10px' : '14px')};
   line-height: ${({ small }) => (small ? '12px' : '16px')};
+  white-space: nowrap;
 
   &::before {
     content: '';

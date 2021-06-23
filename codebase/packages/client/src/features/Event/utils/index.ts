@@ -11,6 +11,8 @@ export const isEventOnAir = (startDate: string, endDate: string) => {
   return DateTime.fromFormat(startDate, FULL_FORMAT) < now && DateTime.fromFormat(endDate, FULL_FORMAT) > now;
 };
 
+export const isPastEvent = (endDate: string) => DateTime.fromFormat(endDate, FULL_FORMAT) < DateTime.now();
+
 export const isActionDisabled = (participants?: number, maxParticipants?: number) => {
   if (!maxParticipants) return false;
 

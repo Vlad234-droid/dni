@@ -17,6 +17,14 @@ enum Period {
   PICK_PERIOD = 'Pick period',
 }
 
+enum Region {
+  ALL = 'All',
+}
+
+enum Format {
+  ALL = 'All',
+}
+
 type State = {
   entityType: Entity;
   [Entity.NETWORK]: any;
@@ -79,6 +87,7 @@ type GraphicsItem = {
   color: {
     [key: string]: boolean;
   };
+  counter: number;
 };
 
 type EntityItem = {
@@ -91,12 +100,12 @@ type EntityItem = {
     [Period.PICK_PERIOD]: GraphicsItem;
   };
   [REGION]: {
-    filter: Period;
-    [Period.THIS_YEAR]: GraphicsItem;
+    filter: Region;
+    [Region.ALL]: GraphicsItem;
   };
   [FORMAT]: {
-    filter: Period;
-    [Period.THIS_YEAR]: GraphicsItem;
+    filter: Format;
+    [Format.ALL]: GraphicsItem;
   };
 };
 
@@ -110,6 +119,7 @@ type EntityData = {
   leave: number;
   name: string;
   color: string;
+  title: string;
 };
 
 type ReportsMiddlewareArgs = {
@@ -124,11 +134,17 @@ type FulfilledArgs = {
   entityType: Entity;
   filter: Filter;
   filterFilter: Period;
-  entities: { [key: string]: { id: number; title: string } };
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  metadata: any;
+};
+
+type Point = {
+  name: string;
+  [key: string]: number | string;
+};
+
+type RowData = EntityData & {
+  percentages: number;
+  checked: boolean;
 };
 
 export type {
@@ -144,7 +160,9 @@ export type {
   EntityData,
   ReportsMiddlewareArgs,
   FulfilledArgs,
+  Point,
+  RowData,
 };
 
-export { Entity, Period, GroupBy };
+export { Entity, Period, Region, Format, GroupBy };
 export { PERIOD, REGION, FORMAT };

@@ -7,14 +7,7 @@ import API from 'utils/api';
 import store from 'store';
 
 import * as T from '../config/types';
-
-const colorConfig = {
-  '#009900': false,
-  '#FF0000': false,
-  black: false,
-  brown: false,
-  purple: false,
-};
+import color from '../config/color';
 
 const getDatePointState = () =>
   ({
@@ -43,8 +36,9 @@ const getGraphicsState = () =>
     statistics: getStatisticsState(),
     dateInterval: getDateIntervalState(),
     color: {
-      ...colorConfig,
+      ...color,
     },
+    counter: 0,
   } as T.GraphicsItem);
 
 const getEntityState = () =>
@@ -55,18 +49,15 @@ const getEntityState = () =>
       [T.Period.THIS_YEAR]: getGraphicsState(),
       [T.Period.LAST_MONTH]: getGraphicsState(),
       [T.Period.LAST_WEEK]: getGraphicsState(),
-      [T.Period.PICK_PERIOD]: {
-        ...getGraphicsState(),
-        dateInterval: getDateIntervalState(),
-      },
+      [T.Period.PICK_PERIOD]: getGraphicsState(),
     },
     [T.REGION]: {
-      filter: T.Period.THIS_YEAR,
-      [T.Period.THIS_YEAR]: getGraphicsState(),
+      filter: T.Region.ALL,
+      [T.Region.ALL]: getGraphicsState(),
     },
     [T.FORMAT]: {
-      filter: T.Period.THIS_YEAR,
-      [T.Period.THIS_YEAR]: getGraphicsState(),
+      filter: T.Format.ALL,
+      [T.Format.ALL]: getGraphicsState(),
     },
   } as T.EntityItem);
 
@@ -79,14 +70,26 @@ const buildTimePeriodQuery = ({ entityType, groupBy, from, to, ids }: T.Params) 
     entityIds: ids.join(','),
   };
 
-  console.log(`requestQuery: ${requestQuery}`);
   return requestQuery;
 };
 
-const reportsMiddleware = async ({ entityType, filter, filterFilter, from, to }: T.ReportsMiddlewareArgs) => {
-  const { ids } = store.getState()[entityType === 0 ? 'networks' : 'events'];
+const calculateDifference = ({ start, end }: { start: number; end: number }) => {
+  if (start === 0 && end === 0) {
+    return 0;
+  } else {
+    if (start === 0) {
+      start += end;
+      end *= 2;
+    }
 
+    return Math.round((end * 100) / start - 100);
+  }
+};
+
+const reportsByTimeMiddleware = async ({ entityType, filter, filterFilter, from, to }: T.ReportsMiddlewareArgs) => {
+  const { ids, entities } = store.getState()[entityType === 0 ? 'networks' : 'events'];
   const date = new Date(new Date().getTime() + 1000 * 60 * 60 * 24);
+
   date.setUTCHours(0, 0, 0, 0);
 
   let groupBy = T.GroupBy.MONTH;
@@ -131,48 +134,23 @@ const reportsMiddleware = async ({ entityType, filter, filterFilter, from, to }:
     ids,
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data, metadata } = await API.report.timePeriods<any>(query);
 
-  const { entities } = store.getState()[entityType === 0 ? 'networks' : 'events'];
+  const groupState = store.getState().reports[entityType][filter][filterFilter];
+  const group = getGraphicsState() as T.GraphicsItem;
 
-  return {
-    entityType,
-    filter,
-    filterFilter,
-    data,
-    metadata,
-    entities,
-  };
-};
+  group.color = groupState.color;
+  group.dateInterval = groupState.dateInterval;
 
-const setDefaultGraphicsState = ({ group }: { group: ReturnType<typeof getGraphicsState> }) => {
-  group.chart = getChartState();
-  group.statistics = getStatisticsState();
-};
-
-const setGraphicsState = ({
-  group,
-  data = [],
-  metadata = [],
-  entities = {},
-}: {
-  group: ReturnType<typeof getGraphicsState>;
-  data: any;
-  metadata: any;
-  entities: { [key: string]: { id: number; title: string } };
-}) => {
-  group.chart = getChartState();
-
-  group.chart.entities = data.map(({ period, entities }: { period: string; entities: T.EntityData[] }) => {
+  group.chart.entities = data.map((element: { period: string; entities: T.EntityData[] }) => {
     const point = {
-      name: isoDateToFormat(period, FULL_DAY_FORMAT),
-    } as {
-      [key: string]: number | string;
-    };
+      name: isoDateToFormat(element.period, FULL_DAY_FORMAT),
+    } as T.Point;
 
-    entities.forEach(({ entityId, entityType, subscribe }) => {
-      point[entityId] = subscribe;
+    element.entities.forEach(({ entityId, entityType, subscribe }: any) => {
+      const entityName = entities[entityId]?.title as string;
+
+      point[entityName] = subscribe;
     });
 
     return point;
@@ -187,28 +165,16 @@ const setGraphicsState = ({
         endMembers,
         subscribe,
         leave,
-      } as T.EntityData & {
-        percentages: number;
-        checked: boolean;
-      };
+      } as T.RowData;
 
-      let start = startMembers;
-      let end = endMembers;
+      row.percentages = calculateDifference({
+        start: startMembers,
+        end: endMembers,
+      });
 
-      if (start === 0 && end === 0) {
-        row.percentages = 0;
-      } else {
-        if (start === 0) {
-          start += end;
-          end *= 2;
-        }
+      const rowState = groupState.statistics.find((element: T.StatisticsItem) => element.entityId == row.entityId);
 
-        row.percentages = Math.round((end * 100) / start - 100);
-      }
-
-      const rowState = group.statistics.find((element) => element.entityId == row.entityId);
-
-      row.name = entities[entityId].title || 'Default entity name';
+      row.name = entities[entityId]?.title || 'Default entity name';
       row.checked = typeof rowState?.['checked'] === 'boolean' ? rowState.checked : false;
       row.color = typeof rowState?.['color'] === 'string' ? rowState.color : '';
 
@@ -216,10 +182,22 @@ const setGraphicsState = ({
     },
   );
 
-  group.chart.elements = keyBy(
-    sort(group.statistics, ['checked', true]),
-    (o: Partial<{ entityId: number; name: string }>) => o.entityId,
-  );
+  group.chart.elements = keyBy(sort(group.statistics, ['checked', true]), (o: Partial<{ name: string }>) => o.name);
+
+  return {
+    entityType,
+    filter,
+    filterFilter,
+    data: group,
+  };
 };
 
-export { getEntityState, reportsMiddleware, setDefaultGraphicsState, setGraphicsState };
+const reportsByRegionMiddleware = async () => {
+  return {};
+};
+
+const reportsByFormatMiddleware = async () => {
+  return {};
+};
+
+export { getEntityState, reportsByTimeMiddleware, reportsByRegionMiddleware, reportsByFormatMiddleware };

@@ -15,7 +15,7 @@ type Props = {
 const PageWrapper: FC<Props> = ({ renderHeaderFilters, renderContent, renderLink, pageName, withBorder = false }) => (
   <Wrapper data-testid={TEST_ID}>
     <Header>
-      <Title>{pageName}</Title>
+      <Title>{pageName.toLowerCase() === 'reports' ? 'Network Members Report' : pageName}</Title>
       {renderLink && renderLink()}
       {renderHeaderFilters && renderHeaderFilters()}
     </Header>

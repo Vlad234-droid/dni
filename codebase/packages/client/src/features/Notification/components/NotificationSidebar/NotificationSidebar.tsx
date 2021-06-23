@@ -31,7 +31,7 @@ const NotificationSidebar: FC = () => {
     <Wrapper data-testid={notificationContainerTestId}>
       <TitleWrapper>
         <Title>Notifications</Title>
-        <Link to={Page.NOTIFICATIONS}>
+        <Link to={`/${Page.NOTIFICATIONS}`}>
           <Button variant='primary' onClick={handleSettingsClick}>
             Settings
           </Button>
