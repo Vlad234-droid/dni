@@ -1,4 +1,4 @@
-import React, { FC, useRef, Children, useCallback } from 'react';
+import React, {FC, useRef, Children, useCallback, useEffect} from 'react';
 import Swipe, { SwipeItem, SwipeInstance } from 'swipejs/react';
 import { ContentCarousel } from '@beans/carousel';
 
@@ -14,6 +14,8 @@ type Props = {
   itemName?: string;
   fullWidth?: boolean;
   continuous?: boolean;
+  onChange?: () => void;
+  isOpen?: boolean;
 };
 
 const Carousel: FC<Props> = ({
@@ -22,6 +24,8 @@ const Carousel: FC<Props> = ({
   itemWidth = 'auto',
   fullWidth = false,
   continuous = false,
+  onChange,
+  isOpen = false,
   ...rest
 }) => {
   const { isMobile } = useMedia();
@@ -29,9 +33,20 @@ const Carousel: FC<Props> = ({
   const [activeIndex, syncActiveIndex] = React.useState(0);
   const childCount = React.Children.count(children);
 
+  useEffect(() => {
+    if (isOpen) {
+      // @ts-ignore
+      swipe && swipe.current && swipe.current.instance && swipe.current.instance.stop();
+    } else {
+      // @ts-ignore
+      swipe && swipe.current && swipe.current.instance && swipe.current.instance.enable();
+    }
+  }, [isOpen]);
+
   const handleSwipe = useCallback(
     (index) => {
       syncActiveIndex(index);
+      onChange && onChange();
     },
     [activeIndex],
   );
