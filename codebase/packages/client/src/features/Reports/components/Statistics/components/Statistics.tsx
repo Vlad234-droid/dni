@@ -18,7 +18,6 @@ const Entity = {
 };
 
 type Props = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: Array<any>;
   onChange: (id: string, checked: boolean) => void;
   entityType: T.Entity;
@@ -39,13 +38,13 @@ const Statistics = ({ data, onChange, entityType }: Props) => {
           <Cell>{'left during the period'}</Cell>
         </Row>
         {data.map((item) => (
-          <Row key={item.id}>
-            <CellName>
-              <Checkbox checked={item.checked} id={item.id} onChange={handleChangeItem} />
+          <Row key={item.entityId}>
+            <CellName color={item.color}>
+              <Checkbox checked={item.checked} id={item.entityId} onChange={handleChangeItem} />
               <TextWithEllipsis>{item.name}</TextWithEllipsis>
             </CellName>
-            <Cell>{item.subscribersAPS}</Cell>
-            <Cell>{item.subscribersAPE}</Cell>
+            <Cell>{item.startMembers}</Cell>
+            <Cell>{item.endMembers}</Cell>
             <Cell>{item.percentages}</Cell>
             <Cell>{item.subscribe}</Cell>
             <Cell>{item.leave}</Cell>
@@ -92,8 +91,16 @@ const Cell = styled.td`
   }
 `;
 
-const CellName = styled(Cell)`
+const CellName = styled(Cell)<{
+  color?: string;
+}>`
   min-width: 250px;
+  max-width: 250px;
+  color: ${({ color }) => color};
+
+  & > *:first-child {
+    flex-shrink: 0;
+  }
 `;
 
 export default Statistics;

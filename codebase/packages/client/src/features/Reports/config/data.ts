@@ -9,8 +9,8 @@ export const getStatisticsData = () => [
     leave: 3745,
     color: '#008800',
     checked: true,
-    subscribersAPS: 666,
-    subscribersAPE: 666,
+    startMembers: 666,
+    endMembers: 666,
     percentages: 666,
   },
   {
@@ -21,8 +21,8 @@ export const getStatisticsData = () => [
     leave: 3745,
     color: '#00539F',
     checked: true,
-    subscribersAPS: 666,
-    subscribersAPE: 666,
+    startMembers: 666,
+    endMembers: 666,
     percentages: 666,
   },
 ];

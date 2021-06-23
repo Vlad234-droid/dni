@@ -4,7 +4,7 @@ import BaseButton from '@beans/button';
 import { textXS } from 'styles';
 
 const Wrapper = styled.div`
-  padding: 4px 4px;
+  padding: 4px 4px 32px;
 
   .beans-form-group__children {
     display: flex;

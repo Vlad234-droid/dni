@@ -6,7 +6,12 @@ import Loading from 'types/loading';
 
 import * as T from '../config/types';
 import * as A from './actionTypes';
-import { getEntityState, reportsMiddleware, setDefaultGraphicsState, setGraphicsState } from '../utils';
+import {
+  getEntityState,
+  reportsByTimeMiddleware,
+  reportsByRegionMiddleware,
+  reportsByFormatMiddleware,
+} from '../utils';
 
 const initialState: T.State = {
   entityType: T.Entity.NETWORK,
@@ -17,7 +22,9 @@ const initialState: T.State = {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const getReports = createAsyncThunk<any, any>(A.GET_REPORTS, reportsMiddleware);
+const getReportsByTime = createAsyncThunk<any, any>(A.GET_REPORTS_BY_TIME, reportsByTimeMiddleware);
+const getReportsByRegion = createAsyncThunk<any, any>(A.GET_REPORTS_BY_REGION, reportsByRegionMiddleware);
+const getReportsByFormat = createAsyncThunk<any, any>(A.GET_REPORTS_BY_FORMAT, reportsByFormatMiddleware);
 
 const slice = createSlice({
   name: A.ROOT,
@@ -59,14 +66,39 @@ const slice = createSlice({
 
       const group = state[entityType][filter][filterFilter];
 
-      group.statistics = group.statistics.map((item: T.StatisticsItem) =>
-        item.id === id ? { ...item, checked } : item,
-      );
+      if (group.counter === 5 && checked === true) {
+        return;
+      }
 
-      group.chart = {
-        ...group.chart,
-        elements: keyBy(sort(group.statistics, ['checked', true]), (o) => o.name),
-      };
+      group.statistics = group.statistics.map((item: T.StatisticsItem) => {
+        if (item.entityId != id) {
+          return item;
+        }
+
+        let color;
+
+        if (checked === true) {
+          color = Object.keys(group.color).find((key) => {
+            if (group.color[key] === false) {
+              group.color[key] = true;
+              group.counter += 1;
+
+              return true;
+            }
+
+            return false;
+          });
+        }
+
+        if (checked === false) {
+          group.color[item.color] = false;
+          group.counter -= 1;
+        }
+
+        return { ...item, checked, color };
+      });
+
+      group.chart.elements = keyBy(sort(group.statistics, ['checked', true]), (o: Partial<{ name: string }>) => o.name);
     },
   },
   extraReducers: (builder) => {
@@ -79,38 +111,40 @@ const slice = createSlice({
       state.loading = Loading.SUCCEEDED;
     };
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const setFailed = (state: T.State, payload: any) => {
       state.loading = Loading.FAILED;
       state.error = payload.error.message;
     };
 
     builder
-      .addCase(getReports.pending, setPending)
-      .addCase(getReports.fulfilled, (state: T.State, { payload }) => {
-        const { entityType, filter, filterFilter, data, metadata } = payload as T.FulfilledArgs;
+      .addCase(getReportsByTime.pending, setPending)
+      .addCase(getReportsByTime.fulfilled, (state: T.State, { payload }) => {
+        const { entityType, filter, filterFilter, data } = payload as T.FulfilledArgs;
 
-        const group = state[entityType][filter][filterFilter];
-
-        if ([data, metadata].includes(null)) {
-          setDefaultGraphicsState({ group });
-        } else {
-          setGraphicsState({ group, data, metadata });
-        }
+        state[entityType][filter][filterFilter] = data;
 
         setSucceeded(state);
-        console.table({
-          data,
-          metadata,
-        });
       })
-      .addCase(getReports.rejected, setFailed)
+      .addCase(getReportsByTime.rejected, setFailed)
+
+      .addCase(getReportsByRegion.pending, setPending)
+      .addCase(getReportsByRegion.fulfilled, (state: T.State, { payload }) => {
+        setSucceeded(state);
+      })
+      .addCase(getReportsByRegion.rejected, setFailed)
+
+      .addCase(getReportsByFormat.pending, setPending)
+      .addCase(getReportsByFormat.fulfilled, (state: T.State, { payload }) => {
+        setSucceeded(state);
+      })
+      .addCase(getReportsByFormat.rejected, setFailed)
+
       .addDefaultCase((state) => state);
   },
 });
 
 export const { actions } = slice;
 
-export { getReports };
+export { getReportsByTime, getReportsByRegion, getReportsByFormat };
 
 export default slice.reducer;

@@ -9,6 +9,21 @@ import store from 'store';
 import { actions } from '../store';
 import * as T from '../config/types';
 
+const filterButtons = [
+  {
+    key: T.PERIOD,
+    title: 'Time period',
+  },
+  {
+    key: T.REGION,
+    title: 'Region',
+  },
+  {
+    key: T.FORMAT,
+    title: 'Format',
+  },
+];
+
 const entityButtons = [
   {
     key: T.Entity.NETWORK,
@@ -49,6 +64,13 @@ const Reports: FC = () => {
 
   return (
     <div data-testid={REPORT_TEST_ID}>
+      <ButtonFilter
+        value={filter}
+        initialFilters={filterButtons}
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        onChange={(event: any) => dispatch(actions.setFilter({ key: event.target.value }))}
+        name='filters'
+      />
       <Graphics
         entityType={entityType}
         filter={filter}

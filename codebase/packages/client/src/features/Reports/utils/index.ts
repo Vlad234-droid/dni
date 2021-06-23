@@ -1,3 +1,4 @@
+import { useSelector } from 'react-redux';
 import keyBy from 'lodash.keyby';
 import sort from 'lodash.filter';
 
@@ -6,6 +7,7 @@ import API from 'utils/api';
 import store from 'store';
 
 import * as T from '../config/types';
+import color from '../config/color';
 
 const getDatePointState = () =>
   ({
@@ -33,6 +35,10 @@ const getGraphicsState = () =>
     chart: getChartState(),
     statistics: getStatisticsState(),
     dateInterval: getDateIntervalState(),
+    color: {
+      ...color,
+    },
+    counter: 0,
   } as T.GraphicsItem);
 
 const getEntityState = () =>
@@ -43,23 +49,19 @@ const getEntityState = () =>
       [T.Period.THIS_YEAR]: getGraphicsState(),
       [T.Period.LAST_MONTH]: getGraphicsState(),
       [T.Period.LAST_WEEK]: getGraphicsState(),
-      [T.Period.PICK_PERIOD]: {
-        ...getGraphicsState(),
-        dateInterval: getDateIntervalState(),
-      },
+      [T.Period.PICK_PERIOD]: getGraphicsState(),
     },
     [T.REGION]: {
-      filter: T.Period.THIS_YEAR,
-      [T.Period.THIS_YEAR]: getGraphicsState(),
+      filter: T.Region.ALL,
+      [T.Region.ALL]: getGraphicsState(),
     },
     [T.FORMAT]: {
-      filter: T.Period.THIS_YEAR,
-      [T.Period.THIS_YEAR]: getGraphicsState(),
+      filter: T.Format.ALL,
+      [T.Format.ALL]: getGraphicsState(),
     },
   } as T.EntityItem);
 
 const buildTimePeriodQuery = ({ entityType, groupBy, from, to, ids }: T.Params) => {
-  //return `?entityType=${entityType}&groupBy=${groupBy}&from=${from}&to=${to}&entityIds=${ids}`;
   const requestQuery = {
     entityType: entityType == 0 ? 'NETWORK' : 'EVENT',
     groupBy,
@@ -68,14 +70,26 @@ const buildTimePeriodQuery = ({ entityType, groupBy, from, to, ids }: T.Params) 
     entityIds: ids.join(','),
   };
 
-  console.log(`requestQuery: ${requestQuery}`);
   return requestQuery;
 };
 
-const reportsMiddleware = async ({ entityType, filter, filterFilter, from, to }: T.ReportsMiddlewareArgs) => {
-  const { ids } = store.getState()[entityType === 0 ? 'networks' : 'events'];
+const calculateDifference = ({ start, end }: { start: number; end: number }) => {
+  if (start === 0 && end === 0) {
+    return 0;
+  } else {
+    if (start === 0) {
+      start += end;
+      end *= 2;
+    }
 
+    return Math.round((end * 100) / start - 100);
+  }
+};
+
+const reportsByTimeMiddleware = async ({ entityType, filter, filterFilter, from, to }: T.ReportsMiddlewareArgs) => {
+  const { ids, entities } = store.getState()[entityType === 0 ? 'networks' : 'events'];
   const date = new Date(new Date().getTime() + 1000 * 60 * 60 * 24);
+
   date.setUTCHours(0, 0, 0, 0);
 
   let groupBy = T.GroupBy.MONTH;
@@ -120,82 +134,70 @@ const reportsMiddleware = async ({ entityType, filter, filterFilter, from, to }:
     ids,
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { data, metadata } = await API.report.timePeriods<any>(query);
 
-  return {
-    entityType,
-    filter,
-    filterFilter,
-    data,
-    metadata,
-  };
-};
+  const groupState = store.getState().reports[entityType][filter][filterFilter];
+  const group = getGraphicsState() as T.GraphicsItem;
 
-const setDefaultGraphicsState = ({ group }: { group: ReturnType<typeof getGraphicsState> }) => {
-  group.chart = getChartState();
-  group.statistics = getStatisticsState();
-};
+  group.color = groupState.color;
+  group.dateInterval = groupState.dateInterval;
 
-const setGraphicsState = ({
-  group,
-  data = [],
-  metadata = [],
-}: {
-  group: ReturnType<typeof getGraphicsState>;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  data: any;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  metadata: any;
-}) => {
-  group.chart = getChartState();
-
-  group.chart.entities = data.map(({ period, entities }: { period: string; entities: T.EntityData[] }) => {
+  group.chart.entities = data.map((element: { period: string; entities: T.EntityData[] }) => {
     const point = {
-      name: isoDateToFormat(period, FULL_DAY_FORMAT),
-    } as {
-      [key: string]: number | string;
-    };
+      name: isoDateToFormat(element.period, FULL_DAY_FORMAT),
+    } as T.Point;
 
-    entities.forEach(({ id, entityType, subscribe }) => {
-      point[`${entityType}-${id}`] = subscribe;
+    element.entities.forEach(({ entityId, entityType, subscribe }: any) => {
+      const entityName = entities[entityId]?.title as string;
+
+      point[entityName] = subscribe;
     });
 
     return point;
   });
 
-  group.statistics = metadata.entities.map(({ id, entityType, subscribe, leave }: T.EntityData) => {
-    const row = {
-      id,
-      entityType,
-      subscribe,
-      leave,
-    } as T.EntityData & {
-      subscribersAPS: number;
-      subscribersAPE: number;
-      percentages: number;
-      checked: boolean;
-    };
+  group.statistics = metadata.entities.map(
+    ({ entityId, entityType, startMembers, endMembers, subscribe, leave }: T.EntityData) => {
+      const row = {
+        entityId,
+        entityType,
+        startMembers,
+        endMembers,
+        subscribe,
+        leave,
+      } as T.RowData;
 
-    const indexFirst = 0;
-    const indexLast = data.length - 1;
+      row.percentages = calculateDifference({
+        start: startMembers,
+        end: endMembers,
+      });
 
-    row.subscribersAPS = data[indexFirst].entities.filter((el: T.EntityData) => el.id === id).subscribe;
-    row.subscribersAPE = data[indexLast].entities.filter((el: T.EntityData) => el.id === id).subscribe;
+      const rowState = groupState.statistics.find((element: T.StatisticsItem) => element.entityId == row.entityId);
 
-    const { subscribersAPS, subscribersAPE } = row;
+      row.name = entities[entityId]?.title || 'Default entity name';
+      row.checked = typeof rowState?.['checked'] === 'boolean' ? rowState.checked : false;
+      row.color = typeof rowState?.['color'] === 'string' ? rowState.color : '';
 
-    row.percentages = 100 * Math.abs((subscribersAPS - subscribersAPE) / ((subscribersAPS + subscribersAPE) / 2));
-
-    row.checked = true;
-
-    return row;
-  });
-
-  group.chart.elements = keyBy(
-    sort(group.statistics, ['checked', true]),
-    (o: Partial<{ id: number; name: string }>) => o.name,
+      return row;
+    },
   );
+
+  group.chart.elements = keyBy(sort(group.statistics, ['checked', true]), (o: Partial<{ name: string }>) => o.name);
+
+  return {
+    entityType,
+    filter,
+    filterFilter,
+    data: group,
+  };
 };
 
-export { getEntityState, reportsMiddleware, setDefaultGraphicsState, setGraphicsState };
+const reportsByRegionMiddleware = async () => {
+  return {};
+};
+
+const reportsByFormatMiddleware = async () => {
+  return {};
+};
+
+export { getEntityState, reportsByTimeMiddleware, reportsByRegionMiddleware, reportsByFormatMiddleware };
