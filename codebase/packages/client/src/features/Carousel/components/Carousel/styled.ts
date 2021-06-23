@@ -3,9 +3,10 @@ import styled, { css } from 'styled-components';
 import Media from 'styles/media';
 import { GREY_COLOR } from 'styles';
 
-const swipeJsCss = css`
+const swipeJsCss = css<{ height: string; }>`
   .swipe {
     overflow: hidden;
+    height: ${({ height }) => height};
   }
 
   .swipe-wrap {
@@ -30,12 +31,11 @@ export const ActiveItemControlContainer = styled.div`
   border-top: none;
 `;
 
-export const SwipeWrapper = styled.div`
+export const SwipeWrapper = styled.div<{ height: string; }>`
   position: relative;
   border: none;
   background-color: ${({ theme }) => theme.colors.white};
   width: 100%;
-  height: fit-content;
   ${swipeJsCss};
 `;
 

@@ -1,4 +1,4 @@
-import React, { FC, useRef, Children, useCallback, useEffect } from 'react';
+import React, { FC, useRef, Children, useCallback, useEffect, useState } from 'react';
 import Swipe, { SwipeItem, SwipeInstance } from 'swipejs/react';
 import { ContentCarousel } from '@beans/carousel';
 
@@ -17,7 +17,10 @@ type Props = {
   onChange?: () => void;
   isOpen?: boolean;
   interval?: number;
+  height?: string;
 };
+
+const CLOSED_CHILD_HEIGHT = 140;
 
 const Carousel: FC<Props> = ({
   children,
@@ -28,22 +31,21 @@ const Carousel: FC<Props> = ({
   onChange,
   isOpen = false,
   interval = AUTO_SLIDE_INTERVAL,
+  height = 'auto',
   ...rest
 }) => {
   const { isMobile } = useMedia();
   const swipe = useRef<SwipeInstance>(null);
-  const [activeIndex, syncActiveIndex] = React.useState(0);
+  const [activeIndex, syncActiveIndex] = useState(0);
   const childCount = React.Children.count(children);
 
   useEffect(() => {
     if (isOpen) {
-      // @ts-ignore
       swipe?.current?.instance?.stop();
     } else {
-      // @ts-ignore
       swipe?.current?.instance?.enable();
     }
-  }, [isOpen]);
+  }, [isOpen, activeIndex]);
 
   const handleSwipe = useCallback(
     (index) => {
@@ -53,15 +55,22 @@ const Carousel: FC<Props> = ({
     [activeIndex],
   );
 
+  const handleDotClick = (index: number) => {
+    syncActiveIndex(index);
+    swipe?.current?.instance?.slide(index);
+  }
+
   if (fullWidth || isMobile) {
     return (
-      <SwipeWrapper data-testid='carousel'>
+      <SwipeWrapper data-testid='carousel' height={height}>
         <Swipe
           auto={interval}
           callback={handleSwipe}
           speed={TRANSITION_SPEED}
           continuous={continuous}
           ref={swipe}
+          autoHeight={true}
+          height='1000px'
         >
           {Children.map(children, (child, index) => (
             <SwipeItem key={index}>{child}</SwipeItem>
@@ -72,6 +81,7 @@ const Carousel: FC<Props> = ({
             <ActiveItemControl
               itemsCount={childCount}
               activeItem={activeIndex}
+              onDotClick={handleDotClick}
               next={swipe?.current?.instance?.next}
               prev={swipe?.current?.instance?.prev}
             />

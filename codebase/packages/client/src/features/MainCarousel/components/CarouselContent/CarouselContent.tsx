@@ -13,11 +13,12 @@ type Props = {
   };
   onButtonClick: () => void;
   isOpen: boolean;
+  index: number;
 };
 
-const CarouselContent: FC<Props> = ({ title, description, image: { src }, onButtonClick, isOpen }) => (
+const CarouselContent: FC<Props> = ({ index, title, description, image: { src }, onButtonClick, isOpen }) => (
   <Wrapper>
-    <ContentWrapper>
+    <ContentWrapper id={`carousel-content-${index}`}>
       <Title>{title}</Title>
       <DescriptionWrapper>
         <Description isOpen={isOpen}>
