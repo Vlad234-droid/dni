@@ -176,7 +176,7 @@ export const LeftContainer = styled.div.attrs({
 })`
   grid-area: left;
   position: fixed;
-  z-index: 2000;
+  z-index: 200;
   bottom: 0;
   left: 0;
   right: 0;

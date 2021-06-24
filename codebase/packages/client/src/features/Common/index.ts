@@ -21,4 +21,5 @@ export { default as RichTextRenderer } from './components/RichTextRenderer';
 export { default as Error } from './components/Error';
 export { default as TextWithEllipsis } from './components/TextWithEllipsis';
 export { default as CMSLink } from './components/CMSLink';
+export { default as ConfirmationModal } from './components/ConfirmationModal';
 export { FieldWrapper } from './styled';
