@@ -176,7 +176,7 @@ export const LeftContainer = styled.div.attrs({
 })`
   grid-area: left;
   position: fixed;
-  z-index: 2000;
+  z-index: 200;
   bottom: 0;
   left: 0;
   right: 0;
@@ -191,6 +191,8 @@ export const MainContainer = styled.div.attrs({
 })<Partial<LayoutProps>>`
   grid-area: main;
   overflow-y: auto;
+  max-height: calc(100vh - 55px - 44px);
+  //overflow: scroll;
 
   ${({ theme }) => css`
     ${Media.small_desktop`
