@@ -3,7 +3,7 @@ import copy from 'copy-to-clipboard';
 import Button from '@beans/button';
 import Icon from '@beans/icon';
 
-import { ROOT_PATH } from 'config/constants';
+import { getPath } from 'utils/path';
 
 type Props = {
   to?: string;
@@ -11,13 +11,11 @@ type Props = {
   hideNotification: () => void;
 };
 
-const getPathname = (pathname: string, to: string) => (pathname.includes(ROOT_PATH) ? `/${ROOT_PATH}${to}` : to);
-
 const CopyLink: FC<Props> = ({ showNotification, hideNotification, to }) => {
   const handleClick = useCallback(() => {
     const { host, pathname } = window.location;
 
-    const path = to ? getPathname(pathname, to) : pathname;
+    const path = to ? getPath(to) : pathname;
     const url = `${host}${path}`;
 
     copy(url);
