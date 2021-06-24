@@ -191,8 +191,6 @@ export const MainContainer = styled.div.attrs({
 })<Partial<LayoutProps>>`
   grid-area: main;
   overflow-y: auto;
-  max-height: calc(100vh - 55px - 44px);
-  //overflow: scroll;
 
   ${({ theme }) => css`
     ${Media.small_desktop`
