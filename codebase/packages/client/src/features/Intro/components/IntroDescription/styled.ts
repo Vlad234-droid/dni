@@ -37,5 +37,6 @@ export const Content = styled.div<{ isOpen: boolean }>`
 
   p {
     margin-bottom: 16px;
+    display: contents !important;
   }
 `;

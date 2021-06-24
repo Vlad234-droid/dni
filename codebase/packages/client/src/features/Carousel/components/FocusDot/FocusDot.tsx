@@ -1,8 +1,8 @@
 import React, { FC } from 'react';
 import styled, { css } from 'styled-components';
 
-const FocusDot: FC<{ active?: boolean }> = ({ active }) => (
-  <Container>
+const FocusDot: FC<{ active?: boolean, index: number; onClick: (index: number) => void; }> = ({ active, index, onClick }) => (
+  <Container onClick={() => onClick(index)}>
     <Hole />
     <RedDot active={active} />
   </Container>

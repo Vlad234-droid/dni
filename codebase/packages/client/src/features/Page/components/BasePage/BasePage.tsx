@@ -7,6 +7,7 @@ import { Header, HeaderMain, HeaderLink } from 'features/Header';
 import { MenuMobile } from 'features/Menu';
 import { useMedia } from 'context/InterfaceContext';
 import NetworkUpdates from 'features/NetworkUpdates';
+import { LINKS } from 'config/constants';
 
 const TEST_ID = 'base-page';
 
@@ -26,7 +27,7 @@ const BasePage: FC<ExtraLayoutProps> = (props) => {
                 <UpdatesWrapper>
                   <NetworkUpdates />
                 </UpdatesWrapper>
-                <Link href='https://www.ourtesco.com/colleague/terms-and-conditions' target='_blank'>
+                <Link href={LINKS.termsAndConditions} target='_self'>
                   Terms & Conditions
                 </Link>
               </>

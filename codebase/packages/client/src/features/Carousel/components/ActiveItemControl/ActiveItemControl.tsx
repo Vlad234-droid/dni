@@ -11,9 +11,10 @@ type Props = {
   activeItem: number;
   next?: () => void;
   prev?: () => void;
+  onDotClick: (index: number) => void;
 };
 
-const ActiveItemControl: FC<Props> = ({ itemsCount, activeItem, next, prev }) => {
+const ActiveItemControl: FC<Props> = ({ itemsCount, activeItem, next, prev, onDotClick }) => {
   const { isMobile } = useMedia();
 
   return (
@@ -25,7 +26,7 @@ const ActiveItemControl: FC<Props> = ({ itemsCount, activeItem, next, prev }) =>
       )}
       {Array.from({ length: itemsCount }, (_, index) => (
         <DowWrapper key={index}>
-          <FocusDot active={index === activeItem} />
+          <FocusDot index={index} active={index === activeItem} onClick={onDotClick} />
         </DowWrapper>
       ))}
       {!isMobile && (

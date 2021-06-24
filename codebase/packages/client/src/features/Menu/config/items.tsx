@@ -1,5 +1,5 @@
 import { Page } from 'features/Page';
-import { ROOT_PATH } from 'config/constants';
+import { getRootPath } from 'utils/path';
 
 import { PageWithIcon } from './types';
 
@@ -58,7 +58,7 @@ export const mainMenuItems = [
     text: 'Health and Wellbeing',
   },
   {
-    href: window.location.pathname.includes(ROOT_PATH) ? process.env.PUBLIC_URL : '/',
+    href: getRootPath(),
     id: 'diversity-and-inclusion',
     text: 'Diversity and Inclusion',
     active: true,
