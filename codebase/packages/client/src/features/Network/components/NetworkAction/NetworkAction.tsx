@@ -6,7 +6,7 @@ import useDispatch from 'hooks/useDispatch';
 import { joinNetwork, leaveNetwork, leaveEvent } from 'features/Auth';
 import Event from 'features/Event';
 
-import { ModalJoin, ModalLeave } from '../ConfirmationModal';
+import { ModalJoin, ModalLeave } from '../Modal';
 import { joinParticipant, leaveParticipant } from '../../store';
 
 type Props = {

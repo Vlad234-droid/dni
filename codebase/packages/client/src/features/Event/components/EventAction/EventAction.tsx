@@ -1,6 +1,5 @@
 import React, {FC, useCallback, useState} from 'react';
 import Button from '@beans/button';
-import BeansModal from '@beans/modal';
 
 import useStore from 'hooks/useStore';
 import useDispatch from 'hooks/useDispatch';
@@ -8,7 +7,6 @@ import { ConfirmationModal } from 'features/Common';
 import { joinEvent, leaveEvent } from 'features/Auth';
 
 import { joinParticipant, leaveParticipant } from '../../store';
-import {ModalLeave} from "../../../Network/components/ConfirmationModal";
 
 type Props = {
   id: number;
