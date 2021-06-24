@@ -1,4 +1,3 @@
-import { useSelector } from 'react-redux';
 import keyBy from 'lodash.keyby';
 import sort from 'lodash.filter';
 
@@ -147,10 +146,10 @@ const reportsByTimeMiddleware = async ({ entityType, filter, filterFilter, from,
       name: isoDateToFormat(element.period, FULL_DAY_FORMAT),
     } as T.Point;
 
-    element.entities.forEach(({ entityId, entityType, subscribe }: any) => {
+    element.entities.forEach(({ entityId, members }: any) => {
       const entityName = entities[entityId]?.title as string;
 
-      point[entityName] = subscribe;
+      point[entityName] = members;
     });
 
     return point;
