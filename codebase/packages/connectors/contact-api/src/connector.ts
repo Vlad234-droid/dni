@@ -1,4 +1,4 @@
-import { fetchClient, resolveBaseUrl, TESCO_API_URLS } from '@energon-connectors/core';
+import { fetchClient, resolveBaseUrl, TESCO_API_URLS, Headers } from '@energon-connectors/core';
 import { createApiConsumer } from '@energon/rest-api-consumer';
 import { defineAPI } from '@energon/rest-api-definition';
 
@@ -11,6 +11,7 @@ import {
   ApiInput,
   ContactApiContext,
   ApiParams,
+  ContactAPIHeaders,
 } from './types';
 
 export type ElementType<T extends ReadonlyArray<unknown>> = T extends ReadonlyArray<infer ElementType>
@@ -38,14 +39,19 @@ export const contactApiDef = defineAPI((endpoint) => ({
 }));
 
 export const contactApiConnector = (ctx: ContactApiContext) => {
+  const headers: ContactAPIHeaders = {
+    ...Headers.identityClientScopedAuthorization(ctx),
+  };
   const baseUrl = resolveBaseUrl(TESCO_API_URLS, ctx);
 
-  const apiConsumer = createApiConsumer(contactApiDef, fetchClient(baseUrl, {}, ctx));
+  const apiConsumer = createApiConsumer(contactApiDef, fetchClient(baseUrl, headers, ctx));
 
   return {
-    sendMessages: (input: ApiInput<ApiParams, ApiMsgBody>) => apiConsumer.sendMessages(input),
+    sendMessages: ({ params, body }: ApiInput<ApiParams, ApiMsgBody>) =>
+      apiConsumer.sendMessages({ params, body: body! }),
     getEmailAddresses: (input: ApiInput<ApiParams>) => apiConsumer.getEmailAddresses(input),
-    updateEmailAddress: (input: ApiInput<ApiParams, ApiEmailAddressBody>) => apiConsumer.updateEmailAddress(input),
+    updateEmailAddress: ({ params, body }: ApiInput<ApiParams, ApiEmailAddressBody>) =>
+      apiConsumer.updateEmailAddress({ params, body: body! }),
   };
 };
 
