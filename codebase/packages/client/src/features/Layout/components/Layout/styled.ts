@@ -109,8 +109,16 @@ export const HeaderContainer = styled.div.attrs({
   ${stylesHeader};
   grid-area: header;
   box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.15);
+  position: fixed;
+  height: 44px;
+  left: 0;
+  right: 0;
+  top: 0;
+  background-color: ${({ theme }) => theme.colors.white};
 
   ${Media.small_desktop`
+    position: relative;
+    height: auto;
     background-color: ${GREY_COLOR};
   `}
 
