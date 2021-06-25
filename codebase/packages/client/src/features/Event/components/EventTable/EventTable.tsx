@@ -36,7 +36,7 @@ const EventTable: FC = () => {
   const tooltipPosition = { top: '38px', left: '32px' };
 
   const memoizedContent = useMemo(() => {
-    if (error) return <Error errorData={{ title: error }} />;
+    if (error) return <Error />;
 
     if (isEmpty(events) && isLoading) return <Spinner height='500px' />;
 

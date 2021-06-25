@@ -133,7 +133,7 @@ const PostList: FC<Props> = ({ entityId, filter = ALL }) => {
   }, []);
 
   const memoizedContent = useMemo(() => {
-    if (error) return <Error errorData={{ title: error }} fullWidth />;
+    if (error) return <Error fullWidth />;
 
     if (isEmpty(posts) && isLoading) return <Spinner height='500px' />;
 

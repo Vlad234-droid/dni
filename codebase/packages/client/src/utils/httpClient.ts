@@ -4,7 +4,6 @@ import { Page } from 'features/Page';
 
 import './mockHttpClient';
 import history from './history';
-import { reloadPage } from './reload';
 
 enum ResponseStatus {
   UNAUTHORIZED = 401,
@@ -40,7 +39,6 @@ httpClient.interceptors.response.use(
 
     switch (status) {
       case ResponseStatus.UNAUTHORIZED:
-        reloadPage();
         history.push(Page.UNAUTHORIZED);
         break;
       case ResponseStatus.FORBIDDEN:

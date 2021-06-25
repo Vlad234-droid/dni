@@ -47,6 +47,12 @@ export const Title = styled.div`
   font-weight: bold;
 `;
 
+export const BtnContainer = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+`;
+
 export const Message = styled.div`
   ${textXS};
   color: ${({ theme }) => theme.colors.grayscale};

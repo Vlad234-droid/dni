@@ -87,7 +87,7 @@ const EventList: FC<Props> = ({
   }, []);
 
   const memoizedContent = useMemo(() => {
-    if (error) return <Error errorData={{ title: error }} />;
+    if (error) return <Error />;
 
     if (isEmpty(events) && isLoading) return <Spinner height='500px' />;
 
