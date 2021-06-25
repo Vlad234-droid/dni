@@ -59,7 +59,8 @@ const EventHeader: FC<Props> = ({ event, participants }) => {
               filename={`${event.title} event.ics`}
               event={{
                 title: event.title,
-                description: event.description,
+                description:
+                  'For more details and the link to join the virtual event please check the event link below: ',
                 startTime: event.startDate.replace('at', ''),
                 endTime: event.endDate.replace('at', ''),
                 location: '',
