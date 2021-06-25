@@ -40,7 +40,9 @@ export const LinkWrapper = styled(Link)<{ active?: boolean }>`
   }
 
   &:last-child {
-    margin-top: auto;
+    margin: auto;
+    margin-bottom: 15vh;
+    border-top: none;
     width: 100%;
     text-align: center;
   }
