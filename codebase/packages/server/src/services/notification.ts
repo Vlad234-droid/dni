@@ -1,4 +1,10 @@
-import { getRepository, Notification, NotificationActionType, NotificationEntityType } from '@dni/database';
+import {
+  getRepository,
+  Notification,
+  NotificationEmployee,
+  NotificationActionType,
+  NotificationEntityType,
+} from '@dni/database';
 import { Network, Event, Post } from '@dni-connectors/colleague-cms-api';
 
 type Input = {
@@ -97,7 +103,19 @@ const analyzeAction = (data: Input, entityType: NotificationEntityType | undefin
   }
 };
 
-const findAllNotifications = () => {
+const findNotifications = (colleagueUUID: string) => {
+  return (
+    getRepository(Notification)
+      .createQueryBuilder('n')
+      .select('n')
+      // .leftJoin('n.employees', 'em')
+      // .where('em.colleagueUUID IS NULL')
+      .orderBy('n.createdAt', 'DESC')
+      .getMany()
+  );
+};
+
+const findNetworkNotifications = (colleagueUUID: string) => {
   return getRepository(Notification).find({
     order: {
       createdAt: 'DESC',
@@ -105,4 +123,11 @@ const findAllNotifications = () => {
   });
 };
 
-export { analyze, handleData, findAllNotifications };
+const createColleagueRelation = (notificationId: number, colleagueUUID: string) => {
+  return getRepository(NotificationEmployee).save({
+    notificationId,
+    colleagueUUID,
+  });
+};
+
+export { analyze, handleData, findNotifications, findNetworkNotifications, createColleagueRelation };

@@ -1,4 +1,4 @@
-import { ProcessEnv } from './env-accessor';
+import { ProcessEnv, envAccessor } from './env-accessor';
 import { defaultConfig } from '../config/default';
 
 type ProcessConfig = {
@@ -101,6 +101,13 @@ class ConfigAccessor {
   }
 }
 
+const getConfig = () => {
+  // validate if all required process env variables exist
+  envAccessor.validate();
+
+  return ConfigAccessor.getInstance(envAccessor.getData()).getData();
+};
+
 export type { ProcessConfig };
 
-export { ConfigAccessor };
+export { getConfig, ConfigAccessor };
