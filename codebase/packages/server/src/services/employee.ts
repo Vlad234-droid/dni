@@ -3,13 +3,18 @@ import { getOpenIdUserInfo } from '@energon/onelogin';
 import { getRepository, EmployeeEvent, EmployeeNetwork } from '@dni/database';
 import { defaultConfig } from '../config/default';
 
-const profileInfoExtractor = async (req: Request, res: Response) => {
-  const userInfo =
-    getOpenIdUserInfo(res) || req.cookies[process.env.COOKIE_USER_KEY!] || {};
+const infoExtractor = (req: Request, res: Response) => {
+  const userInfo = getOpenIdUserInfo(res) || req.cookies[process.env.COOKIE_USER_KEY!] || {};
 
   if (!userInfo) {
     return res.status(403);
   }
+
+  return userInfo;
+};
+
+const profileInfoExtractor = async (req: Request, res: Response) => {
+  const userInfo = infoExtractor(req, res);
 
   let networks: number[] = [];
   let events: number[] = [];
@@ -97,4 +102,5 @@ export {
   removeEventRelation,
   findNetworksParticipants,
   findEventsParticipants,
+  infoExtractor,
 };

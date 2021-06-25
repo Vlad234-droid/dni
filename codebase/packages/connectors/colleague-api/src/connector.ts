@@ -11,6 +11,7 @@ import {
   ApiInput,
   ApiParams,
   ColleagueV2,
+  ColleagueList,
   ColleagueAPIHeaders,
 } from './types';
 
@@ -36,6 +37,7 @@ export const colleagueApiDef = defineAPI((endpoint) => ({
     .params<ApiParams>()
     .response<ColleagueV2>()
     .build(),
+  getColleaguesV2: endpoint.get('/colleague/v2/colleagues').params<ApiParams>().response<ColleagueV2[]>().build(),
 }));
 
 export const colleagueApiConnector = (ctx: ColleagueApiContext) => {
@@ -56,6 +58,10 @@ export const colleagueApiConnector = (ctx: ColleagueApiContext) => {
     },
     v2: {
       getColleague: (input: ApiInput<ApiParams>) => apiConsumer.getColleagueV2(input),
+      getColleagues: (input: ApiInput<ApiParams>) =>
+        apiConsumer
+          .getColleaguesV2(input)
+          .then((response) => ({ data: (response.data as unknown as ColleagueList).colleagues })),
     },
   };
 };

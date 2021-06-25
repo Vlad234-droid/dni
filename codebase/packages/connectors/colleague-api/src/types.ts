@@ -51,12 +51,17 @@ export type GetColleagueInput<T extends keyof Colleague> = {
 export type ColleagueApiContext = Pick<ConnectorContext, 'identityClientToken' | 'apiEnv' | 'markApiCall'>;
 
 export type ApiParams = {
-  colleagueUUID: string;
+  colleagueUUID?: string;
+  'externalSystems.iam.id'?: string;
 };
 
 export type ApiInput<T, U = unknown> = {
   params: T;
   body?: U;
+};
+
+export type ColleagueList = {
+  colleagues: ColleagueV2[];
 };
 
 export interface ColleagueV2 {

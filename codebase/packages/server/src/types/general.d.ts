@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { AuthData, OpenIdUserInfo } from '@energon/onelogin';
+import { ColleagueV2 } from '@dni-connectors/colleague-api';
 
 declare global {
   type Middleware = {
@@ -9,11 +10,16 @@ declare global {
   type ErrorMiddleware = {
     <T>(err: Error, req: Request & T, res: Response, next: NextFunction): void;
   };
-}
 
-declare namespace Express {
-  export interface Request {
-    oneLoginAuthData?: AuthData;
-    oneLoginUserInfo?: OpenIdUserInfo;
+  namespace Express {
+    export interface Request {
+      oneLoginAuthData?: AuthData;
+      oneLoginUserInfo?: OpenIdUserInfo;
+      colleague?: ColleagueV2 | null;
+    }
+
+    export interface Response {
+      colleague?: ColleagueV2 | null;
+    }
   }
 }

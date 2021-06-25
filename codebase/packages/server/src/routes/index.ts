@@ -14,14 +14,17 @@ import {
   // notification
   handleHook,
   handleCepHook,
+  getNotifications,
+  getNetworkNotifications,
+  viewNotification,
   // networks
   getNetworksParticipants,
   // events
   getEventsParticipants,
-  //report
+  // report
   getReportByFilters,
   printPDF,
-  //utils
+  // utils
   getEnvironmentVariablesMiddleware,
   getTypeOrmConnectionOptionsMiddleware,
 } from '../controllers';
@@ -31,7 +34,6 @@ import { cmsAuth } from '../middlewares/cms-auth';
 // controllers
 const healthCheck = express.Router();
 const api = express.Router();
-//const cepApi = express.Router();
 
 healthCheck.get('/_status', (_: Request, res: Response) => res.sendStatus(200));
 
@@ -56,5 +58,8 @@ api.get('/utils/type-orm-options', getTypeOrmConnectionOptionsMiddleware);
 
 api.post('/notifications', cmsAuth, handleHook);
 api.post('/cms-events', handleCepHook);
+api.get('/notifications', getNotifications);
+api.get('/notifications/networks', getNetworkNotifications);
+api.post('/notifications/:notificationId/view', viewNotification);
 
 export { healthCheck, api };

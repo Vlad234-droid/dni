@@ -33,6 +33,9 @@ const api = (requestCtx: ContextProvider<any>) =>
     getColleagueV2: ({ params }, ctx) => {
       return colleagueApiConnector(ctx).v2.getColleague({ params }).then(unsafelyUnpackResponseData);
     },
+    getColleaguesV2: ({ params }, ctx) => {
+      return colleagueApiConnector(ctx).v2.getColleagues({ params }).then(unsafelyUnpackResponseData);
+    },
     // contact api
     sendMessages: (payload, ctx) => {
       return contactApiConnector(ctx).sendMessages(payload).then(unsafelyUnpackResponseData);
