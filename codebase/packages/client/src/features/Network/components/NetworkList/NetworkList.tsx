@@ -125,7 +125,7 @@ const NetworkList: FC = () => {
   }, [networks]);
 
   const memoizedContent = useMemo(() => {
-    if (error) return <Error errorData={{ title: error }} />;
+    if (error) return <Error />;
 
     if (isEmpty(networksList) && isLoading) return <Spinner height='500px' />;
 
