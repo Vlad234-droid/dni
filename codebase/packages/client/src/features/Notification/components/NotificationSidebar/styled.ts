@@ -16,7 +16,7 @@ export const Wrapper = styled.div`
   background-color: ${({ theme }) => theme.colors.white};
 
   ${Media.small_desktop`
-    height: calc(100vh - 226px);
+    height: calc(100vh - 234px);
   `}
 `;
 
