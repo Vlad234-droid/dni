@@ -1,7 +1,8 @@
 import styled, { css } from 'styled-components';
 
 import Media from 'styles/media';
-import { HEADER_HEIGHT_DESKTOP, HEADER_HEIGHT_MOBILE, redDotStyles } from 'styles';
+import { redDotStyles } from 'styles';
+import { HEADER_HEIGHT_MOBILE, HEADER_HEIGHT_DESKTOP } from 'features/Layout';
 
 export const Wrapper = styled.div`
   position: relative;

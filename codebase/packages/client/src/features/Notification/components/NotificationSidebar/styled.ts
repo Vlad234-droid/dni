@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 import Media from 'styles/media';
-import { HEADER_HEIGHT_MOBILE, FOOTER_HEIGHT } from 'styles/sizes';
+import { HEADER_HEIGHT_MOBILE, FOOTER_HEIGHT } from 'features/Layout';
 
 export const Wrapper = styled.div`
   padding: 24px;
