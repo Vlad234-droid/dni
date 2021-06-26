@@ -33,6 +33,7 @@ export const Wrapper = styled.div<Props>`
   grid-template-areas: 'header' 'main' 'left';
 
   ${Media.small_desktop`
+    height: 100vh;
     grid-template-columns: minmax(${PADDING}, 1fr) ${SIDEBAR_WIDTH} minmax(auto, ${MAIN_WIDTH_SMALL}) minmax(
       ${PADDING},
       1fr
@@ -82,13 +83,9 @@ export const TopHeaderContainer = styled.div.attrs({
 
   ${({ theme }) => css`
     ${Media.small_desktop`
-        height: ${TOP_HEADER_HEIGHT};
         grid-area: top-header;
         background-color: ${theme.colors.tescoBlue};
         ${stylesHeader};
-        position: fixed;
-        width: 100%;
-        z-index: 2000;
     `}
   `}
 `;
@@ -104,10 +101,6 @@ export const MainHeaderContainer = styled.div.attrs({
       height: ${MAIN_HEADER_HEIGHT};
       grid-area: main-header;
       ${stylesHeader};
-      position: fixed;
-      width: 100%;
-      z-index: 2000;
-      top: ${TOP_HEADER_HEIGHT};
     `}
   `}
 `;
@@ -126,11 +119,10 @@ export const HeaderContainer = styled.div.attrs({
   background-color: ${({ theme }) => theme.colors.white};
 
   ${Media.small_desktop`
-    height: ${HEADER_HEIGHT_DESKTOP};
+    position: relative;
+    height: auto;
     background-color: ${GREY_COLOR};
     width: 100%;
-    z-index: 2000;
-    top: calc(${TOP_HEADER_HEIGHT} + ${MAIN_HEADER_HEIGHT} - 1px);
   `}
 
   ${({ theme }) => css`
