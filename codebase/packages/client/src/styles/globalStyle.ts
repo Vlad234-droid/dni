@@ -21,6 +21,9 @@ export default createGlobalStyle<{
     font-size: ${({ theme }) => theme.fontSize.xs};
     line-height: ${({ theme }) => theme.lineHeight.text.xs};
     color: ${({ theme }) => theme.colors.base};
+    
+    //remove extra scroll on mobile 
+    height: calc(100vh - calc(100vh - 100%));
   }
 
   h1,
