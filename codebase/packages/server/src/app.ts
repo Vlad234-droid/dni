@@ -5,8 +5,8 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import { isDEV } from './config/env';
 
-import { colleagueApiConnector } from '@dni-connectors/colleague-api';
-import { prepareContext } from './services/context';
+//import { colleagueApiConnector } from '@dni-connectors/colleague-api';
+//import { prepareContext } from './services/context';
 
 import { envAccessor, getConfig } from './services';
 import { healthCheck, api } from './routes';
@@ -42,12 +42,12 @@ const startServer = async () => {
     console.log(`Current build environment: ${config.buildEnvironment}`);
     console.log(`Current infrastructure environment: ${config.environment}`);
 
-    // test
-    const tpx = 'UK45006148';
-    const ctx = await prepareContext();
-    const connector = colleagueApiConnector(ctx);
-    const response = await connector.v2.getColleagues({ params: { 'externalSystems.iam.id': tpx } });
-    console.log(`colleague with TPX ${tpx}`, response.data[0]);
+    // // test
+    // const tpx = 'UK45006148';
+    // const ctx = await prepareContext();
+    // const connector = colleagueApiConnector(ctx);
+    // const response = await connector.v2.getColleagues({ params: { 'externalSystems.iam.id': tpx } });
+    // console.log(`colleague with TPX ${tpx}`, response.data[0]);
 
     // initialize connection to DB
     await initializeTypeOrm();
