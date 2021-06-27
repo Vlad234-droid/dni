@@ -7,6 +7,7 @@ import store from 'store';
 
 import * as T from '../config/types';
 import color from '../config/color';
+import { getRegionsData, getDepartmentsData } from '../config/data';
 
 const getDatePointState = () =>
   ({
@@ -27,7 +28,7 @@ const getChartState = () =>
     entities: [],
   } as T.ChartItem);
 
-const getStatisticsState = () => [] as T.StatisticsItem[];
+const getStatisticsState = () => [] as T.Statistics;
 
 const getGraphicsState = () =>
   ({
@@ -60,18 +61,6 @@ const getEntityState = () =>
     },
   } as T.EntityItem);
 
-const buildTimePeriodQuery = ({ entityType, groupBy, from, to, ids }: T.Params) => {
-  const requestQuery = {
-    entityType: entityType == 0 ? 'NETWORK' : 'EVENT',
-    groupBy,
-    from,
-    to,
-    entityIds: ids.join(','),
-  };
-
-  return requestQuery;
-};
-
 const calculateDifference = ({ start, end }: { start: number; end: number }) => {
   if (start === 0 && end === 0) {
     return 0;
@@ -85,7 +74,31 @@ const calculateDifference = ({ start, end }: { start: number; end: number }) => 
   }
 };
 
-const reportsByTimeMiddleware = async ({ entityType, filter, filterFilter, from, to }: T.ReportsMiddlewareArgs) => {
+const buildTimePeriodQuery = ({ entityType, groupBy, from, to, ids }: T.Params) => {
+  const requestQuery = {
+    entityType: entityType == 0 ? 'NETWORK' : 'EVENT',
+    groupBy,
+    from,
+    to,
+    entityIds: ids.join(','),
+  };
+
+  return requestQuery;
+};
+
+const reportsByTimeMiddleware = async ({
+  entityType,
+  filter,
+  filterFilter,
+  from,
+  to,
+}: {
+  entityType: T.Entity;
+  filter: T.Filter;
+  filterFilter: T.Period;
+  from: string;
+  to: string;
+}) => {
   const { ids, entities } = store.getState()[entityType === 0 ? 'networks' : 'events'];
   const date = new Date(new Date().getTime() + 1000 * 60 * 60 * 24);
 
@@ -164,7 +177,7 @@ const reportsByTimeMiddleware = async ({ entityType, filter, filterFilter, from,
         endMembers,
         subscribe,
         leave,
-      } as T.RowData;
+      } as T.StatisticsItem;
 
       row.percentages = calculateDifference({
         start: startMembers,
@@ -191,12 +204,92 @@ const reportsByTimeMiddleware = async ({ entityType, filter, filterFilter, from,
   };
 };
 
-const reportsByRegionMiddleware = async () => {
-  return {};
+const reportsByRegionMiddleware = async ({ entityType }: { entityType: T.Entity }) => {
+  const { ids } = store.getState()[entityType === 0 ? 'networks' : 'events'];
+
+  // req with ids...
+  const data = await getRegionsData();
+
+  const groupState = store.getState().reports[entityType][T.REGION][T.Region.ALL];
+  const group = getGraphicsState() as T.GraphicsItem;
+
+  group.color = groupState.color;
+
+  group.statistics = data.map(({ entityId, entityName, participants }: T.EntityDataByRegion) => {
+    const row = {
+      entityId,
+      entityName,
+    } as T.StatisticsItemByRegion;
+
+    const rowState = groupState.statistics.find((element: T.StatisticsItemByRegion) => element.entityId == row.entityId);
+
+    row.name = entityName;
+    row.checked = typeof rowState?.['checked'] === 'boolean' ? rowState.checked : false;
+    row.color = typeof rowState?.['color'] === 'string' ? rowState.color : '';
+
+    row.participants = participants.reduce((acc, { count }) => {
+      const newValue = acc + count;
+
+      return newValue;
+    }, 0);
+
+    row.elements = participants;
+
+    return row;
+  });
+
+  group.chart.entities = sort(group.statistics, ['checked', true]);
+
+  group.chart.elements = groupState.chart.elements;
+
+  return {
+    entityType,
+    data: group,
+  };
 };
 
-const reportsByFormatMiddleware = async () => {
-  return {};
+const reportsByFormatMiddleware = async ({ entityType }: { entityType: T.Entity }) => {
+  const { ids } = store.getState()[entityType === 0 ? 'networks' : 'events'];
+
+  // req with ids...
+  const data = await getDepartmentsData();
+
+  const groupState = store.getState().reports[entityType][T.FORMAT][T.Format.ALL];
+  const group = getGraphicsState() as T.GraphicsItem;
+
+  group.color = groupState.color;
+
+  group.statistics = data.map(({ entityId, entityName, participants }: T.EntityDataByFormat) => {
+    const row = {
+      entityId,
+      entityName,
+    } as T.StatisticsItemByFormat;
+
+    const rowState = groupState.statistics.find((element: T.StatisticsItemByFormat) => element.entityId == row.entityId);
+
+    row.name = entityName;
+    row.checked = typeof rowState?.['checked'] === 'boolean' ? rowState.checked : false;
+    row.color = typeof rowState?.['color'] === 'string' ? rowState.color : '';
+
+    row.participants = participants.reduce((acc, { count }) => {
+      const newValue = acc + count;
+
+      return newValue;
+    }, 0);
+
+    row.elements = participants;
+
+    return row;
+  });
+
+  group.chart.entities = sort(group.statistics, ['checked', true]);
+  
+  group.chart.elements = groupState.chart.elements;
+
+  return {
+    entityType,
+    data: group,
+  };
 };
 
 export { getEntityState, reportsByTimeMiddleware, reportsByRegionMiddleware, reportsByFormatMiddleware };
