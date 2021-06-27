@@ -98,7 +98,79 @@ const slice = createSlice({
         return { ...item, checked, color };
       });
 
-      group.chart.elements = keyBy(sort(group.statistics, ['checked', true]), (o: Partial<{ name: string }>) => o.name);
+      if (filter === T.PERIOD) {
+        group.chart.elements = keyBy(
+          sort(
+            group.statistics,
+            ['checked', true]
+          ),
+          (o: Partial<{ name: string }>) => o.name
+        );
+      }
+
+      if (filter === T.REGION) {
+        group.chart.elements = [];
+
+        group.chart.entities = sort(
+          group.statistics,
+          ['checked', true],
+        );
+
+        const items = new Map();
+
+        group.chart.entities.forEach(({ entityName, elements }: T.StatisticsItemByRegion) => {
+          elements.forEach(({ regionName, count }) => {
+
+            const itemName = regionName;
+            const item = items.get(itemName);
+
+            items.set(
+              itemName,
+              {
+                ...item ? item : {},
+                name: itemName,
+                [entityName]: count,
+              },
+            );
+          });
+        });
+
+        items.forEach((element) => {
+          group.chart.elements.push(element);
+        });
+      }
+
+      if (filter === T.FORMAT) {
+        group.chart.elements = [];
+
+        group.chart.entities = sort(
+          group.statistics,
+          ['checked', true],
+        );
+
+        const items = new Map();
+
+        group.chart.entities.forEach(({ entityName, elements }: T.StatisticsItemByFormat) => {
+          elements.forEach(({ department, count }) => {
+
+            const itemName = department;
+            const item = items.get(itemName);
+
+            items.set(
+              itemName,
+              {
+                ...item ? item : {},
+                name: itemName,
+                [entityName]: count,
+              },
+            );
+          });
+        });
+
+        items.forEach((element) => {
+          group.chart.elements.push(element);
+        });
+      }
     },
   },
   extraReducers: (builder) => {
@@ -119,7 +191,7 @@ const slice = createSlice({
     builder
       .addCase(getReportsByTime.pending, setPending)
       .addCase(getReportsByTime.fulfilled, (state: T.State, { payload }) => {
-        const { entityType, filter, filterFilter, data } = payload as T.FulfilledArgs;
+        const { entityType, filter, filterFilter, data } = payload as T.PeriodFulfilledArgs;
 
         state[entityType][filter][filterFilter] = data;
 
@@ -129,12 +201,20 @@ const slice = createSlice({
 
       .addCase(getReportsByRegion.pending, setPending)
       .addCase(getReportsByRegion.fulfilled, (state: T.State, { payload }) => {
+        const { entityType, data } = payload as T.RegionFulfilledArgs;
+
+        state[entityType][T.REGION][T.Region.ALL] = data;
+
         setSucceeded(state);
       })
       .addCase(getReportsByRegion.rejected, setFailed)
 
       .addCase(getReportsByFormat.pending, setPending)
       .addCase(getReportsByFormat.fulfilled, (state: T.State, { payload }) => {
+        const { entityType, data } = payload as T.FormatFulfilledArgs;
+
+        state[entityType][T.FORMAT][T.Format.ALL] = data;
+
         setSucceeded(state);
       })
       .addCase(getReportsByFormat.rejected, setFailed)

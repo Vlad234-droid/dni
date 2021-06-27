@@ -85,7 +85,7 @@ const Reports: FC = () => {
         onChange={(event: any) => dispatch(actions.setEntityType({ entityType: event.target.value }))}
         name='entities'
       />
-      <Statistics entityType={entityType} data={statistics} onChange={handleUpdateStatistics} />
+      <Statistics entityType={entityType} data={statistics} onChange={handleUpdateStatistics} filter={filter} />
     </div>
   );
 };
