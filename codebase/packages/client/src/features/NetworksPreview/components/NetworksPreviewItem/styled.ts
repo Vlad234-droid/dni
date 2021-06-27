@@ -9,7 +9,7 @@ export const Wrapper = styled.div`
 
   &:not(:last-child) {
     ${Media.tablet`
-      margin-right: 6px;
+      margin-right: 12px;
   `}
   }
 

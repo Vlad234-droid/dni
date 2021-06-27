@@ -11,24 +11,35 @@ import { FormData } from '../../config/types';
 import { Wrapper, Content, Title } from './styled';
 
 const NotificationSettings: FC = () => {
-  const [isFormVisible, setFormVisible] = useState(false);
-  const [email, setEmail] = useState('test@tesco.com');
+  const [formData, setFormData] = useState({
+    email: 'test@tesco.com',
+    receivePosts: false,
+    receiveEvents: false,
+  });
   const { handleSubmit, errors, register } = useForm({
     resolver: yupResolver(schema),
   });
 
-  const handleCheckBoxChange = () => {
-    setFormVisible(!isFormVisible);
-  };
-
   const onSubmit = (data: FormData) => {
-    setEmail(data.email);
+    setFormData({
+      ...formData,
+      email: data.email,
+    });
   };
 
   return (
     <Wrapper>
-      <CheckboxWithLabel id='receive-email' labelText='Receive email notifications' onChange={handleCheckBoxChange} />
-      {isFormVisible && (
+      <CheckboxWithLabel
+        id='receive-email-for-posts'
+        labelText='Receive email notifications for posts'
+        onChange={() => setFormData({ ...formData, receivePosts: !formData.receivePosts })}
+      />
+      <CheckboxWithLabel
+        id='receive-email-for-events'
+        labelText='Receive email notifications for events'
+        onChange={() => setFormData({ ...formData, receiveEvents: !formData.receiveEvents })}
+      />
+      {(formData.receivePosts || formData.receiveEvents) && (
         <Content>
           <Title>Enter email address</Title>
           <form onSubmit={handleSubmit(onSubmit)}>
@@ -36,7 +47,7 @@ const NotificationSettings: FC = () => {
               <TextInput
                 // @ts-ignore
                 domRef={register}
-                defaultValue={email}
+                defaultValue={formData.email}
                 name={'email'}
                 placeholder={'email'}
                 // @ts-ignore

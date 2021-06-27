@@ -9,7 +9,7 @@ interface Network {
   id: string;
   imageSrc: string;
   title: string;
-  description: Array<string>;
+  description: string;
 }
 
 type Props = {

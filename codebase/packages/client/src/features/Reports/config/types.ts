@@ -25,15 +25,9 @@ enum Format {
   ALL = 'All',
 }
 
-type State = {
-  entityType: Entity;
-  [Entity.NETWORK]: any;
-  [Entity.EVENT]: any;
-  loading: Loading;
-  error?: string;
-};
-
 type Filter = typeof PERIOD | typeof REGION | typeof FORMAT;
+
+type FilterFilter = Period | Region | Format;
 
 enum GroupBy {
   DAY = 'day',
@@ -62,27 +56,53 @@ type Params = {
 
 type ChartItem = {
   elements: {};
-  entities: {
-    [key: string]: string | number;
-  }[];
+  entities: any[];
 };
 
 type StatisticsItem = {
-  entityId: string;
-  name: string;
-  members: number;
+  entityId: number | string;
+  entityType: string;
+  startMembers: number;
+  endMembers: number;
+  percentages: number;
   subscribe: number;
   leave: number;
+  name: string;
   color: string;
   checked: boolean;
-  subscribersAPS: number;
-  subscribersAPE: number;
-  percentages: number;
 };
+
+type StatisticsItemByRegion = {
+  entityId: number | string;
+  entityName: string;
+  name: string;
+  color: string;
+  checked: boolean;
+  participants: number;
+  elements: {
+    regionName: string;
+    count: number;
+  }[];
+};
+
+type StatisticsItemByFormat = {
+  entityId: number | string;
+  entityName: string;
+  name: string;
+  color: string;
+  checked: boolean;
+  participants: number;
+  elements: {
+    department: string;
+    count: number;
+  }[];
+};
+
+type Statistics = (StatisticsItem | StatisticsItemByRegion | StatisticsItemByFormat)[];
 
 type GraphicsItem = {
   chart: ChartItem;
-  statistics: StatisticsItem[];
+  statistics: Statistics;
   dateInterval: Interval;
   color: {
     [key: string]: boolean;
@@ -109,6 +129,14 @@ type EntityItem = {
   };
 };
 
+type State = {
+  entityType: Entity;
+  [Entity.NETWORK]: any;
+  [Entity.EVENT]: any;
+  loading: Loading;
+  error?: string;
+};
+
 type EntityData = {
   entityId: number | string;
   entityType: string;
@@ -122,18 +150,38 @@ type EntityData = {
   title: string;
 };
 
-type ReportsMiddlewareArgs = {
-  entityType: Entity;
-  filter: Filter;
-  filterFilter: Period;
-  from: string;
-  to: string;
+type EntityDataByRegion = {
+  entityId: number | string;
+  entityName: string;
+  participants: {
+    regionName: string;
+    count: number;
+  }[];
 };
 
-type FulfilledArgs = {
+type EntityDataByFormat = {
+  entityId: number | string;
+  entityName: string;
+  participants: {
+    department: string;
+    count: number;
+  }[];
+};
+
+type PeriodFulfilledArgs = {
   entityType: Entity;
   filter: Filter;
   filterFilter: Period;
+  data: any;
+};
+
+type RegionFulfilledArgs = {
+  entityType: Entity;
+  data: any;
+};
+
+type FormatFulfilledArgs = {
+  entityType: Entity;
   data: any;
 };
 
@@ -142,26 +190,27 @@ type Point = {
   [key: string]: number | string;
 };
 
-type RowData = EntityData & {
-  percentages: number;
-  checked: boolean;
-};
-
 export type {
   State,
   Filter,
+  FilterFilter,
   Interval,
   Params,
+  EntityData,
+  EntityDataByRegion,
+  EntityDataByFormat,
   ChartItem,
+  Statistics,
   StatisticsItem,
+  StatisticsItemByRegion,
+  StatisticsItemByFormat,
   GraphicsItem,
   EntityItem,
   DatePoint,
-  EntityData,
-  ReportsMiddlewareArgs,
-  FulfilledArgs,
+  PeriodFulfilledArgs,
+  RegionFulfilledArgs,
+  FormatFulfilledArgs,
   Point,
-  RowData,
 };
 
 export { Entity, Period, Region, Format, GroupBy };

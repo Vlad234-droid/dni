@@ -17,13 +17,14 @@ const Entity = {
   },
 };
 
-type Props = {
+interface Props {
   data: Array<any>;
   onChange: (id: string, checked: boolean) => void;
   entityType: T.Entity;
-};
+  filter: string;
+}
 
-const Statistics = ({ data, onChange, entityType }: Props) => {
+const Statistics = ({ data, onChange, entityType, filter }: Props) => {
   const handleChangeItem = (e: ChangeEvent<HTMLInputElement>) => onChange(e.target.id, e.target.checked);
 
   return (
@@ -31,11 +32,16 @@ const Statistics = ({ data, onChange, entityType }: Props) => {
       <tbody>
         <Row>
           <CellName>{Entity[entityType].name}</CellName>
-          <Cell>{`${Entity[entityType].members} at the period start`}</Cell>
-          <Cell>{`${Entity[entityType].members} at the period end`}</Cell>
-          <Cell>{'change in %'}</Cell>
-          <Cell>{'subscribed during the period'}</Cell>
-          <Cell>{'left during the period'}</Cell>
+          {filter === T.PERIOD && (
+            <>
+              <Cell>{`${Entity[entityType].members} at the period start`}</Cell>
+              <Cell>{`${Entity[entityType].members} at the period end`}</Cell>
+              <Cell>{'change in %'}</Cell>
+              <Cell>{'subscribed during the period'}</Cell>
+              <Cell>{'left during the period'}</Cell>
+            </>
+          )}
+          {(filter === T.REGION || filter === T.FORMAT) && <Cell>{'Participants'}</Cell>}
         </Row>
         {data.map((item) => (
           <Row key={item.entityId}>
@@ -43,11 +49,16 @@ const Statistics = ({ data, onChange, entityType }: Props) => {
               <Checkbox checked={item.checked} id={item.entityId} onChange={handleChangeItem} />
               <TextWithEllipsis>{item.name}</TextWithEllipsis>
             </CellName>
-            <Cell>{item.startMembers}</Cell>
-            <Cell>{item.endMembers}</Cell>
-            <Cell>{item.percentages}</Cell>
-            <Cell>{item.subscribe}</Cell>
-            <Cell>{item.leave}</Cell>
+            {filter === T.PERIOD && (
+              <>
+                <Cell>{item.startMembers}</Cell>
+                <Cell>{item.endMembers}</Cell>
+                <Cell>{item.percentages}</Cell>
+                <Cell>{item.subscribe}</Cell>
+                <Cell>{item.leave}</Cell>
+              </>
+            )}
+            {(filter === T.REGION || filter === T.FORMAT) && <Cell>{item.participants}</Cell>}
           </Row>
         ))}
       </tbody>

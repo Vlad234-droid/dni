@@ -6,13 +6,13 @@ export const Wrapper = styled.div`
   top: 0;
   left: 0;
   width: 100%;
-  height: 100vh;
   background-color: ${({ theme }) => theme.colors.white};
   z-index: 200;
-  max-height: 100vh;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
+  //remove extra scroll on mobile
+  height: calc(100vh - calc(100vh - 100%));
 `;
 
 export const Heading = styled.div`
@@ -40,7 +40,9 @@ export const LinkWrapper = styled(Link)<{ active?: boolean }>`
   }
 
   &:last-child {
-    margin-top: auto;
+    margin: auto;
+    margin-bottom: 15vh;
+    border-top: none;
     width: 100%;
     text-align: center;
   }

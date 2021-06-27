@@ -11,7 +11,7 @@ const InfoPanelReducer = styled.div`
 `;
 
 const Reducer = styled.div`
-  margin: 0 16px 32px;
+  margin: 0 16px 54px;
 
   ${Media.tablet`
     margin: 0 40px 64px;

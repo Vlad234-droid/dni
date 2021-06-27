@@ -38,7 +38,7 @@ const NetworkCarousel: FC = () => {
   }, [filters]);
 
   const memoizedContent = useMemo(() => {
-    if (error) return <Error errorData={{ title: error }} />;
+    if (error) return <Error />;
 
     if (isLoading) return <Spinner height='300px' />;
 

@@ -2,19 +2,17 @@ import { HTMLProps } from 'react';
 import styled, { css } from 'styled-components';
 
 import Media from 'styles/media';
-import {
-  GREY_COLOR,
-  TOP_HEADER_HEIGHT,
-  MAIN_HEADER_HEIGHT,
-  HEADER_HEIGHT_DESKTOP,
-  HEADER_HEIGHT_MOBILE,
-  FOOTER_HEIGHT,
-} from 'styles';
+import { GREY_COLOR } from 'styles';
 
 import { LayoutProps } from '../../config/types';
 
 type Props = HTMLProps<HTMLDivElement>;
 
+export const TOP_HEADER_HEIGHT = '36px';
+export const MAIN_HEADER_HEIGHT = '131px';
+export const HEADER_HEIGHT_DESKTOP = '65px';
+export const HEADER_HEIGHT_MOBILE = '44px';
+export const FOOTER_HEIGHT = '54px';
 const SIDEBAR_WIDTH = '240px';
 const MAIN_WIDTH_SMALL = '1007px';
 //MAIN_WIDTH_SMALL + PADDING
@@ -33,9 +31,9 @@ export const Wrapper = styled.div<Props>`
   grid-template-columns: 1fr;
   grid-template-rows: ${HEADER_HEIGHT_MOBILE} 1fr ${FOOTER_HEIGHT};
   grid-template-areas: 'header' 'main' 'left';
-  height: 100vh;
 
   ${Media.small_desktop`
+    height: 100vh;
     grid-template-columns: minmax(${PADDING}, 1fr) ${SIDEBAR_WIDTH} minmax(auto, ${MAIN_WIDTH_SMALL}) minmax(
       ${PADDING},
       1fr
@@ -97,9 +95,13 @@ export const MainHeaderContainer = styled.div.attrs({
 })<Props>`
   display: none;
 
-  ${Media.small_desktop`
-    grid-area: main-header;
-    ${stylesHeader};
+  ${({ theme }) => css`
+    ${Media.small_desktop`
+      background-color: ${theme.colors.white};
+      height: ${MAIN_HEADER_HEIGHT};
+      grid-area: main-header;
+      ${stylesHeader};
+    `}
   `}
 `;
 
@@ -109,9 +111,18 @@ export const HeaderContainer = styled.div.attrs({
   ${stylesHeader};
   grid-area: header;
   box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.15);
+  position: fixed;
+  height: ${HEADER_HEIGHT_MOBILE};
+  left: 0;
+  right: 0;
+  top: 0;
+  background-color: ${({ theme }) => theme.colors.white};
 
   ${Media.small_desktop`
+    position: relative;
+    height: auto;
     background-color: ${GREY_COLOR};
+    width: 100%;
   `}
 
   ${({ theme }) => css`
@@ -168,7 +179,7 @@ export const LeftContainer = styled.div.attrs({
 })`
   grid-area: left;
   position: fixed;
-  z-index: 2000;
+  z-index: 200;
   bottom: 0;
   left: 0;
   right: 0;

@@ -1,8 +1,7 @@
 import React, { FC } from 'react';
-import Button from '@beans/button';
 import BeansModal from '@beans/modal';
 
-import { Content, Actions } from './styled';
+import { ConfirmationModal } from 'features/Common';
 
 type Props = {
   isOpen: boolean;
@@ -12,16 +11,12 @@ type Props = {
 
 const ModalLeave: FC<Props> = ({ isOpen, onClose, onConfirm }) => (
   <BeansModal open={isOpen} onChange={onClose} id='join-network'>
-    <Content>
-      <p>
-        By leaving this Network you would also leave all linked events. Are you
-        sure?
-      </p>
-    </Content>
-    <Actions>
-      <Button onClick={onConfirm}>Yes</Button>
-      <Button onClick={onClose}>No</Button>
-    </Actions>
+    <ConfirmationModal
+      isOpen={isOpen}
+      onClose={onClose}
+      onConfirm={onConfirm}
+      renderContent={() => <p>By leaving this Network you would also leave all linked events. Are you sure?</p>}
+    />
   </BeansModal>
 );
 

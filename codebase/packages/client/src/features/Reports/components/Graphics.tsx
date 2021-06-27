@@ -4,13 +4,13 @@ import DropdownGroup from '@beans/dropdown-group';
 import pick from 'lodash.pick';
 import styled from 'styled-components';
 
-import Chart from 'features/Chart';
-import Diagram from 'features/Diagram';
 import { ToastSkin, toasterActions } from 'features/Toaster';
 import { getList as getNetworks } from 'features/Network';
 import { getList as getEvents } from 'features/Event';
 import store from 'store';
 
+import AreaChart from '../components/AreaChart';
+import BarChart from '../components/BarChart';
 import RangeDateTimePicker from '../components/RangeDateTimePicker';
 import { DropdownWrapper } from './styled';
 import { actions, getReportsByTime, getReportsByRegion, getReportsByFormat } from '../store';
@@ -69,7 +69,7 @@ const getEntities = {
 type Props = {
   entityType: T.Entity;
   filter: T.Filter;
-  filterFilter: T.Period;
+  filterFilter: T.FilterFilter;
   dateInterval: T.Interval;
   data: any;
 };
@@ -79,42 +79,10 @@ const Graphics: FC<Props> = ({ entityType, filter, filterFilter, dateInterval, d
 
   const { ids } = useSelector(() => store.getState()[entityType === 0 ? 'networks' : 'events']);
 
-  const handlePeriodButtonClick = (event: any) => {
+  const handlePeriodPick = (event: any) => {
     event.preventDefault();
 
     dispatch(actions.setTimePeriodFilter({ period: event.target.value }));
-  };
-
-  const handlePeriodEffect = () => {
-    if (ids.length === 0) {
-      dispatch(
-        getEntities[entityType]({
-          _start: 0,
-          _limit: 100,
-        }),
-      );
-
-      return;
-    }
-
-    if (filter === T.PERIOD && [T.Period.THIS_YEAR, T.Period.LAST_MONTH, T.Period.LAST_WEEK].includes(filterFilter)) {
-      dispatch(
-        getReportsByTime({
-          entityType,
-          filter,
-          filterFilter,
-          ids,
-        }),
-      );
-    }
-
-    if (filter === T.REGION) {
-      dispatch(getReportsByRegion({}));
-    }
-
-    if (filter === T.FORMAT) {
-      dispatch(getReportsByFormat({}));
-    }
   };
 
   const handleRangeChange = ({ value, prop }: { value: T.DatePoint; prop: string }) => {
@@ -178,7 +146,46 @@ const Graphics: FC<Props> = ({ entityType, filter, filterFilter, dateInterval, d
     );
   };
 
-  useEffect(handlePeriodEffect, [entityType, ids, filterFilter]);
+  const handleGraphicsEffect = () => {
+    if (ids.length === 0) {
+      dispatch(
+        getEntities[entityType]({
+          _start: 0,
+          _limit: 100,
+        }),
+      );
+
+      return;
+    }
+
+    if (filter === T.PERIOD && filterFilter !== T.Period.PICK_PERIOD) {
+      dispatch(
+        getReportsByTime({
+          entityType,
+          filter,
+          filterFilter,
+        }),
+      );
+    }
+
+    if (filter === T.REGION) {
+      dispatch(
+        getReportsByRegion({
+          entityType,
+        }),
+      );
+    }
+
+    if (filter === T.FORMAT) {
+      dispatch(
+        getReportsByFormat({
+          entityType,
+        }),
+      );
+    }
+  };
+
+  useEffect(handleGraphicsEffect, [ids, entityType, filter, filterFilter]);
 
   switch (filter) {
     case T.PERIOD:
@@ -200,7 +207,7 @@ const Graphics: FC<Props> = ({ entityType, filter, filterFilter, dateInterval, d
               id='graphics'
               value={filterFilter}
               labelText='Time Period'
-              onChange={handlePeriodButtonClick}
+              onChange={handlePeriodPick}
               style={{
                 width: 208,
               }}
@@ -212,21 +219,21 @@ const Graphics: FC<Props> = ({ entityType, filter, filterFilter, dateInterval, d
               ))}
             </DropdownGroup>
           </DropdownWrapper>
-          <Chart type={'entities'} data={pick(data, ['elements', 'entities'])} />
+          <AreaChart data={data} />
         </div>
       );
     case T.REGION:
       return (
         <div data-testid={T.REGION}>
           <Label>{label[filter][entityType]}</Label>
-          <Diagram type={'regions'} data={pick(data, ['elements', 'regions'])} />
+          <BarChart data={data} />
         </div>
       );
     case T.FORMAT:
       return (
         <div data-testid={T.FORMAT}>
           <Label>{label[filter][entityType]}</Label>
-          <Diagram type={'formats'} data={pick(data, ['elements', 'formats'])} />
+          <BarChart data={data} />
         </div>
       );
     default:

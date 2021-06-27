@@ -6,24 +6,21 @@ export default [
   {
     id: 'network_1',
     imageSrc: Network1,
-    title: 'Growing Colleague Network Membership',
-    description: ['Grow the networks into all areas of the UK business to support as many colleagues as possible'],
+    title: 'Growing Colleague Network Membership in Channels',
+    description:
+      'Grow the networks in our stores, distribution and fulfilment centres, to support as many colleagues as possible',
   },
   {
     id: 'network_2',
     imageSrc: Network2,
-    title: 'Inclusive Colleagues Lifecycle',
-    description: [
-      'Work withh the D&I Team to ensure that colleagues have an inclusive experience throughout their time at Tesco',
-    ],
+    title: 'Supporting an Inclusive Colleague Lifecycle',
+    description:
+      'Align the activities of the Network to one of our core D&I workstreams e.g. workplace adjustments, recruitment, to ensure that colleagues have an inclusive experience throughout their time at Tesco.',
   },
   {
     id: 'network_3',
     imageSrc: Network3,
-    title: 'Opportunities to Get On',
-    description: [
-      'Ensure that Tesco is a place where everyone can get on',
-      'Help Tesco become known as an employer who attracts and retains  diverse talent',
-    ],
+    title: 'Driving Network Community Priorities',
+    description: 'Drive forward a key priority specifically identified by the Network and the community it represents ',
   },
 ];
