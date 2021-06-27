@@ -1,5 +1,5 @@
-import { Column, CreateDateColumn, Entity, Index, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { DniUserActionEnum } from '../../entities/v2/enums';
+import { Column, CreateDateColumn, Entity, Index, PrimaryGeneratedColumn } from 'typeorm';
+import { DniEntityTypeEnum, DniUserActionEnum } from './enums';
 
 @Entity('dni_user_subscription_log')
 @Index('d_u_subscription_log__pk', ['logUuid'], { unique: true })
