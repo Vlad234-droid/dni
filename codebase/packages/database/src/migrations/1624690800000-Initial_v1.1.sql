@@ -534,7 +534,6 @@ BEGIN
       WHERE dus.subscription_entity_type = p_entity_type AND dus.subscription_entity_id = ANY(p_entity_ids)
       ),
       initial_stats_info AS (SELECT
-         --aur.post_index_prefix,
          aur.region_name,
          dni_usl.subscription_entity_id AS entity_id,
          sum(CASE dni_usl.user_action WHEN 'join' THEN 1 WHEN 'leave' THEN -1 ELSE 0 END) subscribers_count
@@ -546,12 +545,10 @@ BEGIN
         AND dni_usl.subscription_entity_type = p_entity_type
         AND dni_usl.subscription_entity_id = ANY(p_entity_ids)
       GROUP BY
-         --aur.post_index_prefix,
          aur.region_name,
          dni_usl.subscription_entity_id
       ),
       historical_stats_info AS (SELECT
-         --aur.post_index_prefix,
          aur.region_name,
          dni_usl.subscription_entity_id AS entity_id,
          sum(CASE dni_usl.user_action WHEN 'join' THEN 1 ELSE 0 END) AS joined_count,
@@ -565,7 +562,6 @@ BEGIN
         AND dni_usl.subscription_entity_type = p_entity_type
         AND dni_usl.subscription_entity_id = ANY(p_entity_ids)
       GROUP BY
-         --aur.post_index_prefix,
          aur.region_name,
          dni_usl.subscription_entity_id
       ),
@@ -800,4 +796,3 @@ BEGIN
 END
 $function$
 ;
-
