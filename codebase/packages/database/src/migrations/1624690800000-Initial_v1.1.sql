@@ -6,7 +6,7 @@ CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 -- ========
 -- dni_user
 -- ========
-DROP TABLE IF EXISTS dni_user CASCADE;
+--DROP TABLE IF EXISTS dni_user CASCADE;
 CREATE TABLE IF NOT EXISTS dni_user (
 	colleague_uuid uuid NOT NULL,
 	employee_number varchar(12) NOT NULL,
@@ -27,7 +27,7 @@ CREATE INDEX "dni_user$capi_properties__idx" ON dni_user USING gin(capi_properti
 -- ========================
 -- dni_entity_type_enum
 -- ========================
-DROP TYPE IF EXISTS dni_entity_type_enum CASCADE;
+--DROP TYPE IF EXISTS dni_entity_type_enum CASCADE;
 CREATE TYPE dni_entity_type_enum AS ENUM (
 	'network',
 	'event',
@@ -38,7 +38,7 @@ CREATE TYPE dni_entity_type_enum AS ENUM (
 -- ====================
 -- dni_user_action_enum
 -- ====================
-DROP TYPE IF EXISTS dni_user_action_enum CASCADE;
+--DROP TYPE IF EXISTS dni_user_action_enum CASCADE;
 CREATE TYPE dni_user_action_enum AS ENUM (
 	'join',
 	'leave'
@@ -48,7 +48,7 @@ CREATE TYPE dni_user_action_enum AS ENUM (
 -- =====================
 -- dni_user_subscription
 -- =====================
-DROP TABLE IF EXISTS dni_user_subscription;
+--DROP TABLE IF EXISTS dni_user_subscription;
 CREATE TABLE IF NOT EXISTS dni_user_subscription (
 	colleague_uuid uuid NOT NULL,
 	subscription_entity_id int4 NOT NULL,
@@ -62,7 +62,7 @@ CREATE TABLE IF NOT EXISTS dni_user_subscription (
 -- =========================
 -- dni_user_subscription_log
 -- =========================
-DROP TABLE IF EXISTS dni_user_subscription_log;
+--DROP TABLE IF EXISTS dni_user_subscription_log;
 CREATE TABLE IF NOT EXISTS dni_user_subscription_log (
 	log_uuid uuid NOT NULL DEFAULT uuid_generate_v4(),
 	colleague_uuid uuid NOT NULL,
@@ -70,7 +70,7 @@ CREATE TABLE IF NOT EXISTS dni_user_subscription_log (
 	subscription_entity_type dni_entity_type_enum NOT NULL,
 	user_action dni_user_action_enum NOT NULL,
 	created_at timestamptz(0) NOT NULL DEFAULT now(),
-	CONSTRAINT "d_u_subscription_log$colleague_uuid__fk" FOREIGN KEY (colleague_uuid) REFERENCES dni_tmp.dni_user(colleague_uuid),
+	CONSTRAINT "d_u_subscription_log$colleague_uuid__fk" FOREIGN KEY (colleague_uuid) REFERENCES dni_user(colleague_uuid),
 	CONSTRAINT "d_u_subscription_log__pk" PRIMARY KEY (log_uuid)
 );
 
@@ -78,7 +78,7 @@ CREATE TABLE IF NOT EXISTS dni_user_subscription_log (
 -- =================================
 -- dni_user_notification_acknowledge
 -- =================================
-DROP TABLE IF EXISTS dni_user_notification_acknowledge CASCADE;
+--DROP TABLE IF EXISTS dni_user_notification_acknowledge CASCADE;
 CREATE TABLE IF NOT EXISTS dni_user_notification_acknowledge (
 	acknowledge_uuid uuid NOT NULL DEFAULT uuid_generate_v4(),
 	colleague_uuid uuid NOT NULL,
@@ -97,8 +97,8 @@ CREATE INDEX "d_u_n_acknowledge$colleague_uuid$a_entity_type$a_entity_id__idx" O
 -- ===========
 -- capi_region
 -- ===========
-DROP TABLE IF EXISTS capi_region;
--- \copy dni_tmp.capi_region FROM '/root/CAPI_region.csv' WITH CSV HEADER;
+--DROP TABLE IF EXISTS capi_region;
+-- \copy capi_region FROM '/root/CAPI_region.csv' WITH CSV HEADER;
 CREATE TABLE IF NOT EXISTS capi_region (
 	post_index_prefix varchar(8) NOT NULL,
 	region_name varchar(64) NOT NULL,
@@ -110,8 +110,8 @@ COMMENT ON TABLE capi_region IS 'Colleague API regions dictionary';
 -- ===============
 -- capi_department
 -- ===============
-DROP TABLE IF EXISTS capi_department;
--- \copy dni_tmp.capi_department FROM '/root/CAPI_departments.csv' WITH CSV HEADER;
+--DROP TABLE IF EXISTS capi_department;
+-- \copy capi_department FROM '/root/CAPI_departments.csv' WITH CSV HEADER;
 CREATE TABLE IF NOT EXISTS capi_department (
 	capi_business_type varchar(32) NOT NULL,
 	department_name varchar(64) NOT NULL,
@@ -123,7 +123,7 @@ COMMENT ON TABLE capi_department IS 'Colleague API departments dictionary';
 -- =================
 -- ccms_trigger_enum
 -- =================
-DROP TYPE IF EXISTS ccms_trigger_event_enum CASCADE;
+--DROP TYPE IF EXISTS ccms_trigger_event_enum CASCADE;
 CREATE TYPE ccms_trigger_event_enum AS ENUM (
 	'created',
 	'updated',
@@ -134,7 +134,7 @@ CREATE TYPE ccms_trigger_event_enum AS ENUM (
 -- =================
 -- ccms_notification
 -- =================
-DROP TABLE IF EXISTS ccms_notification CASCADE;
+--DROP TABLE IF EXISTS ccms_notification CASCADE;
 CREATE TABLE IF NOT EXISTS ccms_notification (
 	notification_uuid uuid NOT NULL DEFAULT uuid_generate_v4(),
 	notification_trigger_event ccms_trigger_event_enum NOT NULL,
@@ -154,7 +154,7 @@ CREATE INDEX "c_notification$entity_instance__idx" ON ccms_notification USING gi
 -- ===========
 -- ccms_entity
 -- ===========
-DROP TABLE IF EXISTS ccms_entity;
+--DROP TABLE IF EXISTS ccms_entity;
 CREATE TABLE IF NOT EXISTS ccms_entity (
 	entity_id int4 NOT NULL,
 	entity_type dni_entity_type_enum NOT NULL,
@@ -178,7 +178,7 @@ COMMENT ON TABLE ccms_entity IS 'Collleague CMS Entities cache';
 -- ======================
 -- ccms_entity_descriptor
 -- ======================
-DROP TYPE IF EXISTS ccms_entity_descriptor CASCADE;
+--DROP TYPE IF EXISTS ccms_entity_descriptor CASCADE;
 CREATE TYPE ccms_entity_descriptor AS (
     id int4,
     type dni_entity_type_enum
