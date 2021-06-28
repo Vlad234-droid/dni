@@ -311,6 +311,7 @@ END
 $function$
 ;
 
+
 -- ===========================
 -- fn_build_dni_members_report
 -- ===========================
@@ -424,16 +425,16 @@ BEGIN
       ),
       report_data_json AS (SELECT 
          rd.period_point,
-         json_build_object(
+         jsonb_build_object(
             'period', rd.period_point, 
-            'entities', json_agg(json_build_object(
+            'entities', jsonb_agg(jsonb_build_object(
                'entityId', rd.entity_id,
                'entityType', rd.entity_type,
                'subscribers', rd.subscribers,
                'joined', rd.joined,
                'leaved', rd.leaved
             ) order by rd.entity_id)
-         ) json_data
+         ) jsonb_data
       FROM report_data rd
       GROUP BY rd.period_point
       ORDER BY rd.period_point
@@ -453,10 +454,10 @@ BEGIN
       WHERE rd.period_point = date_trunc(params.granularity, params.end_date)::date
       ), 
       report_metadata_json AS (SELECT 
-         json_build_object(
+         jsonb_build_object(
             'granularity', params.granularity,
-            'period', json_build_object('from', params.start_date, 'to', params.end_date),
-            'entities', json_agg(json_build_object(
+            'period', jsonb_build_object('from', params.start_date, 'to', params.end_date),
+            'entities', jsonb_agg(jsonb_build_object(
                'entityId', rmi.entity_id,
                'entityType', rmi.entity_type,
                'startSubscribers', rmi.start_subscribers,
@@ -464,16 +465,16 @@ BEGIN
                'joined', rmi.joined,
                'leaved', rmi.leaved
             ) ORDER BY rmi.entity_id)
-         ) json_metadata
+         ) jsonb_metadata
       FROM params, report_metadata rmi
       GROUP BY 
          params.granularity, 
          params.start_date, 
          params.end_date
       )
-   SELECT json_build_object(
-      'data', json_agg(rdj.json_data ORDER BY period_point),
-      'metadata', (SELECT rmj.json_metadata FROM report_metadata_json rmj)
+   SELECT jsonb_build_object(
+      'data', jsonb_agg(rdj.jsonb_data ORDER BY period_point),
+      'metadata', (SELECT rmj.jsonb_metadata FROM report_metadata_json rmj)
       ) AS report_json
    INTO report_jsonb
    FROM report_data_json rdj;
@@ -568,7 +569,7 @@ BEGIN
       report_template AS (SELECT 
          r.region_name,
          entities.entity_id
-      FROM (SELECT DISTINCT region_name FROM affected_user_regions) r
+      FROM (SELECT DISTINCT region_name FROM capi_region /*affected_user_regions*/) r
       CROSS JOIN unnest(p_entity_ids) as entities(entity_id)
       ),
       report_data AS (SELECT  
@@ -586,17 +587,17 @@ BEGIN
       ),
       report_data_json AS (SELECT 
          rd.entity_id,
-         json_build_object(
+         jsonb_build_object(
             'entityId', rd.entity_id, 
             'entityType', p_entity_type, 
-            'entities', json_agg(json_build_object(
+            'entities', jsonb_agg(jsonb_build_object(
                'regionName', rd.region_name,
                'startSubscribers', rd.start_subscribers,
                'endSubscribers', rd.end_subscribers,
                'joined', rd.joined,
                'leaved', rd.leaved
             ) order by rd.region_name)
-         ) json_data
+         ) jsonb_data
       FROM report_data rd
       GROUP BY rd.entity_id
       ORDER BY rd.entity_id
@@ -615,22 +616,22 @@ BEGIN
       GROUP BY rt.entity_id
       ),
       report_metadata_json AS (SELECT 
-         json_build_object(
-            'period', json_build_object('from', p_start_date, 'to', p_end_date),
-            'entities', json_agg(json_build_object(
+         jsonb_build_object(
+            'period', jsonb_build_object('from', p_start_date, 'to', p_end_date),
+            'entities', coalesce(jsonb_agg(jsonb_build_object(
                'entityId', rm.entity_id,
                'entityType', p_entity_type,
                'startSubscribers', rm.total_start_subscribers,
                'endSubscribers', rm.total_end_subscribers,
                'joined', rm.total_joined,
                'leaved', rm.total_leaved
-            ) ORDER BY rm.entity_id)
-         ) json_metadata
+            ) ORDER BY rm.entity_id), to_jsonb('{}'::text[]))
+         ) jsonb_metadata
       FROM report_metadata rm
       )
-   SELECT json_build_object(
-      'data', json_agg(rdj.json_data ORDER BY entity_id),
-      'metadata', (SELECT rmj.json_metadata FROM report_metadata_json rmj)
+   SELECT jsonb_build_object(
+      'data', coalesce(jsonb_agg(rdj.jsonb_data ORDER BY entity_id), to_jsonb('{}'::text[])),
+      'metadata', (SELECT rmj.jsonb_metadata FROM report_metadata_json rmj)
       ) AS report_json
    INTO report_jsonb
    FROM report_data_json rdj;
@@ -723,9 +724,9 @@ BEGIN
          dni_usl.subscription_entity_id
       ),
       report_template AS (SELECT 
-         r.department_name,
+         d.department_name,
          entities.entity_id
-      FROM (SELECT DISTINCT department_name FROM affected_user_departments) r
+      FROM (SELECT DISTINCT department_name FROM capi_department /*affected_user_departments*/) d
       CROSS JOIN unnest(p_entity_ids) as entities(entity_id)
       ),
       report_data AS (SELECT  
@@ -743,17 +744,17 @@ BEGIN
       ),
       report_data_json AS (SELECT 
          rd.entity_id,
-         json_build_object(
+         jsonb_build_object(
             'entityId', rd.entity_id, 
             'entityType', p_entity_type, 
-            'entities', json_agg(json_build_object(
+            'entities', jsonb_agg(jsonb_build_object(
                'departmentName', rd.department_name,
                'startSubscribers', rd.start_subscribers,
                'endSubscribers', rd.end_subscribers,
                'joined', rd.joined,
                'leaved', rd.leaved
             ) order by rd.department_name)
-         ) json_data
+         ) jsonb_data
       FROM report_data rd
       GROUP BY rd.entity_id
       ORDER BY rd.entity_id
@@ -772,22 +773,22 @@ BEGIN
       GROUP BY rt.entity_id
       ),
       report_metadata_json AS (SELECT 
-         json_build_object(
-            'period', json_build_object('from', p_start_date, 'to', p_end_date),
-            'entities', json_agg(json_build_object(
+         jsonb_build_object(
+            'period', jsonb_build_object('from', p_start_date, 'to', p_end_date),
+            'entities', coalesce(jsonb_agg(jsonb_build_object(
                'entityId', rm.entity_id,
                'entityType', p_entity_type,
                'startSubscribers', rm.total_start_subscribers,
                'endSubscribers', rm.total_end_subscribers,
                'joined', rm.total_joined,
                'leaved', rm.total_leaved
-            ) ORDER BY rm.entity_id)
-         ) json_metadata
+            ) ORDER BY rm.entity_id), to_jsonb('{}'::text[]))
+         ) jsonb_metadata
       FROM report_metadata rm
       )
-   SELECT json_build_object(
-      'data', json_agg(rdj.json_data ORDER BY entity_id),
-      'metadata', (SELECT rmj.json_metadata FROM report_metadata_json rmj)
+   SELECT jsonb_build_object(
+      'data', coalesce(jsonb_agg(rdj.jsonb_data ORDER BY entity_id), to_jsonb('{}'::text[])),
+      'metadata', (SELECT rmj.jsonb_metadata FROM report_metadata_json rmj)
       ) AS report_json
    INTO report_jsonb
    FROM report_data_json rdj;
