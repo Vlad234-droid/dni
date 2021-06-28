@@ -311,12 +311,12 @@ END
 $function$
 ;
 
--- ==============================
--- fn_build_dni_timeseries_report
--- ==============================
-CREATE OR REPLACE FUNCTION fn_build_dni_timeseries_report(
-     p_entity_ids int4[],
+-- ===========================
+-- fn_build_dni_members_report
+-- ===========================
+CREATE OR REPLACE FUNCTION fn_build_dni_members_report(
      p_entity_type dni_entity_type_enum,
+     p_entity_ids int4[] DEFAULT NULL,
      p_granularity varchar(16) DEFAULT 'day',
      p_start_date date DEFAULT CURRENT_DATE - INTERVAL '7 DAYS',
      p_end_date date DEFAULT CURRENT_DATE
@@ -333,6 +333,25 @@ BEGIN
          USING HINT = 'Only these are supported: `year`,`quarter`,`month`,`week`,`day`';
    END IF;
    
+   IF p_entity_type IS NULL
+   THEN
+      RAISE EXCEPTION '`p_entity_type` parameter is required'
+         USING HINT = 'These options are available: `network`, `event`';
+   END IF;
+
+   -- populate array of IDs, if NULL 
+   /*
+   IF p_entity_ids IS NULL
+   THEN 
+      SELECT array_agg(entity_id)
+      INTO p_entity_ids
+      FROM ccms_entity
+      WHERE entity_type = p_entity_type
+        AND entity_published_at IS NOT NULL 
+        AND notification_trigger_event <> 'deleted';
+   END IF;
+   */
+  
    WITH 
       params AS (SELECT 
          p_entity_type as entity_type,
@@ -463,3 +482,322 @@ BEGIN
 END
 $function$
 ;
+
+
+-- ===========================
+-- fn_build_dni_regions_report
+-- ===========================
+CREATE OR REPLACE FUNCTION fn_build_dni_regions_report(
+     p_entity_type dni_entity_type_enum,
+     p_entity_ids int4[] DEFAULT NULL,
+     p_start_date date DEFAULT CURRENT_DATE - INTERVAL '7 DAYS',
+     p_end_date date DEFAULT CURRENT_DATE
+     )
+  RETURNS jsonb 
+  LANGUAGE plpgsql
+AS $function$
+DECLARE
+    report_jsonb jsonb;
+BEGIN
+   IF p_entity_type IS NULL
+   THEN
+      RAISE EXCEPTION '`p_entity_type` parameter is required'
+         USING HINT = 'These options are available: `network`, `event`';
+   END IF;
+
+   -- populate array of IDs, if NULL 
+   /*
+   IF p_entity_ids IS NULL
+   THEN 
+      SELECT array_agg(entity_id)
+      INTO p_entity_ids
+      FROM ccms_entity
+      WHERE entity_type = p_entity_type
+        AND entity_published_at IS NOT NULL 
+        AND notification_trigger_event <> 'deleted';
+   END IF;
+   */
+  
+   WITH 
+      affected_user_regions AS (SELECT 
+         dus.colleague_uuid,
+         ur.region_name
+      FROM (
+         SELECT DISTINCT
+            du.colleague_uuid, 
+            cr.region_name 
+         FROM dni_user du
+         LEFT JOIN capi_region cr
+         ON upper(coalesce(left(du.capi_properties->>'addressPostcode', length(cr.post_index_prefix)), 'XX')) = upper(cr.post_index_prefix)
+         ) ur
+      JOIN dni_user_subscription dus ON ur.colleague_uuid = dus.colleague_uuid 
+      WHERE dus.subscription_entity_type = p_entity_type AND dus.subscription_entity_id = ANY(p_entity_ids)
+      ),
+      initial_stats_info AS (SELECT
+         --aur.post_index_prefix,
+         aur.region_name,
+         dni_usl.subscription_entity_id AS entity_id,
+         sum(CASE dni_usl.user_action WHEN 'join' THEN 1 WHEN 'leave' THEN -1 ELSE 0 END) subscribers_count
+      FROM 
+         dni_user_subscription_log dni_usl
+      JOIN affected_user_regions aur
+      ON dni_usl.colleague_uuid  = aur.colleague_uuid
+      WHERE dni_usl.created_at::date < p_start_date
+        AND dni_usl.subscription_entity_type = p_entity_type
+        AND dni_usl.subscription_entity_id = ANY(p_entity_ids)
+      GROUP BY
+         --aur.post_index_prefix,
+         aur.region_name,
+         dni_usl.subscription_entity_id
+      ),
+      historical_stats_info AS (SELECT
+         --aur.post_index_prefix,
+         aur.region_name,
+         dni_usl.subscription_entity_id AS entity_id,
+         sum(CASE dni_usl.user_action WHEN 'join' THEN 1 ELSE 0 END) AS joined_count,
+         sum(CASE dni_usl.user_action WHEN 'leave' THEN 1 ELSE 0 END) AS leaved_count,
+         sum(CASE dni_usl.user_action WHEN 'join' THEN 1 WHEN 'leave' THEN -1 ELSE 0 END) AS subscribers_count
+      FROM 
+         dni_user_subscription_log dni_usl
+      JOIN affected_user_regions aur
+      ON dni_usl.colleague_uuid  = aur.colleague_uuid
+      WHERE dni_usl.created_at::date between p_start_date and p_end_date
+        AND dni_usl.subscription_entity_type = p_entity_type
+        AND dni_usl.subscription_entity_id = ANY(p_entity_ids)
+      GROUP BY
+         --aur.post_index_prefix,
+         aur.region_name,
+         dni_usl.subscription_entity_id
+      ),
+      report_template AS (SELECT 
+         r.region_name,
+         entities.entity_id
+      FROM (SELECT DISTINCT region_name FROM affected_user_regions) r
+      CROSS JOIN unnest(p_entity_ids) as entities(entity_id)
+      ),
+      report_data AS (SELECT  
+         rt.region_name,
+         rt.entity_id,
+         coalesce(isi.subscribers_count, 0) as start_subscribers,
+         coalesce(isi.subscribers_count, 0) + coalesce(hsi.subscribers_count, 0) as end_subscribers,
+         coalesce(hsi.joined_count, 0) as joined,
+         coalesce(hsi.leaved_count, 0) as leaved
+      FROM report_template rt
+      LEFT JOIN initial_stats_info isi 
+        ON (rt.region_name = isi.region_name and rt.entity_id = isi.entity_id)
+      LEFT JOIN historical_stats_info hsi 
+        ON (rt.region_name = hsi.region_name and rt.entity_id = hsi.entity_id)
+      ),
+      report_data_json AS (SELECT 
+         rd.entity_id,
+         json_build_object(
+            'entityId', rd.entity_id, 
+            'entityType', p_entity_type, 
+            'entities', json_agg(json_build_object(
+               'regionName', rd.region_name,
+               'startSubscribers', rd.start_subscribers,
+               'endSubscribers', rd.end_subscribers,
+               'joined', rd.joined,
+               'leaved', rd.leaved
+            ) order by rd.region_name)
+         ) json_data
+      FROM report_data rd
+      GROUP BY rd.entity_id
+      ORDER BY rd.entity_id
+      ),
+      report_metadata AS (SELECT  
+         rt.entity_id,
+         sum(coalesce(isi.subscribers_count, 0)) as total_start_subscribers,
+         sum(coalesce(isi.subscribers_count, 0) + coalesce(hsi.subscribers_count, 0)) as total_end_subscribers,
+         sum(coalesce(hsi.joined_count, 0)) as total_joined,
+         sum(coalesce(hsi.leaved_count, 0)) as total_leaved
+      FROM report_template rt
+      LEFT JOIN initial_stats_info isi 
+        ON (rt.region_name = isi.region_name and rt.entity_id = isi.entity_id)
+      LEFT JOIN historical_stats_info hsi 
+        ON (rt.region_name = hsi.region_name and rt.entity_id = hsi.entity_id)
+      GROUP BY rt.entity_id
+      ),
+      report_metadata_json AS (SELECT 
+         json_build_object(
+            'period', json_build_object('from', p_start_date, 'to', p_end_date),
+            'entities', json_agg(json_build_object(
+               'entityId', rm.entity_id,
+               'entityType', p_entity_type,
+               'startSubscribers', rm.total_start_subscribers,
+               'endSubscribers', rm.total_end_subscribers,
+               'joined', rm.total_joined,
+               'leaved', rm.total_leaved
+            ) ORDER BY rm.entity_id)
+         ) json_metadata
+      FROM report_metadata rm
+      )
+   SELECT json_build_object(
+      'data', json_agg(rdj.json_data ORDER BY entity_id),
+      'metadata', (SELECT rmj.json_metadata FROM report_metadata_json rmj)
+      ) AS report_json
+   INTO report_jsonb
+   FROM report_data_json rdj;
+
+   RETURN report_jsonb;
+END
+$function$
+;
+
+
+-- ===============================
+-- fn_build_dni_departments_report
+-- ===============================
+CREATE OR REPLACE FUNCTION fn_build_dni_departments_report(
+     p_entity_type dni_entity_type_enum,
+     p_entity_ids int4[] DEFAULT NULL,
+     p_start_date date DEFAULT CURRENT_DATE - INTERVAL '7 DAYS',
+     p_end_date date DEFAULT CURRENT_DATE
+     )
+  RETURNS jsonb 
+  LANGUAGE plpgsql
+AS $function$
+DECLARE
+    report_jsonb jsonb;
+BEGIN
+   IF p_entity_type IS NULL
+   THEN
+      RAISE EXCEPTION '`p_entity_type` parameter is required'
+         USING HINT = 'These options are available: `network`, `event`';
+   END IF;
+
+   -- populate array of IDs, if NULL 
+   /*
+   IF p_entity_ids IS NULL
+   THEN 
+      SELECT array_agg(entity_id)
+      INTO p_entity_ids
+      FROM ccms_entity
+      WHERE entity_type = p_entity_type
+        AND entity_published_at IS NOT NULL 
+        AND notification_trigger_event <> 'deleted';
+   END IF;
+   */
+  
+   WITH 
+      affected_user_departments AS (SELECT 
+         dus.colleague_uuid,
+         ud.department_name
+      FROM (
+         SELECT DISTINCT
+            du.colleague_uuid, 
+            coalesce(cd.department_name, 'Unknown') as department_name
+         FROM dni_user du
+         LEFT JOIN capi_department cd 
+         ON upper(du.capi_properties->>'businessType') = upper(cd.capi_business_type)
+         ) ud
+      JOIN dni_user_subscription dus ON ud.colleague_uuid = dus.colleague_uuid 
+      WHERE dus.subscription_entity_type = p_entity_type AND dus.subscription_entity_id = ANY(p_entity_ids)
+      ),
+      initial_stats_info AS (SELECT
+         aud.department_name,
+         dni_usl.subscription_entity_id AS entity_id,
+         sum(CASE dni_usl.user_action WHEN 'join' THEN 1 WHEN 'leave' THEN -1 ELSE 0 END) subscribers_count
+      FROM 
+         dni_user_subscription_log dni_usl
+      JOIN affected_user_departments aud
+      ON dni_usl.colleague_uuid  = aud.colleague_uuid
+      WHERE dni_usl.created_at::date < p_start_date
+        AND dni_usl.subscription_entity_type = p_entity_type
+        AND dni_usl.subscription_entity_id = ANY(p_entity_ids)
+      GROUP BY
+         aud.department_name,
+         dni_usl.subscription_entity_id
+      ),
+      historical_stats_info AS (SELECT
+         aud.department_name,
+         dni_usl.subscription_entity_id AS entity_id,
+         sum(CASE dni_usl.user_action WHEN 'join' THEN 1 ELSE 0 END) AS joined_count,
+         sum(CASE dni_usl.user_action WHEN 'leave' THEN 1 ELSE 0 END) AS leaved_count,
+         sum(CASE dni_usl.user_action WHEN 'join' THEN 1 WHEN 'leave' THEN -1 ELSE 0 END) AS subscribers_count
+      FROM 
+         dni_user_subscription_log dni_usl
+      JOIN affected_user_departments aud
+      ON dni_usl.colleague_uuid  = aud.colleague_uuid
+      WHERE dni_usl.created_at::date between p_start_date and p_end_date
+        AND dni_usl.subscription_entity_type = p_entity_type
+        AND dni_usl.subscription_entity_id = ANY(p_entity_ids)
+      GROUP BY
+         aud.department_name,
+         dni_usl.subscription_entity_id
+      ),
+      report_template AS (SELECT 
+         r.department_name,
+         entities.entity_id
+      FROM (SELECT DISTINCT department_name FROM affected_user_departments) r
+      CROSS JOIN unnest(p_entity_ids) as entities(entity_id)
+      ),
+      report_data AS (SELECT  
+         rt.department_name,
+         rt.entity_id,
+         coalesce(isi.subscribers_count, 0) as start_subscribers,
+         coalesce(isi.subscribers_count, 0) + coalesce(hsi.subscribers_count, 0) as end_subscribers,
+         coalesce(hsi.joined_count, 0) as joined,
+         coalesce(hsi.leaved_count, 0) as leaved
+      FROM report_template rt
+      LEFT JOIN initial_stats_info isi 
+        ON (rt.department_name = isi.department_name and rt.entity_id = isi.entity_id)
+      LEFT JOIN historical_stats_info hsi 
+        ON (rt.department_name = hsi.department_name and rt.entity_id = hsi.entity_id)
+      ),
+      report_data_json AS (SELECT 
+         rd.entity_id,
+         json_build_object(
+            'entityId', rd.entity_id, 
+            'entityType', p_entity_type, 
+            'entities', json_agg(json_build_object(
+               'departmentName', rd.department_name,
+               'startSubscribers', rd.start_subscribers,
+               'endSubscribers', rd.end_subscribers,
+               'joined', rd.joined,
+               'leaved', rd.leaved
+            ) order by rd.department_name)
+         ) json_data
+      FROM report_data rd
+      GROUP BY rd.entity_id
+      ORDER BY rd.entity_id
+      ),
+      report_metadata AS (SELECT  
+         rt.entity_id,
+         sum(coalesce(isi.subscribers_count, 0)) as total_start_subscribers,
+         sum(coalesce(isi.subscribers_count, 0) + coalesce(hsi.subscribers_count, 0)) as total_end_subscribers,
+         sum(coalesce(hsi.joined_count, 0)) as total_joined,
+         sum(coalesce(hsi.leaved_count, 0)) as total_leaved
+      FROM report_template rt
+      LEFT JOIN initial_stats_info isi 
+        ON (rt.department_name = isi.department_name and rt.entity_id = isi.entity_id)
+      LEFT JOIN historical_stats_info hsi 
+        ON (rt.department_name = hsi.department_name and rt.entity_id = hsi.entity_id)
+      GROUP BY rt.entity_id
+      ),
+      report_metadata_json AS (SELECT 
+         json_build_object(
+            'period', json_build_object('from', p_start_date, 'to', p_end_date),
+            'entities', json_agg(json_build_object(
+               'entityId', rm.entity_id,
+               'entityType', p_entity_type,
+               'startSubscribers', rm.total_start_subscribers,
+               'endSubscribers', rm.total_end_subscribers,
+               'joined', rm.total_joined,
+               'leaved', rm.total_leaved
+            ) ORDER BY rm.entity_id)
+         ) json_metadata
+      FROM report_metadata rm
+      )
+   SELECT json_build_object(
+      'data', json_agg(rdj.json_data ORDER BY entity_id),
+      'metadata', (SELECT rmj.json_metadata FROM report_metadata_json rmj)
+      ) AS report_json
+   INTO report_jsonb
+   FROM report_data_json rdj;
+
+   RETURN report_jsonb;
+END
+$function$
+;
+
