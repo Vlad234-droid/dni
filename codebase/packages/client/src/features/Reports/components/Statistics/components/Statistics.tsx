@@ -7,11 +7,11 @@ import { TextWithEllipsis } from 'features/Common';
 import * as T from '../../../config/types';
 
 const Entity = {
-  [T.Entity.NETWORK]: {
+  [T.Entity.network]: {
     name: 'Networks',
     members: 'subscribers',
   },
-  [T.Entity.EVENT]: {
+  [T.Entity.event]: {
     name: 'Events',
     members: 'participants',
   },

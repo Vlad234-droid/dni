@@ -1,6 +1,5 @@
 import { BarChart, CartesianGrid, XAxis, YAxis, Tooltip, Legend, Bar } from 'recharts';
 import { useMedia } from 'context/InterfaceContext';
-import { ViewportSize } from 'config/constants';
 
 type Props = {
   data: any;
@@ -8,8 +7,6 @@ type Props = {
 
 const BarChartContainer = ({ data }: Props) => {
   const { isDesktop, isTablet } = useMedia();
-
-  console.log(data);
 
   return (
     <BarChart

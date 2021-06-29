@@ -26,11 +26,11 @@ const filterButtons = [
 
 const entityButtons = [
   {
-    key: T.Entity.NETWORK,
+    key: T.Entity.network,
     title: 'Network',
   },
   {
-    key: T.Entity.EVENT,
+    key: T.Entity.event,
     title: 'Event',
   },
 ];

@@ -6,8 +6,8 @@ const REGION = 'REGION';
 const FORMAT = 'FORMAT';
 
 enum Entity {
-  NETWORK,
-  EVENT,
+  network,
+  event,
 }
 
 enum Period {
@@ -18,11 +18,11 @@ enum Period {
 }
 
 enum Region {
-  ALL = 'All',
+  PICK_PERIOD = 'Pick period',
 }
 
 enum Format {
-  ALL = 'All',
+  PICK_PERIOD = 'Pick period',
 }
 
 type Filter = typeof PERIOD | typeof REGION | typeof FORMAT;
@@ -48,7 +48,7 @@ type Interval = {
 
 type Params = {
   entityType: Entity;
-  groupBy: string;
+  groupBy?: string;
   from: string;
   to: string;
   ids: EntityId[];
@@ -121,42 +121,76 @@ type EntityItem = {
   };
   [REGION]: {
     filter: Region;
-    [Region.ALL]: GraphicsItem;
+    [Period.PICK_PERIOD]: GraphicsItem;
   };
   [FORMAT]: {
     filter: Format;
-    [Format.ALL]: GraphicsItem;
+    [Period.PICK_PERIOD]: GraphicsItem;
   };
 };
 
 type State = {
   entityType: Entity;
-  [Entity.NETWORK]: any;
-  [Entity.EVENT]: any;
+  [Entity.network]: any;
+  [Entity.event]: any;
   loading: Loading;
   error?: string;
 };
 
-type EntityData = {
-  entityId: number | string;
+type EntryId = {
+  entityId: number;
   entityType: string;
-  members: number;
-  startMembers: number;
-  endMembers: number;
-  subscribe: number;
-  leave: number;
-  name: string;
-  color: string;
-  title: string;
 };
 
-type EntityDataByRegion = {
-  entityId: number | string;
-  entityName: string;
-  participants: {
-    regionName: string;
-    count: number;
-  }[];
+type Entry = {
+  joined: number;
+  leaved: number;
+  regionName: string;
+  endSubscribers?: number;
+  startSubscribers?: number;
+};
+
+type EntryWithId = Entry & EntryId;
+
+type Range = {
+  from: string;
+  to: string;
+};
+
+type PeriodEntityData = {
+  period: string;
+  entities: Array<
+    Entry &
+      EntryId & {
+        subscribers: number;
+      }
+  >;
+};
+
+type RegionEntityData = {
+  entities: Array<
+    Entry & {
+      regionName: string;
+    }
+  >;
+} & EntryId;
+
+type FormatEntityData = {
+  entities: Array<
+    Entry & {
+      departmentName: string;
+    }
+  >;
+} & EntryId;
+
+type EntityMetadata = {
+  period: Range;
+  entities: Array<EntryWithId>;
+};
+
+type Response<T> = {
+  data: T[];
+  metadata: EntityMetadata;
 };
 
 type EntityDataByFormat = {
@@ -196,9 +230,13 @@ export type {
   FilterFilter,
   Interval,
   Params,
-  EntityData,
-  EntityDataByRegion,
+  Response,
+  PeriodEntityData,
+  RegionEntityData,
+  FormatEntityData,
+  EntityMetadata,
   EntityDataByFormat,
+  EntryWithId,
   ChartItem,
   Statistics,
   StatisticsItem,

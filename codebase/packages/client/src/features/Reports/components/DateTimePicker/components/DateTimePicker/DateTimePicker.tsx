@@ -11,10 +11,11 @@ type Props = {
   dateTime: DatePoint;
   type: Type;
   required: boolean;
+  label?: string;
   handleDateChange: (value: DatePoint) => void;
 };
 
-const DateTimePicker: FC<Props> = ({ dateTime, type, required, handleDateChange }) => {
+const DateTimePicker: FC<Props> = ({ dateTime, type, required, label, handleDateChange }) => {
   return (
     <Wrapper data-testid={`${type}-datetime-picker`}>
       <DateWrapper>
@@ -28,7 +29,7 @@ const DateTimePicker: FC<Props> = ({ dateTime, type, required, handleDateChange 
               <DatePicker
                 id={DATE_NAME_BY_TYPE[type]}
                 name={DATE_NAME_BY_TYPE[type]}
-                labelText={DATE_LABEL_BY_TYPE[type]}
+                labelText={label || DATE_LABEL_BY_TYPE[type]}
                 required={required}
                 isCalendarOpen={isOpen}
                 onCalendarToggle={handleOpen}

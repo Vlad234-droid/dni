@@ -24,8 +24,8 @@ const ReportPage: FC = () => {
           <PageWrapper
             renderContent={() => (
               <ContentWrapper>
-                {entityType === Entity.NETWORK && <Reports />}
-                {entityType === Entity.EVENT && <Reports />}
+                {entityType === Entity.network && <Reports />}
+                {entityType === Entity.event && <Reports />}
               </ContentWrapper>
             )}
             pageName={menuItemsDesktop[Page.REPORTS]}

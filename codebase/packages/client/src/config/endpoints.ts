@@ -26,7 +26,7 @@ export enum Endpoint {
   // report
   REPORT_MEMBERS = '/reports/members',
   REPORT_REGIONS = '/reports/regions',
-  REPORT_DPARTMENTS = '/reports/dpartments',
+  REPORT_DEPARTMENTS = '/reports/departments',
   REPORT_PRINT_PDF = '/reports/print-pdf',
   // common
   COMMON_UPLOAD = '/upload',
@@ -70,7 +70,7 @@ export default (httpClient: AxiosInstance) => ({
   report: {
     members: <T>(query: Config = {}) => httpClient.get<T>(Endpoint.REPORT_MEMBERS, { params: query }),
     regions: <T>(query: Config = {}) => httpClient.get<T>(Endpoint.REPORT_REGIONS, { params: query }),
-    dpartments: <T>(query: Config = {}) => httpClient.get<T>(Endpoint.REPORT_DPARTMENTS, { params: query }),
+    departments: <T>(query: Config = {}) => httpClient.get<T>(Endpoint.REPORT_DEPARTMENTS, { params: query }),
     printPdf: <T>(data: T) =>
       httpClient.post<Blob>(Endpoint.REPORT_PRINT_PDF, data, {
         responseType: 'blob',

@@ -50,7 +50,7 @@ api.get('/networks/participants', getNetworksParticipants);
 
 api.get('/reports/members', getMembersReportByFilters);
 api.get('/reports/regions', getRegionsReportByFilters);
-api.get('/reports/dpartments', getDepartmentsReportByFilters);
+api.get('/reports/departments', getDepartmentsReportByFilters);
 api.post('/reports/print-pdf', printPDF);
 
 api.get('/utils/env', getEnvironmentVariablesMiddleware);

@@ -1,7 +1,6 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC, useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import DropdownGroup from '@beans/dropdown-group';
-import pick from 'lodash.pick';
 import styled from 'styled-components';
 
 import { ToastSkin, toasterActions } from 'features/Toaster';
@@ -12,6 +11,7 @@ import store from 'store';
 import AreaChart from '../components/AreaChart';
 import BarChart from '../components/BarChart';
 import RangeDateTimePicker from '../components/RangeDateTimePicker';
+import DateTimePicker, { Type } from '../components/DateTimePicker';
 import { DropdownWrapper } from './styled';
 import { actions, getReportsByTime, getReportsByRegion, getReportsByFormat } from '../store';
 import * as T from '../config/types';
@@ -29,16 +29,16 @@ const Label = styled.div`
 
 const label = {
   [T.PERIOD]: {
-    [T.Entity.NETWORK]: 'Network subscribers over time',
-    [T.Entity.EVENT]: 'Event participants over time',
+    [T.Entity.network]: 'Network subscribers over time',
+    [T.Entity.event]: 'Event participants over time',
   },
   [T.REGION]: {
-    [T.Entity.NETWORK]: 'Network subscribers over regions',
-    [T.Entity.EVENT]: 'Event participants over regions',
+    [T.Entity.network]: 'Network subscribers over regions',
+    [T.Entity.event]: 'Event participants over regions',
   },
   [T.FORMAT]: {
-    [T.Entity.NETWORK]: 'Network subscribers over formats',
-    [T.Entity.EVENT]: 'Event participants over formats',
+    [T.Entity.network]: 'Network subscribers over formats',
+    [T.Entity.event]: 'Event participants over formats',
   },
 };
 
@@ -85,13 +85,40 @@ const Graphics: FC<Props> = ({ entityType, filter, filterFilter, dateInterval, d
     dispatch(actions.setTimePeriodFilter({ period: event.target.value }));
   };
 
+  const handleEndChange = (value: T.DatePoint) => {
+    dispatch(actions.updatePeriodInterval({ filter, entityType, value, prop: 'to' }));
+
+    const dateTo = new Date(`${value.mm} ${value.dd} ${value.yyyy}`).toISOString();
+
+    switch (filter) {
+      case T.REGION: {
+        dispatch(
+          getReportsByRegion({
+            entityType,
+            to: dateTo,
+          }),
+        );
+        break;
+      }
+      case T.FORMAT: {
+        dispatch(
+          getReportsByFormat({
+            entityType,
+            to: dateTo,
+          }),
+        );
+        break;
+      }
+    }
+  };
+
   const handleRangeChange = ({ value, prop }: { value: T.DatePoint; prop: string }) => {
-    dispatch(actions.updatePeriodInterval({ entityType, value, prop }));
+    dispatch(actions.updatePeriodInterval({ filter, entityType, value, prop }));
 
     let dateFrom = new Date();
     let dateTo = new Date();
 
-    let { from, to } = store.getState().reports[entityType][T.PERIOD][T.Period.PICK_PERIOD].dateInterval;
+    let { from, to } = store.getState().reports[entityType][filter][T.Period.PICK_PERIOD].dateInterval;
 
     switch (prop) {
       case 'from':
@@ -187,6 +214,20 @@ const Graphics: FC<Props> = ({ entityType, filter, filterFilter, dateInterval, d
 
   useEffect(handleGraphicsEffect, [ids, entityType, filter, filterFilter]);
 
+  const memoizedDatePicker = useMemo(
+    () => (
+      <DateTimePicker
+        key={filter}
+        label='Pick date'
+        dateTime={dateInterval.to}
+        required
+        type={Type.TYPE_END}
+        handleDateChange={handleEndChange}
+      />
+    ),
+    [dateInterval.to],
+  );
+
   switch (filter) {
     case T.PERIOD:
       return (
@@ -225,15 +266,21 @@ const Graphics: FC<Props> = ({ entityType, filter, filterFilter, dateInterval, d
     case T.REGION:
       return (
         <div data-testid={T.REGION}>
-          <Label>{label[filter][entityType]}</Label>
-          <BarChart data={data} />
+          <DropdownWrapper>
+            <Label>{label[filter][entityType]}</Label>
+            <RangeWrapper>{memoizedDatePicker}</RangeWrapper>
+          </DropdownWrapper>
+          <BarChart data={data} key={filter} />
         </div>
       );
     case T.FORMAT:
       return (
         <div data-testid={T.FORMAT}>
-          <Label>{label[filter][entityType]}</Label>
-          <BarChart data={data} />
+          <DropdownWrapper>
+            <Label>{label[filter][entityType]}</Label>
+            <RangeWrapper>{memoizedDatePicker}</RangeWrapper>
+          </DropdownWrapper>
+          <BarChart data={data} key={filter} />
         </div>
       );
     default:
