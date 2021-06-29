@@ -6,6 +6,7 @@ import ICalendarLink from 'react-icalendar-link';
 import { OnAir, CopyLink, TextWithEllipsis, RichTextRenderer } from 'features/Common';
 import { useMedia } from 'context/InterfaceContext';
 import useStore from 'hooks/useStore';
+import { Page } from 'features/Page';
 
 import EventAction from '../EventAction';
 import Event from '../../config/types';
@@ -62,7 +63,7 @@ const EventHeader: FC<Props> = ({ event, participants }) => {
                 description:
                   `For more details and the link to join the virtual event please check the event link below:
                   
-                  ${window.location.href}
+                  ${window.location.origin}/${Page.EVENTS}/${id}
                 `,
                 startTime: event.startDate.replace('at', ''),
                 endTime: event.endDate.replace('at', ''),
