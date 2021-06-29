@@ -22,7 +22,10 @@ COMMENT ON COLUMN dni_user.colleague_uuid IS 'ColleagueUUID';
 COMMENT ON COLUMN dni_user.employee_number IS 'a.k.a. TPX';
 COMMENT ON COLUMN dni_user.capi_properties IS 'Colleague API properties';
 
+CREATE INDEX "dni_user$created_at__idx" ON dni_user (created_at);
+
 CREATE INDEX "dni_user$capi_properties__idx" ON dni_user USING gin(capi_properties);
+
 
 -- ========================
 -- dni_entity_type_enum
@@ -58,6 +61,8 @@ CREATE TABLE IF NOT EXISTS dni_user_subscription (
 	CONSTRAINT "d_u_subscription__pk" PRIMARY KEY (colleague_uuid, subscription_entity_type, subscription_entity_id)
 );
 
+CREATE INDEX "d_u_subscription$created_at__idx" ON dni_user_subscription (created_at);
+
 
 -- =========================
 -- dni_user_subscription_log
@@ -73,6 +78,8 @@ CREATE TABLE IF NOT EXISTS dni_user_subscription_log (
 	CONSTRAINT "d_u_subscription_log$colleague_uuid__fk" FOREIGN KEY (colleague_uuid) REFERENCES dni_user(colleague_uuid),
 	CONSTRAINT "d_u_subscription_log__pk" PRIMARY KEY (log_uuid)
 );
+
+CREATE INDEX "d_u_subscription_log$created_at__idx" ON dni_user_subscription_log (created_at);
 
 
 -- =================================
@@ -104,6 +111,7 @@ CREATE TABLE IF NOT EXISTS capi_region (
 	region_name varchar(64) NOT NULL,
 	CONSTRAINT "c_region__pk" PRIMARY KEY (post_index_prefix)
 );
+
 COMMENT ON TABLE capi_region IS 'Colleague API regions dictionary';
 
 
@@ -117,6 +125,7 @@ CREATE TABLE IF NOT EXISTS capi_department (
 	department_name varchar(64) NOT NULL,
 	CONSTRAINT "c_department__pk" PRIMARY KEY (capi_business_type)
 );
+
 COMMENT ON TABLE capi_department IS 'Colleague API departments dictionary';
 
 
@@ -146,7 +155,12 @@ CREATE TABLE IF NOT EXISTS ccms_notification (
 	received_at timestamptz(0) NOT NULL DEFAULT now(),
 	CONSTRAINT "c_notification__pk" PRIMARY KEY (notification_uuid)
 );
+
 COMMENT ON TABLE ccms_notification IS 'Collleague CMS notifications';
+
+CREATE INDEX "c_notification$entity_received_at__idx" ON ccms_notification (received_at);
+
+CREATE INDEX "c_notification$entity_created_at__idx" ON ccms_notification (entity_created_at);
 
 CREATE INDEX "c_notification$entity_instance__idx" ON ccms_notification USING gin(entity_instance);
 
@@ -172,7 +186,12 @@ CREATE TABLE IF NOT EXISTS ccms_entity (
 	CONSTRAINT "c_entity$notification_uuid__fk" FOREIGN KEY (notification_uuid) REFERENCES ccms_notification(notification_uuid),
 	CONSTRAINT "c_entity__pk" PRIMARY KEY (entity_id, entity_type)
 );
+
 COMMENT ON TABLE ccms_entity IS 'Collleague CMS Entities cache';
+
+CREATE INDEX "c_entity$created_at__idx" ON ccms_entity (created_at);
+
+CREATE INDEX "c_entity$entity_created_at__idx" ON ccms_entity (entity_created_at);
 
 
 -- ======================
@@ -224,6 +243,7 @@ END
 $function$
 ;
 
+
 -- ===================================================
 -- fn_get_dni_user_recent_notification_acknowledgement
 -- ===================================================
@@ -254,6 +274,7 @@ BEGIN
 END
 $function$
 ;
+
 
 -- =================================
 -- fn_get_dni_user_notification_list
@@ -391,7 +412,7 @@ BEGIN
       FROM 
          params,
          dni_user_subscription_log dni_usl
-      WHERE dni_usl.created_at::date between params.start_date and params.end_date
+      WHERE dni_usl.created_at::date BETWEEN params.start_date AND params.end_date
         AND dni_usl.subscription_entity_type = params.entity_type
         AND dni_usl.subscription_entity_id = ANY(params.entity_ids)
       UNION ALL
@@ -521,7 +542,7 @@ BEGIN
   
    WITH 
       affected_user_regions AS (SELECT 
-         dus.colleague_uuid,
+         dni_usl.colleague_uuid,
          ur.region_name
       FROM (
          SELECT DISTINCT
@@ -531,8 +552,14 @@ BEGIN
          LEFT JOIN capi_region cr
          ON upper(coalesce(left(du.capi_properties->>'addressPostcode', length(cr.post_index_prefix)), 'XX')) = upper(cr.post_index_prefix)
          ) ur
-      JOIN dni_user_subscription dus ON ur.colleague_uuid = dus.colleague_uuid 
-      WHERE dus.subscription_entity_type = p_entity_type AND dus.subscription_entity_id = ANY(p_entity_ids)
+      JOIN (
+         SELECT DISTINCT 
+            colleague_uuid 
+         FROM dni_user_subscription_log 
+         WHERE created_at::date BETWEEN p_start_date AND p_end_date
+           AND subscription_entity_type = p_entity_type AND subscription_entity_id = ANY(p_entity_ids)
+         ) dni_usl 
+      ON ur.colleague_uuid = dni_usl.colleague_uuid 
       ),
       initial_stats_info AS (SELECT
          aur.region_name,
@@ -559,7 +586,7 @@ BEGIN
          dni_user_subscription_log dni_usl
       JOIN affected_user_regions aur
       ON dni_usl.colleague_uuid  = aur.colleague_uuid
-      WHERE dni_usl.created_at::date between p_start_date and p_end_date
+      WHERE dni_usl.created_at::date BETWEEN p_start_date AND p_end_date
         AND dni_usl.subscription_entity_type = p_entity_type
         AND dni_usl.subscription_entity_id = ANY(p_entity_ids)
       GROUP BY
@@ -678,7 +705,7 @@ BEGIN
   
    WITH 
       affected_user_departments AS (SELECT 
-         dus.colleague_uuid,
+         dni_usl.colleague_uuid,
          ud.department_name
       FROM (
          SELECT DISTINCT
@@ -688,8 +715,14 @@ BEGIN
          LEFT JOIN capi_department cd 
          ON upper(du.capi_properties->>'businessType') = upper(cd.capi_business_type)
          ) ud
-      JOIN dni_user_subscription dus ON ud.colleague_uuid = dus.colleague_uuid 
-      WHERE dus.subscription_entity_type = p_entity_type AND dus.subscription_entity_id = ANY(p_entity_ids)
+      JOIN (
+         SELECT DISTINCT 
+            colleague_uuid 
+         FROM dni_user_subscription_log 
+         WHERE created_at::date BETWEEN p_start_date AND p_end_date
+           AND subscription_entity_type = p_entity_type AND subscription_entity_id = ANY(p_entity_ids)
+         ) dni_usl 
+      ON ud.colleague_uuid = dni_usl.colleague_uuid 
       ),
       initial_stats_info AS (SELECT
          aud.department_name,
@@ -716,7 +749,7 @@ BEGIN
          dni_user_subscription_log dni_usl
       JOIN affected_user_departments aud
       ON dni_usl.colleague_uuid  = aud.colleague_uuid
-      WHERE dni_usl.created_at::date between p_start_date and p_end_date
+      WHERE dni_usl.created_at::date BETWEEN p_start_date AND p_end_date
         AND dni_usl.subscription_entity_type = p_entity_type
         AND dni_usl.subscription_entity_id = ANY(p_entity_ids)
       GROUP BY
