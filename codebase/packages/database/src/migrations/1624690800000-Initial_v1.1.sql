@@ -678,8 +678,8 @@ BEGIN
       'data', coalesce(jsonb_agg(rdj.jsonb_data ORDER BY entity_id), to_jsonb('{}'::text[])),
       'metadata', (SELECT rmj.jsonb_metadata FROM report_metadata_json rmj)
       ) AS report_json
-   FROM report_data_json rdj;
    INTO report_jsonb
+   FROM report_data_json rdj;
 
    RETURN report_jsonb;
 END
