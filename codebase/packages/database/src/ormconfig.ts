@@ -37,9 +37,7 @@ const typeOrmConfig = {
   username: TYPEORM_USERNAME,
   password: TYPEORM_PASSWORD,
   database: TYPEORM_DATABASE,
-  extra: {
-    schema: TYPEORM_SCHEMA || 'piblic',
-  },
+  schema: TYPEORM_SCHEMA || 'public',
   logging: TYPEORM_LOGGING ? TYPEORM_LOGGING === 'true' : false,
   synchronize: TYPEORM_SYNCHRONIZE ? TYPEORM_SYNCHRONIZE === 'true' : false,
   entities: [buildPathWithExt(ENTITIES_DIR)],

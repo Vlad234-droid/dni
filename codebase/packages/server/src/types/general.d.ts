@@ -15,11 +15,11 @@ declare global {
     export interface Request {
       oneLoginAuthData?: AuthData;
       oneLoginUserInfo?: OpenIdUserInfo;
-      colleague?: ColleagueV2 | null;
+      colleagueUUID?: string | null;
     }
 
     export interface Response {
-      colleague?: ColleagueV2 | null;
+      colleagueUUID?: string | null;
     }
   }
 }

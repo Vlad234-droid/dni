@@ -30,7 +30,7 @@ class CcmsEntity {
   parentEntityType?: DniEntityTypeEnum;
 
   @Column('uuid', { name: 'notification_uuid', nullable: true })
-  notificationUuid?: string;
+  notificationUUID?: string;
 
   @Column('enum', { name: 'notification_trigger_event', enum: CcmsTriggerEventEnum, nullable: true })
   notificationTriggerEvent?: CcmsTriggerEventEnum;

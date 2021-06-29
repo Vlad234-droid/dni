@@ -3,10 +3,10 @@ import { CcmsTriggerEventEnum, DniEntityTypeEnum } from './enums';
 
 @Entity('ccms_notification')
 @Index('dni_user__ccms_entity_instance', ['entityInstance'], {})
-@Index('c_notification__pk', ['notificationUuid'], { unique: true })
+@Index('c_notification__pk', ['notificationUUID'], { unique: true })
 class CcmsNotification {
   @PrimaryGeneratedColumn('uuid', { name: 'notification_uuid' })
-  notificationUuid!: string;
+  notificationUUID!: string;
 
   @Column({ type: 'enum', name: 'notification_trigger_event', enum: CcmsTriggerEventEnum })
   notificationTriggerEvent!: CcmsTriggerEventEnum;

@@ -20,7 +20,7 @@ import {
   formData,
   fakeLoginConfig,
   fakeUserExtractor,
-  colleagueExtractor,
+  colleagueUUIDExtractor,
   fakeColleagueExtractor,
 } from './middlewares';
 import { buildContext } from './context';
@@ -76,7 +76,7 @@ const startServer = async () => {
       app.use(await openId);
     }
 
-    app.use(colleagueExtractor);
+    app.use(colleagueUUIDExtractor);
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
     app.use('/api/upload', upload.any(), formData);

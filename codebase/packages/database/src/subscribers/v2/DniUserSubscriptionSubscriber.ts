@@ -14,15 +14,18 @@ export class DniUserSubscriptionSubscriber implements EntitySubscriberInterface<
     await this.generateDniUserSubscriptionLog(event.entity, DniUserActionEnum.JOIN);
   }
 
-  async beforeRemove(event: RemoveEvent<DniUserSubscription>) {
-    await this.generateDniUserSubscriptionLog(event.entity!, DniUserActionEnum.LEAVE);
+  async afterRemove(event: RemoveEvent<DniUserSubscription>) {
+    // check if entity was removed
+    if (event.databaseEntity) {
+      await this.generateDniUserSubscriptionLog(event.databaseEntity!, DniUserActionEnum.LEAVE);
+    }
   }
 
   async generateDniUserSubscriptionLog(entity: DniUserSubscription, userAction: DniUserActionEnum) {
     const manager = getManager();
     const subscriptionLog = new DniUserSubscriptionLog();
 
-    subscriptionLog.colleagueUuid = entity.colleagueUuid;
+    subscriptionLog.colleagueUUID = entity.colleagueUUID;
     subscriptionLog.subscriptionEntityType = entity.subscriptionEntityType;
     subscriptionLog.subscriptionEntityId = entity.subscriptionEntityId;
     subscriptionLog.userAction = userAction;

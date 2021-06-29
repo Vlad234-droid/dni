@@ -1,7 +1,17 @@
+SET search_path TO public;
+
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
+-- !!! ----------------------------------------------------------------
+-- WARNING: IF NEXT COMMAND IS UNCOMMENTED WHOLE SCHEMA WILL BE DROPPED 
+DROP SCHEMA IF EXISTS "dni" CASCADE;
+-- !!! ----------------------------------------------------------------
+
+CREATE SCHEMA IF NOT EXISTS "dni";
+
+SET search_path TO "$user", dni, public;
 
 -- ========
 -- dni_user
@@ -11,6 +21,7 @@ CREATE TABLE IF NOT EXISTS dni_user (
 	colleague_uuid uuid NOT NULL,
 	employee_number varchar(12) NOT NULL,
 	capi_properties jsonb NULL,
+   setting_properties jsonb NULL,
 	last_login_at timestamptz(0) NULL,
 	created_at timestamptz(0) NOT NULL DEFAULT now(),
 	updated_at timestamptz(0) NULL,
@@ -105,7 +116,6 @@ CREATE INDEX "d_u_n_acknowledge$colleague_uuid$a_entity_type$a_entity_id__idx" O
 -- capi_region
 -- ===========
 --DROP TABLE IF EXISTS capi_region;
--- \copy capi_region FROM '/root/CAPI_region.csv' WITH CSV HEADER;
 CREATE TABLE IF NOT EXISTS capi_region (
 	post_index_prefix varchar(8) NOT NULL,
 	region_name varchar(64) NOT NULL,
@@ -114,12 +124,12 @@ CREATE TABLE IF NOT EXISTS capi_region (
 
 COMMENT ON TABLE capi_region IS 'Colleague API regions dictionary';
 
+-- \copy capi_region FROM './data/CAPI_region.csv' WITH CSV HEADER;
 
 -- ===============
 -- capi_department
 -- ===============
 --DROP TABLE IF EXISTS capi_department;
--- \copy capi_department FROM '/root/CAPI_departments.csv' WITH CSV HEADER;
 CREATE TABLE IF NOT EXISTS capi_department (
 	capi_business_type varchar(32) NOT NULL,
 	department_name varchar(64) NOT NULL,
@@ -128,6 +138,7 @@ CREATE TABLE IF NOT EXISTS capi_department (
 
 COMMENT ON TABLE capi_department IS 'Colleague API departments dictionary';
 
+-- \copy capi_department FROM './data/CAPI_departments.csv' WITH CSV HEADER;
 
 -- =================
 -- ccms_trigger_enum
@@ -541,6 +552,12 @@ BEGIN
    */
   
    WITH 
+      params AS (SELECT 
+         p_entity_type as entity_type,
+         p_entity_ids as entity_ids, 
+         p_start_date as start_date, 
+         p_end_date as end_date
+      ),
       affected_user_regions AS (SELECT 
          dni_usl.colleague_uuid,
          ur.region_name
@@ -555,9 +572,9 @@ BEGIN
       JOIN (
          SELECT DISTINCT 
             colleague_uuid 
-         FROM dni_user_subscription_log 
-         WHERE created_at::date BETWEEN p_start_date AND p_end_date
-           AND subscription_entity_type = p_entity_type AND subscription_entity_id = ANY(p_entity_ids)
+         FROM params, dni_user_subscription_log 
+         WHERE created_at::date BETWEEN start_date AND end_date
+           AND subscription_entity_type = entity_type AND subscription_entity_id = ANY(entity_ids)
          ) dni_usl 
       ON ur.colleague_uuid = dni_usl.colleague_uuid 
       ),
@@ -566,12 +583,12 @@ BEGIN
          dni_usl.subscription_entity_id AS entity_id,
          sum(CASE dni_usl.user_action WHEN 'join' THEN 1 WHEN 'leave' THEN -1 ELSE 0 END) subscribers_count
       FROM 
-         dni_user_subscription_log dni_usl
+         params, dni_user_subscription_log dni_usl
       JOIN affected_user_regions aur
       ON dni_usl.colleague_uuid  = aur.colleague_uuid
-      WHERE dni_usl.created_at::date < p_start_date
-        AND dni_usl.subscription_entity_type = p_entity_type
-        AND dni_usl.subscription_entity_id = ANY(p_entity_ids)
+      WHERE dni_usl.created_at::date < params.start_date
+        AND dni_usl.subscription_entity_type = params.entity_type
+        AND dni_usl.subscription_entity_id = ANY(params.entity_ids)
       GROUP BY
          aur.region_name,
          dni_usl.subscription_entity_id
@@ -583,12 +600,12 @@ BEGIN
          sum(CASE dni_usl.user_action WHEN 'leave' THEN 1 ELSE 0 END) AS leaved_count,
          sum(CASE dni_usl.user_action WHEN 'join' THEN 1 WHEN 'leave' THEN -1 ELSE 0 END) AS subscribers_count
       FROM 
-         dni_user_subscription_log dni_usl
+         params, dni_user_subscription_log dni_usl
       JOIN affected_user_regions aur
       ON dni_usl.colleague_uuid  = aur.colleague_uuid
-      WHERE dni_usl.created_at::date BETWEEN p_start_date AND p_end_date
-        AND dni_usl.subscription_entity_type = p_entity_type
-        AND dni_usl.subscription_entity_id = ANY(p_entity_ids)
+      WHERE dni_usl.created_at::date BETWEEN params.start_date AND params.end_date
+        AND dni_usl.subscription_entity_type = params.entity_type
+        AND dni_usl.subscription_entity_id = ANY(params.entity_ids)
       GROUP BY
          aur.region_name,
          dni_usl.subscription_entity_id
@@ -596,8 +613,8 @@ BEGIN
       report_template AS (SELECT 
          r.region_name,
          entities.entity_id
-      FROM (SELECT DISTINCT region_name FROM capi_region /*affected_user_regions*/) r
-      CROSS JOIN unnest(p_entity_ids) as entities(entity_id)
+      FROM params, (SELECT DISTINCT region_name FROM capi_region /*affected_user_regions*/) r
+      CROSS JOIN unnest(params.entity_ids) as entities(entity_id)
       ),
       report_data AS (SELECT  
          rt.region_name,
@@ -616,7 +633,7 @@ BEGIN
          rd.entity_id,
          jsonb_build_object(
             'entityId', rd.entity_id, 
-            'entityType', p_entity_type, 
+            'entityType', params.entity_type, 
             'entities', jsonb_agg(jsonb_build_object(
                'regionName', rd.region_name,
                'startSubscribers', rd.start_subscribers,
@@ -625,8 +642,8 @@ BEGIN
                'leaved', rd.leaved
             ) order by rd.region_name)
          ) jsonb_data
-      FROM report_data rd
-      GROUP BY rd.entity_id
+      FROM params, report_data rd
+      GROUP BY params.entity_type, rd.entity_id
       ORDER BY rd.entity_id
       ),
       report_metadata AS (SELECT  
@@ -644,24 +661,25 @@ BEGIN
       ),
       report_metadata_json AS (SELECT 
          jsonb_build_object(
-            'period', jsonb_build_object('from', p_start_date, 'to', p_end_date),
+            'period', jsonb_build_object('from', params.start_date, 'to', params.end_date),
             'entities', coalesce(jsonb_agg(jsonb_build_object(
                'entityId', rm.entity_id,
-               'entityType', p_entity_type,
+               'entityType', params.entity_type,
                'startSubscribers', rm.total_start_subscribers,
                'endSubscribers', rm.total_end_subscribers,
                'joined', rm.total_joined,
                'leaved', rm.total_leaved
             ) ORDER BY rm.entity_id), to_jsonb('{}'::text[]))
          ) jsonb_metadata
-      FROM report_metadata rm
+      FROM params, report_metadata rm
+      GROUP BY params.start_date, params.end_date
       )
    SELECT jsonb_build_object(
       'data', coalesce(jsonb_agg(rdj.jsonb_data ORDER BY entity_id), to_jsonb('{}'::text[])),
       'metadata', (SELECT rmj.jsonb_metadata FROM report_metadata_json rmj)
       ) AS report_json
-   INTO report_jsonb
    FROM report_data_json rdj;
+   INTO report_jsonb
 
    RETURN report_jsonb;
 END
@@ -704,6 +722,12 @@ BEGIN
    */
   
    WITH 
+      params AS (SELECT 
+         p_entity_type as entity_type,
+         p_entity_ids as entity_ids, 
+         p_start_date as start_date, 
+         p_end_date as end_date
+      ),
       affected_user_departments AS (SELECT 
          dni_usl.colleague_uuid,
          ud.department_name
@@ -718,9 +742,9 @@ BEGIN
       JOIN (
          SELECT DISTINCT 
             colleague_uuid 
-         FROM dni_user_subscription_log 
-         WHERE created_at::date BETWEEN p_start_date AND p_end_date
-           AND subscription_entity_type = p_entity_type AND subscription_entity_id = ANY(p_entity_ids)
+         FROM params, dni_user_subscription_log 
+         WHERE created_at::date BETWEEN params.start_date AND params.end_date
+           AND subscription_entity_type = params.entity_type AND subscription_entity_id = ANY(params.entity_ids)
          ) dni_usl 
       ON ud.colleague_uuid = dni_usl.colleague_uuid 
       ),
@@ -729,12 +753,12 @@ BEGIN
          dni_usl.subscription_entity_id AS entity_id,
          sum(CASE dni_usl.user_action WHEN 'join' THEN 1 WHEN 'leave' THEN -1 ELSE 0 END) subscribers_count
       FROM 
-         dni_user_subscription_log dni_usl
+         params, dni_user_subscription_log dni_usl
       JOIN affected_user_departments aud
       ON dni_usl.colleague_uuid  = aud.colleague_uuid
-      WHERE dni_usl.created_at::date < p_start_date
-        AND dni_usl.subscription_entity_type = p_entity_type
-        AND dni_usl.subscription_entity_id = ANY(p_entity_ids)
+      WHERE dni_usl.created_at::date < params.start_date
+        AND dni_usl.subscription_entity_type = params.entity_type
+        AND dni_usl.subscription_entity_id = ANY(params.entity_ids)
       GROUP BY
          aud.department_name,
          dni_usl.subscription_entity_id
@@ -746,12 +770,12 @@ BEGIN
          sum(CASE dni_usl.user_action WHEN 'leave' THEN 1 ELSE 0 END) AS leaved_count,
          sum(CASE dni_usl.user_action WHEN 'join' THEN 1 WHEN 'leave' THEN -1 ELSE 0 END) AS subscribers_count
       FROM 
-         dni_user_subscription_log dni_usl
+         params, dni_user_subscription_log dni_usl
       JOIN affected_user_departments aud
       ON dni_usl.colleague_uuid  = aud.colleague_uuid
-      WHERE dni_usl.created_at::date BETWEEN p_start_date AND p_end_date
-        AND dni_usl.subscription_entity_type = p_entity_type
-        AND dni_usl.subscription_entity_id = ANY(p_entity_ids)
+      WHERE dni_usl.created_at::date BETWEEN params.start_date AND params.end_date
+        AND dni_usl.subscription_entity_type = params.entity_type
+        AND dni_usl.subscription_entity_id = ANY(params.entity_ids)
       GROUP BY
          aud.department_name,
          dni_usl.subscription_entity_id
@@ -759,8 +783,8 @@ BEGIN
       report_template AS (SELECT 
          d.department_name,
          entities.entity_id
-      FROM (SELECT DISTINCT department_name FROM capi_department /*affected_user_departments*/) d
-      CROSS JOIN unnest(p_entity_ids) as entities(entity_id)
+      FROM params, (SELECT DISTINCT department_name FROM capi_department /*affected_user_departments*/) d
+      CROSS JOIN unnest(params.entity_ids) as entities(entity_id)
       ),
       report_data AS (SELECT  
          rt.department_name,
@@ -779,7 +803,7 @@ BEGIN
          rd.entity_id,
          jsonb_build_object(
             'entityId', rd.entity_id, 
-            'entityType', p_entity_type, 
+            'entityType', params.entity_type, 
             'entities', jsonb_agg(jsonb_build_object(
                'departmentName', rd.department_name,
                'startSubscribers', rd.start_subscribers,
@@ -788,8 +812,8 @@ BEGIN
                'leaved', rd.leaved
             ) order by rd.department_name)
          ) jsonb_data
-      FROM report_data rd
-      GROUP BY rd.entity_id
+      FROM params, report_data rd
+      GROUP BY params.entity_type, rd.entity_id
       ORDER BY rd.entity_id
       ),
       report_metadata AS (SELECT  
@@ -807,18 +831,20 @@ BEGIN
       ),
       report_metadata_json AS (SELECT 
          jsonb_build_object(
-            'period', jsonb_build_object('from', p_start_date, 'to', p_end_date),
+            'period', jsonb_build_object('from', params.start_date, 'to', params.end_date),
             'entities', coalesce(jsonb_agg(jsonb_build_object(
                'entityId', rm.entity_id,
-               'entityType', p_entity_type,
+               'entityType', params.entity_type,
                'startSubscribers', rm.total_start_subscribers,
                'endSubscribers', rm.total_end_subscribers,
                'joined', rm.total_joined,
                'leaved', rm.total_leaved
             ) ORDER BY rm.entity_id), to_jsonb('{}'::text[]))
          ) jsonb_metadata
-      FROM report_metadata rm
+      FROM params, report_metadata rm
+      GROUP BY params.start_date, params.end_date
       )
+
    SELECT jsonb_build_object(
       'data', coalesce(jsonb_agg(rdj.jsonb_data ORDER BY entity_id), to_jsonb('{}'::text[])),
       'metadata', (SELECT rmj.jsonb_metadata FROM report_metadata_json rmj)

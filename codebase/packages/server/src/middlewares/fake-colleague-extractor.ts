@@ -3,8 +3,9 @@ import { ColleagueV2 } from '@dni-connectors/colleague-api';
 
 export const fakeColleagueExtractor: Middleware = async (req, res, next) => {
   const userInfo = infoExtractor(req, res);
+  const colleagueUUID = '023c05c5-b825-43ac-813b-b362721ad6da';
   const colleague = {
-    colleagueUUID: '023c05c5-b825-43ac-813b-b362721ad6da',
+    colleagueUUID,
     externalSystems: {
       iam: {
         id: userInfo?.params?.employeeNumber,
@@ -29,6 +30,7 @@ export const fakeColleagueExtractor: Middleware = async (req, res, next) => {
     },
     serviceDates: {
       hireDate: '2020-08-12',
+      leavingDate: '2021-12-31',
     },
     workRelationships: [
       {
@@ -42,7 +44,7 @@ export const fakeColleagueExtractor: Middleware = async (req, res, next) => {
 
   await createOrUpdateDniUser(colleague);
 
-  req.colleague = colleague;
+  req.colleagueUUID = colleagueUUID;
 
   next();
 };

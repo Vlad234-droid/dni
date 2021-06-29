@@ -66,30 +66,30 @@ export type ColleagueList = {
 
 export interface ColleagueV2 {
   colleagueUUID: string;
-  employeeId: string;
-  countryCode: string;
-  effectivity: Effectivity;
+  employeeId?: string;
+  countryCode?: string;
+  effectivity?: Effectivity;
   externalSystems: ExternalSystems;
   profile: Profile;
-  contact: Contact;
-  serviceDates: ServiceDates;
-  workRelationships: WorkRelationship[];
-  nonTerms: NonTerm[];
-  visaPermits: VisaPermit[];
-  skills: Skill[];
+  contact?: Contact;
+  serviceDates?: ServiceDates;
+  workRelationships?: WorkRelationship[];
+  nonTerms?: NonTerm[];
+  visaPermits?: VisaPermit[];
+  skills?: Skill[];
 }
 
 export interface Contact {
   email: string;
-  workPhoneNumber: string;
-  addresses: Address[];
+  workPhoneNumber?: string;
+  addresses?: Address[];
 }
 
 export interface Address {
-  lines: string[];
-  countryCode: string;
-  postcode: string;
-  city: string;
+  lines?: string[];
+  countryCode?: string;
+  postcode?: string;
+  city?: string;
 }
 
 export interface Effectivity {

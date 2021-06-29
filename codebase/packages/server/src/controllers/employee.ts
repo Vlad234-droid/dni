@@ -7,7 +7,7 @@ import {
   removeEventRelation,
   findEventsParticipants,
   findNetworksParticipants,
-  colleagueExtractor,
+  colleagueUUIDExtractor,
 } from '../services';
 import { executeSafe } from '../utils';
 
@@ -17,10 +17,10 @@ const getProfile: Middleware = (req: Request, res: Response) => {
 
 const addNetworkToEmployee: Middleware = async (req: Request, res: Response) => {
   return executeSafe(res, async () => {
-    const employee = await colleagueExtractor(req, res);
+    const colleagueUUID = await colleagueUUIDExtractor(req, res);
     const { networkId } = req.body;
 
-    await createNetworkRelation(employee!.colleagueUUID, networkId);
+    await createNetworkRelation(colleagueUUID!, networkId);
 
     return res.json({
       message: 'Network was added to employee',
@@ -31,10 +31,10 @@ const addNetworkToEmployee: Middleware = async (req: Request, res: Response) => 
 
 const deleteNetworkFromEmployee: Middleware = async (req: Request, res: Response) => {
   return executeSafe(res, async () => {
-    const employee = await colleagueExtractor(req, res);
+    const colleagueUUID = await colleagueUUIDExtractor(req, res);
     const { networkId } = req.body;
 
-    await removeNetworkRelation(employee!.colleagueUUID, networkId);
+    await removeNetworkRelation(colleagueUUID!, networkId);
 
     return res.json({
       message: `Network with ID ${networkId} was deleted from employee`,
@@ -45,10 +45,10 @@ const deleteNetworkFromEmployee: Middleware = async (req: Request, res: Response
 
 const addEventToEmployee: Middleware = async (req: Request, res: Response) => {
   return executeSafe(res, async () => {
-    const employee = await colleagueExtractor(req, res);
+    const colleagueUUID = await colleagueUUIDExtractor(req, res);
     const { eventId } = req.body;
 
-    await createEventRelation(employee!.colleagueUUID, eventId);
+    await createEventRelation(colleagueUUID!, eventId);
 
     return res.json({
       message: 'Event was added to employee',
@@ -59,10 +59,10 @@ const addEventToEmployee: Middleware = async (req: Request, res: Response) => {
 
 const deleteEventFromEmployee: Middleware = async (req: Request, res: Response) => {
   return executeSafe(res, async () => {
-    const employee = await colleagueExtractor(req, res);
+    const colleagueUUID = await colleagueUUIDExtractor(req, res);
     const { eventId } = req.body;
 
-    await removeEventRelation(employee!.colleagueUUID, eventId);
+    await removeEventRelation(colleagueUUID!, eventId);
 
     return res.json({
       message: `Event with ID ${eventId} was deleted from employee`,

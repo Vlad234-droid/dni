@@ -1,5 +1,5 @@
 import { CcmsEntity, CcmsNotification, DniEntityTypeEnum } from '../../entities/v2';
-import { EntitySubscriberInterface, EventSubscriber, getConnection, InsertEvent } from 'typeorm';
+import { EntitySubscriberInterface, EventSubscriber, getRepository, InsertEvent } from 'typeorm';
 
 interface CommonCcrmEntity {
   slug: string;
@@ -45,13 +45,12 @@ export class CcmsNotificationSubscriber implements EntitySubscriberInterface<Ccm
         : undefined;
     }
 
-    ccrmEntity.notificationUuid = ccrmNotification.notificationUuid;
+    ccrmEntity.notificationUUID = ccrmNotification.notificationUUID;
     ccrmEntity.notificationTriggerEvent = ccrmNotification.notificationTriggerEvent;
 
-    getConnection()
-      .createQueryBuilder(CcmsEntity, 'entity')
+    getRepository(CcmsEntity)
+      .createQueryBuilder()
       .insert()
-      .into(CcmsEntity)
       .values(ccrmEntity)
       .onConflict(
         `ON CONSTRAINT "c_entity__pk" ` +
@@ -62,7 +61,7 @@ export class CcmsNotificationSubscriber implements EntitySubscriberInterface<Ccm
           `  , entity_published_at = :entityPublishedAt ` +
           `  , parent_entity_id = :parentEntityId ` +
           `  , parent_entity_type = :parentEntityType ` +
-          `  , notification_uuid = :notificationUuid ` +
+          `  , notification_uuid = :notificationUUID ` +
           `  , notification_trigger_event = :notificationTriggerEvent ` +
           `  , updated_at = now() `,
       )
@@ -72,7 +71,7 @@ export class CcmsNotificationSubscriber implements EntitySubscriberInterface<Ccm
       .setParameter('entityPublishedAt', ccrmEntity.entityPublishedAt)
       .setParameter('parentEntityId', ccrmEntity.parentEntityId)
       .setParameter('parentEntityType', ccrmEntity.parentEntityType)
-      .setParameter('notificationUuid', ccrmEntity.notificationUuid)
+      .setParameter('notificationUUID', ccrmEntity.notificationUUID)
       .setParameter('notificationTriggerEvent', ccrmEntity.notificationTriggerEvent)
       .execute();
   }

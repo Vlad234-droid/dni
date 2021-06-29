@@ -1,9 +1,9 @@
-import { colleagueExtractor as extractor } from '../services/employee';
+import { colleagueUUIDExtractor as extractor } from '../services/employee';
 
-export const colleagueExtractor: Middleware = async (req, res, next) => {
-  const colleague = await extractor(req, res);
+export const colleagueUUIDExtractor: Middleware = async (req, res, next) => {
+  const colleagueUUID = await extractor(req, res);
 
-  req.colleague = colleague;
+  req.colleagueUUID = colleagueUUID;
 
   next();
 };

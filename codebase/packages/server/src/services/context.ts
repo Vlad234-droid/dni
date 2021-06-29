@@ -7,7 +7,7 @@ import { getInstance as getCacheInstance } from '../services/cache';
 
 const config = getConfig();
 const context = buildContext(config);
-const DEFAULT_CACHE_CLIENT_SCOPE_TOKEN_KEY = 'identityClientToken';
+const DEFAULT_CACHE_IDENTITY_APP_SCOPE_TOKEN_KEY = 'IDENTITY_APP_SCOPE_TOKEN';
 
 const prepareContext = async (req = {} as Request, res = {} as Response) => {
   const requestCtx = context(req, res);
@@ -22,7 +22,7 @@ const enrichResWithToken = async (
   requestCtx: RequestCtx,
   { identityClientId, identityClientSecret }: ProcessConfig,
 ) => {
-  const cacheKey = process.env.CACHE_CLIENT_SCOPE_TOKEN_KEY || DEFAULT_CACHE_CLIENT_SCOPE_TOKEN_KEY;
+  const cacheKey = process.env.CACHE_IDENTITY_APP_SCOPE_TOKEN_KEY || DEFAULT_CACHE_IDENTITY_APP_SCOPE_TOKEN_KEY;
   let tokenData: ClientScopeToken;
 
   const cache = getCacheInstance();

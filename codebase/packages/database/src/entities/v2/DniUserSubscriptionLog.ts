@@ -2,13 +2,13 @@ import { Column, CreateDateColumn, Entity, Index, PrimaryGeneratedColumn } from 
 import { DniEntityTypeEnum, DniUserActionEnum } from './enums';
 
 @Entity('dni_user_subscription_log')
-@Index('d_u_subscription_log__pk', ['logUuid'], { unique: true })
+@Index('d_u_subscription_log__pk', ['logUUID'], { unique: true })
 export class DniUserSubscriptionLog {
   @PrimaryGeneratedColumn('uuid', { name: 'log_uuid' })
-  logUuid!: string;
+  logUUID!: string;
 
   @Column('uuid', { name: 'colleague_uuid' })
-  colleagueUuid!: string;
+  colleagueUUID!: string;
 
   @Column('integer', { name: 'subscription_entity_id' })
   subscriptionEntityId!: number;

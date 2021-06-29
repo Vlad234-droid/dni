@@ -4,16 +4,16 @@ import { DniEntityTypeEnum } from './enums';
 @Entity('dni_user_notification_acknowledge')
 @Index(
   'd_u_n_acknowledge$colleague_uuid$a_entity_type$a_entity_id__idx',
-  ['acknowledgeEntityId', 'acknowledgeEntityType', 'colleagueUuid'],
+  ['acknowledgeEntityId', 'acknowledgeEntityType', 'colleagueUUID'],
   {},
 )
-@Index('d_u_n_acknowledge__pk', ['acknowledgeUuid'], { unique: true })
+@Index('d_u_n_acknowledge__pk', ['acknowledgeUUID'], { unique: true })
 export class DniUserNotificationAcknowledge {
   @PrimaryGeneratedColumn('uuid', { name: 'acknowledge_uuid' })
-  acknowledgeUuid!: string;
+  acknowledgeUUID!: string;
 
   @Column('uuid', { name: 'colleague_uuid' })
-  colleagueUuid!: string;
+  colleagueUUID!: string;
 
   @Column('enum', { name: 'acknowledge_entity_type', enum: DniEntityTypeEnum })
   acknowledgeEntityType!: DniEntityTypeEnum;

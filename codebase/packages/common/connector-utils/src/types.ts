@@ -17,7 +17,7 @@ type BasicUserData = {
   userName: string;
   userFirstName: string;
   userEmail: string;
-  colleagueUuid: string;
+  colleagueUUID: string;
   employeeNumber: string;
   businessCategory?: BusinessCategory;
 };
