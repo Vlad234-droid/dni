@@ -76,7 +76,7 @@ const calculateDifference = ({ start, end }: { start: number; end: number }) => 
 
 const buildTimePeriodQuery = ({ entityType, groupBy, from, to, ids }: T.Params) => {
   const requestQuery = {
-    entityType: entityType == 0 ? 'NETWORK' : 'EVENT',
+    entityType: entityType == 0 ? 'network' : 'event',
     groupBy,
     from,
     to,
@@ -146,7 +146,7 @@ const reportsByTimeMiddleware = async ({
     ids,
   });
 
-  const { data, metadata } = await API.report.timePeriods<any>(query);
+  const { data, metadata } = await API.report.members<any>(query);
 
   const groupState = store.getState().reports[entityType][filter][filterFilter];
   const group = getGraphicsState() as T.GraphicsItem;

@@ -21,6 +21,7 @@ import {
   fakeLoginConfig,
   fakeUserExtractor,
   colleagueExtractor,
+  fakeColleagueExtractor,
 } from './middlewares';
 import { buildContext } from './context';
 import { initializeTypeOrm } from './config/db';
@@ -67,6 +68,7 @@ const startServer = async () => {
       app.use(cookieParser());
       app.use(fakeLoginConfig(context, config));
       app.use(fakeUserExtractor);
+      app.use(fakeColleagueExtractor);
     } else {
       const { openId, openIdCookieParser, clientScopedToken } = openIdConfig(config);
       app.use(openIdCookieParser);

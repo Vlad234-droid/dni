@@ -33,7 +33,7 @@ const enrichResWithToken = async (
     const connector = identityApiConnector(requestCtx);
     const response = await connector.getToken({ body });
     tokenData = response.data;
-    cache.set(cacheKey, tokenData, process.env.CACHE_CLIENT_SCOPE_TOKEN_TTL || 120);
+    cache.set(cacheKey, tokenData, tokenData.expires_in || 3000);
   }
 
   setIdentityClientData(res, tokenData);

@@ -4,7 +4,7 @@ import { Column, CreateDateColumn, Entity, Index, PrimaryColumn, UpdateDateColum
 @Index('dni_user__capi_properties', ['capiProperties'], {})
 @Index('dni_user__pk', ['colleagueUuid'], { unique: true })
 export class DniUser {
-  @PrimaryColumn('uuid', { name: 'notification_uuid' })
+  @PrimaryColumn('uuid', { name: 'colleague_uuid' })
   colleagueUuid!: string;
 
   @Column('character varying', { name: 'employee_number', length: 12 })

@@ -82,10 +82,10 @@ export interface ColleagueV2 {
 export interface Contact {
   email: string;
   workPhoneNumber: string;
-  addresses: Addresses;
+  addresses: Address[];
 }
 
-export interface Addresses {
+export interface Address {
   lines: string[];
   countryCode: string;
   postcode: string;

@@ -24,7 +24,7 @@ const buildPath = (...paths: string[]) => path.join(...paths);
 const buildPathWithExt = (dir: string, ext = '*{.ts,.js}') => buildPath(dir, '**', ext);
 const ENTITIES_DIR = buildPath(root, 'entities');
 const SUBSCRIBERS_DIR = buildPath(root, 'subscribers');
-const MIGRATIONS_DIR = buildPath(root, 'migrations');
+const MIGRATIONS_DIR = buildPath('src', 'migrations');
 const SCHEMAS_DIR = buildPath(root, 'schemas');
 
 const sslOpt = { ssl: TYPEORM_SSL === 'true' };

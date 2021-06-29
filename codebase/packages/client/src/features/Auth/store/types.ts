@@ -21,7 +21,6 @@ type State = {
 type UserResponse = DefaultUser | User;
 
 type NetworkPayload = {
-  employeeNumber: string;
   networkId: number;
 };
 
@@ -31,7 +30,6 @@ type NetworkResponse = {
 };
 
 type EventPayload = {
-  employeeNumber: string;
   eventId: number;
 };
 
@@ -45,15 +43,7 @@ type ValidationError = {
   path: string[];
 };
 
-export type {
-  State,
-  UserResponse,
-  ValidationError,
-  NetworkPayload,
-  NetworkResponse,
-  EventPayload,
-  EventResponse,
-};
+export type { State, UserResponse, ValidationError, NetworkPayload, NetworkResponse, EventPayload, EventResponse };
 
 export {
   // actions

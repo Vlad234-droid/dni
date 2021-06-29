@@ -13,8 +13,8 @@ export class DniUserSubscriptionLog {
   @Column('integer', { name: 'subscription_entity_id' })
   subscriptionEntityId!: number;
 
-  @Column('enum', { name: 'subscription_entity', enum: DniEntityTypeEnum })
-  subscriptionEntity!: DniEntityTypeEnum;
+  @Column('enum', { name: 'subscription_entity_type', enum: DniEntityTypeEnum })
+  subscriptionEntityType!: DniEntityTypeEnum;
 
   @Column('enum', { name: 'user_action', enum: DniUserActionEnum })
   userAction!: DniUserActionEnum;

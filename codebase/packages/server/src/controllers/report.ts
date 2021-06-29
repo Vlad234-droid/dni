@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { getReportBy, getPDFBuffer, PrintParams } from '../services';
+import { getMembersReportBy, getRegionsReportBy, getDepartmentsReportBy, getPDFBuffer, PrintParams } from '../services';
 import { executeSafe } from '../utils';
 import { Readable } from 'stream';
 
@@ -11,15 +11,33 @@ interface ReportFilter {
   to: string;
 }
 
-const getReportByFilters = (req: Request<{}, {}, {}, ReportFilter>, res: Response) => {
+const getMembersReportByFilters = (req: Request<{}, {}, {}, ReportFilter>, res: Response) => {
   const { entityType, entityIds, groupBy, from, to } = req.query;
-  console.log(`req entityIds: ${entityIds}`);
 
   const entityIdsArray = entityIds && entityIds.length > 0 ? entityIds.split(',') : [];
-  console.log(`req entityIds array: ${entityIdsArray}`);
 
   return executeSafe(res, async () =>
-    res.status(200).json(await getReportBy(entityType, entityIdsArray, groupBy, from, to)),
+    res.status(200).json(await getMembersReportBy(entityType, entityIdsArray, groupBy, from, to)),
+  );
+};
+
+const getRegionsReportByFilters = (req: Request<{}, {}, {}, ReportFilter>, res: Response) => {
+  const { entityType, entityIds, from, to } = req.query;
+
+  const entityIdsArray = entityIds && entityIds.length > 0 ? entityIds.split(',') : [];
+
+  return executeSafe(res, async () =>
+    res.status(200).json(await getRegionsReportBy(entityType, entityIdsArray, from, to)),
+  );
+};
+
+const getDepartmentsReportByFilters = (req: Request<{}, {}, {}, ReportFilter>, res: Response) => {
+  const { entityType, entityIds, from, to } = req.query;
+
+  const entityIdsArray = entityIds && entityIds.length > 0 ? entityIds.split(',') : [];
+
+  return executeSafe(res, async () =>
+    res.status(200).json(await getDepartmentsReportBy(entityType, entityIdsArray, from, to)),
   );
 };
 
@@ -37,4 +55,4 @@ const printPDF = async (req: Request<{}, {}, PrintParams>, res: Response) => {
   stream.pipe(res);
 };
 
-export { getReportByFilters, printPDF };
+export { getMembersReportByFilters, getRegionsReportByFilters, getDepartmentsReportByFilters, printPDF };

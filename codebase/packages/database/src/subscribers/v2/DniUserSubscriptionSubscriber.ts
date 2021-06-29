@@ -23,7 +23,7 @@ export class DniUserSubscriptionSubscriber implements EntitySubscriberInterface<
     const subscriptionLog = new DniUserSubscriptionLog();
 
     subscriptionLog.colleagueUuid = entity.colleagueUuid;
-    subscriptionLog.subscriptionEntity = entity.subscriptionEntity;
+    subscriptionLog.subscriptionEntityType = entity.subscriptionEntityType;
     subscriptionLog.subscriptionEntityId = entity.subscriptionEntityId;
     subscriptionLog.userAction = userAction;
 
