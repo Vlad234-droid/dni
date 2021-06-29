@@ -109,6 +109,10 @@
         "type": "plain",
         "value": "di_database"
       },
+      "TYPEORM_SCHEMA": {
+        "type": "plain",
+        "value": "dni"
+      },
       "TYPEORM_USERNAME": {
         "type": "secret",
         "name": "typeorm_username"
