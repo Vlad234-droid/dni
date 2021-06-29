@@ -32,9 +32,7 @@ const MainMenuMobile: FC<Props> = ({ onClose }) => (
       <LinkWrapper href={LINKS.signOut}>Sign out</LinkWrapper>
     </>
     <LinkWrapper>
-      <Link href={LINKS.termsAndConditions} target='_selft'>
-        Terms & Conditions
-      </Link>
+      <Link href={LINKS.termsAndConditions}>Terms & Conditions</Link>
     </LinkWrapper>
   </Wrapper>
 );
