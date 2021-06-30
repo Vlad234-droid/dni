@@ -62,10 +62,7 @@ const EventHeader: FC<Props> = ({ event, participants }) => {
               event={{
                 title: event.title,
                 description:
-                  `For more details and the link to join the virtual event please check the event link below:
-                  
-                  ${window.location.origin}/${Page.EVENTS}/${id}
-                `,
+                  `For more details and the link to join the virtual event please check the event link: ${window.location.href}`,
                 startTime: event.startDate.replace('at', ''),
                 endTime: event.endDate.replace('at', ''),
                 location: '',
