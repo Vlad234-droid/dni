@@ -386,7 +386,7 @@ BEGIN
    THEN 
       SELECT array_agg(entity_id)
       INTO p_entity_ids
-      FROM dni.ccms_entity
+      FROM ccms_entity
       WHERE entity_type = p_entity_type
         AND entity_published_at IS NOT NULL 
         AND notification_trigger_event <> 'deleted';
@@ -583,8 +583,7 @@ BEGIN
          SELECT DISTINCT 
             colleague_uuid 
          FROM params, dni_user_subscription_log 
-         WHERE created_at::date BETWEEN start_date AND end_date
-           AND subscription_entity_type = entity_type AND subscription_entity_id = ANY(entity_ids)
+         WHERE subscription_entity_type = entity_type AND subscription_entity_id = ANY(entity_ids)
          ) dni_usl 
       ON ur.colleague_uuid = dni_usl.colleague_uuid 
       ),
@@ -755,8 +754,7 @@ BEGIN
          SELECT DISTINCT 
             colleague_uuid 
          FROM params, dni_user_subscription_log 
-         WHERE created_at::date BETWEEN params.start_date AND params.end_date
-           AND subscription_entity_type = params.entity_type AND subscription_entity_id = ANY(params.entity_ids)
+         WHERE subscription_entity_type = params.entity_type AND subscription_entity_id = ANY(params.entity_ids)
          ) dni_usl 
       ON ud.colleague_uuid = dni_usl.colleague_uuid 
       ),
