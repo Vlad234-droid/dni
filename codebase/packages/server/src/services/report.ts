@@ -13,7 +13,7 @@ const getMembersReportBy = async (
         report::json->'data' AS data,
         report::json->'metadata' AS metadata
     FROM fn_build_dni_members_report(
-        $1::dni_entity_type_enum,
+        $1,
         $2::int4[],
         $3,
         $4::date,
@@ -31,7 +31,7 @@ const getRegionsReportBy = async (entityType: string, entityIds: string[], from:
         report::json->'data' AS data,
         report::json->'metadata' AS metadata
     FROM fn_build_dni_regions_report(
-        $1::dni_entity_type_enum,
+        $1,
         $2::int4[],
         $3::date,
         $4::date
@@ -48,7 +48,7 @@ const getDepartmentsReportBy = async (entityType: string, entityIds: string[], f
         report::json->'data' AS data,
         report::json->'metadata' AS metadata
     FROM fn_build_dni_departments_report(
-        $1::dni_entity_type_enum,
+        $1,
         $2::int4[],
         $3::date,
         $4::date
