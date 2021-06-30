@@ -866,3 +866,65 @@ BEGIN
 END
 $function$
 ;
+
+
+-- ==================================
+-- fn_perform_dni_colleague_data_wipe
+-- ----------------------------------
+-- WARNING!!!
+-- THIS IS DATA WIPE FUNCTION 
+-- USE CARREFULLY
+-- ==================================
+CREATE OR REPLACE FUNCTION fn_perform_dni_colleague_data_wipe(
+     p_retention_period varchar(32) DEFAULT '6 month'
+     )
+  RETURNS jsonb 
+  LANGUAGE plpgsql
+AS $function$
+DECLARE
+    report_jsonb jsonb;
+BEGIN
+   SET search_path TO "$user", dni, public;
+
+   WITH 
+      params AS (SELECT
+         p_retention_period::varchar AS retention_period
+      ),
+      affected_colleague_ids AS (SELECT 
+         colleague_uuid 
+      FROM params, dni_user du
+      WHERE ((du.capi_properties->>'leavingDate')::date + params.retention_period::INTERVAL) < now()
+         OR (du.last_login_at + params.retention_period::INTERVAL) < now()
+      ),
+      dusl_deleted AS (
+         DELETE FROM dni_user_subscription_log dusl 
+         WHERE dusl.colleague_uuid IN (SELECT colleague_uuid FROM affected_colleague_ids)
+         RETURNING dusl.log_uuid
+      ),
+      dus_deleted as (
+         DELETE FROM dni_user_subscription dus
+         WHERE dus.colleague_uuid IN (SELECT colleague_uuid FROM affected_colleague_ids)
+         RETURNING colleague_uuid, subscription_entity_type, subscription_entity_id
+      ),
+      duna_deleted AS (
+         DELETE FROM dni_user_notification_acknowledge duna 
+         WHERE duna.colleague_uuid IN (SELECT colleague_uuid FROM affected_colleague_ids)
+         RETURNING duna.acknowledge_uuid
+      ),
+      du_deleted as (
+         DELETE FROM dni_user du
+         WHERE du.colleague_uuid IN (SELECT colleague_uuid FROM affected_colleague_ids)
+         RETURNING colleague_uuid
+      )
+   SELECT jsonb_build_object(
+      'dni_user_subscription_log_deleted', (SELECT count(*) FROM dusl_deleted),
+      'dni_user_subscription_deleted', (SELECT count(*) FROM dus_deleted),
+      'dni_user_notification_acknowledge_deleted', (SELECT count(*) FROM duna_deleted),
+      'dni_user_deleted', (SELECT count(*) FROM du_deleted)
+      )
+   INTO report_jsonb;
+
+   RETURN report_jsonb;
+END
+$function$
+;
