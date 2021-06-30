@@ -8,6 +8,8 @@ const FULL_DAY_FORMAT = 'LLLL dd, yyyy';
 
 const dateToFormat = (date: Date, format: string) => DateTime.fromJSDate(date).toFormat(format);
 
+const fromIsoDate = (date: string) => DateTime.fromISO(date).toJSDate();
+
 const isoDateToFormat = (date: string, format: string) => DateTime.fromISO(date).toFormat(format);
 
 const firstDayOf = (duration: DurationUnit) => DateTime.local().startOf(duration);
@@ -30,6 +32,7 @@ export {
   addDuration,
   minusDuration,
   dateMinusDuration,
+  fromIsoDate,
   now,
   DATE_FORMAT,
   TIME_FORMAT,

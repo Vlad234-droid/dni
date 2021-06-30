@@ -1,7 +1,7 @@
 import keyBy from 'lodash.keyby';
 import sort from 'lodash.filter';
 
-import { FULL_DAY_FORMAT, isoDateToFormat, now, dateMinusDuration } from 'utils/date';
+import { FULL_DAY_FORMAT, isoDateToFormat, now, dateMinusDuration, fromIsoDate } from 'utils/date';
 import API from 'utils/api';
 import store from 'store';
 
@@ -243,7 +243,8 @@ const reportsByRegionMiddleware = async ({
   const group = getGraphicsState() as T.GraphicsItem;
 
   group.color = groupState.color;
-  group.dateInterval = groupState.dateInterval;
+  group.dateInterval.from = toDateInterval(dateFrom);
+  group.dateInterval.to = toDateInterval(dateTo);
 
   group.statistics = metadata.entities.map(({ entityId }) => {
     const entityName = entities[entityId]?.title || 'Default entity name';
@@ -317,7 +318,8 @@ const reportsByFormatMiddleware = async ({
   const group = getGraphicsState() as T.GraphicsItem;
 
   group.color = groupState.color;
-  group.dateInterval = groupState.dateInterval;
+  group.dateInterval.from = toDateInterval(dateFrom);
+  group.dateInterval.to = toDateInterval(dateTo);
 
   group.statistics = metadata.entities.map(({ entityId }) => {
     const entityName = entities[entityId]?.title || 'Default entity name';
@@ -357,6 +359,17 @@ const reportsByFormatMiddleware = async ({
   return {
     entityType,
     data: group,
+  };
+};
+
+const toDateInterval = (isoDate: string) => {
+  const addLeadingZero = (value: string | number) => `0${value}`.slice(-2);
+  const date = fromIsoDate(isoDate);
+
+  return {
+    dd: addLeadingZero(date.getDate()),
+    mm: addLeadingZero(date.getMonth() + 1),
+    yyyy: String(date.getFullYear()),
   };
 };
 

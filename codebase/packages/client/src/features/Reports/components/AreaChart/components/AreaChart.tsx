@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo } from 'react';
 import styled from 'styled-components';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip } from 'recharts';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import Button from '@beans/button';
 import Icon from '@beans/icon';
 
@@ -51,60 +51,60 @@ const AreaChartContainer = ({ data }: Props) => {
           </Button>
         </div>
       </ButtonWrapper>
-      <AreaChart
-        width={isDesktop ? 750 : isTablet ? 700 : 320}
-        height={264}
-        data={data.entities}
-        barSize={4}
-        barGap={0.5}
-        barCategoryGap={8}
-        margin={{ top: 28 }}
-        style={{
-          fontFamily: 'Noto Sans',
-          fontSize: '12px',
-          fill: '#ccc',
-        }}
-      >
-        <defs>
-          {Object.entries(data.elements).map(([key, value], idx) => {
-            return (
-              <linearGradient
-                key={key}
-                id={`color_${idx}`}
-                x1='0.000134018'
-                y1='-172.527'
-                x2='0.000134018'
-                y2='184.613'
-                gradientUnits='userSpaceOnUse'
-              >
-                <stop stopColor={value.color} />
-                <stop offset={1} stopColor={value.color} stopOpacity={0.1} />
-              </linearGradient>
-            );
-          })}
-        </defs>
-        <CartesianGrid stroke='#E5E5E5' strokeDasharray='2 2' vertical={false} />
-        <XAxis
-          dataKey='name'
-          tickLine={false}
-          tick={{
-            fontSize: 11,
+      <ResponsiveContainer height={400} width={'95%'}>
+        <AreaChart
+          data={data.entities}
+          barSize={4}
+          barGap={0.5}
+          barCategoryGap={8}
+          margin={{ top: 28 }}
+          style={{
+            fontFamily: 'Noto Sans',
+            fontSize: '12px',
+            fill: '#ccc',
           }}
-        />
-        <YAxis type='number' domain={[0, 10]} tickCount={6} tickLine={false} />
-        <Tooltip />
-        {Object.entries(data.elements).map(([key, value], idx) => (
-          <Area
-            key={key}
-            type='monotone'
-            dataKey={key}
-            radius={24}
-            fill={`url(#color_${idx})`}
-            stroke={value.color}
-            fillOpacity={1}
+        >
+          <defs>
+            {Object.entries(data.elements).map(([key, value], idx) => {
+              return (
+                <linearGradient
+                  key={key}
+                  id={`color_${idx}`}
+                  x1='0.000134018'
+                  y1='-172.527'
+                  x2='0.000134018'
+                  y2='184.613'
+                  gradientUnits='userSpaceOnUse'
+                >
+                  <stop stopColor={value.color} />
+                  <stop offset={1} stopColor={value.color} stopOpacity={0.1} />
+                </linearGradient>
+              );
+            })}
+          </defs>
+          <CartesianGrid stroke='#E5E5E5' strokeDasharray='2 2' vertical={false} />
+          <XAxis
+            dataKey='name'
+            tickLine={false}
+            tick={{
+              fontSize: 11,
+            }}
           />
-        ))}
-      </AreaChart>
+          <YAxis type='number' domain={[0, 10]} tickCount={6} tickLine={false} />
+          <Tooltip />
+          {Object.entries(data.elements).map(([key, value], idx) => (
+            <Area
+              key={key}
+              type='monotone'
+              dataKey={key}
+              radius={24}
+              fill={`url(#color_${idx})`}
+              stroke={value.color}
+              fillOpacity={1}
+            />
+          ))}
+        </AreaChart>
+      </ResponsiveContainer>
     </div>
   );
 };

@@ -218,7 +218,7 @@ const Graphics: FC<Props> = ({ entityType, filter, filterFilter, dateInterval, d
     () => (
       <DateTimePicker
         key={filter}
-        label='Pick date'
+        label='Select date'
         dateTime={dateInterval.to}
         required
         type={Type.TYPE_END}
