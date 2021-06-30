@@ -41,7 +41,7 @@ const Statistics = ({ data, onChange, entityType, filter }: Props) => {
               <Cell>{'left during the period'}</Cell>
             </>
           )}
-          {(filter === T.REGION || filter === T.FORMAT) && <Cell>{'Participants'}</Cell>}
+          {(filter === T.REGION || filter === T.FORMAT) && <Cell>{'Subscribers'}</Cell>}
         </Row>
         {data.map((item) => (
           <Row key={item.entityId}>

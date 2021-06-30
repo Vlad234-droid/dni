@@ -1,4 +1,4 @@
-import { BarChart, CartesianGrid, XAxis, YAxis, Tooltip, Legend, Bar, ResponsiveContainer } from 'recharts';
+import { BarChart, CartesianGrid, XAxis, YAxis, Tooltip, Legend, Bar, LabelList, ResponsiveContainer } from 'recharts';
 import { useMedia } from 'context/InterfaceContext';
 
 type Props = {
@@ -24,8 +24,12 @@ const BarChartContainer = ({ data }: Props) => {
         <XAxis type='number' />
         <Tooltip />
         <Legend />
-        {data.entities.map(({ name, color }: { name: string; color: string }) => {
-          return <Bar key={name} dataKey={name} fill={color} />;
+        {data.entities.map(({ name, color, ...rest }: { name: string; color: string }) => {
+          return (
+            <Bar key={name} dataKey={name} fill={color}>
+              <LabelList position='inside' />
+            </Bar>
+          );
         })}
       </BarChart>
     </ResponsiveContainer>

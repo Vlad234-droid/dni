@@ -258,7 +258,7 @@ const reportsByRegionMiddleware = async ({
     );
 
     row.name = entityName;
-    row.checked = typeof rowState?.['checked'] === 'boolean' ? rowState.checked : false;
+    row.checked = false;
     row.color = typeof rowState?.['color'] === 'string' ? rowState.color : '';
 
     const dataEntities = data.find((element) => element.entityId == entityId)!.entities || [];
@@ -277,7 +277,7 @@ const reportsByRegionMiddleware = async ({
     return row;
   });
 
-  group.chart.entities = sort(group.statistics, ['checked', true]);
+  // group.chart.entities = sort(group.statistics, ['checked', true]);
 
   group.chart.elements = groupState.chart.elements;
 
@@ -333,7 +333,7 @@ const reportsByFormatMiddleware = async ({
     );
 
     row.name = entityName;
-    row.checked = typeof rowState?.['checked'] === 'boolean' ? rowState.checked : false;
+    row.checked = false;
     row.color = typeof rowState?.['color'] === 'string' ? rowState.color : '';
 
     const dataEntities = data.find((element) => element.entityId == entityId)!.entities || [];
@@ -352,7 +352,7 @@ const reportsByFormatMiddleware = async ({
     return row;
   });
 
-  group.chart.entities = sort(group.statistics, ['checked', true]);
+  // group.chart.entities = sort(group.statistics, ['checked', true]);
 
   group.chart.elements = groupState.chart.elements;
 
