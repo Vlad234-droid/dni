@@ -1,5 +1,4 @@
 import { BarChart, CartesianGrid, XAxis, YAxis, Tooltip, Legend, Bar, LabelList, ResponsiveContainer } from 'recharts';
-import { useMedia } from 'context/InterfaceContext';
 
 type Props = {
   data: any;
@@ -12,7 +11,6 @@ const BarChartContainer = ({ data }: Props) => {
         barGap={0.5}
         barCategoryGap={8}
         style={{
-          fontFamily: 'Noto Sans',
           fontSize: '12px',
           fill: '#ccc',
         }}
@@ -20,19 +18,43 @@ const BarChartContainer = ({ data }: Props) => {
         data={data.elements}
       >
         <CartesianGrid strokeDasharray={'3 3'} />
-        <YAxis dataKey={'name'} type='category' />
-        <XAxis type='number' />
+        <YAxis type='category' dataKey={'name'} width={80} />
+        <XAxis type='number' tick={{ fontFamily: 'sans-serif' }} />
         <Tooltip />
         <Legend />
-        {data.entities.map(({ name, color, ...rest }: { name: string; color: string }) => {
+        {data.entities.map(({ name, color }: { name: string; color: string }) => {
           return (
             <Bar key={name} dataKey={name} fill={color}>
-              <LabelList position='inside' />
+              <LabelList position='inside' content={renderCustomizedLabel} />
             </Bar>
           );
         })}
       </BarChart>
     </ResponsiveContainer>
+  );
+};
+
+const renderCustomizedLabel = (props: {
+  x?: string | number;
+  y?: string | number;
+  width?: string | number;
+  height?: string | number;
+  value?: string | number;
+}) => {
+  const { x, y, width, value, height } = props;
+
+  return (
+    <g>
+      <text
+        x={+x! + +width! / 2}
+        y={Math.ceil(+y! + +height! / 2) + 1}
+        fill='#fff'
+        textAnchor='middle'
+        dominantBaseline='middle'
+      >
+        {value == 0 ? '' : value}
+      </text>
+    </g>
   );
 };
 

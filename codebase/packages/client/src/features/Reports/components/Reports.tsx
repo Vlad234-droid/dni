@@ -5,6 +5,7 @@ import Statistics from '../components/Statistics';
 import ButtonFilter from '../components/ButtonFilter';
 import Graphics from './Graphics';
 import store from 'store';
+import { Wrapper } from './styled';
 
 import { actions } from '../store';
 import * as T from '../config/types';
@@ -63,7 +64,7 @@ const Reports: FC = () => {
   };
 
   return (
-    <div data-testid={REPORT_TEST_ID}>
+    <Wrapper data-testid={REPORT_TEST_ID}>
       <ButtonFilter
         value={filter}
         initialFilters={filterButtons}
@@ -86,7 +87,7 @@ const Reports: FC = () => {
         name='entities'
       />
       <Statistics entityType={entityType} data={statistics} onChange={handleUpdateStatistics} filter={filter} />
-    </div>
+    </Wrapper>
   );
 };
 
