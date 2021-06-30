@@ -54,13 +54,14 @@ export const openIdConfig = ({
 
     //console.log(` ---> User groups: [${userGroups}]`);
 
-    let userRoles = [defaultConfig.defaultRole];
+    //let userRoles: Set<string> = new Set([defaultConfig.defaultRole, 'Admin']);
+    let userRoles: Set<string> = new Set([ 'Admin' ]);
 
     if (managerGroups.some((g) => userGroups.includes(g))) {
-      userRoles = [...userRoles, 'Manager'];
+      userRoles.add('Manager');
     }
     if (adminGroups.some((g) => userGroups.includes(g))) {
-      userRoles = [...userRoles, 'Admin'];
+      userRoles.add('Admin');
     }
 
     //console.log(` ---> User roles: [${userRoles}]`);
@@ -75,7 +76,7 @@ export const openIdConfig = ({
         employeeNumber: (userInfo.params?.employeeNumber || userInfo.params?.EmployeeNumber) as string,
       },
       groups: userGroups,
-      roles: userRoles,
+      roles: Array.from(userRoles.values()),
     };
 
     //console.log(` ---> User data: ${JSON.stringify(userData)}`);

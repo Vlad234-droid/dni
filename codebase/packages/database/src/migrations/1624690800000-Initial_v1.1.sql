@@ -229,6 +229,8 @@ DECLARE
     root_entity_id int4;
     root_entity_type dni_entity_type_enum;
 BEGIN
+   SET search_path TO "$user", dni, public;
+
    WITH RECURSIVE entities(entity_id, entity_type, parent_entity_id, parent_entity_type) AS (
       SELECT NULL::int4 AS entity_id, NULL::dni_entity_type_enum AS entity_type, parent_entity_id, parent_entity_type
       FROM ccms_entity
@@ -269,6 +271,8 @@ CREATE OR REPLACE FUNCTION fn_get_dni_user_recent_notification_acknowledgement(
   LANGUAGE plpgsql
 AS $function$
 BEGIN
+   SET search_path TO "$user", dni, public;
+
    RETURN QUERY
       SELECT 
          a.colleague_uuid AS colleague_uuid, 
@@ -307,6 +311,8 @@ CREATE OR REPLACE FUNCTION fn_get_dni_user_notification_list(
   LANGUAGE plpgsql
 AS $function$
 BEGIN
+   SET search_path TO "$user", dni, public;
+
    RETURN QUERY
       SELECT 
          p_colleague_uuid as colleague_uuid,
@@ -344,10 +350,10 @@ $function$
 ;
 
 
--- ===========================
--- fn_build_dni_members_report
--- ===========================
-CREATE OR REPLACE FUNCTION fn_build_dni_members_report(
+-- ==============================
+-- fn_build_dni_timeseries_report
+-- ==============================
+CREATE OR REPLACE FUNCTION fn_build_dni_timeseries_report(
      p_entity_type dni_entity_type_enum,
      p_entity_ids int4[] DEFAULT NULL,
      p_granularity varchar(16) DEFAULT 'day',
@@ -372,13 +378,15 @@ BEGIN
          USING HINT = 'These options are available: `network`, `event`';
    END IF;
 
+   SET search_path TO "$user", dni, public;
+
    -- populate array of IDs, if NULL 
    /*
    IF p_entity_ids IS NULL
    THEN 
       SELECT array_agg(entity_id)
       INTO p_entity_ids
-      FROM ccms_entity
+      FROM dni.ccms_entity
       WHERE entity_type = p_entity_type
         AND entity_published_at IS NOT NULL 
         AND notification_trigger_event <> 'deleted';
@@ -537,6 +545,8 @@ BEGIN
       RAISE EXCEPTION '`p_entity_type` parameter is required'
          USING HINT = 'These options are available: `network`, `event`';
    END IF;
+
+   SET search_path TO "$user", dni, public;
 
    -- populate array of IDs, if NULL 
    /*
@@ -707,6 +717,8 @@ BEGIN
       RAISE EXCEPTION '`p_entity_type` parameter is required'
          USING HINT = 'These options are available: `network`, `event`';
    END IF;
+
+   SET search_path TO "$user", dni, public;
 
    -- populate array of IDs, if NULL 
    /*
