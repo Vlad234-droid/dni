@@ -3,13 +3,39 @@ import {
   identityTokenSwapPlugin,
   userDataPlugin,
   identityClientScopedTokenPlugin,
-  defaultLogger,
+  Logger,
+  LoggerEvent,
   OpenIdUserInfo,
 } from '@energon/onelogin';
 import cookieParser from 'cookie-parser';
 import { isPROD } from '../config/env';
 import { defaultConfig } from '../config/default';
 import { ProcessConfig } from 'services/config-accessor';
+
+interface ErrorLogMessage {
+  errorType: string;
+  errorMessage: string;
+  stack: string;
+}
+
+interface InfoLogMessage {
+  message: string;
+}
+
+const OpenIdLogger: Logger = (event: LoggerEvent) => {
+  switch (event.severity) {
+    case 'info':
+    case 'warning':
+      const infoLogMessage = event.payload as unknown as InfoLogMessage;
+      console.log(` --> OpenID: [${event.severity}] <${event.flow}> ${infoLogMessage.message}`);
+      break;
+    case 'error':
+      const errorLogMessage = event.payload.error as unknown as ErrorLogMessage;
+      console.log(` --> OpenID: [${event.severity}] <${event.flow}> ${errorLogMessage.errorMessage}`);
+      break;
+  }
+};
+
 
 export const openIdConfig = ({
   environment,
@@ -137,7 +163,7 @@ export const openIdConfig = ({
     scope: ['openid', 'profile', 'params', 'groups'],
 
     /** Optional, callback that will be called with Event type objects durring authentication process */
-    //logger: defaultLogger,
+    logger: OpenIdLogger,
 
     /** If true sets idToken and encRefreshToken in 'authData' cookie. */
     requireIdToken: false,
