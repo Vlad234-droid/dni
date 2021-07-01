@@ -3,6 +3,16 @@ import { KEY_CODES as BEANS_KEY_CODES } from '@beans/date-input';
 import { PaginationPayload, FilterPayload } from 'types/payload';
 import Loading from 'types/loading';
 
+export const PUBLIC_URL = process.env.PUBLIC_URL ? process.env.PUBLIC_URL : '/';
+
+export const API_URL = process.env.REACT_APP_API_URL ? process.env.REACT_APP_API_URL : '/api';
+
+export const WS_URL = process.env.REACT_APP_WS_URL ? process.env.REACT_APP_WS_URL : '/socket.io';
+
+export const OURTESCO_URL = process.env.REACT_APP_OURTESCO_URL
+  ? process.env.REACT_APP_OURTESCO_URL
+  : 'https://www.ourtesco.com';
+
 // spread to separate files
 export enum ViewportSize {
   PHONE = 320,
@@ -46,9 +56,7 @@ export const DEFAULT_FILTERS: FilterPayload = {
 };
 
 export const LINKS = {
-  signOut: 'https://www.ourtesco.com/colleague/sso/logout',
-  thisIsMeSurvey: 'https://www.ourtesco.com/thisisme/office ',
-  termsAndConditions: 'https://www.ourtesco.com/colleague/terms-and-conditions',
+  signOut: `${OURTESCO_URL}/colleague/sso/logout`,
+  thisIsMeSurvey: `${OURTESCO_URL}/thisisme/office`,
+  termsAndConditions: `${OURTESCO_URL}/colleague/terms-and-conditions`,
 };
-
-export const ROOT_PATH = 'diversity-and-inclusion';

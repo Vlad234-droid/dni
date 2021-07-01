@@ -3,12 +3,13 @@ import styled from 'styled-components';
 import Link from '@beans/link';
 import Icon from '@beans/icon';
 import Button from '@beans/button';
+import { OURTESCO_URL } from 'config/constants';
 
 const TEST_ID = 'help-link';
 
 const HelpLink: FC = () => (
   <Wrapper>
-    <Link href='https://www.ourtesco.com/colleague/help'>
+    <Link href={`${OURTESCO_URL}/colleague/help`}>
       <Button variant='link'>
         <Icon graphic='help' />
         Help

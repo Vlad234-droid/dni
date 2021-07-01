@@ -18,7 +18,7 @@ type Props = {
 };
 
 const AreaChartContainer = ({ data }: Props) => {
-  const { isDesktop, isTablet } = useMedia();
+  //const { isDesktop, isTablet } = useMedia();
 
   const [{ response, loading }, doFetch] = useFetch<Blob>();
   const isLoading = useMemo(() => loading !== Loading.SUCCEEDED && loading !== Loading.FAILED, [loading]);

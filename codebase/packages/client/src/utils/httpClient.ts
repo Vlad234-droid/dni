@@ -5,13 +5,13 @@ import { Page } from 'features/Page';
 import './mockHttpClient';
 import history from './history';
 
+import { PUBLIC_URL, API_URL } from 'config/constants';
+
 enum ResponseStatus {
   UNAUTHORIZED = 401,
   FORBIDDEN = 403,
   SERVER_ERROR = 500,
 }
-
-import { PUBLIC_URL, API_URL } from 'config/api';
 
 let baseURL = '';
 

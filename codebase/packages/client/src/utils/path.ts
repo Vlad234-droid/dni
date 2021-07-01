@@ -1,6 +1,3 @@
-import { ROOT_PATH } from 'config/constants';
+import { PUBLIC_URL } from 'config/constants';
 
-export const getRootPath = () => (window.location.pathname.includes(ROOT_PATH) ? process.env.PUBLIC_URL : '/');
-
-export const getPath = (to: string) =>
-  window.location.pathname.includes(ROOT_PATH) ? `/${ROOT_PATH}/${to}` : `/${to}`;
+export const getPath = (to: string) => (PUBLIC_URL === '/' ? `/${to}` : `/${PUBLIC_URL}/${to}`);

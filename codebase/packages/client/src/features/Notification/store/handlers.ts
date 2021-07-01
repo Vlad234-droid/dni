@@ -26,6 +26,7 @@ const onNotificationDelete = (ids: []) => {
 
 const onNotificationCloserClick = ({ id }: { id: Id }) => {
   // emit delete by ids
+  if (process.env.NODE_ENV !== 'production') console.log(`onNotificationCloserClick(${id})`);
 };
 
 const onEntityRender = ({ id, entityType }: { id: Id; entityType: EntityType }) => {
@@ -39,6 +40,7 @@ const onEntityRender = ({ id, entityType }: { id: Id; entityType: EntityType }) 
   const { ids } = entity.notifications;
 
   // emit delete by ids
+  if (process.env.NODE_ENV !== 'production') console.log(`onEntityRender(${ids})`);
 };
 
 export { onNotificationAll, onNotificationCreate, onNotificationDelete, onNotificationCloserClick, onEntityRender };

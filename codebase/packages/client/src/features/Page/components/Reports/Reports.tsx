@@ -12,7 +12,7 @@ import PageWrapper from '../PageWrapper';
 import { TEST_ID } from '../Networks/Networks';
 
 const ReportPage: FC = () => {
-  const dispatch = useDispatch();
+  //const dispatch = useDispatch();
 
   const { entityType } = useSelector(() => store.getState().reports);
 
