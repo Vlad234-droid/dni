@@ -31,8 +31,15 @@ const addNetworkToEmployee: Middleware = async (req: Request, res: Response) => 
 
 const deleteNetworkFromEmployee: Middleware = async (req: Request, res: Response) => {
   return executeSafe(res, async () => {
+    const paramNetworkId = req.params.networkId;
+
+    if (isNaN(Number(paramNetworkId))) {
+      return res.status(400).json({ 
+        error: 'networkId path param is invalid.' });
+    } 
+    
+    const networkId = Number(paramNetworkId);
     const colleagueUUID = await colleagueUUIDExtractor(req, res);
-    const { networkId } = req.body;
 
     await removeNetworkRelation(colleagueUUID!, networkId);
 
@@ -59,8 +66,14 @@ const addEventToEmployee: Middleware = async (req: Request, res: Response) => {
 
 const deleteEventFromEmployee: Middleware = async (req: Request, res: Response) => {
   return executeSafe(res, async () => {
-    console.log(req.body);
-    const { eventId } = req.body;
+    const paramEventId = req.params.eventId;
+
+    if (isNaN(Number(paramEventId))) {
+      return res.status(400).json({ 
+        error: 'eventId path param is invalid.' });
+    }
+    
+    const eventId = Number(paramEventId);
     const colleagueUUID = await colleagueUUIDExtractor(req, res);
 
     await removeEventRelation(colleagueUUID!, eventId);

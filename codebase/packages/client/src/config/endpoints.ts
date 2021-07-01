@@ -40,9 +40,9 @@ export default (httpClient: AxiosInstance) => ({
   user: {
     profile: <T>() => httpClient.get<T>(Endpoint.USER_PROFILE),
     joinNetwork: <T>(data: Config) => httpClient.post<T>(Endpoint.USER_NETWORKS, data),
-    leaveNetwork: <T>(data: Config) => httpClient.delete<T>(Endpoint.USER_NETWORKS, { data }),
+    leaveNetwork: <T>(data: Config) => httpClient.delete<T>(`${Endpoint.USER_NETWORKS}/${data.networkId}`),
     joinEvent: <T>(data: Config) => httpClient.post<T>(Endpoint.USER_EVENTS, data),
-    leaveEvent: <T>(data: Config) => httpClient.delete<T>(Endpoint.USER_EVENTS, { data }),
+    leaveEvent: <T>(data: Config) => httpClient.delete<T>(`${Endpoint.USER_EVENTS}/${data.eventId}`),
   },
   networks: {
     fetchAll: <T>(data: Config = {}) => httpClient.get<T>(Endpoint.NETWORKS, { params: data }),

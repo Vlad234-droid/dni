@@ -30,8 +30,8 @@ const colleagueUUIDExtractor = async (req: Request, res: Response): Promise<stri
   const userInfo = infoExtractor(req, res);
   const employeeNumber = userInfo?.params?.employeeNumber;
   if (!employeeNumber) {
-    res.status(403).send(JSON.stringify({ 
-      error: 'Unauthorized. employeeNumber is missing.' }));
+    res.status(403).json({ 
+      error: 'Unauthorized. employeeNumber is missing.' });
 
     return null;
   }
@@ -77,8 +77,8 @@ const colleagueUUIDExtractor = async (req: Request, res: Response): Promise<stri
     }
   }
 
-  res.status(403).send(JSON.stringify({ 
-    error: `Unauthorized. colleagueUUID is missing for the employee: ${employeeNumber}` }));
+  res.status(403).json({ 
+    error: `Unauthorized. colleagueUUID is missing for the employee: ${employeeNumber}` });
 
   return null;
 };
@@ -156,8 +156,8 @@ const createOrUpdateDniUser = async (colleague: ColleagueV2) => {
 const createSubscriptionEntity = async (
   colleagueUUID: string,
   subscriptionEntityId: number,
-  subscriptionEntityType: DniEntityTypeEnum,
-) => {
+  subscriptionEntityType: DniEntityTypeEnum) => {
+
   await getRepository(DniUserSubscription).save({
     colleagueUUID,
     subscriptionEntityId,
@@ -168,20 +168,15 @@ const createSubscriptionEntity = async (
 const removeSubscriptionEntity = async (
   colleagueUUID: string,
   subscriptionEntityId: number,
-  subscriptionEntityType: DniEntityTypeEnum,
-) => {
-  const subscriptionRepo = getRepository(DniUserSubscription);
-  console.log(`Removing DniUserSubscription: ${colleagueUUID}, ${subscriptionEntityId}, ${subscriptionEntityType}`)
-  const userSubscriptionToRemove = await subscriptionRepo.preload({
+  subscriptionEntityType: DniEntityTypeEnum) => {
+
+  const userSubscriptionToRemove = {
     colleagueUUID,
     subscriptionEntityId,
     subscriptionEntityType,
-  });
+  } as DniUserSubscription;
 
-  if (userSubscriptionToRemove) {
-    console.log(JSON.stringify(userSubscriptionToRemove));
-    await getRepository(DniUserSubscription).remove(userSubscriptionToRemove);
-  }
+  await getRepository(DniUserSubscription).remove(userSubscriptionToRemove);
 };
 
 const createNetworkRelation = async (colleagueUUID: string, networkId: number) => {

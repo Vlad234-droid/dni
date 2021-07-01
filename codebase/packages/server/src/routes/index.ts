@@ -40,10 +40,10 @@ healthCheck.get('/_status', (_: Request, res: Response) => res.sendStatus(200));
 api.get('/employees/profile', getProfile);
 
 api.post('/employees/networks', addNetworkToEmployee);
-api.delete('/employees/networks', deleteNetworkFromEmployee);
+api.delete('/employees/networks/:networkId', deleteNetworkFromEmployee);
 
 api.post('/employees/events', addEventToEmployee);
-api.delete('/employees/events', deleteEventFromEmployee);
+api.delete('/employees/events/:eventId', deleteEventFromEmployee);
 
 api.get('/events/participants', getEventsParticipants);
 api.get('/networks/participants', getNetworksParticipants);
