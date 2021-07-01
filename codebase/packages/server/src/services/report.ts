@@ -1,6 +1,6 @@
 import { getManager } from '@dni/database';
 
-interface OptionsWithSchema { schema? : string; };
+interface ConnectionOptionsWithSchema { schema? : string; };
 
 const getMembersReportBy = async (
   entityType: string,
@@ -10,7 +10,7 @@ const getMembersReportBy = async (
   to: string,
 ) => {
   const connection = getManager().connection;
-  const schema = (connection.options as OptionsWithSchema).schema;
+  const schema = (connection.options as ConnectionOptionsWithSchema).schema;
   const schemaPrefix = schema ? `"${schema}".` : '';
 
   return (
@@ -18,7 +18,7 @@ const getMembersReportBy = async (
       `SELECT
         report::json->'data' AS data,
         report::json->'metadata' AS metadata
-    FROM ${schemaPrefix}fn_build_dni_timeseries_report(
+      FROM ${schemaPrefix}fn_build_dni_timeseries_report(
         $1::${schemaPrefix}dni_entity_type_enum,
         $2::int4[],
         $3::varchar,
@@ -32,7 +32,7 @@ const getMembersReportBy = async (
 
 const getRegionsReportBy = async (entityType: string, entityIds: string[], from: string, to: string) => {
   const connection = getManager().connection;
-  const schema = (connection.options as OptionsWithSchema).schema;
+  const schema = (connection.options as ConnectionOptionsWithSchema).schema;
   const schemaPrefix = schema ? `"${schema}".` : '';
 
   return (
@@ -40,7 +40,7 @@ const getRegionsReportBy = async (entityType: string, entityIds: string[], from:
       `SELECT
         report::json->'data' AS data,
         report::json->'metadata' AS metadata
-    FROM ${schemaPrefix}fn_build_dni_regions_report(
+      FROM ${schemaPrefix}fn_build_dni_regions_report(
         $1::${schemaPrefix}dni_entity_type_enum,
         $2::int4[],
         $3::date,
@@ -53,7 +53,7 @@ const getRegionsReportBy = async (entityType: string, entityIds: string[], from:
 
 const getDepartmentsReportBy = async (entityType: string, entityIds: string[], from: string, to: string) => {
   const connection = getManager().connection;
-  const schema = (connection.options as OptionsWithSchema).schema;
+  const schema = (connection.options as ConnectionOptionsWithSchema).schema;
   const schemaPrefix = schema ? `"${schema}".` : '';
 
   return (
@@ -61,7 +61,7 @@ const getDepartmentsReportBy = async (entityType: string, entityIds: string[], f
       `SELECT
         report::json->'data' AS data,
         report::json->'metadata' AS metadata
-    FROM ${schemaPrefix}fn_build_dni_departments_report(
+      FROM ${schemaPrefix}fn_build_dni_departments_report(
         $1::${schemaPrefix}dni_entity_type_enum,
         $2::int4[],
         $3::date,
