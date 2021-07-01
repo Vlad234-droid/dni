@@ -172,9 +172,10 @@ const removeSubscriptionEntity = async (
     subscriptionEntityType,
   });
 
-  console.log(JSON.stringify(userSubscriptionToRemove));
-
-  await getRepository(DniUserSubscription).remove(userSubscriptionToRemove);
+  if (userSubscriptionToRemove) {
+    console.log(JSON.stringify(userSubscriptionToRemove));
+    await getRepository(DniUserSubscription).remove(userSubscriptionToRemove);
+  }
 };
 
 const createNetworkRelation = async (colleagueUUID: string, networkId: number) => {
