@@ -166,6 +166,7 @@ const removeSubscriptionEntity = async (
   subscriptionEntityType: DniEntityTypeEnum,
 ) => {
   const subscriptionRepo = getRepository(DniUserSubscription);
+  console.log(`Removing DniUserSubscription: ${colleagueUUID}, ${subscriptionEntityId}, ${subscriptionEntityType}`)
   const userSubscriptionToRemove = await subscriptionRepo.preload({
     colleagueUUID,
     subscriptionEntityId,
