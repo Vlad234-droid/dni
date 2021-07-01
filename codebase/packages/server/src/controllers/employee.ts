@@ -59,8 +59,9 @@ const addEventToEmployee: Middleware = async (req: Request, res: Response) => {
 
 const deleteEventFromEmployee: Middleware = async (req: Request, res: Response) => {
   return executeSafe(res, async () => {
-    const colleagueUUID = await colleagueUUIDExtractor(req, res);
+    console.log(req.body);
     const { eventId } = req.body;
+    const colleagueUUID = await colleagueUUIDExtractor(req, res);
 
     await removeEventRelation(colleagueUUID!, eventId);
 

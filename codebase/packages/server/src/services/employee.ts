@@ -30,7 +30,9 @@ const colleagueUUIDExtractor = async (req: Request, res: Response): Promise<stri
   const userInfo = infoExtractor(req, res);
   const employeeNumber = userInfo?.params?.employeeNumber;
   if (!employeeNumber) {
-    res.status(403).send(JSON.stringify({ error: 'Cannot extract employeeNumber' }));
+    res.status(403).send(JSON.stringify({ 
+      error: 'Unauthorized. employeeNumber is missing.' }));
+
     return null;
   }
 
@@ -74,6 +76,9 @@ const colleagueUUIDExtractor = async (req: Request, res: Response): Promise<stri
       return colleague.colleagueUUID;
     }
   }
+
+  res.status(403).send(JSON.stringify({ 
+    error: `Unauthorized. colleagueUUID is missing for the employee: ${employeeNumber}` }));
 
   return null;
 };
