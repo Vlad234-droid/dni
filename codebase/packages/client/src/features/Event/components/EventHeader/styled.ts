@@ -70,7 +70,6 @@ export const ButtonWrapper = styled.div<{ isJoined: boolean }>`
   left: 16px;
   right: 16px;
   z-index: 100;
-  margin-right: 16px;
 
   & > button {
     width: 100%;
@@ -79,6 +78,10 @@ export const ButtonWrapper = styled.div<{ isJoined: boolean }>`
   ${Media.tablet`
     position: static;
   `}
+`;
+
+export const DownloadWrapper = styled.div`
+  margin-left: 16px;
 `;
 
 export const TitleWrapper = styled.div`

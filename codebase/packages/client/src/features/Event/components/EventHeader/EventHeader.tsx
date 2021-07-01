@@ -17,6 +17,7 @@ import {
   TitleWrapper,
   StatusWrapper,
   ButtonWrapper,
+  DownloadWrapper,
   Inner,
   Description,
   TextIconWrapper,
@@ -69,9 +70,11 @@ const EventHeader: FC<Props> = ({ event, participants }) => {
                 location: '',
               }}
             >
-              <Button>
-                <Icon graphic='download' />
-              </Button>
+              <DownloadWrapper>
+                <Button>
+                  <Icon graphic='download' />
+                </Button>
+              </DownloadWrapper>
             </ICalendarLink>
           )}
         </Actions>
