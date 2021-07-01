@@ -125,13 +125,7 @@
     "profile": { "firstName": "Esther", "lastName": "Basra", "dateOfBirth": "1978-09-12", "gender": "F" },
     "contact": {
       "email": "Esther.Basra@tesco.com",
-      "addresses": [
-        {
-          "lines": ["145 Cole Green Lane", "Welwyn Garden City", "Hertfordshire"],
-          "countryCode": "GB",
-          "postcode": "AL7 3JG"
-        }
-      ]
+      "addresses": [ { "lines": ["145 Cole Green Lane", "Welwyn Garden City", "Hertfordshire"], "countryCode": "GB", "postcode": "AL7 3JG" } ]
     },
     "serviceDates": { "hireDate": "2012-02-27" },
     "workRelationships": [
@@ -157,14 +151,7 @@
     "profile": { "firstName": "Henry", "lastName": "Gosling", "dateOfBirth": "1983-08-02", "gender": "M" },
     "contact": {
       "email": "Henry.Gosling@tesco.com",
-      "addresses": [
-        {
-          "lines": ["63 Sanders Place", "Walsworth Road", "Hitchin"],
-          "countryCode": "GB",
-          "postcode": "SG4 9SY",
-          "city": "Hertfordshire"
-        }
-      ]
+      "addresses": [ { "lines": ["63 Sanders Place", "Walsworth Road", "Hitchin"], "countryCode": "GB", "postcode": "SG4 9SY", "city": "Hertfordshire" } ]
     },
     "serviceDates": { "hireDate": "2004-10-15" },
     "workRelationships": [
@@ -190,8 +177,7 @@
     "profile": { "firstName": "Laura", "lastName": "Hong", "dateOfBirth": "1987-12-01", "gender": "F" },
     "contact": {
       "email": "Laura.Hong@tesco.com",
-      "addresses": [
-        { "lines": ["48", "Cambridge Road"], "countryCode": "GB", "postcode": "AL1 5LD", "city": "St Albans" }
+      "addresses": [ { "lines": ["48", "Cambridge Road"], "countryCode": "GB", "postcode": "AL1 5LD", "city": "St Albans" }
       ]
     },
     "serviceDates": { "hireDate": "2020-06-22" },
@@ -205,8 +191,7 @@
     "profile": { "firstName": "Toni", "lastName": "McKay-Lewis", "dateOfBirth": "1988-06-10", "gender": "F" },
     "contact": {
       "email": "Toni.T.McKay@tesco.com",
-      "addresses": [
-        { "lines": ["19 Frederick Street", "Woodville", "Derbyshire"], "countryCode": "GB", "postcode": "DE11 8BX" }
+      "addresses": [ { "lines": ["19 Frederick Street", "Woodville", "Derbyshire"], "countryCode": "GB", "postcode": "DE11 8BX" }
       ]
     },
     "serviceDates": { "hireDate": "2004-10-11" },
@@ -262,8 +247,8 @@
     "externalSystems": { "iam": { "id": "UK33179177", "name": "IAM" } },
     "profile": { "firstName": "Laura", "lastName": "Wallace", "dateOfBirth": "1982-02-15", "gender": "F" },
     "contact": {
-        "email": "Laura.Wallace@tesco.com",
-        "addresses": [ { "lines": [ "69 Nursery Hill", "Welwyn Garden City", "Herts" ], "countryCode": "GB", "postcode": "AL7 1UG" } ] },
+      "email": "Laura.Wallace@tesco.com",
+      "addresses": [ { "lines": [ "69 Nursery Hill", "Welwyn Garden City", "Herts" ], "countryCode": "GB", "postcode": "AL7 1UG" } ] },
     "serviceDates": { "hireDate": "2012-10-22" },
     "workRelationships": [ 
       { "locationUUID": "3b7a0d01-26ca-4ea2-9103-80e8b1745321", "department": { "businessType": "Office" } } 
