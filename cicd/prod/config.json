@@ -21,6 +21,10 @@
         "type": "plain",
         "value": "/socket.io"
       },
+      "REACT_APP_OURTESCO_URL": {
+        "type": "plain",
+        "value": "https://www.ourtesco.com"
+      },
       "PUBLIC_URL": {
         "type": "plain",
         "value": "/diversity-and-inclusion"
