@@ -34,6 +34,7 @@ export const openIdConfig = ({
   const openIdCookieParser = cookieParser(cookieKey);
   const isProduction = isPROD(environment);
   const identityIdAndSecret = `${identityClientId}:${identityClientSecret}`;
+
   const clientScopedToken = (): Middleware => {
     return identityClientScopedTokenPlugin({
       identityIdAndSecret,
@@ -54,28 +55,37 @@ export const openIdConfig = ({
 
     //console.log(` ---> User groups: [${userGroups}]`);
 
-    //let userRoles: Set<string> = new Set([defaultConfig.defaultRole, 'Admin']);
-    let userRoles: Set<string> = new Set([ 'Admin' ]);
+    const userRoles: Set<string> = new Set([defaultConfig.defaultRole]);
 
+    //console.log(` ---> Manager Groups: [${managerGroups}]`);
     if (managerGroups.some((g) => userGroups.includes(g))) {
       userRoles.add('Manager');
     }
+
+    //console.log(` ---> Admin Groups: [${adminGroups}]`);
     if (adminGroups.some((g) => userGroups.includes(g))) {
       userRoles.add('Admin');
     }
 
-    //console.log(` ---> User roles: [${userRoles}]`);
+    //console.log(` ---> User roles: [${Array.from(userRoles.values())}]`);
 
     const userData = {
-      ...userInfo,
+      //...userInfo,
       fullName: userInfo.name,
       firstName: userInfo.given_name || userInfo.name.split(/\s+/)[0],
+      lastName: userInfo.family_name || userInfo.name.split(/\s+/)[1],
       email: userInfo.preferred_username,
       params: {
-        ...userInfo.params,
         employeeNumber: (userInfo.params?.employeeNumber || userInfo.params?.EmployeeNumber) as string,
       },
-      groups: userGroups,
+      //groups: userGroups,
+      aud: userInfo.aud,
+      sid: userInfo.sid,
+      iat: userInfo.iat,
+      iss: userInfo.iss,
+      sub: userInfo.sub,
+      exp: userInfo.exp,
+      updatedAt: userInfo.updated_at,
       roles: Array.from(userRoles.values()),
     };
 
@@ -127,7 +137,7 @@ export const openIdConfig = ({
     scope: ['openid', 'profile', 'params', 'groups'],
 
     /** Optional, callback that will be called with Event type objects durring authentication process */
-    logger: defaultLogger,
+    //logger: defaultLogger,
 
     /** If true sets idToken and encRefreshToken in 'authData' cookie. */
     requireIdToken: false,
