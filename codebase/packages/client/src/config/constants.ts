@@ -49,6 +49,7 @@ export const LINKS = {
   signOut: 'https://www.ourtesco.com/colleague/sso/logout',
   thisIsMeSurvey: 'https://www.ourtesco.com/thisisme/office ',
   termsAndConditions: 'https://www.ourtesco.com/colleague/terms-and-conditions',
+  privacyPolicy: 'https://colleague-help.ourtesco.com/hc/en-us/articles/360001354803-Colleague-Data-Privacy-Full-Policy-and-Supporting-Documents'
 };
 
 export const ROOT_PATH = 'diversity-and-inclusion';

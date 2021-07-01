@@ -33,6 +33,7 @@ const MainMenuMobile: FC<Props> = ({ onClose }) => (
     </>
     <LinkWrapper>
       <Link href={LINKS.termsAndConditions}>Terms & Conditions</Link>
+      <Link href={LINKS.privacyPolicy}>Privacy Policy</Link>
     </LinkWrapper>
   </Wrapper>
 );
