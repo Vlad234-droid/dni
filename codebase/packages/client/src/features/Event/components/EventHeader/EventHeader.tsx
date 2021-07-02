@@ -3,6 +3,8 @@ import Button from '@beans/button';
 import Icon from '@beans/icon';
 import ICalendarLink from 'react-icalendar-link';
 
+import { getPath } from 'utils/path';
+
 import { OnAir, CopyLink, TextWithEllipsis, RichTextRenderer } from 'features/Common';
 import { useMedia } from 'context/InterfaceContext';
 import useStore from 'hooks/useStore';
@@ -61,10 +63,9 @@ const EventHeader: FC<Props> = ({ event, participants }) => {
               filename={`${event.title} event.ics`}
               event={{
                 title: event.title,
-                description: `For more details and the link to join the virtual event please check the event link below:
-                  
-                  ${window.location.origin}/${Page.EVENTS}/${id}
-                `,
+                description:
+                  `For more details and the link to join the virtual event please check the event link: ` +
+                  `${window.location.origin}${getPath(Page.EVENTS)}/${id}`,
                 startTime: event.startDate.replace('at', ''),
                 endTime: event.endDate.replace('at', ''),
                 location: '',
