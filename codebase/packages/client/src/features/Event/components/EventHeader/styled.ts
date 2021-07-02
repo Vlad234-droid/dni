@@ -78,7 +78,6 @@ export const ButtonWrapper = styled.div<{ isJoined: boolean }>`
   ${Media.tablet`
     position: static;
   `}
-  
 `;
 
 export const DownloadWrapper = styled.div`

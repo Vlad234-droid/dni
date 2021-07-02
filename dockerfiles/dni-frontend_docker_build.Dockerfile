@@ -20,6 +20,9 @@ ENV NEXUS_ACCESS_TOKEN=$NEXUS_ACCESS_TOKEN
 
 RUN dos2unix ./run.sh && dos2unix ./create-npmrc.sh && bash ./create-npmrc.sh --token $NEXUS_ACCESS_TOKEN
 
+# Show information about the file system
+RUN df -h
+
 # Install lerna, version 3.22.1 globally
 RUN yarn global add lerna@3.22.1 --prefix=/usr
 

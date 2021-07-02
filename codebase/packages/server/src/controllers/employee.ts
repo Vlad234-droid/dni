@@ -1,105 +1,102 @@
 import { Request, Response } from 'express';
 import {
   profileInfoExtractor,
-  findNetworksBy,
   createNetworkRelation,
   removeNetworkRelation,
-  findEventsBy,
   createEventRelation,
   removeEventRelation,
   findEventsParticipants,
   findNetworksParticipants,
+  colleagueUUIDExtractor,
 } from '../services';
 import { executeSafe } from '../utils';
 
 const getProfile: Middleware = (req: Request, res: Response) => {
-  return executeSafe(res, async () =>
-    res.status(200).json(await profileInfoExtractor(req, res)),
-  );
-};
-
-const getNetworksByEmployeeNumber: Middleware = (req: Request, res: Response) => {
-  return executeSafe(res, async () =>
-    res.status(200).json(await findNetworksBy(req.params.employeeNumber)),
-  );
+  return executeSafe(res, async () => res.status(200).json(await profileInfoExtractor(req, res)));
 };
 
 const addNetworkToEmployee: Middleware = async (req: Request, res: Response) => {
   return executeSafe(res, async () => {
-    const { employeeNumber, networkId } = req.body;
+    const colleagueUUID = await colleagueUUIDExtractor(req, res);
+    const { networkId } = req.body;
 
-    await createNetworkRelation(employeeNumber, networkId);
+    await createNetworkRelation(colleagueUUID!, networkId);
 
     return res.json({
       message: 'Network was added to employee',
-      body: { employeeNumber, networkId },
+      body: { networkId },
     });
   });
 };
 
 const deleteNetworkFromEmployee: Middleware = async (req: Request, res: Response) => {
   return executeSafe(res, async () => {
-    const { employeeNumber, networkId } = req.body;
+    const paramNetworkId = req.params.networkId;
 
-    await removeNetworkRelation(employeeNumber, networkId);
+    if (isNaN(Number(paramNetworkId))) {
+      return res.status(400).json({ 
+        error: 'networkId path param is invalid.' });
+    } 
+    
+    const networkId = Number(paramNetworkId);
+    const colleagueUUID = await colleagueUUIDExtractor(req, res);
+
+    await removeNetworkRelation(colleagueUUID!, networkId);
 
     return res.json({
-      message: `Network with ID ${networkId} was deleted from employee with NUMBER ${employeeNumber}`,
-      body: { employeeNumber, networkId },
+      message: `Network with ID ${networkId} was deleted from employee`,
+      body: { networkId },
     });
   });
 };
 
-const getEventsByEmployeeNumber: Middleware = (req: Request, res: Response) => {
-  return executeSafe(res, async () =>
-    res.status(200).json(await findEventsBy(req.params.employeeNumber)),
-  );
-};
-
 const addEventToEmployee: Middleware = async (req: Request, res: Response) => {
   return executeSafe(res, async () => {
-    const { employeeNumber, eventId } = req.body;
+    const colleagueUUID = await colleagueUUIDExtractor(req, res);
+    const { eventId } = req.body;
 
-    await createEventRelation(employeeNumber, eventId);
+    await createEventRelation(colleagueUUID!, eventId);
 
     return res.json({
       message: 'Event was added to employee',
-      body: { employeeNumber, eventId },
+      body: { eventId },
     });
   });
 };
 
 const deleteEventFromEmployee: Middleware = async (req: Request, res: Response) => {
   return executeSafe(res, async () => {
-    const { employeeNumber, eventId } = req.body;
+    const paramEventId = req.params.eventId;
 
-    await removeEventRelation(employeeNumber, eventId);
+    if (isNaN(Number(paramEventId))) {
+      return res.status(400).json({ 
+        error: 'eventId path param is invalid.' });
+    }
+    
+    const eventId = Number(paramEventId);
+    const colleagueUUID = await colleagueUUIDExtractor(req, res);
+
+    await removeEventRelation(colleagueUUID!, eventId);
 
     return res.json({
-      message: `Event with ID ${eventId} was deleted from employee with NUMBER ${employeeNumber}`,
-      body: { employeeNumber, eventId },
+      message: `Event with ID ${eventId} was deleted from employee`,
+      body: { eventId },
     });
   });
 };
 
 const getEventsParticipants: Middleware = (_, res) => {
-  return executeSafe(res, async () =>
-    res.status(200).json(await findEventsParticipants()),
-  );
+  return executeSafe(res, async () => res.status(200).json(await findEventsParticipants()));
 };
 
 const getNetworksParticipants: Middleware = (_, res) => {
-  return executeSafe(res, async () =>
-    res.status(200).json(await findNetworksParticipants()),
-  );
+  return executeSafe(res, async () => res.status(200).json(await findNetworksParticipants()));
 };
 
 export {
   getProfile,
-  getNetworksByEmployeeNumber,
   addNetworkToEmployee,
   deleteNetworkFromEmployee,
-  getEventsByEmployeeNumber,
   addEventToEmployee,
   deleteEventFromEmployee,
   getEventsParticipants,

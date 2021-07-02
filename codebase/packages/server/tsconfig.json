@@ -3,7 +3,7 @@
   "compilerOptions": {
     "target": "es6",
     "module": "commonjs",
-    "typeRoots": ["../../node_modules/@types", "./src/@types"],
+    "typeRoots": ["./src/types", "./node_modules/@types", "../../node_modules/@types"],
     "baseUrl": "./src",
     "outDir": "./build",
     "noEmit": false,
@@ -13,6 +13,5 @@
     "declarationMap": true,
     "strictPropertyInitialization": false
   },
-  "include": ["./src/**/*"],
-  "exclude": ["./src/setupProxy.js"]
+  "include": ["./src/**/*"]
 }

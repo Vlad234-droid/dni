@@ -1,19 +1,11 @@
-import {
-  fetchClient,
-  resolveBaseUrl,
-  ConnectorContext,
-} from '@energon-connectors/core';
+import { fetchClient, resolveBaseUrl, ConnectorContext } from '@energon-connectors/core';
 import { createApiConsumer } from '@energon/rest-api-consumer';
 import { defineAPI } from '@energon/rest-api-definition';
 import { MarkApiCall } from '@energon/splunk-logger';
 
-import { ConfigContext } from '@dni-connectors/common';
+import { ConfigContext } from '@dni-common/connector-utils';
 
-import {
-  CONFIRMIT_API_URLS,
-  confirmitApiConfigs,
-  ConfirmitApiHeaders,
-} from './constants';
+import { CONFIRMIT_API_URLS, confirmitApiConfigs, ConfirmitApiHeaders } from './constants';
 
 const { logon: logonConfig, reporting: reportingConfig } = confirmitApiConfigs;
 
@@ -21,22 +13,14 @@ export const logonApiDef = defineAPI((endpoint) => ({
   /**
    * API: ws.euro.confirmit.com/confirmit/webservices/current/logon.asmx
    */
-  logon: endpoint
-    .post(logonConfig.path)
-    .response<string>()
-    .body<string>()
-    .build(),
+  logon: endpoint.post(logonConfig.path).response<string>().body<string>().build(),
 }));
 
 export const reportingApiDef = defineAPI((endpoint) => ({
   /**
    * API: ws.euro.confirmit.com/confirmit/webservices/current/reporting.svc
    */
-  reporting: endpoint
-    .post(reportingConfig.path)
-    .response<string>()
-    .body<string>()
-    .build(),
+  reporting: endpoint.post(reportingConfig.path).response<string>().body<string>().build(),
 }));
 
 export type ConfirmitConfig = {
@@ -62,20 +46,12 @@ export const confirmitApiConnector = (ctx: Context) => {
 
   return {
     current: {
-      ...createApiConsumer(
-        logonApiDef,
-        fetchClient(baseUrl, logonHeaders, { markApiCall }),
-        {
-          transport: 'XML',
-        },
-      ),
-      ...createApiConsumer(
-        reportingApiDef,
-        fetchClient(baseUrl, reportingHeaders, { markApiCall }),
-        {
-          transport: 'XML',
-        },
-      ),
+      ...createApiConsumer(logonApiDef, fetchClient(baseUrl, logonHeaders, { markApiCall }), {
+        transport: 'XML',
+      }),
+      ...createApiConsumer(reportingApiDef, fetchClient(baseUrl, reportingHeaders, { markApiCall }), {
+        transport: 'XML',
+      }),
     },
   };
 };

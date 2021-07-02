@@ -1,4 +1,4 @@
-import React, {FC, useCallback, useState} from 'react';
+import React, { FC, useState } from 'react';
 import Button from '@beans/button';
 
 import useStore from 'hooks/useStore';
@@ -16,36 +16,25 @@ type Props = {
 const EventAction: FC<Props> = ({ id, disabled }) => {
   const dispatch = useDispatch();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { events = [], params } = useStore((state) => state.auth.user);
-  const employeeNumber = params?.employeeNumber;
+  const { events = [] } = useStore((state) => state.auth.user);
   const isJoined = events.includes(+id);
 
   const handleLeave = () => setIsModalOpen(true);
   const handleModalClose = () => setIsModalOpen(false);
 
-  const handleConfirmJoin = useCallback(
-    async () => {
-      setIsModalOpen(false);
+  const handleConfirmJoin = async () => {
+    setIsModalOpen(false);
 
-      if (employeeNumber) {
-        await dispatch(joinEvent({ employeeNumber, eventId: id }));
-        dispatch(joinParticipant(id));
-      }
-    },
-    [employeeNumber],
-  );
+    await dispatch(joinEvent({ eventId: id }));
+    dispatch(joinParticipant(id));
+  };
 
-  const handleConfirmLeave = useCallback(
-    async () => {
-      setIsModalOpen(false);
+  const handleConfirmLeave = async () => {
+    setIsModalOpen(false);
 
-      if (employeeNumber) {
-        await dispatch(leaveEvent({ employeeNumber, eventId: id }));
-        dispatch(leaveParticipant(id));
-      }
-    },
-    [employeeNumber],
-  );
+    await dispatch(leaveEvent({ eventId: id }));
+    dispatch(leaveParticipant(id));
+  };
 
   return isJoined ? (
     <>
@@ -56,9 +45,7 @@ const EventAction: FC<Props> = ({ id, disabled }) => {
         isOpen={isModalOpen}
         onClose={handleModalClose}
         onConfirm={handleConfirmLeave}
-        renderContent={() => (
-          <p>After leaving this Event you won`t get any updates on it. Are you sure?</p>
-        )}
+        renderContent={() => <p>After leaving this Event you won`t get any updates on it. Are you sure?</p>}
       />
     </>
   ) : (

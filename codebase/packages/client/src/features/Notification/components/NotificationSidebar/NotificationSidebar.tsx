@@ -20,7 +20,7 @@ const NotificationSidebar: FC = () => {
 
   const handleSettingsClick = () => {
     dispatch(actions.toggleNotificationSidebar());
-  }
+  };
 
   const isSidebarOpened = useSelector(() => store.getState().notification.isSidebarOpened);
 
@@ -33,7 +33,9 @@ const NotificationSidebar: FC = () => {
       <TitleWrapper>
         <Title>Notifications</Title>
         <Link to={`${getPath(Page.NOTIFICATIONS)}`}>
-          <Button variant='primary' onClick={handleSettingsClick}>Settings</Button>
+          <Button variant='primary' onClick={handleSettingsClick}>
+            Settings
+          </Button>
         </Link>
       </TitleWrapper>
       {items.map((item) => {

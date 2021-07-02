@@ -1,6 +1,6 @@
 import { isDEV } from '../config/env';
 
-type ProcessEnv = {
+export type ProcessEnv = {
   // general
   BUILD_ENV: string;
   NODE_ENV: string;
@@ -27,9 +27,12 @@ type ProcessEnv = {
   CONFIRMIT_PASSWORD: string;
   // mock
   MOCK_SERVER_URL?: string;
+  // AD groups tp roles assigments
+  OIDC_GROUPS_ADMIN_ROLE?: string;
+  OIDC_GROUPS_MANAGER_ROLE?: string;
 };
 
-class EnvAccessor {
+export class EnvAccessor {
   private static instance: EnvAccessor;
   private data: ProcessEnv = {} as ProcessEnv;
 
@@ -59,7 +62,6 @@ class EnvAccessor {
 
   public reReadEnv() {
     this.readEnv();
-
     return this;
   }
 
@@ -84,6 +86,8 @@ class EnvAccessor {
       IDENTITY_USER_SCOPED_TOKEN_COOKIE_SECRET,
       IDENTITY_USER_SCOPED_TOKEN_COOKIE_NAME,
       CONFIRMIT_PASSWORD,
+      OIDC_GROUPS_ADMIN_ROLE,
+      OIDC_GROUPS_MANAGER_ROLE,
       MOCK_SERVER_URL,
     } = process.env as ProcessEnv;
 
@@ -107,13 +111,11 @@ class EnvAccessor {
       IDENTITY_USER_SCOPED_TOKEN_COOKIE_SECRET,
       IDENTITY_USER_SCOPED_TOKEN_COOKIE_NAME,
       CONFIRMIT_PASSWORD,
+      OIDC_GROUPS_ADMIN_ROLE,
+      OIDC_GROUPS_MANAGER_ROLE,
       ...(isDEV(BUILD_ENV) ? { MOCK_SERVER_URL } : undefined),
     };
   }
 }
 
-const envAccessor = EnvAccessor.getInstance();
-
-export type { ProcessEnv };
-
-export { envAccessor, EnvAccessor };
+export const envAccessor = EnvAccessor.getInstance();

@@ -21,7 +21,7 @@ docker build ^
    --build-arg NODE_ENV=ppe ^
    --build-arg REACT_APP_API_URL=/api ^
    --build-arg REACT_APP_WS_URL=/socket.io ^
-   --build-arg PUBLIC_URL=/ ^
+   --build-arg PUBLIC_URL=/diversity-and-inclusion ^
    --file dockerfiles/dni-frontend_docker_build.Dockerfile ^
    .
 

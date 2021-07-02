@@ -1,8 +1,8 @@
 {
-  "name": "@dni-connectors/common",
+  "name": "@dni-common/connector-utils",
   "version": "1.0.0",
   "license": "MIT",
-  "private": "false",
+  "private": true,
   "files": [
     "build"
   ],

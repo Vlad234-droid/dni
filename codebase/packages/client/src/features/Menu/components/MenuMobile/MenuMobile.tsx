@@ -3,11 +3,11 @@ import { useLocation } from 'react-router-dom';
 import Icon from '@beans/icon';
 
 import { Page } from 'features/Page';
-import { ROOT_PATH } from 'config/constants';
 
 import { menuItemsMobile } from '../../config/items';
 import MenuItemMobile, { IconWrapper } from '../MenuItemMobile';
 import { ItemsList, HomeLink } from './styled';
+import { OURTESCO_URL, PUBLIC_URL } from 'config/constants';
 
 export const TEST_ID = 'menu-mobile';
 
@@ -17,7 +17,9 @@ const MenuMobile: FC = () => {
   const isItemActive = useCallback(
     (page: string) => {
       if (page === Page.ABOUT) {
-        return location.pathname === '/' || location.pathname === `/${ROOT_PATH}/`;
+        return (
+          location.pathname === '/' || location.pathname === `${PUBLIC_URL}/` || location.pathname === `${PUBLIC_URL}`
+        );
       }
 
       return location.pathname.includes(page);
@@ -28,7 +30,7 @@ const MenuMobile: FC = () => {
   return (
     <div data-testid={TEST_ID}>
       <ItemsList amount={5}>
-        <HomeLink href='https://www.ourtesco.com/colleague'>
+        <HomeLink href={`${OURTESCO_URL}/colleague`}>
           <IconWrapper>
             <Icon graphic='home' />
           </IconWrapper>

@@ -1,13 +1,12 @@
 import keyBy from 'lodash.keyby';
 import sort from 'lodash.filter';
 
-import { FULL_DAY_FORMAT, isoDateToFormat } from 'utils/date';
+import { FULL_DAY_FORMAT, isoDateToFormat, now, dateMinusDuration, fromIsoDate } from 'utils/date';
 import API from 'utils/api';
 import store from 'store';
 
 import * as T from '../config/types';
 import color from '../config/color';
-import { getRegionsData, getDepartmentsData } from '../config/data';
 
 const getDatePointState = () =>
   ({
@@ -35,9 +34,7 @@ const getGraphicsState = () =>
     chart: getChartState(),
     statistics: getStatisticsState(),
     dateInterval: getDateIntervalState(),
-    color: {
-      ...color,
-    },
+    color,
     counter: 0,
   } as T.GraphicsItem);
 
@@ -52,32 +49,43 @@ const getEntityState = () =>
       [T.Period.PICK_PERIOD]: getGraphicsState(),
     },
     [T.REGION]: {
-      filter: T.Region.ALL,
-      [T.Region.ALL]: getGraphicsState(),
+      filter: T.Region.PICK_PERIOD,
+      [T.Region.PICK_PERIOD]: getGraphicsState(),
     },
     [T.FORMAT]: {
-      filter: T.Format.ALL,
-      [T.Format.ALL]: getGraphicsState(),
+      filter: T.Format.PICK_PERIOD,
+      [T.Region.PICK_PERIOD]: getGraphicsState(),
     },
   } as T.EntityItem);
 
 const calculateDifference = ({ start, end }: { start: number; end: number }) => {
   if (start === 0 && end === 0) {
     return 0;
-  } else {
-    if (start === 0) {
-      start += end;
-      end *= 2;
-    }
-
-    return Math.round((end * 100) / start - 100);
   }
+
+  if (start === 0) {
+    start += end;
+    end *= 2;
+  }
+
+  return Math.round((end * 100) / start - 100);
 };
 
 const buildTimePeriodQuery = ({ entityType, groupBy, from, to, ids }: T.Params) => {
   const requestQuery = {
-    entityType: entityType == 0 ? 'NETWORK' : 'EVENT',
+    entityType: entityType == 0 ? 'network' : 'event',
     groupBy,
+    from,
+    to,
+    entityIds: ids.join(','),
+  };
+
+  return requestQuery;
+};
+
+const buildRegionOrFormatQuery = ({ entityType, from, to, ids }: T.Params) => {
+  const requestQuery = {
+    entityType: entityType == 0 ? 'network' : 'event',
     from,
     to,
     entityIds: ids.join(','),
@@ -146,7 +154,7 @@ const reportsByTimeMiddleware = async ({
     ids,
   });
 
-  const { data, metadata } = await API.report.timePeriods<any>(query);
+  const { data, metadata } = await API.report.members<any>(query);
 
   const groupState = store.getState().reports[entityType][filter][filterFilter];
   const group = getGraphicsState() as T.GraphicsItem;
@@ -154,34 +162,34 @@ const reportsByTimeMiddleware = async ({
   group.color = groupState.color;
   group.dateInterval = groupState.dateInterval;
 
-  group.chart.entities = data.map((element: { period: string; entities: T.EntityData[] }) => {
+  group.chart.entities = data.map((element: { period: string; entities: T.PeriodEntityData[] }) => {
     const point = {
       name: isoDateToFormat(element.period, FULL_DAY_FORMAT),
     } as T.Point;
 
-    element.entities.forEach(({ entityId, members }: any) => {
+    element.entities.forEach(({ entityId, subscribers }: any) => {
       const entityName = entities[entityId]?.title as string;
 
-      point[entityName] = members;
+      point[entityName] = subscribers;
     });
 
     return point;
   });
 
   group.statistics = metadata.entities.map(
-    ({ entityId, entityType, startMembers, endMembers, subscribe, leave }: T.EntityData) => {
+    ({ entityId, entityType, startSubscribers, endSubscribers, joined, leaved }: T.EntryWithId) => {
       const row = {
         entityId,
         entityType,
-        startMembers,
-        endMembers,
-        subscribe,
-        leave,
+        startMembers: startSubscribers,
+        endMembers: endSubscribers,
+        subscribe: joined,
+        leave: leaved,
       } as T.StatisticsItem;
 
       row.percentages = calculateDifference({
-        start: startMembers,
-        end: endMembers,
+        start: startSubscribers!,
+        end: endSubscribers!,
       });
 
       const rowState = groupState.statistics.find((element: T.StatisticsItem) => element.entityId == row.entityId);
@@ -204,41 +212,72 @@ const reportsByTimeMiddleware = async ({
   };
 };
 
-const reportsByRegionMiddleware = async ({ entityType }: { entityType: T.Entity }) => {
-  const { ids } = store.getState()[entityType === 0 ? 'networks' : 'events'];
+const reportsByRegionMiddleware = async ({
+  entityType,
+  from,
+  to,
+}: {
+  entityType: T.Entity;
+  from: string;
+  to: string;
+}) => {
+  const { ids, entities } = store.getState()[entityType === 0 ? 'networks' : 'events'];
 
-  // req with ids...
-  const data = await getRegionsData();
+  const dateTo = to || now().toISOString();
+  const dateFrom = from || dateMinusDuration(dateTo, { week: 1 }).toISOString();
 
-  const groupState = store.getState().reports[entityType][T.REGION][T.Region.ALL];
+  const interval = {
+    from: dateFrom,
+    to: dateTo,
+  };
+
+  const query = buildRegionOrFormatQuery({
+    entityType,
+    ...interval,
+    ids,
+  });
+
+  const { data, metadata } = await API.report.regions<T.Response<T.RegionEntityData>>(query);
+
+  const groupState = store.getState().reports[entityType][T.REGION][T.Region.PICK_PERIOD];
   const group = getGraphicsState() as T.GraphicsItem;
 
   group.color = groupState.color;
+  group.dateInterval.from = toDateInterval(dateFrom);
+  group.dateInterval.to = toDateInterval(dateTo);
 
-  group.statistics = data.map(({ entityId, entityName, participants }: T.EntityDataByRegion) => {
+  group.statistics = metadata.entities.map(({ entityId }) => {
+    const entityName = entities[entityId]?.title || 'Default entity name';
     const row = {
       entityId,
       entityName,
     } as T.StatisticsItemByRegion;
 
-    const rowState = groupState.statistics.find((element: T.StatisticsItemByRegion) => element.entityId == row.entityId);
+    const rowState = groupState.statistics.find(
+      (element: T.StatisticsItemByRegion) => element.entityId == row.entityId,
+    );
 
     row.name = entityName;
-    row.checked = typeof rowState?.['checked'] === 'boolean' ? rowState.checked : false;
+    row.checked = false;
     row.color = typeof rowState?.['color'] === 'string' ? rowState.color : '';
 
-    row.participants = participants.reduce((acc, { count }) => {
-      const newValue = acc + count;
+    const dataEntities = data.find((element) => element.entityId == entityId)!.entities || [];
+
+    row.participants = dataEntities.reduce((acc, { endSubscribers }) => {
+      const newValue = acc + endSubscribers!;
 
       return newValue;
     }, 0);
 
-    row.elements = participants;
+    row.elements = dataEntities.map(({ regionName, endSubscribers }) => ({
+      regionName,
+      count: endSubscribers!,
+    }));
 
     return row;
   });
 
-  group.chart.entities = sort(group.statistics, ['checked', true]);
+  // group.chart.entities = sort(group.statistics, ['checked', true]);
 
   group.chart.elements = groupState.chart.elements;
 
@@ -248,47 +287,89 @@ const reportsByRegionMiddleware = async ({ entityType }: { entityType: T.Entity 
   };
 };
 
-const reportsByFormatMiddleware = async ({ entityType }: { entityType: T.Entity }) => {
-  const { ids } = store.getState()[entityType === 0 ? 'networks' : 'events'];
+const reportsByFormatMiddleware = async ({
+  entityType,
+  from,
+  to,
+}: {
+  entityType: T.Entity;
+  from: string;
+  to: string;
+}) => {
+  const { ids, entities } = store.getState()[entityType === 0 ? 'networks' : 'events'];
 
-  // req with ids...
-  const data = await getDepartmentsData();
+  const dateTo = to || now().toISOString();
+  const dateFrom = from || dateMinusDuration(dateTo, { week: 1 }).toISOString();
 
-  const groupState = store.getState().reports[entityType][T.FORMAT][T.Format.ALL];
+  const interval = {
+    from: dateFrom,
+    to: dateTo,
+  };
+
+  const query = buildRegionOrFormatQuery({
+    entityType,
+    ...interval,
+    ids,
+  });
+
+  const { data, metadata } = await API.report.departments<T.Response<T.FormatEntityData>>(query);
+
+  const groupState = store.getState().reports[entityType][T.FORMAT][T.Region.PICK_PERIOD];
   const group = getGraphicsState() as T.GraphicsItem;
 
   group.color = groupState.color;
+  group.dateInterval.from = toDateInterval(dateFrom);
+  group.dateInterval.to = toDateInterval(dateTo);
 
-  group.statistics = data.map(({ entityId, entityName, participants }: T.EntityDataByFormat) => {
+  group.statistics = metadata.entities.map(({ entityId }) => {
+    const entityName = entities[entityId]?.title || 'Default entity name';
     const row = {
       entityId,
       entityName,
     } as T.StatisticsItemByFormat;
 
-    const rowState = groupState.statistics.find((element: T.StatisticsItemByFormat) => element.entityId == row.entityId);
+    const rowState = groupState.statistics.find(
+      (element: T.StatisticsItemByFormat) => element.entityId == row.entityId,
+    );
 
     row.name = entityName;
-    row.checked = typeof rowState?.['checked'] === 'boolean' ? rowState.checked : false;
+    row.checked = false;
     row.color = typeof rowState?.['color'] === 'string' ? rowState.color : '';
 
-    row.participants = participants.reduce((acc, { count }) => {
-      const newValue = acc + count;
+    const dataEntities = data.find((element) => element.entityId == entityId)!.entities || [];
+
+    row.participants = dataEntities.reduce((acc, { endSubscribers }) => {
+      const newValue = acc + endSubscribers!;
 
       return newValue;
     }, 0);
 
-    row.elements = participants;
+    row.elements = dataEntities.map(({ departmentName, endSubscribers }) => ({
+      department: departmentName,
+      count: endSubscribers!,
+    }));
 
     return row;
   });
 
-  group.chart.entities = sort(group.statistics, ['checked', true]);
-  
+  // group.chart.entities = sort(group.statistics, ['checked', true]);
+
   group.chart.elements = groupState.chart.elements;
 
   return {
     entityType,
     data: group,
+  };
+};
+
+const toDateInterval = (isoDate: string) => {
+  const addLeadingZero = (value: string | number) => `0${value}`.slice(-2);
+  const date = fromIsoDate(isoDate);
+
+  return {
+    dd: addLeadingZero(date.getDate()),
+    mm: addLeadingZero(date.getMonth() + 1),
+    yyyy: String(date.getFullYear()),
   };
 };
 

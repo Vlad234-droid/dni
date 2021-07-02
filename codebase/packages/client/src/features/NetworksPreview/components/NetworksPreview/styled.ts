@@ -4,15 +4,14 @@ import Media from 'styles/media';
 import { Heading } from 'features/Common';
 
 export const Title = styled(Heading)`
-
   &:first-child {
     margin-bottom: 32px;
-    
+
     ${Media.tablet`
       margin-bottom: 60px;
     `}
   }
-  
+
   &:last-child {
     max-width: 714px;
     margin: 0 auto;

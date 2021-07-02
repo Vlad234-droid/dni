@@ -15,12 +15,7 @@ const ModalLeave: FC<Props> = ({ isOpen, onClose, onConfirm }) => (
       isOpen={isOpen}
       onClose={onClose}
       onConfirm={onConfirm}
-      renderContent={() => (
-        <p>
-          By leaving this Network you would also leave all linked events. Are you
-          sure?
-        </p>
-      )}
+      renderContent={() => <p>By leaving this Network you would also leave all linked events. Are you sure?</p>}
     />
   </BeansModal>
 );

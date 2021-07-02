@@ -7,11 +7,11 @@ import { TextWithEllipsis } from 'features/Common';
 import * as T from '../../../config/types';
 
 const Entity = {
-  [T.Entity.NETWORK]: {
+  [T.Entity.network]: {
     name: 'Networks',
     members: 'subscribers',
   },
-  [T.Entity.EVENT]: {
+  [T.Entity.event]: {
     name: 'Events',
     members: 'participants',
   },
@@ -41,7 +41,7 @@ const Statistics = ({ data, onChange, entityType, filter }: Props) => {
               <Cell>{'left during the period'}</Cell>
             </>
           )}
-          {(filter === T.REGION || filter === T.FORMAT) && <Cell>{'Participants'}</Cell>}
+          {(filter === T.REGION || filter === T.FORMAT) && <Cell>{'Subscribers'}</Cell>}
         </Row>
         {data.map((item) => (
           <Row key={item.entityId}>

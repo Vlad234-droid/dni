@@ -25,19 +25,19 @@ const NotificationSettings: FC = () => {
       ...formData,
       email: data.email,
     });
-  }
+  };
 
   return (
     <Wrapper>
       <CheckboxWithLabel
         id='receive-email-for-posts'
         labelText='Receive email notifications for posts'
-        onChange={() => setFormData({...formData, receivePosts: !formData.receivePosts})}
+        onChange={() => setFormData({ ...formData, receivePosts: !formData.receivePosts })}
       />
       <CheckboxWithLabel
         id='receive-email-for-events'
         labelText='Receive email notifications for events'
-        onChange={() => setFormData({...formData, receiveEvents: !formData.receiveEvents})}
+        onChange={() => setFormData({ ...formData, receiveEvents: !formData.receiveEvents })}
       />
       {(formData.receivePosts || formData.receiveEvents) && (
         <Content>
@@ -62,7 +62,7 @@ const NotificationSettings: FC = () => {
         </Content>
       )}
     </Wrapper>
-  )
+  );
 };
 
 export default NotificationSettings;

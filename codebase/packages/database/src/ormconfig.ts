@@ -9,6 +9,7 @@ const {
   TYPEORM_HOST,
   TYPEORM_PORT,
   TYPEORM_DATABASE,
+  TYPEORM_SCHEMA,
   TYPEORM_USERNAME,
   TYPEORM_PASSWORD,
   TYPEORM_SYNCHRONIZE,
@@ -20,10 +21,10 @@ const root = getPackageDistFolder('@dni/database', ['', '']);
 console.log(`PackageDistFolder of '@dni/database': ${root}`);
 
 const buildPath = (...paths: string[]) => path.join(...paths);
-const buildPathWithExt = (dir: string, ext = '*{.ts,.js}') => buildPath(dir, ext);
+const buildPathWithExt = (dir: string, ext = '*{.ts,.js}') => buildPath(dir, '**', ext);
 const ENTITIES_DIR = buildPath(root, 'entities');
 const SUBSCRIBERS_DIR = buildPath(root, 'subscribers');
-const MIGRATIONS_DIR = buildPath(root, 'migrations');
+const MIGRATIONS_DIR = buildPath('src', 'migrations');
 const SCHEMAS_DIR = buildPath(root, 'schemas');
 
 const sslOpt = { ssl: TYPEORM_SSL === 'true' };
@@ -36,6 +37,7 @@ const typeOrmConfig = {
   username: TYPEORM_USERNAME,
   password: TYPEORM_PASSWORD,
   database: TYPEORM_DATABASE,
+  schema: TYPEORM_SCHEMA || 'public',
   logging: TYPEORM_LOGGING ? TYPEORM_LOGGING === 'true' : false,
   synchronize: TYPEORM_SYNCHRONIZE ? TYPEORM_SYNCHRONIZE === 'true' : false,
   entities: [buildPathWithExt(ENTITIES_DIR)],

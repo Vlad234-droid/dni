@@ -24,7 +24,9 @@ export enum Endpoint {
   POSTS = '/posts',
   POSTS_COUNT = '/posts/count',
   // report
-  REPORT_TIME_PERIODS = '/reports/time-periods',
+  REPORT_MEMBERS = '/reports/members',
+  REPORT_REGIONS = '/reports/regions',
+  REPORT_DEPARTMENTS = '/reports/departments',
   REPORT_PRINT_PDF = '/reports/print-pdf',
   // common
   COMMON_UPLOAD = '/upload',
@@ -38,9 +40,9 @@ export default (httpClient: AxiosInstance) => ({
   user: {
     profile: <T>() => httpClient.get<T>(Endpoint.USER_PROFILE),
     joinNetwork: <T>(data: Config) => httpClient.post<T>(Endpoint.USER_NETWORKS, data),
-    leaveNetwork: <T>(data: Config) => httpClient.delete<T>(Endpoint.USER_NETWORKS, { data }),
+    leaveNetwork: <T>(data: Config) => httpClient.delete<T>(`${Endpoint.USER_NETWORKS}/${data.networkId}`),
     joinEvent: <T>(data: Config) => httpClient.post<T>(Endpoint.USER_EVENTS, data),
-    leaveEvent: <T>(data: Config) => httpClient.delete<T>(Endpoint.USER_EVENTS, { data }),
+    leaveEvent: <T>(data: Config) => httpClient.delete<T>(`${Endpoint.USER_EVENTS}/${data.eventId}`),
   },
   networks: {
     fetchAll: <T>(data: Config = {}) => httpClient.get<T>(Endpoint.NETWORKS, { params: data }),
@@ -66,7 +68,9 @@ export default (httpClient: AxiosInstance) => ({
     count: <T>(data: Config = {}) => httpClient.get<T>(Endpoint.POSTS_COUNT, { params: data }),
   },
   report: {
-    timePeriods: <T>(query: Config = {}) => httpClient.get<T>(Endpoint.REPORT_TIME_PERIODS, { params: query }),
+    members: <T>(query: Config = {}) => httpClient.get<T>(Endpoint.REPORT_MEMBERS, { params: query }),
+    regions: <T>(query: Config = {}) => httpClient.get<T>(Endpoint.REPORT_REGIONS, { params: query }),
+    departments: <T>(query: Config = {}) => httpClient.get<T>(Endpoint.REPORT_DEPARTMENTS, { params: query }),
     printPdf: <T>(data: T) =>
       httpClient.post<Blob>(Endpoint.REPORT_PRINT_PDF, data, {
         responseType: 'blob',

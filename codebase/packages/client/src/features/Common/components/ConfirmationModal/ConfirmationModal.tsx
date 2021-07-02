@@ -10,7 +10,7 @@ type Props = {
   isOpen: boolean;
   onClose: () => void;
   onConfirm: () => void;
-}
+};
 
 const ConfirmationModal: FC<Props> = ({ renderContent, isOpen, onClose, onConfirm }) => (
   <BeansModal open={isOpen} onChange={onClose} id='join-network'>
@@ -51,6 +51,5 @@ export const Actions = styled.div`
     margin-bottom: 24px;
   `}
 `;
-
 
 export default ConfirmationModal;

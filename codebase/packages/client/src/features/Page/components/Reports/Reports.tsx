@@ -12,7 +12,7 @@ import PageWrapper from '../PageWrapper';
 import { TEST_ID } from '../Networks/Networks';
 
 const ReportPage: FC = () => {
-  const dispatch = useDispatch();
+  //const dispatch = useDispatch();
 
   const { entityType } = useSelector(() => store.getState().reports);
 
@@ -24,8 +24,8 @@ const ReportPage: FC = () => {
           <PageWrapper
             renderContent={() => (
               <ContentWrapper>
-                {entityType === Entity.NETWORK && <Reports />}
-                {entityType === Entity.EVENT && <Reports />}
+                {entityType === Entity.network && <Reports />}
+                {entityType === Entity.event && <Reports />}
               </ContentWrapper>
             )}
             pageName={menuItemsDesktop[Page.REPORTS]}

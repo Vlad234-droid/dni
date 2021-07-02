@@ -14,13 +14,7 @@ const Notifications: FC = () => {
       data-testid={`${PAGE_PREFIX}${Page.NOTIFICATIONS}`}
       renderMain={() => (
         <div data-testid={TEST_ID}>
-          <PageWrapper
-            renderContent={() => (
-              <NotificationSettings />
-            )}
-            pageName={'Notifications'}
-            withBorder
-          />
+          <PageWrapper renderContent={() => <NotificationSettings />} pageName={'Notifications'} withBorder />
         </div>
       )}
     />

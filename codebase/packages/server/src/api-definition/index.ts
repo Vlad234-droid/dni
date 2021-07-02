@@ -12,6 +12,7 @@ import {
 } from '@dni-connectors/colleague-cms-api';
 
 import { contactApiDef } from '@dni-connectors/contact-api';
+import { colleagueApiDef } from '@dni-connectors/colleague-api';
 
 export const apiDefinition = defineAPI(() => ({
   ...cmsEmojisApiDef,
@@ -23,5 +24,6 @@ export const apiDefinition = defineAPI(() => ({
   ...cmsEmotionsApiDef,
   ...cmsUploadApiDef,
   ...contactApiDef,
+  ...colleagueApiDef,
   // TODO: define others API endpoints
 }));

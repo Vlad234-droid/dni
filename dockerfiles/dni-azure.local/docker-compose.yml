@@ -1,8 +1,20 @@
 version: '3'
 services:
+    # nginx:
+    #     image: nginx:latest
+    #     container_name: 'azure_dni_nginx'
+    #     depends_on:
+    #         - 'dni'
+    #         - 'postgres'
+    #     volumes:
+    #       - ./nginx/conf.d:/etc/nginx/conf.d
+    #     ports:
+    #     - 8000:80
     dni:
         image: dni_local:latest
         container_name: 'azure_dni'
+        depends_on:
+            - 'postgres'
         environment:
             - NODE_ENV=ppe
             - NODE_PORT=9000
@@ -29,11 +41,15 @@ services:
             - TYPEORM_RUN_MIGRATION=true
             - COOKIE_SESSION_KEY=dni_cookie
             - COOKIE_USER_KEY=user_data
+            # Roles groups
+            - OIDC_GROUPS_ADMIN_ROLE=GG-UK-TescoGlobal-DiversityAndInclusion-PPE-Admin
+            - OIDC_GROUPS_MANAGER_ROLE=GG-UK-TescoGlobal-DiversityAndInclusion-PPE-Manager
         ports:
             - 9000:9000
         restart: always
     postgres:
-        image: postgres:12.5
+        # https://docs.microsoft.com/en-us/azure/postgresql/concepts-supported-versions
+        image: postgres:11.6
         container_name: 'azure_dni_postgres'
         environment:
             - POSTGRES_USER=dni

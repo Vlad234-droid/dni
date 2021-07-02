@@ -3,12 +3,39 @@ import {
   identityTokenSwapPlugin,
   userDataPlugin,
   identityClientScopedTokenPlugin,
-  defaultLogger,
+  Logger,
+  LoggerEvent,
+  OpenIdUserInfo,
 } from '@energon/onelogin';
 import cookieParser from 'cookie-parser';
 import { isPROD } from '../config/env';
-
+import { defaultConfig } from '../config/default';
 import { ProcessConfig } from 'services/config-accessor';
+
+interface ErrorLogMessage {
+  errorType: string;
+  errorMessage: string;
+  stack: string;
+}
+
+interface InfoLogMessage {
+  message: string;
+}
+
+const OpenIdLogger: Logger = (event: LoggerEvent) => {
+  switch (event.severity) {
+    case 'info':
+    case 'warning':
+      const infoLogMessage = event.payload as unknown as InfoLogMessage;
+      console.log(` --> OpenID: [${event.severity}] <${event.flow}> ${infoLogMessage.message}`);
+      break;
+    case 'error':
+      const errorLogMessage = event.payload.error as unknown as ErrorLogMessage;
+      console.log(` --> OpenID: [${event.severity}] <${event.flow}> ${errorLogMessage.errorMessage}`);
+      break;
+  }
+};
+
 
 export const openIdConfig = ({
   environment,
@@ -26,19 +53,73 @@ export const openIdConfig = ({
   identityClientSecret,
   identityUserScopedTokenCookieSecret,
   identityUserScopedTokenCookieName,
-  groupsWithAccess,
-  appName,
+  groupFiltersRegex,
+  adminGroups,
+  managerGroups,
 }: ProcessConfig) => {
   const openIdCookieParser = cookieParser(cookieKey);
   const isProduction = isPROD(environment);
   const identityIdAndSecret = `${identityClientId}:${identityClientSecret}`;
+
   const clientScopedToken = (): Middleware => {
     return identityClientScopedTokenPlugin({
       identityIdAndSecret,
       cache: true,
     });
   };
-  const regExp = new RegExp(`.*${appName}-(PPE-)?`);
+
+  const enrichUserInfo = (userInfo: OpenIdUserInfo) => {
+    //console.log(` ---> OpenIdUserInfo: ${JSON.stringify(userInfo)}`);
+
+    const userGroups = (
+      Array.isArray(userInfo.groups) ? userInfo.groups : ((userInfo.groups as unknown as string) || '').split(',') || []
+    )
+      .filter(Boolean)
+      .filter(
+        (group) => groupFiltersRegex && groupFiltersRegex.length > 0 && groupFiltersRegex.some((rr) => rr.test(group)),
+      );
+
+    //console.log(` ---> User groups: [${userGroups}]`);
+
+    const userRoles: Set<string> = new Set([defaultConfig.defaultRole]);
+
+    //console.log(` ---> Manager Groups: [${managerGroups}]`);
+    if (managerGroups.some((g) => userGroups.includes(g))) {
+      userRoles.add('Manager');
+    }
+
+    //console.log(` ---> Admin Groups: [${adminGroups}]`);
+    if (adminGroups.some((g) => userGroups.includes(g))) {
+      userRoles.add('Admin');
+    }
+
+    //console.log(` ---> User roles: [${Array.from(userRoles.values())}]`);
+
+    const userData = {
+      //...userInfo,
+      fullName: userInfo.name,
+      firstName: userInfo.given_name || userInfo.name.split(/\s+/)[0],
+      lastName: userInfo.family_name || userInfo.name.split(/\s+/)[1],
+      email: userInfo.preferred_username,
+      params: {
+        employeeNumber: (userInfo.params?.employeeNumber || userInfo.params?.EmployeeNumber) as string,
+      },
+      //groups: userGroups,
+      aud: userInfo.aud,
+      sid: userInfo.sid,
+      iat: userInfo.iat,
+      iss: userInfo.iss,
+      sub: userInfo.sub,
+      exp: userInfo.exp,
+      updatedAt: userInfo.updated_at,
+      roles: Array.from(userRoles.values()),
+    };
+
+    //console.log(` ---> User data: ${JSON.stringify(userData)}`);
+
+    return userData;
+  };
+
   const openId = getOpenidMiddleware({
     /** The OneLogin generated Client ID for your OpenID Connect app */
     clientId: oidcClientId,
@@ -82,7 +163,7 @@ export const openIdConfig = ({
     scope: ['openid', 'profile', 'params', 'groups'],
 
     /** Optional, callback that will be called with Event type objects durring authentication process */
-    logger: defaultLogger,
+    logger: OpenIdLogger,
 
     /** If true sets idToken and encRefreshToken in 'authData' cookie. */
     requireIdToken: false,
@@ -112,28 +193,7 @@ export const openIdConfig = ({
           httpOnly: true,
           secure: false,
           signed: false,
-          cookieShapeResolver: (userInfo) => {
-            const userData = {
-              ...userInfo,
-              fullName: userInfo.name,
-              firstName: userInfo.given_name || userInfo.name.split(/\s+/)[0],
-              email: userInfo.preferred_username,
-              params: {
-                ...userInfo.params,
-                employeeNumber: (userInfo.params?.employeeNumber || userInfo.params?.EmployeeNumber) as string,
-              },
-              groups: (Array.isArray(userInfo.groups)
-                ? userInfo.groups
-                : ((userInfo.groups as unknown as string) || '').split(',') || []
-              )
-                .filter(Boolean)
-                .filter((group) => groupsWithAccess.includes(group)),
-            };
-            return {
-              ...userData,
-              roles: userData.groups.map((group: string) => group.replace(regExp, '')),
-            };
-          },
+          cookieShapeResolver: (userInfo) => enrichUserInfo(userInfo),
         },
       }),
     ],

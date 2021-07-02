@@ -11,7 +11,7 @@ export const Wrapper = styled.div`
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  //remove extra scroll on mobile 
+  //remove extra scroll on mobile
   height: calc(100vh - calc(100vh - 100%));
 `;
 

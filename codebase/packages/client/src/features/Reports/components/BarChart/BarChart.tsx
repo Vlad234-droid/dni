@@ -1,39 +1,60 @@
-import { BarChart, CartesianGrid, XAxis, YAxis, Tooltip, Legend, Bar } from 'recharts';
-import { useMedia } from 'context/InterfaceContext';
-import { ViewportSize } from 'config/constants';
+import { BarChart, CartesianGrid, XAxis, YAxis, Tooltip, Legend, Bar, LabelList, ResponsiveContainer } from 'recharts';
 
 type Props = {
   data: any;
 };
 
 const BarChartContainer = ({ data }: Props) => {
-  const { isDesktop, isTablet } = useMedia();
+  return (
+    <ResponsiveContainer height={700} width={'95%'}>
+      <BarChart
+        barGap={0.5}
+        barCategoryGap={8}
+        style={{
+          fontSize: '12px',
+          fill: '#ccc',
+        }}
+        layout='vertical'
+        data={data.elements}
+      >
+        <CartesianGrid strokeDasharray={'3 3'} />
+        <YAxis type='category' dataKey={'name'} width={80} />
+        <XAxis type='number' tick={{ fontFamily: 'sans-serif' }} />
+        <Tooltip />
+        <Legend />
+        {data.entities.map(({ name, color }: { name: string; color: string }) => {
+          return (
+            <Bar key={name} dataKey={name} fill={color}>
+              <LabelList position='inside' content={renderCustomizedLabel} />
+            </Bar>
+          );
+        })}
+      </BarChart>
+    </ResponsiveContainer>
+  );
+};
 
-  console.log(data);
+const renderCustomizedLabel = (props: {
+  x?: string | number;
+  y?: string | number;
+  width?: string | number;
+  height?: string | number;
+  value?: string | number;
+}) => {
+  const { x, y, width, value, height } = props;
 
   return (
-    <BarChart
-      width={isDesktop ? 750 : isTablet ? 700 : 320}
-      height={400}
-      barGap={0.5}
-      barCategoryGap={8}
-      margin={{ top: 138 }}
-      style={{
-        fontFamily: 'Noto Sans',
-        fontSize: '12px',
-        fill: '#ccc',
-      }}
-      data={data.elements}
-    >
-      <CartesianGrid strokeDasharray={'3 3'} />
-      <XAxis dataKey={'name'} />
-      <YAxis />
-      <Tooltip />
-      <Legend />
-      {data.entities.map(({ name, color }: { name: string; color: string }) => {
-        return <Bar key={name} dataKey={name} fill={color} />;
-      })}
-    </BarChart>
+    <g>
+      <text
+        x={+x! + +width! / 2}
+        y={Math.ceil(+y! + +height! / 2) + 1}
+        fill='#fff'
+        textAnchor='middle'
+        dominantBaseline='middle'
+      >
+        {value == 0 ? '' : value}
+      </text>
+    </g>
   );
 };
 

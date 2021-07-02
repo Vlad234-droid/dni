@@ -14,15 +14,8 @@ export default function useFetchEvents(
 ): [Loading, Event[], boolean, string?, string?] {
   const [list, setList] = useState<Event[]>([]);
 
-  const [
-    { response: data, loading, error: listError },
-    doFetchEvents,
-    setLoading,
-  ] = useFetch<Event[]>([]);
-  const [
-    { response: total, loading: countLoading, error: countError },
-    doFetchEventsCount,
-  ] = useFetch<number>(0);
+  const [{ response: data, loading, error: listError }, doFetchEvents, setLoading] = useFetch<Event[]>([]);
+  const [{ response: total, loading: countLoading, error: countError }, doFetchEventsCount] = useFetch<number>(0);
 
   const hasMore = useMemo(() => list!.length < total!, [list, total]);
 

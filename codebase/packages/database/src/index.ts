@@ -11,4 +11,6 @@ createTypeOrmConnection()
   .catch((error) => console.log(error));
 
 export * from './entities';
+export * from './subscribers';
+
 export { createTypeOrmConnection, getTypeOrmConnectionOptions, getManager, getRepository };

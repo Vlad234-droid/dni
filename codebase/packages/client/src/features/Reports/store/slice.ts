@@ -14,9 +14,9 @@ import {
 } from '../utils';
 
 const initialState: T.State = {
-  entityType: T.Entity.NETWORK,
-  [T.Entity.NETWORK]: getEntityState(),
-  [T.Entity.EVENT]: getEntityState(),
+  entityType: T.Entity.network,
+  [T.Entity.network]: getEntityState(),
+  [T.Entity.event]: getEntityState(),
   loading: Loading.IDLE,
   error: undefined,
 };
@@ -35,7 +35,8 @@ const slice = createSlice({
     },
 
     setFilter(state, { payload: { key } }) {
-      state[state.entityType].filter = key;
+      state[T.Entity.network].filter = key;
+      state[T.Entity.event].filter = key;
     },
 
     setTimePeriodFilter(state, { payload: { period } }) {
@@ -44,13 +45,14 @@ const slice = createSlice({
     },
 
     updatePeriodInterval(state, { payload }) {
-      const { entityType, value, prop } = payload as {
+      const { entityType, value, prop, filter } = payload as {
         entityType: T.Entity;
         value: T.DatePoint;
         prop: string;
+        filter: T.Filter;
       };
 
-      const group = state[entityType][T.PERIOD][T.Period.PICK_PERIOD];
+      const group = state[entityType][filter][T.Period.PICK_PERIOD];
 
       group.dateInterval[prop] = value;
     },
@@ -100,38 +102,28 @@ const slice = createSlice({
 
       if (filter === T.PERIOD) {
         group.chart.elements = keyBy(
-          sort(
-            group.statistics,
-            ['checked', true]
-          ),
-          (o: Partial<{ name: string }>) => o.name
+          sort(group.statistics, ['checked', true]),
+          (o: Partial<{ name: string }>) => o.name,
         );
       }
 
       if (filter === T.REGION) {
         group.chart.elements = [];
 
-        group.chart.entities = sort(
-          group.statistics,
-          ['checked', true],
-        );
+        group.chart.entities = sort(group.statistics, ['checked', true]);
 
         const items = new Map();
 
         group.chart.entities.forEach(({ entityName, elements }: T.StatisticsItemByRegion) => {
           elements.forEach(({ regionName, count }) => {
-
             const itemName = regionName;
             const item = items.get(itemName);
 
-            items.set(
-              itemName,
-              {
-                ...item ? item : {},
-                name: itemName,
-                [entityName]: count,
-              },
-            );
+            items.set(itemName, {
+              ...(item ? item : {}),
+              name: itemName,
+              [entityName]: count,
+            });
           });
         });
 
@@ -143,27 +135,20 @@ const slice = createSlice({
       if (filter === T.FORMAT) {
         group.chart.elements = [];
 
-        group.chart.entities = sort(
-          group.statistics,
-          ['checked', true],
-        );
+        group.chart.entities = sort(group.statistics, ['checked', true]);
 
         const items = new Map();
 
         group.chart.entities.forEach(({ entityName, elements }: T.StatisticsItemByFormat) => {
           elements.forEach(({ department, count }) => {
-
             const itemName = department;
             const item = items.get(itemName);
 
-            items.set(
-              itemName,
-              {
-                ...item ? item : {},
-                name: itemName,
-                [entityName]: count,
-              },
-            );
+            items.set(itemName, {
+              ...(item ? item : {}),
+              name: itemName,
+              [entityName]: count,
+            });
           });
         });
 
@@ -203,7 +188,7 @@ const slice = createSlice({
       .addCase(getReportsByRegion.fulfilled, (state: T.State, { payload }) => {
         const { entityType, data } = payload as T.RegionFulfilledArgs;
 
-        state[entityType][T.REGION][T.Region.ALL] = data;
+        state[entityType][T.REGION][T.Region.PICK_PERIOD] = data;
 
         setSucceeded(state);
       })
@@ -213,7 +198,7 @@ const slice = createSlice({
       .addCase(getReportsByFormat.fulfilled, (state: T.State, { payload }) => {
         const { entityType, data } = payload as T.FormatFulfilledArgs;
 
-        state[entityType][T.FORMAT][T.Format.ALL] = data;
+        state[entityType][T.FORMAT][T.Format.PICK_PERIOD] = data;
 
         setSucceeded(state);
       })

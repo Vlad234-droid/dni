@@ -1,6 +1,12 @@
 import styled from 'styled-components';
 
-import { TOP_HEADER_HEIGHT, MAIN_HEADER_HEIGHT, HEADER_HEIGHT_DESKTOP, HEADER_HEIGHT_MOBILE, FOOTER_HEIGHT } from 'features/Layout';
+import {
+  TOP_HEADER_HEIGHT,
+  MAIN_HEADER_HEIGHT,
+  HEADER_HEIGHT_DESKTOP,
+  HEADER_HEIGHT_MOBILE,
+  FOOTER_HEIGHT,
+} from 'features/Layout';
 import Media from 'styles/media';
 
 export const Wrapper = styled.div`

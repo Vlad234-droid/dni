@@ -1,5 +1,5 @@
+import { OURTESCO_URL, PUBLIC_URL } from 'config/constants';
 import { Page } from 'features/Page';
-import { getRootPath } from 'utils/path';
 
 import { PageWithIcon } from './types';
 
@@ -28,12 +28,12 @@ const menuItemsMobile = {
 
 export const mainMenuItems = [
   {
-    href: 'https://www.ourtesco.com/colleague',
+    href: `${OURTESCO_URL}/colleague`,
     id: 'home',
     text: 'Home',
   },
   {
-    href: 'https://www.ourtesco.com/colleague/news',
+    href: `${OURTESCO_URL}/colleague/news`,
     id: 'news-and-views',
     text: 'News & Views',
   },
@@ -43,22 +43,22 @@ export const mainMenuItems = [
     text: 'Reward & Benefits',
   },
   {
-    href: 'https://www.ourtesco.com/colleague/working-at-tesco',
+    href: `${OURTESCO_URL}/colleague/working-at-tesco`,
     id: 'working-at-tesco',
     text: 'Working at Tesco',
   },
   {
-    href: 'https://www.ourtesco.com/colleague/our-community',
+    href: `${OURTESCO_URL}/colleague/our-community`,
     id: 'our-community',
     text: 'Our Community',
   },
   {
-    href: 'https://www.ourtesco.com/colleague/health-and-wellbeing',
+    href: `${OURTESCO_URL}/colleague/health-and-wellbeing`,
     id: 'health-and-wellbeing',
     text: 'Health and Wellbeing',
   },
   {
-    href: getRootPath(),
+    href: `${PUBLIC_URL}`,
     id: 'diversity-and-inclusion',
     text: 'Diversity and Inclusion',
     active: true,

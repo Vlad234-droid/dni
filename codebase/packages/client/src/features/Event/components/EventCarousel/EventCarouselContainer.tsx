@@ -23,11 +23,10 @@ const EventCarouselContainer: FC = () => {
   });
 
   const [loading, list, hasMore, listError, countError] = useFetchEvents(filters);
-  const errorMessage = useMemo(() => listError || countError || participants.error, [
-    participants,
-    listError,
-    countError,
-  ]);
+  const errorMessage = useMemo(
+    () => listError || countError || participants.error,
+    [participants, listError, countError],
+  );
   const loadParticipants = () => dispatch(getParticipants());
 
   return (

@@ -24,7 +24,7 @@ export const fakeUserExtractor: Middleware = (req, res, next) => {
   return res.redirect(req.path);
 };
 
-const buildFakeUserInfo = (employeeNumber = 'UK00000427'): OpenIdUserInfo => ({
+const buildFakeUserInfo = (employeeNumber = 'UK45006148'): OpenIdUserInfo => ({
   sub: 'fake-openid',
   preferred_username: 'AD',
   name: 'Arthur Dent',

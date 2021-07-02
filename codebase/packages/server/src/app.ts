@@ -5,7 +5,10 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import { isDEV } from './config/env';
 
-import { envAccessor, ConfigAccessor, initializeWebSockets } from './services';
+//import { colleagueApiConnector } from '@dni-connectors/colleague-api';
+//import { prepareContext } from './services/context';
+
+import { envAccessor, getConfig } from './services';
 import { healthCheck, api } from './routes';
 import {
   clientStaticFolder,
@@ -17,15 +20,15 @@ import {
   formData,
   fakeLoginConfig,
   fakeUserExtractor,
+  colleagueUUIDExtractor,
+  fakeColleagueExtractor,
 } from './middlewares';
 import { buildContext } from './context';
-import { buildWebSocketsServer } from './config/notification';
 import { initializeTypeOrm } from './config/db';
 
-// validate if all required process env variables exist
 envAccessor.validate();
 
-const config = ConfigAccessor.getInstance(envAccessor.getData()).getData();
+const config = getConfig();
 
 const upload = multer({ limits: { fieldSize: config.uploadSize } });
 
@@ -39,6 +42,13 @@ const startServer = async () => {
   try {
     console.log(`Current build environment: ${config.buildEnvironment}`);
     console.log(`Current infrastructure environment: ${config.environment}`);
+
+    // // test
+    // const tpx = 'UK45006148';
+    // const ctx = await prepareContext();
+    // const connector = colleagueApiConnector(ctx);
+    // const response = await connector.v2.getColleagues({ params: { 'externalSystems.iam.id': tpx } });
+    // console.log(`colleague with TPX ${tpx}`, response.data[0]);
 
     // initialize connection to DB
     await initializeTypeOrm();
@@ -58,6 +68,7 @@ const startServer = async () => {
       app.use(cookieParser());
       app.use(fakeLoginConfig(context, config));
       app.use(fakeUserExtractor);
+      app.use(fakeColleagueExtractor);
     } else {
       const { openId, openIdCookieParser, clientScopedToken } = openIdConfig(config);
       app.use(openIdCookieParser);
@@ -65,6 +76,7 @@ const startServer = async () => {
       app.use(await openId);
     }
 
+    app.use(colleagueUUIDExtractor);
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
     app.use('/api/upload', upload.any(), formData);
@@ -78,12 +90,6 @@ const startServer = async () => {
 
     server.listen(PORT, () => {
       console.log(`⚡️[server]: Server is running at http://localhost:${PORT}`);
-
-      // ws connection
-      initializeWebSockets(
-        buildWebSocketsServer(server)
-        );
-
     });
   } catch (error) {
     console.log(error);
