@@ -59,4 +59,5 @@ export const LINKS = {
   signOut: `${OURTESCO_URL}/colleague/sso/logout`,
   thisIsMeSurvey: `${OURTESCO_URL}/thisisme/office`,
   termsAndConditions: `${OURTESCO_URL}/colleague/terms-and-conditions`,
+  privacyPolicy: 'https://colleague-help.ourtesco.com/hc/en-us/articles/360001354803-Colleague-Data-Privacy-Full-Policy-and-Supporting-Documents'
 };

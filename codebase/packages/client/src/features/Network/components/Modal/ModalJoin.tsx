@@ -18,25 +18,32 @@ const ModalJoin: FC<Props> = ({ isOpen, onClose, onConfirm }) => {
       renderContent={() => (
         <>
           <p>
-            Thank you for taking the time to voluntarily share your personal diversity information. Any information you
-            share will be completely confidential and by participating you will be helping us to:
+            By signing up to one or more of our networks,
+            you will receive updates throughout the year
+            and priority invites to network-run events for
+            the network(s) of your choice. Occasionally we
+            might send an update to all our networks but
+            don’t worry, this won’t be too often.
           </p>
-          <ul>
-            <li>Better understand the diversity of our workforce</li>
-            <li>Inform and improve our colleague policies and approaches to be fully inclusive</li>
-            <li>Hold ourselves accountable for progress and taking action</li>
-            <li>Participate in legislative and voluntary reporting</li>
-          </ul>
+            <br />
           <p>
-            This action is a vital part of our journey to better understanding and celebrating our diverse workforce and
-            becoming a more inclusive business for all.
+            We recognise that some colleagues may prefer
+            for their participation in the network(s) to
+            be confidential so any information you share
+            with us will not be linked to you as an
+            individual, it will be saved securely and
+            anonymously. In order to better understand
+            our Networks and how they can improve their
+            offer to our colleagues they will receive
+            aggregated demographic reporting. This reporting
+            is anonymous and no individuals can be identified
+            from it.
           </p>
+          <br />
           <p>
-            For more information and frequently asked questions please go to{' '}
-            <Link href='https://www.ourtesco.com/' target='_blank'>
-              Our Tesco
-            </Link>{' '}
-            or speak to your manager.
+            We’ve had some great webinars and events over the
+            last few years and with your participation we hope
+            to make them bigger and better in the future!
           </p>
         </>
       )}

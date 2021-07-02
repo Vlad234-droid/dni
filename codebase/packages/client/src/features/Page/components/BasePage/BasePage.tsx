@@ -27,9 +27,14 @@ const BasePage: FC<ExtraLayoutProps> = (props) => {
                 <UpdatesWrapper>
                   <NetworkUpdates />
                 </UpdatesWrapper>
-                <Link href={LINKS.termsAndConditions} target='_self'>
-                  Terms & Conditions
-                </Link>
+                <LinksWrapper>
+                  <Link href={LINKS.termsAndConditions} target='_self'>
+                      Terms & Conditions
+                  </Link>
+                  <Link href={LINKS.privacyPolicy} target='_self'>
+                      Privacy Policy
+                  </Link>
+                </LinksWrapper>
               </>
             ) : (
               <MenuMobile />
@@ -45,6 +50,15 @@ const BasePage: FC<ExtraLayoutProps> = (props) => {
 const UpdatesWrapper = styled.div`
   margin-top: 32px;
 `;
+
+const LinksWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  
+  a:last-child {
+    margin-top: 10px;
+  }
+`
 
 export { TEST_ID };
 
