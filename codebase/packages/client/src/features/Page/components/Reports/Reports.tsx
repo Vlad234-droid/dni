@@ -1,5 +1,5 @@
 import React, { FC } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 
 import { Page, PAGE_PREFIX } from 'features/Page';
@@ -12,8 +12,6 @@ import PageWrapper from '../PageWrapper';
 import { TEST_ID } from '../Networks/Networks';
 
 const ReportPage: FC = () => {
-  //const dispatch = useDispatch();
-
   const { entityType } = useSelector(() => store.getState().reports);
 
   return (

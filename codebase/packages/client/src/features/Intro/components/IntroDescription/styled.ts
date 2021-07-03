@@ -31,7 +31,7 @@ export const Content = styled.div<{ isOpen: boolean }>`
     ${Media.tablet`
       -webkit-line-clamp: ${isOpen ? 'auto' : '6'};
       margin-bottom: 40px;
-      max-width: 463px;
+      padding-right: 48px;
     `}
   `}
 

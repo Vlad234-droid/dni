@@ -64,6 +64,7 @@ export const Description = styled.div<{ isOpen: boolean }>`
 
 export const DescriptionWrapper = styled.div`
   margin-bottom: 40px;
+  padding-right: 48px;
 `;
 
 export const Image = styled.img<{ isOpen: boolean }>`
