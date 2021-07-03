@@ -39,4 +39,6 @@ const enrichResWithToken = async (
   setIdentityClientData(res, tokenData);
 };
 
+export type { RequestCtx };
+
 export { prepareContext, enrichResWithToken };

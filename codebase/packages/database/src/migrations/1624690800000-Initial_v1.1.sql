@@ -147,7 +147,8 @@ COMMENT ON TABLE capi_department IS 'Colleague API departments dictionary';
 CREATE TYPE ccms_trigger_event_enum AS ENUM (
 	'created',
 	'updated',
-	'deleted'
+	'deleted',
+	'published'
 	);
 
 

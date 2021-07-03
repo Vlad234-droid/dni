@@ -1,133 +1,128 @@
 import {
+  getManager,
   getRepository,
-  Notification,
-  NotificationEmployee,
-  NotificationActionType,
-  NotificationEntityType,
+  CcmsNotification,
+  DniUserNotificationAcknowledge,
+  CcmsTriggerEventEnum,
+  DniEntityTypeEnum,
+  getSchemaPrefix,
 } from '@dni/database';
-import { Network, Event, Post } from '@dni-connectors/colleague-cms-api';
+import {
+  Network,
+  Event,
+  Post,
+  cmsPostsApiConnector,
+  cmsEventsApiConnector,
+  cmsNetworksApiConnector,
+  TENANT_KEY as tenantkey,
+} from '@dni-connectors/colleague-cms-api';
+import { prepareContext, RequestCtx } from './context';
+import { Request, Response } from 'express';
 
-type Input = {
-  event: 'entry.update' | 'entry.create' | 'entry.delete';
+type CepPayload = {
+  id: string;
+  model: DniEntityTypeEnum;
+  trigger: CcmsTriggerEventEnum;
   created_at: string;
-  model: 'post' | 'event' | 'network';
-  entry: Network | Event | Post;
+  updated_at: string;
 };
 
-const handleData = async (data: Input) => {
-  try {
-    const preparedData = analyze(data);
+const handleCepRequest = async (req: Request<{}, CepPayload>, res: Response) => {
+  const payload = req.body;
+  const ctx = await prepareContext(req, res);
 
-    if (preparedData) {
-      getRepository(Notification).save(preparedData);
+  // 1. try to get cms entity from Colleague CMS
+  const cmsEntity: Post | Event | Network = (await analyzeEntity(payload, ctx)).data;
+
+  // 2. create notification
+  const notification = new CcmsNotification();
+  notification.notificationTriggerEvent = payload.trigger;
+  notification.entityId = payload.id;
+  notification.entityType = payload.model;
+  notification.entityCreatedAt = new Date(cmsEntity.published_at); // entity don't have the field created_at
+  notification.entityUpdatedAt = new Date(cmsEntity.published_at);
+  notification.entityInstance = cmsEntity;
+
+  // 3. try to store notification into the db
+  getRepository(CcmsNotification).save(notification);
+};
+
+const analyzeEntity = async (payload: CepPayload, ctx: RequestCtx) => {
+  const { id, model } = payload;
+
+  const reqPayload = { params: { id }, tenantkey };
+
+  switch (model) {
+    case DniEntityTypeEnum.POST: {
+      const connector = cmsPostsApiConnector(ctx);
+      return await connector.getPost(reqPayload);
     }
-  } catch (e) {
-    console.log(e);
-  }
-};
-
-const analyze = (data: Input) => {
-  const entityType = analyzeEntityType(data);
-  const entity = data.entry;
-  const action = analyzeAction(data, entityType);
-
-  if (entityType && action) {
-    return {
-      entityType,
-      action,
-      entity,
-    };
-  }
-};
-
-const analyzeEntityType = (data: Input) => {
-  switch (data.model) {
-    case 'post':
-      return NotificationEntityType.POST;
-    case 'event':
-      return NotificationEntityType.EVENT;
-    case 'network':
-      return NotificationEntityType.NETWORK;
-    default:
-      return;
-  }
-};
-
-const analyzeAction = (data: Input, entityType: NotificationEntityType | undefined) => {
-  if (!entityType) {
-    return;
-  }
-
-  switch (data.event) {
-    case 'entry.create':
-      switch (entityType) {
-        case NotificationEntityType.POST:
-          return NotificationActionType.POST_CREATED;
-        case NotificationEntityType.EVENT:
-          return NotificationActionType.EVENT_CREATED;
-        case NotificationEntityType.NETWORK:
-          return NotificationActionType.NETWORK_CREATED;
-        default:
-          return;
-      }
-    case 'entry.update':
-      switch (entityType) {
-        case NotificationEntityType.POST: {
-          const post = data.entry as Post;
-          if (post.archived) {
-            return NotificationActionType.POST_ARCHIVED;
-          } else {
-            return NotificationActionType.POST_UPDATED;
-          }
-        }
-        case NotificationEntityType.EVENT:
-          return NotificationActionType.EVENT_UPDATED;
-        case NotificationEntityType.NETWORK:
-          return NotificationActionType.NETWORK_UPDATED;
-        default:
-          return;
-      }
-    case 'entry.delete':
-      switch (entityType) {
-        case NotificationEntityType.POST:
-          return NotificationActionType.POST_REMOVED;
-        case NotificationEntityType.EVENT:
-          return NotificationActionType.EVENT_REMOVED;
-        case NotificationEntityType.NETWORK:
-          return NotificationActionType.NETWORK_REMOVED;
-        default:
-          return;
-      }
-    default:
-      return;
+    case DniEntityTypeEnum.EVENT: {
+      const connector = cmsEventsApiConnector(ctx);
+      return await connector.getEvent(reqPayload);
+    }
+    case DniEntityTypeEnum.NETWORK: {
+      const connector = cmsNetworksApiConnector(ctx);
+      return await connector.getNetwork(reqPayload);
+    }
   }
 };
 
 const findNotifications = (colleagueUUID: string) => {
-  return (
-    getRepository(Notification)
-      .createQueryBuilder('n')
-      .select('n')
-      // .leftJoin('n.employees', 'em')
-      // .where('em.colleagueUUID IS NULL')
-      .orderBy('n.createdAt', 'DESC')
-      .getMany()
+  const schemaPrefix = getSchemaPrefix();
+  return getManager().connection.query(
+    `SELECT
+      colleague_uuid, 
+      entity_id,
+      entity_type,
+      root_ancestor_id,
+      root_ancestor_type
+    FROM ${schemaPrefix}fn_get_dni_user_notification_list(
+      $1::uuid,
+      ARRAY['event'::${schemaPrefix}dni_entity_type_enum, 'post'::${schemaPrefix}dni_entity_type_enum]::${schemaPrefix}dni_entity_type_enum[],
+      ARRAY['network'::${schemaPrefix}dni_entity_type_enum, 'event'::${schemaPrefix}dni_entity_type_enum]::${schemaPrefix}dni_entity_type_enum[],
+      TRUE::boolean
+    )`,
+    [colleagueUUID],
   );
 };
 
 const findNetworkNotifications = (colleagueUUID: string) => {
-  return getRepository(Notification).find({
-    order: {
-      createdAt: 'DESC',
-    },
-  });
+  const schemaPrefix = getSchemaPrefix();
+  return getManager().connection.query(
+    `SELECT
+      colleague_uuid uuid, 
+      entity_type,
+      root_ancestor_id, 
+      root_ancestor_type, 
+      count(*) as entity_count
+    FROM ${schemaPrefix}fn_get_dni_user_notification_list(
+      $1::uuid,
+      ARRAY['post'::${schemaPrefix}dni_entity_type_enum]::${schemaPrefix}dni_entity_type_enum[],
+      ARRAY['network'::${schemaPrefix}dni_entity_type_enum]::${schemaPrefix}dni_entity_type_enum[],
+      TRUE::boolean
+    )
+    GROUP BY
+      colleague_uuid, 
+      root_ancestor_id, 
+      root_ancestor_type, 
+      entity_type`,
+    [colleagueUUID],
+  );
 };
 
-const createColleagueRelation = (notificationId: number, colleagueUUID: string) => {
-  return getRepository(NotificationEmployee).save({
-    notificationId,
+const createColleagueNotificationRelation = async (
+  entityId: number,
+  entityType: DniEntityTypeEnum,
+  colleagueUUID: string,
+) => {
+  return await getRepository(DniUserNotificationAcknowledge).save({
     colleagueUUID,
+    acknowledgeEntityType: entityType,
+    acknowledgeEntityId: entityId,
   });
 };
 
-export { analyze, handleData, findNotifications, findNetworkNotifications, createColleagueRelation };
+export type { CepPayload };
+
+export { handleCepRequest, findNotifications, findNetworkNotifications, createColleagueNotificationRelation };

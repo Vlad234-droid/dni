@@ -10,11 +10,10 @@ import {
   addEventToEmployee,
   deleteEventFromEmployee,
   // notification
-  handleHook,
   handleCepHook,
   getNotifications,
   getNetworkNotifications,
-  viewNotification,
+  acknowledgeNotification,
   // networks
   getNetworksParticipants,
   // events
@@ -28,8 +27,6 @@ import {
   getEnvironmentVariablesMiddleware,
   getTypeOrmConnectionOptionsMiddleware,
 } from '../controllers';
-
-import { cmsAuth } from '../middlewares/cms-auth';
 
 // controllers
 const healthCheck = express.Router();
@@ -56,10 +53,9 @@ api.post('/reports/print-pdf', printPDF);
 api.get('/utils/env', getEnvironmentVariablesMiddleware);
 api.get('/utils/type-orm-options', getTypeOrmConnectionOptionsMiddleware);
 
-api.post('/notifications', cmsAuth, handleHook);
 api.post('/cms-events', handleCepHook);
 api.get('/notifications', getNotifications);
 api.get('/notifications/networks', getNetworkNotifications);
-api.post('/notifications/:notificationId/view', viewNotification);
+api.post('/notifications/acknowledge', acknowledgeNotification);
 
 export { healthCheck, api };
