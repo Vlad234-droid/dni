@@ -23,16 +23,11 @@ const NetworkCarousel: FC = () => {
 
     return elHeight;
   };
-  const [index, setIndex] = useState(0);
+  const [index] = useState(0);
 
   useEffect(() => {
     setSwipeHeight(isOpen ? `${getChildHeight(index)}px` : 'auto');
   }, [isOpen, index]);
-
-  const handleButtonClick = (index: number) => {
-    setIsOpen(!isOpen);
-    setIndex(index);
-  };
 
   const handleOnChange = () => {
     setIsOpen(false);
@@ -50,7 +45,7 @@ const NetworkCarousel: FC = () => {
         continuous
       >
         {networks.map(({ id, ...network }, index) => (
-          <CarouselContent key={id} index={index} onButtonClick={() => handleButtonClick(index)} isOpen={isOpen} {...network} />
+          <CarouselContent key={id} index={index} {...network} />
         ))}
       </Carousel>
     </Wrapper>

@@ -1,6 +1,4 @@
 import React, { FC } from 'react';
-import Icon from '@beans/icon';
-import Button from '@beans/button';
 
 import { Wrapper, ContentWrapper, Title, DescriptionWrapper, Description, Image } from './styled';
 
@@ -11,17 +9,15 @@ type Props = {
   image: {
     src: string;
   };
-  onButtonClick: () => void;
-  isOpen: boolean;
   index: number;
 };
 
-const CarouselContent: FC<Props> = ({ index, title, description, image: { src }, onButtonClick, isOpen }) => (
+const CarouselContent: FC<Props> = ({ index, title, description, image: { src } }) => (
   <Wrapper>
     <ContentWrapper id={`carousel-content-${index}`}>
       <Title>{title}</Title>
       <DescriptionWrapper>
-        <Description isOpen={isOpen}>
+        <Description isOpen={true}>
           {Array.isArray(description) ? (
             description.map((item, index) => <p key={index}>{item}</p>)
           ) : (
@@ -29,12 +25,8 @@ const CarouselContent: FC<Props> = ({ index, title, description, image: { src },
           )}
         </Description>
       </DescriptionWrapper>
-      <Button inverse variant='primary' onClick={onButtonClick}>
-        {isOpen ? 'Read less' : 'Read more'}
-        <Icon graphic={isOpen ? 'contract' : 'expand'} size='xx' />
-      </Button>
     </ContentWrapper>
-    <Image src={src} isOpen={isOpen} />
+    <Image src={src} isOpen={true} />
   </Wrapper>
 );
 
