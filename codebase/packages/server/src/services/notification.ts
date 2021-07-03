@@ -36,15 +36,15 @@ const handleCepRequest = async (req: Request<{}, CepPayload>, res: Response) => 
 
   // 2. create notification
   const notification = new CcmsNotification();
+
   notification.notificationTriggerEvent = payload.trigger;
   notification.entityId = payload.id;
   notification.entityType = payload.model;
   notification.entityCreatedAt = new Date(cmsEntity.published_at); // entity don't have the field created_at
   notification.entityUpdatedAt = new Date(cmsEntity.published_at);
-  notification.entityInstance = cmsEntity;
 
-  // 3. try to store notification into the db
-  getRepository(CcmsNotification).save(notification);
+  // 3. store notification into the db
+  getManager().getRepository(CcmsNotification).save(notification, { data: { entityInstance : cmsEntity } });
 };
 
 const analyzeEntity = async (payload: CepPayload, ctx: RequestCtx) => {
