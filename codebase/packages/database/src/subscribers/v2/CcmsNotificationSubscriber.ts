@@ -35,34 +35,43 @@ export class CcmsNotificationSubscriber implements EntitySubscriberInterface<Ccm
   }
 
   async afterInsert(event: InsertEvent<CcmsNotification>) {
-    await this.upsertCcrmEntity(event.entity, event.manager);
+    
+    await this.upsertCcrmEntity(
+      event.entity, 
+      event.manager, 
+      event.queryRunner.data.entityInstance
+      );
   }
 
-  async upsertCcrmEntity(ccrmNotification: CcmsNotification, manager: EntityManager) {
+  async upsertCcrmEntity(ccrmNotification: CcmsNotification, manager: EntityManager, entityInstance: CommonCcrmEntity) {
     const ccrmEntity = new CcmsEntity();
 
     ccrmEntity.entityId = ccrmNotification.entityId;
     ccrmEntity.entityType = ccrmNotification.entityType;
 
-    const ccrmEntityInstance = ccrmNotification.entityInstance! as CommonCcrmEntity;
+    console.log(` ==> ccrmEntityInstance = ${JSON.stringify(entityInstance, undefined, 3)}`);
 
-    if (ccrmEntityInstance) {
-      ccrmEntity.slug = ccrmEntityInstance.slug || slugify(ccrmEntityInstance.title);
-      ccrmEntity.entityCreatedAt = ccrmEntityInstance.published_at;
-      ccrmEntity.entityUpdatedAt = ccrmEntityInstance.published_at;
-      ccrmEntity.entityPublishedAt = ccrmEntityInstance.published_at;
+    if (entityInstance) {
+      ccrmEntity.slug = entityInstance.slug || slugify(entityInstance.title);
+      ccrmEntity.entityInstance = entityInstance;
+      ccrmEntity.entityCreatedAt = entityInstance.published_at;
+      ccrmEntity.entityUpdatedAt = entityInstance.published_at;
+      ccrmEntity.entityPublishedAt = entityInstance.published_at;
 
-      const parent = ccrmEntityInstance.event || ccrmEntityInstance.network;
+      const parent = entityInstance.event || entityInstance.network;
       if (parent) {
-        const ccrmParentEntity = new CcmsEntity();
-        const entityType = ccrmEntityInstance.event?.id
+        const parentEntityType = entityInstance.event?.id
           ? DniEntityTypeEnum.EVENT
-          : ccrmEntityInstance.network?.id
+          : entityInstance.network?.id
           ? DniEntityTypeEnum.NETWORK
           : undefined;
-        ccrmParentEntity.entityId = parent?.id;
-        ccrmParentEntity.entityType = entityType!;
+        
+        const ccrmParentEntity = new CcmsEntity();
+        
+        ccrmParentEntity.entityId = parent.id;
+        ccrmParentEntity.entityType = parentEntityType!;
         ccrmParentEntity.slug = parent?.slug || slugify(parent!.title);
+        ccrmParentEntity.entityInstance = parent;
         ccrmParentEntity.entityCreatedAt = parent?.published_at;
         ccrmParentEntity.entityUpdatedAt = parent?.published_at;
         ccrmParentEntity.entityPublishedAt = parent?.published_at;
@@ -72,8 +81,8 @@ export class CcmsNotificationSubscriber implements EntitySubscriberInterface<Ccm
 
         manager.save(ccrmParentEntity);
 
-        ccrmEntity.parentEntityId = parent?.id;
-        ccrmEntity.parentEntityType = entityType;
+        ccrmEntity.parentEntityId = parent.id;
+        ccrmEntity.parentEntityType = parentEntityType;
       }
     }
 

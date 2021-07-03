@@ -163,7 +163,6 @@ CREATE TABLE IF NOT EXISTS ccms_notification (
 	entity_type dni_entity_type_enum NOT NULL,
 	entity_created_at timestamptz(0) NOT NULL,
 	entity_updated_at timestamptz(0) NULL,
-	entity_instance jsonb NULL,
 	received_at timestamptz(0) NOT NULL DEFAULT now(),
 	CONSTRAINT "c_notification__pk" PRIMARY KEY (notification_uuid)
 );
@@ -174,8 +173,6 @@ CREATE INDEX "c_notification$entity_received_at__idx" ON ccms_notification (rece
 
 CREATE INDEX "c_notification$entity_created_at__idx" ON ccms_notification (entity_created_at);
 
-CREATE INDEX "c_notification$entity_instance__idx" ON ccms_notification USING gin(entity_instance);
-
 
 -- ===========
 -- ccms_entity
@@ -185,6 +182,7 @@ CREATE TABLE IF NOT EXISTS ccms_entity (
 	entity_id int4 NOT NULL,
 	entity_type dni_entity_type_enum NOT NULL,
 	slug varchar(128) NOT NULL,
+	entity_instance jsonb NULL,
 	entity_created_at timestamptz(0) NOT NULL,
 	entity_updated_at timestamptz(0) NULL,
 	entity_published_at timestamptz(0) NULL,
@@ -204,6 +202,8 @@ COMMENT ON TABLE ccms_entity IS 'Collleague CMS Entities cache';
 CREATE INDEX "c_entity$created_at__idx" ON ccms_entity (created_at);
 
 CREATE INDEX "c_entity$entity_created_at__idx" ON ccms_entity (entity_created_at);
+
+CREATE INDEX "c_entity$entity_instance__idx" ON ccms_entity USING gin(entity_instance);
 
 
 -- ======================

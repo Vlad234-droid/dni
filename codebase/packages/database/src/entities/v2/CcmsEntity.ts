@@ -14,6 +14,9 @@ class CcmsEntity {
   @Column('character varying', { name: 'slug', length: 128 })
   slug!: string;
 
+  @Column('jsonb', { name: 'entity_instance', nullable: true })
+  entityInstance?: object;
+
   @Column('timestamp with time zone', { name: 'entity_created_at', default: () => 'now()' })
   entityCreatedAt!: Date;
 

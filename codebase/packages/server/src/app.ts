@@ -76,7 +76,8 @@ const startServer = async () => {
       app.use(await openId);
     }
 
-    app.use(colleagueUUIDExtractor);
+    app.use(colleagueUUIDExtractor('/api/cms-events'));
+
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
     app.use('/api/upload', upload.any(), formData);
