@@ -23,7 +23,8 @@ export const handleCepHook = async (req: Request<{}, CepPayload>, res: Response)
 
 export const getNotifications: Middleware = async (req, res) => {
   return executeSafe(res, async () => {
-    return res.status(200).json(await findNotifications());
+    const colleagueUUID = await colleagueUUIDExtractor(req, res);
+    return res.status(200).json(await findNotifications(colleagueUUID!));
   });
 };
 
@@ -36,8 +37,8 @@ export const getNetworkNotifications: Middleware = async (req, res) => {
 
 export const acknowledgeNotification: Middleware = async (req, res) => {
   return executeSafe(res, async () => {
-    const { notifUUID: notificationUUID } = req.params;
+    const { entityId, entityType } = req.body;
     const colleagueUUID = await colleagueUUIDExtractor(req, res);
-    return res.status(200).json(await createColleagueNotificationRelation(notificationUUID, colleagueUUID!));
+    return res.status(200).json(await createColleagueNotificationRelation(entityId, entityType, colleagueUUID!));
   });
 };

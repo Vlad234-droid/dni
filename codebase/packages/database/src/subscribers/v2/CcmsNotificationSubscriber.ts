@@ -1,5 +1,5 @@
 import { CcmsEntity, CcmsNotification, DniEntityTypeEnum } from '../../entities/v2';
-import { EntitySubscriberInterface, EventSubscriber, getRepository, InsertEvent } from 'typeorm';
+import { EntitySubscriberInterface, EventSubscriber, InsertEvent, EntityManager } from 'typeorm';
 
 interface CommonCcrmEntity {
   id: number;
@@ -35,10 +35,10 @@ export class CcmsNotificationSubscriber implements EntitySubscriberInterface<Ccm
   }
 
   async afterInsert(event: InsertEvent<CcmsNotification>) {
-    await this.upsertCcrmEntity(event.entity);
+    await this.upsertCcrmEntity(event.entity, event.manager);
   }
 
-  async upsertCcrmEntity(ccrmNotification: CcmsNotification) {
+  async upsertCcrmEntity(ccrmNotification: CcmsNotification, manager: EntityManager) {
     const ccrmEntity = new CcmsEntity();
 
     ccrmEntity.entityId = ccrmNotification.entityId;
@@ -52,18 +52,34 @@ export class CcmsNotificationSubscriber implements EntitySubscriberInterface<Ccm
       ccrmEntity.entityUpdatedAt = ccrmEntityInstance.published_at;
       ccrmEntity.entityPublishedAt = ccrmEntityInstance.published_at;
 
-      // TODO: create parent entity and notification
-      // ccrmEntity.parentEntityId = ccrmEntityInstance.event?.id || ccrmEntityInstance.network?.id;
-      // ccrmEntity.parentEntityType = ccrmEntityInstance.event?.id
-      //   ? DniEntityTypeEnum.EVENT
-      //   : ccrmEntityInstance.network?.id
-      //   ? DniEntityTypeEnum.NETWORK
-      //   : undefined;
+      const parent = ccrmEntityInstance.event || ccrmEntityInstance.network;
+      if (parent) {
+        const ccrmParentEntity = new CcmsEntity();
+        const entityType = ccrmEntityInstance.event?.id
+          ? DniEntityTypeEnum.EVENT
+          : ccrmEntityInstance.network?.id
+          ? DniEntityTypeEnum.NETWORK
+          : undefined;
+        ccrmParentEntity.entityId = parent?.id;
+        ccrmParentEntity.entityType = entityType!;
+        ccrmParentEntity.slug = parent?.slug || slugify(parent!.title);
+        ccrmParentEntity.entityCreatedAt = parent?.published_at;
+        ccrmParentEntity.entityUpdatedAt = parent?.published_at;
+        ccrmParentEntity.entityPublishedAt = parent?.published_at;
+
+        ccrmParentEntity.notificationUUID = ccrmNotification.notificationUUID;
+        ccrmParentEntity.notificationTriggerEvent = ccrmNotification.notificationTriggerEvent;
+
+        manager.save(ccrmParentEntity);
+
+        ccrmEntity.parentEntityId = parent?.id;
+        ccrmEntity.parentEntityType = entityType;
+      }
     }
 
     ccrmEntity.notificationUUID = ccrmNotification.notificationUUID;
     ccrmEntity.notificationTriggerEvent = ccrmNotification.notificationTriggerEvent;
 
-    getRepository(CcmsEntity).save(ccrmEntity);
+    manager.save(ccrmEntity);
   }
 }

@@ -1,7 +1,6 @@
 import {
   getManager,
   getRepository,
-  Notification,
   CcmsNotification,
   DniUserNotificationAcknowledge,
   CcmsTriggerEventEnum,
@@ -69,31 +68,59 @@ const analyzeEntity = async (payload: CepPayload, ctx: RequestCtx) => {
   }
 };
 
-const findNotifications = async () => {
+const findNotifications = (colleagueUUID: string) => {
   const schemaPrefix = getSchemaPrefix();
-  return await getManager().connection.query(
+  return getManager().connection.query(
     `SELECT
-        *
-      FROM ${schemaPrefix}fn_get_ccms_entity_root_ancestor()`,
+      colleague_uuid, 
+      entity_id,
+      entity_type,
+      root_ancestor_id,
+      root_ancestor_type
+    FROM ${schemaPrefix}fn_get_dni_user_notification_list(
+      $1::uuid,
+      ARRAY['event'::${schemaPrefix}dni_entity_type_enum, 'post'::${schemaPrefix}dni_entity_type_enum]::${schemaPrefix}dni_entity_type_enum[],
+      ARRAY['network'::${schemaPrefix}dni_entity_type_enum, 'event'::${schemaPrefix}dni_entity_type_enum]::${schemaPrefix}dni_entity_type_enum[],
+      TRUE::boolean
+    )`,
+    [colleagueUUID],
   );
 };
 
 const findNetworkNotifications = (colleagueUUID: string) => {
-  return getRepository(Notification).find({
-    order: {
-      createdAt: 'DESC',
-    },
-  });
+  const schemaPrefix = getSchemaPrefix();
+  return getManager().connection.query(
+    `SELECT
+      colleague_uuid uuid, 
+      entity_type,
+      root_ancestor_id, 
+      root_ancestor_type, 
+      count(*) as entity_count
+    FROM ${schemaPrefix}fn_get_dni_user_notification_list(
+      $1::uuid,
+      ARRAY['post'::${schemaPrefix}dni_entity_type_enum]::${schemaPrefix}dni_entity_type_enum[],
+      ARRAY['network'::${schemaPrefix}dni_entity_type_enum]::${schemaPrefix}dni_entity_type_enum[],
+      TRUE::boolean
+    )
+    GROUP BY
+      colleague_uuid, 
+      root_ancestor_id, 
+      root_ancestor_type, 
+      entity_type`,
+    [colleagueUUID],
+  );
 };
 
-const createColleagueNotificationRelation = async (notificationUUID: string, colleagueUUID: string) => {
-  const notification = await getRepository(CcmsNotification).findOne({ notificationUUID });
-  await getRepository(DniUserNotificationAcknowledge).save({
+const createColleagueNotificationRelation = async (
+  entityId: number,
+  entityType: DniEntityTypeEnum,
+  colleagueUUID: string,
+) => {
+  return await getRepository(DniUserNotificationAcknowledge).save({
     colleagueUUID,
-    acknowledgeEntityType: notification?.entityType,
-    acknowledgeEntityId: notification?.entityId,
+    acknowledgeEntityType: entityType,
+    acknowledgeEntityId: entityId,
   });
-  return notification;
 };
 
 export type { CepPayload };

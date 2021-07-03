@@ -148,7 +148,7 @@ CREATE TYPE ccms_trigger_event_enum AS ENUM (
 	'created',
 	'updated',
 	'deleted',
-	'published',
+	'published'
 	);
 
 

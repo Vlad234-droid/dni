@@ -56,6 +56,6 @@ api.get('/utils/type-orm-options', getTypeOrmConnectionOptionsMiddleware);
 api.post('/cms-events', handleCepHook);
 api.get('/notifications', getNotifications);
 api.get('/notifications/networks', getNetworkNotifications);
-api.post('/notifications/:notifUUID/acknowledge', acknowledgeNotification);
+api.post('/notifications/acknowledge', acknowledgeNotification);
 
 export { healthCheck, api };
