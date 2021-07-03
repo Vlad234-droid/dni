@@ -151,7 +151,7 @@ export const openIdConfig = ({
     /**
      * Paths that won't be part of token validation and refreshing
      */
-    ignoredPathsFragments: ['/api/notifications', '/api/cms-events'],
+    ignoredPathsFragments: [ '/api/cms-events' ],
 
     /**
      * In case of error, calls containg that path framgents won't result in redirect.
