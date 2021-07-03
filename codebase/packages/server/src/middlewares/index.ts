@@ -4,7 +4,6 @@ export * from './open-id';
 export * from './unless-paths';
 export * from './api';
 export * from './form-data';
-export * from './cms-auth';
 export * from './fake-login';
 export * from './fake-user-extractor';
 export * from './colleague-extractor';

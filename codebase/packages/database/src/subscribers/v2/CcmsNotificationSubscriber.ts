@@ -2,13 +2,28 @@ import { CcmsEntity, CcmsNotification, DniEntityTypeEnum } from '../../entities/
 import { EntitySubscriberInterface, EventSubscriber, getRepository, InsertEvent } from 'typeorm';
 
 interface CommonCcrmEntity {
+  id: number;
   slug: string;
+  title: string;
   created_at: Date;
   updated_at: Date;
   published_at: Date;
-  network_id?: number;
-  event_id?: number;
+  network?: CommonCcrmEntity;
+  event?: CommonCcrmEntity;
 }
+
+// TODO: temp function
+const slugify = (value: string) => {
+  return String(value)
+    .toString()
+    .replace(/^\s+|\s+$/g, '') // trim
+    .toLowerCase() // to lower case
+    .replace(/[^a-z0-9 -]/g, '') // remove invalid chars
+    .replace(/\s+/g, '-') // collapse whitespace and replace by -
+    .replace(/-+/g, '-') // collapse dashes
+    .replace(/^-+/, '') // trim - from start of text
+    .replace(/-+$/, ''); // trim - from end of text
+};
 
 @EventSubscriber()
 export class CcmsNotificationSubscriber implements EntitySubscriberInterface<CcmsNotification> {
@@ -32,47 +47,23 @@ export class CcmsNotificationSubscriber implements EntitySubscriberInterface<Ccm
     const ccrmEntityInstance = ccrmNotification.entityInstance! as CommonCcrmEntity;
 
     if (ccrmEntityInstance) {
-      ccrmEntity.slug = ccrmEntityInstance.slug;
-      ccrmEntity.entityCreatedAt = ccrmEntityInstance.created_at;
-      ccrmEntity.entityUpdatedAt = ccrmEntityInstance.updated_at;
+      ccrmEntity.slug = ccrmEntityInstance.slug || slugify(ccrmEntityInstance.title);
+      ccrmEntity.entityCreatedAt = ccrmEntityInstance.published_at;
+      ccrmEntity.entityUpdatedAt = ccrmEntityInstance.published_at;
       ccrmEntity.entityPublishedAt = ccrmEntityInstance.published_at;
 
-      ccrmEntity.parentEntityId = ccrmEntityInstance.event_id || ccrmEntityInstance.network_id;
-      ccrmEntity.parentEntityType = ccrmEntityInstance.event_id
-        ? DniEntityTypeEnum.EVENT
-        : ccrmEntityInstance.network_id
-        ? DniEntityTypeEnum.NETWORK
-        : undefined;
+      // TODO: create parent entity and notification
+      // ccrmEntity.parentEntityId = ccrmEntityInstance.event?.id || ccrmEntityInstance.network?.id;
+      // ccrmEntity.parentEntityType = ccrmEntityInstance.event?.id
+      //   ? DniEntityTypeEnum.EVENT
+      //   : ccrmEntityInstance.network?.id
+      //   ? DniEntityTypeEnum.NETWORK
+      //   : undefined;
     }
 
     ccrmEntity.notificationUUID = ccrmNotification.notificationUUID;
     ccrmEntity.notificationTriggerEvent = ccrmNotification.notificationTriggerEvent;
 
-    getRepository(CcmsEntity)
-      .createQueryBuilder()
-      .insert()
-      .values(ccrmEntity)
-      .onConflict(
-        `ON CONSTRAINT "c_entity__pk" ` +
-          `DO UPDATE ` +
-          `SET slug = :slug ` +
-          `  , entity_created_at = :entityCreatedAt ` +
-          `  , entity_updated_at = :entityUpdatedAt ` +
-          `  , entity_published_at = :entityPublishedAt ` +
-          `  , parent_entity_id = :parentEntityId ` +
-          `  , parent_entity_type = :parentEntityType ` +
-          `  , notification_uuid = :notificationUUID ` +
-          `  , notification_trigger_event = :notificationTriggerEvent ` +
-          `  , updated_at = now() `,
-      )
-      .setParameter('slug', ccrmEntity.slug)
-      .setParameter('entityCreatedAt', ccrmEntity.entityCreatedAt)
-      .setParameter('entityUpdatedAt', ccrmEntity.entityUpdatedAt)
-      .setParameter('entityPublishedAt', ccrmEntity.entityPublishedAt)
-      .setParameter('parentEntityId', ccrmEntity.parentEntityId)
-      .setParameter('parentEntityType', ccrmEntity.parentEntityType)
-      .setParameter('notificationUUID', ccrmEntity.notificationUUID)
-      .setParameter('notificationTriggerEvent', ccrmEntity.notificationTriggerEvent)
-      .execute();
+    getRepository(CcmsEntity).save(ccrmEntity);
   }
 }

@@ -2,6 +2,7 @@ enum CcmsTriggerEventEnum {
   CREATED = 'created',
   UPDATED = 'updated',
   DELETED = 'deleted',
+  PUBLISHED = 'published',
 }
 
 enum DniEntityTypeEnum {
