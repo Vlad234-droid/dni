@@ -1,39 +1,17 @@
 import { defineAPI } from '@energon/rest-api-definition';
 
 import { Event, EventApiParams, EventBody } from './types';
-import {
-  buildApiConsumer,
-  buildParams,
-  buildFetchClient,
-  buildFetchParams,
-} from '../utils';
+import { buildApiConsumer, buildParams, buildFetchClient, buildFetchParams } from '../utils';
 import { DniCmsApiContext, ApiInput } from '../types';
 
 export const cmsEventsApiDef = defineAPI((endpoint) => ({
-  getEventsCount: endpoint
-    .get('/events/count')
-    .params<EventApiParams>()
-    .response<number>()
-    .build(),
+  getEventsCount: endpoint.get('/events/count').params<EventApiParams>().response<number>().build(),
 
-  getEvent: endpoint
-    .get('/events/:id')
-    .params<Pick<EventApiParams, 'id'>>()
-    .response<Event>()
-    .build(),
+  getEvent: endpoint.get('/events/:id').params<Pick<EventApiParams, 'id'>>().response<Event>().build(),
 
-  getEvents: endpoint
-    .get('/events')
-    .params<EventApiParams>()
-    .response<Event[]>()
-    .build(),
+  getEvents: endpoint.get('/events').params<Omit<EventApiParams, 'id'>>().response<Event[]>().build(),
 
-  postEvent: endpoint
-    .post('/events')
-    .params<EventApiParams>()
-    .body<EventBody>()
-    .response<Event>()
-    .build(),
+  postEvent: endpoint.post('/events').params<EventApiParams>().body<EventBody>().response<Event>().build(),
 
   putEvent: endpoint
     .put('/events/:id')
@@ -42,11 +20,7 @@ export const cmsEventsApiDef = defineAPI((endpoint) => ({
     .response<Event>()
     .build(),
 
-  deleteEvent: endpoint
-    .delete('/events/:id')
-    .params<Pick<EventApiParams, 'id'>>()
-    .response<Event>()
-    .build(),
+  deleteEvent: endpoint.delete('/events/:id').params<Pick<EventApiParams, 'id'>>().response<Event>().build(),
 }));
 
 export const cmsEventsApiConnector = (ctx: DniCmsApiContext) => {
@@ -57,38 +31,19 @@ export const cmsEventsApiConnector = (ctx: DniCmsApiContext) => {
     getEvent: async ({ params, tenantkey }: ApiInput<EventApiParams>) =>
       apiConsumer.getEvent(buildParams(params, tenantkey)),
 
-    getEvents: ({ params, tenantkey }: ApiInput<EventApiParams>) =>
-      fetchClient<Event[]>(
-        cmsEventsApiDef.getEvents,
-        params,
-        buildFetchParams(tenantkey),
-      ),
+    getEvents: ({ params, tenantkey }: ApiInput<Omit<EventApiParams, 'id'>>) =>
+      fetchClient<Event[]>(cmsEventsApiDef.getEvents, params, buildFetchParams(tenantkey)),
 
-    getEventsCount: ({ params, tenantkey }: ApiInput<EventApiParams>) =>
-      fetchClient<number>(
-        cmsEventsApiDef.getEventsCount,
-        params,
-        buildFetchParams(tenantkey),
-      ),
+    getEventsCount: ({ params, tenantkey }: ApiInput<Omit<EventApiParams, 'id'>>) =>
+      fetchClient<number>(cmsEventsApiDef.getEventsCount, params, buildFetchParams(tenantkey)),
 
-    postEvent: async ({
-      params,
-      body,
-      tenantkey,
-    }: ApiInput<EventApiParams, EventBody>) =>
+    postEvent: async ({ params, body, tenantkey }: ApiInput<EventApiParams, EventBody>) =>
       apiConsumer.postEvent(buildParams(params, tenantkey, body!)),
 
-    putEvent: async ({
-      params,
-      body,
-      tenantkey,
-    }: ApiInput<EventApiParams, EventBody>) =>
+    putEvent: async ({ params, body, tenantkey }: ApiInput<EventApiParams, EventBody>) =>
       apiConsumer.putEvent(buildParams(params, tenantkey, body!)),
 
-    deleteEvent: ({
-      params,
-      tenantkey,
-    }: ApiInput<Pick<EventApiParams, 'id'>>) =>
+    deleteEvent: ({ params, tenantkey }: ApiInput<Pick<EventApiParams, 'id'>>) =>
       apiConsumer.deleteEvent(buildParams(params, tenantkey)),
   };
 };

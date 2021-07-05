@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { createTypeOrmConnection, getTypeOrmConnectionOptions, getSchema, getSchemaPrefix } from './utils';
+import { createTypeOrmConnection, getTypeOrmConnectionOptions, getSchema, getSchemaPrefix, slugify } from './utils';
 import { getManager, getRepository, Connection } from 'typeorm';
 
 createTypeOrmConnection()
@@ -13,4 +13,12 @@ createTypeOrmConnection()
 export * from './entities';
 export * from './subscribers';
 
-export { createTypeOrmConnection, getTypeOrmConnectionOptions, getManager, getRepository, getSchema, getSchemaPrefix };
+export {
+  createTypeOrmConnection,
+  getTypeOrmConnectionOptions,
+  getManager,
+  getRepository,
+  getSchema,
+  getSchemaPrefix,
+  slugify,
+};

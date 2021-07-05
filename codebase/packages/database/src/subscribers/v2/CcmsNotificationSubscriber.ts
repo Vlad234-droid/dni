@@ -1,5 +1,6 @@
 import { CcmsEntity, CcmsNotification, DniEntityTypeEnum } from '../../entities/v2';
 import { EntitySubscriberInterface, EventSubscriber, InsertEvent, EntityManager } from 'typeorm';
+import { slugify } from '../../utils';
 
 interface CommonCcrmEntity {
   id: number;
@@ -12,19 +13,6 @@ interface CommonCcrmEntity {
   event?: CommonCcrmEntity;
 }
 
-// TODO: temp function
-const slugify = (value: string) => {
-  return String(value)
-    .toString()
-    .replace(/^\s+|\s+$/g, '') // trim
-    .toLowerCase() // to lower case
-    .replace(/[^a-z0-9 -]/g, '') // remove invalid chars
-    .replace(/\s+/g, '-') // collapse whitespace and replace by -
-    .replace(/-+/g, '-') // collapse dashes
-    .replace(/^-+/, '') // trim - from start of text
-    .replace(/-+$/, ''); // trim - from end of text
-};
-
 @EventSubscriber()
 export class CcmsNotificationSubscriber implements EntitySubscriberInterface<CcmsNotification> {
   /**
@@ -35,12 +23,7 @@ export class CcmsNotificationSubscriber implements EntitySubscriberInterface<Ccm
   }
 
   async afterInsert(event: InsertEvent<CcmsNotification>) {
-    
-    await this.upsertCcrmEntity(
-      event.entity, 
-      event.manager, 
-      event.queryRunner.data.entityInstance
-      );
+    await this.upsertCcrmEntity(event.entity, event.manager, event.queryRunner.data.entityInstance);
   }
 
   async upsertCcrmEntity(ccrmNotification: CcmsNotification, manager: EntityManager, entityInstance: CommonCcrmEntity) {
@@ -65,9 +48,9 @@ export class CcmsNotificationSubscriber implements EntitySubscriberInterface<Ccm
           : entityInstance.network?.id
           ? DniEntityTypeEnum.NETWORK
           : undefined;
-        
+
         const ccrmParentEntity = new CcmsEntity();
-        
+
         ccrmParentEntity.entityId = parent.id;
         ccrmParentEntity.entityType = parentEntityType!;
         ccrmParentEntity.slug = parent?.slug || slugify(parent!.title);
