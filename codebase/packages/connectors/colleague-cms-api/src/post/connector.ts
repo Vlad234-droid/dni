@@ -54,39 +54,37 @@ export const cmsPostsApiConnector = (ctx: DniCmsApiContext) => {
   const fetchClient = buildFetchClient(ctx);
 
   return {
-    getPost: async ({ params, tenantkey }: ApiInput<PostApiParams>) =>
-      apiConsumer.getPost(buildParams(params, tenantkey)),
+    getPost: async ({ params }: ApiInput<PostApiParams>) =>
+      apiConsumer.getPost(buildParams(params)),
 
-    getPosts: ({ params, tenantkey }: ApiInput<PostApiParams>) =>
+    getPosts: ({ params }: ApiInput<PostApiParams>) =>
       fetchClient<Post[]>(
         cmsPostsApiDef.getPosts,
         params,
-        buildFetchParams(tenantkey),
+        buildFetchParams(),
       ),
 
-    getPostsCount: ({ params, tenantkey }: ApiInput<PostApiParams>) =>
+    getPostsCount: ({ params }: ApiInput<PostApiParams>) =>
       fetchClient<number>(
         cmsPostsApiDef.getPostsCount,
         params,
-        buildFetchParams(tenantkey),
+        buildFetchParams(),
       ),
 
     postPost: async ({
       params,
       body,
-      tenantkey,
     }: ApiInput<PostApiParams, PostBody>) =>
-      apiConsumer.postPost(buildParams(params, tenantkey, body!)),
+      apiConsumer.postPost(buildParams(params, body!)),
 
     putPost: async ({
       params,
       body,
-      tenantkey,
     }: ApiInput<PostApiParams, PostBody>) =>
-      apiConsumer.putPost(buildParams(params, tenantkey, body!)),
+      apiConsumer.putPost(buildParams(params, body!)),
 
-    deletePost: ({ params, tenantkey }: ApiInput<Pick<PostApiParams, 'id'>>) =>
-      apiConsumer.deletePost(buildParams(params, tenantkey)),
+    deletePost: ({ params }: ApiInput<Pick<PostApiParams, 'id'>>) =>
+      apiConsumer.deletePost(buildParams(params)),
   };
 };
 

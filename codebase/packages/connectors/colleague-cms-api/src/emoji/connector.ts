@@ -22,11 +22,11 @@ export const cmsEmojisApiConnector = (ctx: DniCmsApiContext) => {
   const apiConsumer = buildApiConsumer(ctx, cmsEmojisApiDef);
 
   return {
-    getEmoji: async ({ params, tenantkey }: ApiInput<EmojiApiParams>) =>
-      apiConsumer.getEmoji(buildParams(params, tenantkey)),
+    getEmoji: async ({ params }: ApiInput<EmojiApiParams>) =>
+      apiConsumer.getEmoji(buildParams(params)),
 
-    getEmojis: ({ params, tenantkey }: ApiInput<EmojiApiParams>) =>
-      apiConsumer.getEmojis(buildParams(params, tenantkey)),
+    getEmojis: ({ params }: ApiInput<EmojiApiParams>) =>
+      apiConsumer.getEmojis(buildParams(params)),
   };
 };
 

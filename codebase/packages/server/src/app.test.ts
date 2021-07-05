@@ -19,10 +19,8 @@ jest.mock('./middlewares', () => ({
 
 describe('Server run', () => {
   // Close the server after each test
-  afterEach(async () => {
-    if (server) {
-      await server.close();
-    }
+  afterEach(() => {
+    if (server) { server.close(); }
   });
 
   it('check static method was not called', () => {

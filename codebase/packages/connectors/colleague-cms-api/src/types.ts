@@ -1,10 +1,9 @@
 import { ConnectorContext } from '@energon-connectors/core';
 import { DateString } from './built-in';
 
-type DniCmsApiContext = Pick<
-  ConnectorContext,
-  'identityClientToken' | 'apiEnv' | 'markApiCall'
->;
+type DniCmsApiContext = 
+  Pick<ConnectorContext, 'identityClientToken' | 'apiEnv' | 'markApiCall'>;
+
 
 type DniCmsApiHeaders = {
   Authorization: () => string;
@@ -12,9 +11,9 @@ type DniCmsApiHeaders = {
 
 type ApiInput<T, U = unknown> = {
   params: T;
-  tenantkey: string;
   body?: U;
 };
+
 
 type BaseApiParams = {
   // filter _where
@@ -28,6 +27,7 @@ type BaseApiParams = {
   // sorting
   _sort?: 'created_at:desc' | 'created_at:asc';
 };
+
 
 type BaseType = {
   id: number;

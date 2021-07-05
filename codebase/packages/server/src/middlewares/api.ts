@@ -8,7 +8,6 @@ import {
   cmsOrganizationsApiConnector,
   cmsEmotionsApiConnector,
   cmsUploadApiConnector,
-  TENANT_KEY as tenantkey,
 } from '@dni-connectors/colleague-cms-api';
 
 import { contactApiConnector } from '@dni-connectors/contact-api';
@@ -33,230 +32,169 @@ const api = (requestCtx: ContextProvider<any>) =>
     getColleagueV2: ({ params }, ctx) => {
       return colleagueApiConnector(ctx).v2.getColleague({ params }).then(unsafelyUnpackResponseData);
     },
-    getColleaguesV2: ({ params }, ctx) => {
-      return colleagueApiConnector(ctx).v2.getColleagues({ params }).then(unsafelyUnpackResponseData);
+    getColleaguesV2: async ({ params }, ctx) => {
+      const res = await colleagueApiConnector(ctx).v2.getColleagues({ params });
+      return unsafelyUnpackResponseData(res);
     },
     // contact api
-    sendMessages: (payload, ctx) => {
-      return contactApiConnector(ctx).sendMessages(payload).then(unsafelyUnpackResponseData);
+    sendMessages: async (payload, ctx) => {
+      const res = await contactApiConnector(ctx).sendMessages(payload);
+      return unsafelyUnpackResponseData(res);
     },
-    getEmailAddresses: ({ params }, ctx) => {
-      return contactApiConnector(ctx).getEmailAddresses({ params }).then(unsafelyUnpackResponseData);
+    getEmailAddresses: async ({ params }, ctx) => {
+      const res = await contactApiConnector(ctx).getEmailAddresses({ params });
+      return unsafelyUnpackResponseData(res);
     },
-    updateEmailAddress: ({ params }, ctx) => {
-      return contactApiConnector(ctx).updateEmailAddress({ params }).then(unsafelyUnpackResponseData);
+    updateEmailAddress: async ({ params }, ctx) => {
+      const res = await contactApiConnector(ctx).updateEmailAddress({ params });
+      return unsafelyUnpackResponseData(res);
     },
     // Emojis
-    getEmoji: ({ params }, ctx) => {
-      return cmsEmojisApiConnector(ctx).getEmoji({ params, tenantkey }).then(unsafelyUnpackResponseData);
+    getEmoji: async ({ params }, ctx) => {
+      const res = await cmsEmojisApiConnector(ctx).getEmoji({ params });
+      return unsafelyUnpackResponseData(res);
     },
-    getEmojis: ({ params }, ctx) => {
-      return cmsEmojisApiConnector(ctx)
-        .getEmojis({
-          params,
-          tenantkey,
-        })
-        .then(unsafelyUnpackResponseData);
+    getEmojis: async ({ params }, ctx) => {
+      const res = await cmsEmojisApiConnector(ctx).getEmojis({ params });
+      return unsafelyUnpackResponseData(res);
     },
 
     // Emotions
-    postEmotion: ({ params, body }, ctx) => {
-      return cmsEmotionsApiConnector(ctx)
-        .postEmotion({
-          params,
-          tenantkey,
-          body,
-        })
-        .then(unsafelyUnpackResponseData);
+    postEmotion: async ({ params, body }, ctx) => {
+      const res = await cmsEmotionsApiConnector(ctx).postEmotion({ params, body });
+      return unsafelyUnpackResponseData(res);
     },
-    putEmotion: ({ params, body }, ctx) => {
-      return cmsEmotionsApiConnector(ctx)
-        .putEmotion({
-          params,
-          tenantkey,
-          body,
-        })
-        .then(unsafelyUnpackResponseData);
+    putEmotion: async ({ params, body }, ctx) => {
+      const res = await cmsEmotionsApiConnector(ctx).putEmotion({ params, body });
+      return unsafelyUnpackResponseData(res);
     },
-    deleteEmotion: ({ params }, ctx) => {
-      return cmsEmotionsApiConnector(ctx).deleteEmotion({ params, tenantkey }).then(unsafelyUnpackResponseData);
+    deleteEmotion: async ({ params }, ctx) => {
+      const res = await cmsEmotionsApiConnector(ctx).deleteEmotion({ params });
+      return unsafelyUnpackResponseData(res);
     },
 
     // Posts
-    getPost: ({ params }, ctx) => {
-      return cmsPostsApiConnector(ctx).getPost({ params, tenantkey }).then(unsafelyUnpackResponseData);
+    getPost: async ({ params }, ctx) => {
+      const res = await cmsPostsApiConnector(ctx).getPost({ params });
+      return unsafelyUnpackResponseData(res);
     },
-    getPosts: ({ params }, ctx) => {
-      return cmsPostsApiConnector(ctx)
-        .getPosts({
-          params,
-          tenantkey,
-        })
-        .then(unsafelyUnpackResponseData);
+    getPosts: async ({ params }, ctx) => {
+      const res = await cmsPostsApiConnector(ctx).getPosts({ params });
+      return unsafelyUnpackResponseData(res);
     },
-    getPostsCount: ({ params }, ctx) => {
-      return cmsPostsApiConnector(ctx).getPostsCount({ params, tenantkey }).then(unsafelyUnpackResponseData);
+    getPostsCount: async ({ params }, ctx) => {
+      const res = await cmsPostsApiConnector(ctx).getPostsCount({ params });
+      return unsafelyUnpackResponseData(res);
     },
-    postPost: ({ params, body }, ctx) => {
-      return cmsPostsApiConnector(ctx)
-        .postPost({
-          params,
-          tenantkey,
-          body,
-        })
-        .then(unsafelyUnpackResponseData);
+    postPost: async ({ params, body }, ctx) => {
+      const res = await cmsPostsApiConnector(ctx).postPost({ params, body });
+      return unsafelyUnpackResponseData(res);
     },
-    putPost: ({ params, body }, ctx) => {
-      return cmsPostsApiConnector(ctx)
-        .putPost({
-          params,
-          tenantkey,
-          body,
-        })
-        .then(unsafelyUnpackResponseData);
+    putPost: async ({ params, body }, ctx) => {
+      const res = await cmsPostsApiConnector(ctx).putPost({ params, body });
+      return unsafelyUnpackResponseData(res);
     },
-    deletePost: ({ params }, ctx) => {
-      return cmsPostsApiConnector(ctx).deletePost({ params, tenantkey }).then(unsafelyUnpackResponseData);
+    deletePost: async ({ params }, ctx) => {
+      const res = await cmsPostsApiConnector(ctx).deletePost({ params });
+      return unsafelyUnpackResponseData(res);
     },
 
     // Events
-    getEvent: ({ params }, ctx) => {
-      return cmsEventsApiConnector(ctx).getEvent({ params, tenantkey }).then(unsafelyUnpackResponseData);
+    getEvent: async ({ params }, ctx) => {
+      const res = await cmsEventsApiConnector(ctx).getEvent({ params });
+      return unsafelyUnpackResponseData(res);
     },
-    getEvents: ({ params }, ctx) => {
-      return cmsEventsApiConnector(ctx)
-        .getEvents({
-          params,
-          tenantkey,
-        })
-        .then(unsafelyUnpackResponseData);
+    getEvents: async ({ params }, ctx) => {
+      const res = await cmsEventsApiConnector(ctx).getEvents({ params });
+      return unsafelyUnpackResponseData(res);
     },
-    getEventsCount: ({ params }, ctx) => {
-      return cmsEventsApiConnector(ctx).getEventsCount({ params, tenantkey }).then(unsafelyUnpackResponseData);
+    getEventsCount: async ({ params }, ctx) => {
+      const res = await cmsEventsApiConnector(ctx).getEventsCount({ params });
+      return unsafelyUnpackResponseData(res);
     },
-    postEvent: ({ params, body }, ctx) => {
-      return cmsEventsApiConnector(ctx)
-        .postEvent({
-          params,
-          tenantkey,
-          body,
-        })
-        .then(unsafelyUnpackResponseData);
+    postEvent: async ({ params, body }, ctx) => {
+      const res = await cmsEventsApiConnector(ctx).postEvent({ params, body });
+      return unsafelyUnpackResponseData(res);
     },
-    putEvent: ({ params, body }, ctx) => {
-      return cmsEventsApiConnector(ctx)
-        .putEvent({
-          params,
-          tenantkey,
-          body,
-        })
-        .then(unsafelyUnpackResponseData);
+    putEvent: async ({ params, body }, ctx) => {
+      const res = await cmsEventsApiConnector(ctx).putEvent({ params, body });
+      return unsafelyUnpackResponseData(res);
     },
-    deleteEvent: ({ params }, ctx) => {
-      return cmsEventsApiConnector(ctx).deleteEvent({ params, tenantkey }).then(unsafelyUnpackResponseData);
+    deleteEvent: async ({ params }, ctx) => {
+      const res = await cmsEventsApiConnector(ctx).deleteEvent({ params });
+      return unsafelyUnpackResponseData(res);
     },
 
     // Networks
-    getNetwork: ({ params }, ctx) => {
-      return cmsNetworksApiConnector(ctx).getNetwork({ params, tenantkey }).then(unsafelyUnpackResponseData);
+    getNetwork: async ({ params }, ctx) => {
+      const res = await cmsNetworksApiConnector(ctx).getNetwork({ params });
+      return unsafelyUnpackResponseData(res);
     },
-    getNetworks: ({ params }, ctx) => {
-      return cmsNetworksApiConnector(ctx)
-        .getNetworks({
-          params,
-          tenantkey,
-        })
-        .then(unsafelyUnpackResponseData);
+    getNetworks: async ({ params }, ctx) => {
+      const res = await cmsNetworksApiConnector(ctx).getNetworks({ params });
+      return unsafelyUnpackResponseData(res);
     },
-    getNetworksCount: ({ params }, ctx) => {
-      return cmsNetworksApiConnector(ctx).getNetworksCount({ params, tenantkey }).then(unsafelyUnpackResponseData);
+    getNetworksCount: async ({ params }, ctx) => {
+      const res = await cmsNetworksApiConnector(ctx).getNetworksCount({ params });
+      return unsafelyUnpackResponseData(res);
     },
-    postNetwork: ({ params, body }, ctx) => {
-      return cmsNetworksApiConnector(ctx)
-        .postNetwork({
-          params,
-          tenantkey,
-          body,
-        })
-        .then(unsafelyUnpackResponseData);
+    postNetwork: async ({ params, body }, ctx) => {
+      const res = await cmsNetworksApiConnector(ctx).postNetwork({ params, body });
+      return unsafelyUnpackResponseData(res);
     },
-    putNetwork: ({ params, body }, ctx) => {
-      return cmsNetworksApiConnector(ctx)
-        .putNetwork({
-          params,
-          tenantkey,
-          body,
-        })
-        .then(unsafelyUnpackResponseData);
+    putNetwork: async ({ params, body }, ctx) => {
+      const res = await cmsNetworksApiConnector(ctx).putNetwork({ params, body });
+      return unsafelyUnpackResponseData(res);
     },
-    deleteNetwork: ({ params }, ctx) => {
-      return cmsNetworksApiConnector(ctx).deleteNetwork({ params, tenantkey }).then(unsafelyUnpackResponseData);
+    deleteNetwork: async ({ params }, ctx) => {
+      const res = await cmsNetworksApiConnector(ctx).deleteNetwork({ params });
+      return unsafelyUnpackResponseData(res);
     },
 
     // Routing
-    getRoutingConfig: (_, ctx) => {
-      return cmsRoutingApiConnector(ctx).getRoutingConfig(tenantkey).then(unsafelyUnpackResponseData);
+    getRoutingConfig: async (_, ctx) => {
+      const res = await cmsRoutingApiConnector(ctx).getRoutingConfig();
+      return unsafelyUnpackResponseData(res);
     },
 
     // Organizations
-    getOrganization: ({ params }, ctx) => {
-      return cmsOrganizationsApiConnector(ctx).getOrganization({ params, tenantkey }).then(unsafelyUnpackResponseData);
+    getOrganization: async ({ params }, ctx) => {
+      const res = await cmsOrganizationsApiConnector(ctx).getOrganization({ params });
+      return unsafelyUnpackResponseData(res);
     },
-    getOrganizations: ({ params }, ctx) => {
-      return cmsOrganizationsApiConnector(ctx)
-        .getOrganizations({
-          params,
-          tenantkey,
-        })
-        .then(unsafelyUnpackResponseData);
+    getOrganizations: async ({ params }, ctx) => {
+      const res = await cmsOrganizationsApiConnector(ctx).getOrganizations({ params });
+      return unsafelyUnpackResponseData(res);
     },
-    postOrganization: ({ params, body }, ctx) => {
-      return cmsOrganizationsApiConnector(ctx)
-        .postOrganization({
-          params,
-          tenantkey,
-          body,
-        })
-        .then(unsafelyUnpackResponseData);
+    postOrganization: async ({ params, body }, ctx) => {
+      const res = await cmsOrganizationsApiConnector(ctx).postOrganization({ params, body });
+      return unsafelyUnpackResponseData(res);
     },
-    putOrganization: ({ params, body }, ctx) => {
-      return cmsOrganizationsApiConnector(ctx)
-        .putOrganization({
-          params,
-          tenantkey,
-          body,
-        })
-        .then(unsafelyUnpackResponseData);
+    putOrganization: async ({ params, body }, ctx) => {
+      const res = await cmsOrganizationsApiConnector(ctx).putOrganization({ params, body });
+      return unsafelyUnpackResponseData(res);
     },
-    deleteOrganization: ({ params }, ctx) => {
-      return cmsOrganizationsApiConnector(ctx)
-        .deleteOrganization({ params, tenantkey })
-        .then(unsafelyUnpackResponseData);
+    deleteOrganization: async ({ params }, ctx) => {
+      const res = await cmsOrganizationsApiConnector(ctx).deleteOrganization({ params });
+      return unsafelyUnpackResponseData(res);
     },
 
     // Upload
-    getFile: ({ params }, ctx) => {
-      return cmsUploadApiConnector(ctx).getFile({ params, tenantkey }).then(unsafelyUnpackResponseData);
+    getFile: async ({ params }, ctx) => {
+      const res = await cmsUploadApiConnector(ctx).getFile({ params });
+      return unsafelyUnpackResponseData(res);
     },
-    getFiles: ({ params }, ctx) => {
-      return cmsUploadApiConnector(ctx)
-        .getFiles({
-          params,
-          tenantkey,
-        })
-        .then(unsafelyUnpackResponseData);
+    getFiles: async ({ params }, ctx) => {
+      const res = await cmsUploadApiConnector(ctx).getFiles({ params });
+      return unsafelyUnpackResponseData(res);
     },
-    postFiles: ({ params, body }, ctx) => {
-      return cmsUploadApiConnector(ctx)
-        .postFiles({
-          params,
-          tenantkey,
-          body,
-        })
-        .then(unsafelyUnpackResponseData);
+    postFiles: async ({ params, body }, ctx) => {
+      const res = await cmsUploadApiConnector(ctx).postFiles({ params, body });
+      return unsafelyUnpackResponseData(res);
     },
-    deleteFile: ({ params }, ctx) => {
-      return cmsUploadApiConnector(ctx).deleteFile({ params, tenantkey }).then(unsafelyUnpackResponseData);
+    deleteFile: async ({ params }, ctx) => {
+      const res = await cmsUploadApiConnector(ctx).deleteFile({ params });
+      return unsafelyUnpackResponseData(res);
     },
   });
 

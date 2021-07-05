@@ -11,8 +11,9 @@ import {
   Post,
   cmsPostsApiConnector,
   cmsEventsApiConnector,
-  cmsNetworksApiConnector
+  cmsNetworksApiConnector,
 } from '@dni-connectors/colleague-cms-api';
+
 
 import { prepareContext, RequestCtx } from './context';
 import { Request, Response } from 'express';

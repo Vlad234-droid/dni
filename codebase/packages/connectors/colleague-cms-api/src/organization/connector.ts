@@ -44,35 +44,30 @@ export const cmsOrganizationsApiConnector = (ctx: DniCmsApiContext) => {
   return {
     getOrganization: async ({
       params,
-      tenantkey,
     }: ApiInput<OrganizationApiParams>) =>
-      apiConsumer.getOrganization(buildParams(params, tenantkey)),
+      apiConsumer.getOrganization(buildParams(params)),
 
     getOrganizations: ({
       params,
-      tenantkey,
     }: ApiInput<Omit<OrganizationApiParams, 'id'>>) =>
-      apiConsumer.getOrganizations(buildParams(params, tenantkey)),
+      apiConsumer.getOrganizations(buildParams(params)),
 
     postOrganization: async ({
       params,
       body,
-      tenantkey,
     }: ApiInput<OrganizationApiParams, OrganizationBody>) =>
-      apiConsumer.postOrganization(buildParams(params, tenantkey, body!)),
+      apiConsumer.postOrganization(buildParams(params, body!)),
 
     putOrganization: async ({
       params,
       body,
-      tenantkey,
     }: ApiInput<OrganizationApiParams, OrganizationBody>) =>
-      apiConsumer.putOrganization(buildParams(params, tenantkey, body!)),
+      apiConsumer.putOrganization(buildParams(params, body!)),
 
     deleteOrganization: ({
       params,
-      tenantkey,
     }: ApiInput<Pick<OrganizationApiParams, 'id'>>) =>
-      apiConsumer.deleteOrganization(buildParams(params, tenantkey)),
+      apiConsumer.deleteOrganization(buildParams(params)),
   };
 };
 

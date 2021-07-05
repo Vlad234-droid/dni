@@ -41,17 +41,17 @@ export const cmsUploadApiConnector = (ctx: DniCmsApiContext) => {
   const fetchClient = buildFetchClient(ctx);
 
   return {
-    getFile: async ({ params, tenantkey }: ApiInput<UploadApiParams>) =>
-      apiConsumer.getFile(buildParams(params, tenantkey)),
+    getFile: async ({ params }: ApiInput<UploadApiParams>) =>
+      apiConsumer.getFile(buildParams(params)),
 
-    getFiles: ({ params, tenantkey }: ApiInput<UploadApiParams>) =>
-      apiConsumer.getFiles(buildParams(params, tenantkey)),
+    getFiles: ({ params }: ApiInput<UploadApiParams>) =>
+      apiConsumer.getFiles(buildParams(params)),
 
-    postFiles: ({ body, tenantkey }: ApiInput<UploadApiParams, UploadBody>) =>
+    postFiles: ({ body }: ApiInput<UploadApiParams, UploadBody>) =>
       fetchClient<UploadFile[]>(
         cmsUploadApiDef.postFiles,
         {},
-        buildFetchParams(tenantkey, body, {
+        buildFetchParams(body, {
           headers: {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             'Content-Type': (body as any).getHeaders()['content-type'],
@@ -61,9 +61,8 @@ export const cmsUploadApiConnector = (ctx: DniCmsApiContext) => {
 
     deleteFile: ({
       params,
-      tenantkey,
     }: ApiInput<Pick<UploadApiParams, 'id'>>) =>
-      apiConsumer.deleteFile(buildParams(params, tenantkey)),
+      apiConsumer.deleteFile(buildParams(params)),
   };
 };
 

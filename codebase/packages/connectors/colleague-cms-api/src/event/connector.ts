@@ -54,42 +54,39 @@ export const cmsEventsApiConnector = (ctx: DniCmsApiContext) => {
   const fetchClient = buildFetchClient(ctx);
 
   return {
-    getEvent: async ({ params, tenantkey }: ApiInput<EventApiParams>) =>
-      apiConsumer.getEvent(buildParams(params, tenantkey)),
+    getEvent: async ({ params }: ApiInput<EventApiParams>) =>
+      apiConsumer.getEvent(buildParams(params)),
 
-    getEvents: ({ params, tenantkey }: ApiInput<EventApiParams>) =>
+    getEvents: ({ params }: ApiInput<EventApiParams>) =>
       fetchClient<Event[]>(
         cmsEventsApiDef.getEvents,
         params,
-        buildFetchParams(tenantkey),
+        buildFetchParams(),
       ),
 
-    getEventsCount: ({ params, tenantkey }: ApiInput<EventApiParams>) =>
+    getEventsCount: ({ params }: ApiInput<EventApiParams>) =>
       fetchClient<number>(
         cmsEventsApiDef.getEventsCount,
         params,
-        buildFetchParams(tenantkey),
+        buildFetchParams(),
       ),
 
     postEvent: async ({
       params,
       body,
-      tenantkey,
     }: ApiInput<EventApiParams, EventBody>) =>
-      apiConsumer.postEvent(buildParams(params, tenantkey, body!)),
+      apiConsumer.postEvent(buildParams(params, body!)),
 
     putEvent: async ({
       params,
       body,
-      tenantkey,
     }: ApiInput<EventApiParams, EventBody>) =>
-      apiConsumer.putEvent(buildParams(params, tenantkey, body!)),
+      apiConsumer.putEvent(buildParams(params, body!)),
 
     deleteEvent: ({
       params,
-      tenantkey,
     }: ApiInput<Pick<EventApiParams, 'id'>>) =>
-      apiConsumer.deleteEvent(buildParams(params, tenantkey)),
+      apiConsumer.deleteEvent(buildParams(params)),
   };
 };
 

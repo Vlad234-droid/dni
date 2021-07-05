@@ -54,42 +54,39 @@ export const cmsNetworksApiConnector = (ctx: DniCmsApiContext) => {
   const fetchClient = buildFetchClient(ctx);
 
   return {
-    getNetwork: async ({ params, tenantkey }: ApiInput<NetworkApiParams>) =>
-      apiConsumer.getNetwork(buildParams(params, tenantkey)),
+    getNetwork: async ({ params }: ApiInput<NetworkApiParams>) =>
+      apiConsumer.getNetwork(buildParams(params)),
 
-    getNetworks: ({ params, tenantkey }: ApiInput<NetworkApiParams>) =>
+    getNetworks: ({ params }: ApiInput<NetworkApiParams>) =>
       fetchClient<Network[]>(
         cmsNetworksApiDef.getNetworks,
         params,
-        buildFetchParams(tenantkey),
+        buildFetchParams(),
       ),
 
-    getNetworksCount: ({ params, tenantkey }: ApiInput<NetworkApiParams>) =>
+    getNetworksCount: ({ params }: ApiInput<NetworkApiParams>) =>
       fetchClient<number>(
         cmsNetworksApiDef.getNetworksCount,
         params,
-        buildFetchParams(tenantkey),
+        buildFetchParams(),
       ),
 
     postNetwork: async ({
       params,
       body,
-      tenantkey,
     }: ApiInput<NetworkApiParams, NetworkBody>) =>
-      apiConsumer.postNetwork(buildParams(params, tenantkey, body!)),
+      apiConsumer.postNetwork(buildParams(params, body!)),
 
     putNetwork: async ({
       params,
       body,
-      tenantkey,
     }: ApiInput<NetworkApiParams, NetworkBody>) =>
-      apiConsumer.putNetwork(buildParams(params, tenantkey, body!)),
+      apiConsumer.putNetwork(buildParams(params, body!)),
 
     deleteNetwork: ({
       params,
-      tenantkey,
     }: ApiInput<Pick<NetworkApiParams, 'id'>>) =>
-      apiConsumer.deleteNetwork(buildParams(params, tenantkey)),
+      apiConsumer.deleteNetwork(buildParams(params)),
   };
 };
 

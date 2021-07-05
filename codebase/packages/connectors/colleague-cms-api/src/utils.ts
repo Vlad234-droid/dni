@@ -4,7 +4,7 @@ import { ApiDefinition, EndpointDefinition } from '@energon/rest-api-definition'
 import qs from 'qs';
 import merge from 'lodash.merge';
 
-import { DNI_CMS_API_URLS } from './config';
+import { COLLEAGUE_CMS_API_URLS, COLLEAGUE_CMS_TENANT_KEY } from './config';
 import { DniCmsApiContext } from './types';
 import { SimpleFetchClient } from '@energon/fetch-client';
 
@@ -14,10 +14,12 @@ const buildApiConsumer = <T extends ApiDefinition>(ctx: DniCmsApiContext, apiDef
 };
 
 function buildClient(ctx: DniCmsApiContext): SimpleFetchClient {
-  const baseUrl = process.env.COLLEAGUE_CMS_URL || resolveBaseUrl(DNI_CMS_API_URLS, ctx);
+  const baseUrl = process.env.COLLEAGUE_CMS_URL || resolveBaseUrl(COLLEAGUE_CMS_API_URLS, ctx);
+  const tenantkey = process.env.COLLEAGUE_CMS_TENANT_KEY || COLLEAGUE_CMS_TENANT_KEY;
 
   const headers = {
     Auth: () => `Bearer ${ctx.identityClientToken()}`,
+    tenantkey,
   };
 
   return fetchClient(baseUrl, headers, ctx);
@@ -25,24 +27,20 @@ function buildClient(ctx: DniCmsApiContext): SimpleFetchClient {
 
 const buildParams = <T, U = unknown>(
   params: T,
-  tenantkey: string,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   body: U = undefined as any,
 ) => ({
   params,
-  fetchOpts: { headers: { tenantkey } },
   body,
 });
 
 const buildFetchParams = <U = unknown>(
-  tenantkey: string,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   body: U = undefined as any,
   fetchParams = {},
 ) =>
   merge(
     {
-      headers: { tenantkey },
       body,
     },
     fetchParams,
