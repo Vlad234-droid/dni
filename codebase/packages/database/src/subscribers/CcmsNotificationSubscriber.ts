@@ -1,4 +1,4 @@
-import { CcmsEntity, CcmsNotification, DniEntityTypeEnum } from '../../entities/v2';
+import { CcmsEntity, CcmsNotification, DniEntityTypeEnum } from '../entities';
 import { EntitySubscriberInterface, EventSubscriber, InsertEvent, EntityManager } from 'typeorm';
 
 interface CommonCcrmEntity {
@@ -35,12 +35,11 @@ export class CcmsNotificationSubscriber implements EntitySubscriberInterface<Ccm
   }
 
   async afterInsert(event: InsertEvent<CcmsNotification>) {
-    
-    await this.upsertCcrmEntity(
-      event.entity, 
-      event.manager, 
-      event.queryRunner.data.entityInstance
-      );
+    console.log(` *** 111 ***`);
+
+    await this.upsertCcrmEntity(event.entity, event.manager, event.queryRunner.data.entityInstance);
+
+    console.log(` *** 222 ***`);
   }
 
   async upsertCcrmEntity(ccrmNotification: CcmsNotification, manager: EntityManager, entityInstance: CommonCcrmEntity) {
@@ -65,9 +64,9 @@ export class CcmsNotificationSubscriber implements EntitySubscriberInterface<Ccm
           : entityInstance.network?.id
           ? DniEntityTypeEnum.NETWORK
           : undefined;
-        
+
         const ccrmParentEntity = new CcmsEntity();
-        
+
         ccrmParentEntity.entityId = parent.id;
         ccrmParentEntity.entityType = parentEntityType!;
         ccrmParentEntity.slug = parent?.slug || slugify(parent!.title);
