@@ -9,8 +9,9 @@ import {
   // employee-events
   addEventToEmployee,
   deleteEventFromEmployee,
+  // ccrm-events
+  consumeCepEvent,
   // notification
-  handleCepHook,
   getNotifications,
   getNetworkNotifications,
   acknowledgeNotification,
@@ -30,9 +31,10 @@ import {
 
 // controllers
 const healthCheck = express.Router();
-const api = express.Router();
 
 healthCheck.get('/_status', (_: Request, res: Response) => res.sendStatus(200));
+
+const api = express.Router();
 
 api.get('/employees/profile', getProfile);
 
@@ -57,6 +59,6 @@ api.get('/notifications', getNotifications);
 api.get('/notifications/networks', getNetworkNotifications);
 api.post('/notifications/acknowledge', acknowledgeNotification);
 
-api.post('/cms-events', handleCepHook);
+api.post('/cms-events', consumeCepEvent);
 
 export { healthCheck, api };

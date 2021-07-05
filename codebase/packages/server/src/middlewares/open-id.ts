@@ -7,6 +7,7 @@ import {
   LoggerEvent,
   OpenIdUserInfo,
 } from '@energon/onelogin';
+
 import cookieParser from 'cookie-parser';
 import { isPROD } from '../config/env';
 import { defaultConfig } from '../config/default';
