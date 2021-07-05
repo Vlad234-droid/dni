@@ -30,6 +30,10 @@ export enum Endpoint {
   REPORT_PRINT_PDF = '/reports/print-pdf',
   // common
   COMMON_UPLOAD = '/upload',
+  // notifications
+  NOTIFICATIONS = '/notifications',
+  NOTIFICATIONS_NETWORKS = '/notifications/networks',
+  NOTIFICATIONS_ACKNOWLEDGE = '/notifications/acknowledge',
 }
 
 export default (httpClient: AxiosInstance) => ({
@@ -75,5 +79,10 @@ export default (httpClient: AxiosInstance) => ({
       httpClient.post<Blob>(Endpoint.REPORT_PRINT_PDF, data, {
         responseType: 'blob',
       }),
+  },
+  notifications: {
+    fetchAll: <T>() => httpClient.get<T>(Endpoint.NOTIFICATIONS),
+    fetchAllGroupByNetwork: <T>() => httpClient.get<T>(Endpoint.NOTIFICATIONS_NETWORKS),
+    acknowledge: <T>(data: Config = {}) => httpClient.post<T>(Endpoint.NOTIFICATIONS_ACKNOWLEDGE, data),
   },
 });

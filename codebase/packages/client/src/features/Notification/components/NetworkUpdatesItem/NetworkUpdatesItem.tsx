@@ -1,28 +1,22 @@
 import React, { FC } from 'react';
-import { Dictionary } from '@reduxjs/toolkit';
 import Icon from '@beans/icon';
 
 import { Wrapper, Avatar, Name, Count } from './styled';
-import { Id, NotificationView } from '../../config/types';
 
-interface NetworkUpdateItemProps {
-  id: Id;
+type UpdateItem = {
   href: string;
   name: string;
   avatar: string;
-  notifications: {
-    ids: Id[];
-    entities: Dictionary<NotificationView>;
-  };
-}
+  count: number;
+};
 
-const networkUpdatesItemTestId = 'network-updates-item-test-id';
+type Props = UpdateItem;
 
-const NetworkUpdateItem: FC<NetworkUpdateItemProps> = ({ href, name, avatar, notifications }) => {
-  const count = notifications.ids.length;
+const NETWORK_UPDATES_ITEM_TEST_ID = 'network-updates-item-test-id';
 
+const NetworkUpdateItem: FC<Props> = ({ href, name, avatar, count }) => {
   return (
-    <Wrapper to={href} data-testid={networkUpdatesItemTestId}>
+    <Wrapper to={href} data-testid={NETWORK_UPDATES_ITEM_TEST_ID}>
       <Avatar avatar={avatar} />
       <Name>{name}</Name>
       {Boolean(count) && (
@@ -35,5 +29,8 @@ const NetworkUpdateItem: FC<NetworkUpdateItemProps> = ({ href, name, avatar, not
   );
 };
 
+export { NETWORK_UPDATES_ITEM_TEST_ID };
+
+export type { UpdateItem };
+
 export default NetworkUpdateItem;
-export { networkUpdatesItemTestId };

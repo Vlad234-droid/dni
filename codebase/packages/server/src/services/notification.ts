@@ -44,7 +44,9 @@ const handleCepRequest = async (req: Request<{}, CepPayload>, res: Response) => 
   notification.entityUpdatedAt = new Date(cmsEntity.published_at);
 
   // 3. store notification into the db
-  getManager().getRepository(CcmsNotification).save(notification, { data: { entityInstance : cmsEntity } });
+  getManager()
+    .getRepository(CcmsNotification)
+    .save(notification, { data: { entityInstance: cmsEntity } });
 };
 
 const analyzeEntity = async (payload: CepPayload, ctx: RequestCtx) => {
@@ -72,17 +74,18 @@ const findNotifications = (colleagueUUID: string) => {
   const schemaPrefix = getSchemaPrefix();
   return getManager().connection.query(
     `SELECT
-      colleague_uuid, 
       entity_id,
       entity_type,
-      root_ancestor_id,
-      root_ancestor_type
+      root_ancestor_id parent_id,
+      root_ancestor_type parent_type,
+      notified_at created_at
     FROM ${schemaPrefix}fn_get_dni_user_notification_list(
       $1::uuid,
-      ARRAY['event'::${schemaPrefix}dni_entity_type_enum, 'post'::${schemaPrefix}dni_entity_type_enum]::${schemaPrefix}dni_entity_type_enum[],
+      ARRAY['post'::${schemaPrefix}dni_entity_type_enum]::${schemaPrefix}dni_entity_type_enum[],
       ARRAY['network'::${schemaPrefix}dni_entity_type_enum, 'event'::${schemaPrefix}dni_entity_type_enum]::${schemaPrefix}dni_entity_type_enum[],
       TRUE::boolean
-    )`,
+    )
+    ORDER BY notified_at DESC`,
     [colleagueUUID],
   );
 };
@@ -91,11 +94,11 @@ const findNetworkNotifications = (colleagueUUID: string) => {
   const schemaPrefix = getSchemaPrefix();
   return getManager().connection.query(
     `SELECT
-      colleague_uuid uuid, 
       entity_type,
-      root_ancestor_id, 
-      root_ancestor_type, 
-      count(*) as entity_count
+      root_ancestor_id parent_id,
+      root_ancestor_type parent_type,
+      COUNT(*) as count,
+      ARRAY_AGG(entity_id) AS entities_ids
     FROM ${schemaPrefix}fn_get_dni_user_notification_list(
       $1::uuid,
       ARRAY['post'::${schemaPrefix}dni_entity_type_enum]::${schemaPrefix}dni_entity_type_enum[],

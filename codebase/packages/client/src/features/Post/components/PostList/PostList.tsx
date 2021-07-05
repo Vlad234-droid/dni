@@ -10,6 +10,7 @@ import useDispatch from 'hooks/useDispatch';
 import useStore from 'hooks/useStore';
 import { FilterPayload } from 'types/payload';
 import { EmptyContainer, Error, Spinner } from 'features/Common';
+import { useNotificationContext, EntityType } from 'features/Notification';
 import { DEFAULT_PAGINATION } from 'config/constants';
 import { useScrollContainer } from 'context/ScrollContainerContext';
 import Loading from 'types/loading';
@@ -66,6 +67,12 @@ const PostList: FC<Props> = ({ entityId, filter = ALL }) => {
   const [filters, setFilters] = useState<Filters>(
     filter == ALL ? getAllFilterPayload(networks, events) : getFilterPayload(filter, entityId),
   );
+
+  const { acknowledge } = useNotificationContext();
+
+  useEffect(() => {
+    posts.forEach((post) => acknowledge({ entityId: post.id, entityType: EntityType.POST }));
+  }, [posts]);
 
   const loadPosts = useCallback(
     (filters: Filters) => {

@@ -36,7 +36,7 @@ const Description = styled.div`
 
   ${Media.small_desktop`
      margin-right: 22px;
-     font-size: 28px;
+     font-size: 22px;
      line-height: 40px;
   `}
 `;

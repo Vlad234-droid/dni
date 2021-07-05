@@ -7,9 +7,7 @@ import { eventsAdapter } from './slice';
 import serializer from './serializer';
 import Event from '../config/types';
 
-const eventsSelectors = eventsAdapter.getSelectors(
-  (state: RootState) => state.events,
-);
+const eventsSelectors = eventsAdapter.getSelectors((state: RootState) => state.events);
 
 const [selectAll, selectById] = getEntitySelectors(eventsSelectors);
 
@@ -20,7 +18,14 @@ const byIdSelector = (id: Event['id']) =>
   );
 
 const listSelector = createSelector(
-  (state: RootState) => selectAll(state).map((event) => serializer(event)!),
+  (state: RootState, events?: number[]) =>
+    selectAll(state)
+      .filter((item) => {
+        if (!events) return item;
+
+        return events.includes(item.id);
+      })
+      .map((event) => serializer(event)!),
   (events) => events,
 );
 

@@ -15,7 +15,7 @@ const rootReducer = combineReducers({
   posts: postReducer,
   toaster: toasterReducer,
   reports: reportsReducer,
-  notification: notificationReducer,
+  notifications: notificationReducer,
   // TODO: add other reducers
 });
 

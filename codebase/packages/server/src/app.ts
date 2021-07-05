@@ -43,13 +43,6 @@ const startServer = async () => {
     console.log(`Current build environment: ${config.buildEnvironment}`);
     console.log(`Current infrastructure environment: ${config.environment}`);
 
-    // // test
-    // const tpx = 'UK45006148';
-    // const ctx = await prepareContext();
-    // const connector = colleagueApiConnector(ctx);
-    // const response = await connector.v2.getColleagues({ params: { 'externalSystems.iam.id': tpx } });
-    // console.log(`colleague with TPX ${tpx}`, response.data[0]);
-
     // initialize connection to DB
     await initializeTypeOrm();
 

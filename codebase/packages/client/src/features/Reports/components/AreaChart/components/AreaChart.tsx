@@ -5,11 +5,11 @@ import Button from '@beans/button';
 import Icon from '@beans/icon';
 
 import useFetch from 'hooks/useFetch';
-import { useMedia } from 'context/InterfaceContext';
 import Loading from 'types/loading';
 
 export type Data = {
   elements: Record<string, Record<'color', string>>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   entities: any[];
 };
 
@@ -18,8 +18,6 @@ type Props = {
 };
 
 const AreaChartContainer = ({ data }: Props) => {
-  //const { isDesktop, isTablet } = useMedia();
-
   const [{ response, loading }, doFetch] = useFetch<Blob>();
   const isLoading = useMemo(() => loading !== Loading.SUCCEEDED && loading !== Loading.FAILED, [loading]);
 

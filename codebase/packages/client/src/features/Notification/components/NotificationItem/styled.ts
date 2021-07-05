@@ -23,7 +23,7 @@ const CreatorName = styled.div`
   color: ${({ theme }) => theme.colors.text.dark};
 `;
 
-const NotificationCloser = styled.div`
+const Closer = styled.div`
   width: 16px;
   height: 16px;
   cursor: pointer;
@@ -33,27 +33,33 @@ const NotificationCloser = styled.div`
   z-index: 2;
 `;
 
-const NotificationHead = styled.div`
+const Head = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
 `;
 
-const NotificationDate = styled.div`
+const Date = styled.div`
   font-size: 14px;
   line-height: 22px;
   align-self: flex-end;
   color: ${({ theme }) => theme.colors.text.base};
 `;
 
-const NotificactionContent = styled.div`
+const Title = styled.div`
+  font-size: 14px;
+  line-height: 22px;
+  font-weight: bold;
+  color: ${({ theme }) => theme.colors.text.base};
+`;
+
+const Content = styled.div`
   display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
+  flex-direction: column;
   padding-top: 16px;
 `;
 
-const NotificationLink = styled(Link)`
+const CustomLink = styled(Link)`
   position: absolute;
   width: 100%;
   height: 100%;
@@ -61,26 +67,17 @@ const NotificationLink = styled(Link)`
   top: 0;
 `;
 
-const NotificationCore = styled.div`
+const Core = styled.div`
   flex-grow: 1;
 `;
 
-const NotificationWrapper = styled.div`
+const Wrapper = styled.div`
   padding: 16px;
   display: flex;
   position: relative;
   text-decoration: none;
   box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.15);
+  margin-bottom: 20px;
 `;
 
-export {
-  CreatorAvatar,
-  CreatorName,
-  NotificationHead,
-  NotificactionContent,
-  NotificationCore,
-  NotificationCloser,
-  NotificationDate,
-  NotificationLink,
-  NotificationWrapper,
-};
+export { CreatorAvatar, CreatorName, Head, Content, Core, Closer, Date, Title, CustomLink, Wrapper };

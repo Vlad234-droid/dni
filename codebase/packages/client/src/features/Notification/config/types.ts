@@ -1,113 +1,109 @@
-import { Dictionary } from '@reduxjs/toolkit';
-
-import { Post } from 'features/Post';
-// import { Event } from 'features/Events';
-// import { Network } from 'features/Networks';
-
-type Id = number | string;
-
-enum ActionType {
-  POST_CREATED = 'POST_CREATED',
-  POST_UPDATED = 'POST_UPDATED',
-  POST_ARCHIVED = 'POST_ARCHIVED',
-  POST_REMOVED = 'POST_REMOVED',
-  EVENT_CREATED = 'EVENT_CREATED',
-  EVENT_UPDATED = 'EVENT_UPDATED',
-  EVENT_ARCHIVED = 'EVENT_ARCHIVED',
-  EVENT_REMOVED = 'EVENT_REMOVED',
-  NETWORK_CREATED = 'NETWORK_CREATED',
-  NETWORK_UPDATED = 'NETWORK_UPDATED',
-  NETWORK_ARCHIVED = 'NETWORK_ARCHIVED',
-  NETWORK_REMOVED = 'NETWORK_REMOVED',
-}
-
-enum PostAs {
-  USER = 'poster.user',
-  EVENT = 'poster.event',
-  NETWORK = 'poster.network',
-}
+import Loading from 'types/loading';
 
 enum EntityType {
-  POST = 'Post',
-  EVENT = 'Event',
-  NETWORK = 'Network',
+  NETWORK = 'network',
+  EVENT = 'event',
+  POST = 'post',
 }
+
+type Entity = {
+  id: number;
+  title: string;
+  image?: {
+    url?: string;
+  };
+};
+
+type NotificationResponse = {
+  entity_id: number;
+  entity_type: EntityType;
+  parent_id: number;
+  parent_type: EntityType;
+  created_at: string;
+};
+
+type NetworkNotificationResponse = {
+  entities_ids: number[];
+  entity_type: EntityType;
+  parent_id: number;
+  parent_type: EntityType;
+  count: number;
+};
 
 type Notification = {
-  id: Id;
-  createdAt: string;
-  action: ActionType;
+  entityId: number;
   entityType: EntityType;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  entity: Post | any;
+  parentId: number;
+  parentType: EntityType;
+  createdAt: string;
+  entity?: Entity;
+  parent?: Entity;
 };
 
-type NotificationView = {
-  id: Id;
-  createdAt: string;
-  actionType: ActionType;
+type NetworkNotification = {
+  entitiesIds: number[];
   entityType: EntityType;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  entity: Post | any;
-  href: string;
-  name: string;
-  avatar: string;
+  parentId: number;
+  parentType: EntityType;
+  count: number;
+  parent?: Entity;
 };
 
-type GroupByEntityId = {
-  id: Id;
-  notifications: {
-    ids: Id[];
-    entities: Dictionary<NotificationView>;
+type EntityIds = {
+  networkIds: number[];
+  eventIds: number[];
+  postIds: number[];
+};
+
+type Acknowledge = {
+  acknowledgeEntityType: EntityType;
+  acknowledgeEntityId: number;
+};
+
+type AcknowledgePayload = {
+  entityId: number;
+  entityType: EntityType;
+};
+
+type MetaData = {
+  loading: Loading;
+  error?: string;
+};
+
+type Error = {
+  error: {
+    message: string;
   };
-  href: string;
-  name: string;
-  avatar: string;
 };
 
-type GroupById = {
-  id: Id;
-  href: string;
-  name: string;
-  avatar: string;
+type State = {
+  notifications: {
+    list: Notification[];
+    metadata: MetaData;
+  };
+  networkNotifications: {
+    list: NetworkNotification[];
+    metadata: MetaData;
+  };
+  isSidebarOpened: boolean;
 };
 
-type GroupByIdInMap = {
-  notifications: Map<Id, NotificationView>;
-} & GroupById;
+type FormData = {
+  email: string;
+};
 
-type GroupByIdInArray = {
-  notifications: NotificationView[];
-} & GroupById;
-
-type MultilevelMap = Map<Id, GroupByIdInMap>;
-
-type Groups = Partial<{
-  all: Map<Id, NotificationView>;
-  [EntityType.POST]: MultilevelMap;
-  [EntityType.EVENT]: MultilevelMap;
-  [EntityType.NETWORK]: MultilevelMap;
-}>;
-
-interface SkinContentProps {
-  id: Id;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  entity: any;
-}
-
-export { ActionType, EntityType, PostAs };
+export { EntityType };
 
 export type {
-  Id,
+  Entity,
+  NetworkNotification,
   Notification,
-  NotificationView,
-  GroupByEntityId,
-  GroupByIdInArray,
-  MultilevelMap,
-  Groups,
-  SkinContentProps,
+  AcknowledgePayload,
+  Acknowledge,
+  Error,
+  State,
+  NetworkNotificationResponse,
+  NotificationResponse,
+  FormData,
+  EntityIds,
 };
-
-export interface FormData {
-  email: string;
-}

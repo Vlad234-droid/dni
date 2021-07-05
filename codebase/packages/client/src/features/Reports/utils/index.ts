@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import keyBy from 'lodash.keyby';
 import sort from 'lodash.filter';
 
