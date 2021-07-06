@@ -41,7 +41,7 @@ const findNetworkNotifications = (colleagueUUID: string) => {
       ARRAY_AGG(fn.entity_id) AS "entitiesIds",
       fn.root_ancestor_type AS "rootAncestorType",
       fn.root_ancestor_id AS "rootAncestorId",
-      p.entity_instance AS "rootAncestor",
+      root.entity_instance AS "rootAncestor",
       COUNT(*) as "count"
       FROM ${schemaPrefix}fn_get_dni_user_notification_list(
         $1::uuid,
@@ -49,14 +49,14 @@ const findNetworkNotifications = (colleagueUUID: string) => {
         ARRAY['network'::${schemaPrefix}dni_entity_type_enum, 'event'::${schemaPrefix}dni_entity_type_enum]::${schemaPrefix}dni_entity_type_enum[],
         TRUE::boolean
       ) fn
-      LEFT JOIN ccms_entity p
-      ON fn.root_ancestor_id = p.entity_id AND fn.root_ancestor_type = p.entity_type
+      LEFT JOIN ${schemaPrefix}ccms_entity root
+      ON fn.root_ancestor_id = root.entity_id AND fn.root_ancestor_type = root.entity_type
       GROUP BY
         fn.colleague_uuid, 
         fn.root_ancestor_id, 
         fn.root_ancestor_type, 
         fn.entity_type,
-        p.entity_instance
+        root.entity_instance
       ORDER BY max(fn.notified_at) DESC`,
     [colleagueUUID],
   );
