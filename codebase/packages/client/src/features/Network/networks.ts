@@ -49,7 +49,7 @@ export default [
     id: 5,
     title: 'Women at Tesco',
     description: [
-      'Supporting one another to make working life easier, wherever you are in the business and whatever your goals. Helping female colleagues to network, develop, balance work and home like & ensuring we have Role Models in Tesco.',
+      'Supporting one another to make working life easier, wherever you are in the business and whatever your goals. Helping female colleagues to network, develop, balance work and home life & ensuring we have Role Models in Tesco.',
     ],
     image: {
       src: womenImage,
