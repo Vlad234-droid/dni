@@ -11,7 +11,7 @@ enum Page {
   NETWORK_POST = 'network-news/:id',
   REPORTS = 'reports',
   PROFILE = 'profile',
-  NOTIFICATIONS = 'notifications',
+  NOTIFICATION_SETTINGS = 'notification/settings',
   UNAUTHORIZED = '401',
   FORBIDDEN = '403',
   SERVER_ERROR = '500',

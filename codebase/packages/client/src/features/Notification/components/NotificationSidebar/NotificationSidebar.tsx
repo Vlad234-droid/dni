@@ -5,7 +5,6 @@ import Button from '@beans/button';
 import isEmpty from 'lodash.isempty';
 
 import { Page } from 'features/Page';
-import { getPath } from 'utils/path';
 
 import Loading from 'types/loading';
 import { EmptyContainer, Error, Spinner } from 'features/Common';
@@ -99,12 +98,15 @@ const NotificationSidebar: FC<Props> = ({ buttonRef }) => {
           entityType,
           entityId,
           entity,
-          /*rootAncestorId, rootAncestorType, rootAncestor,*/ parentId,
+          //rootAncestorId, 
+          //rootAncestorType, 
+          //rootAncestor,
+          parentId,
           parentType,
           parent,
           createdAt,
         }) => ({
-          key: parentId || 'network-news',
+          key: entityId || `network-news-${entityId}`,
           href: buildLink(parentId, parentType),
           name: parent?.title || 'Diversity & Inclusion News',
           title: entity?.title || 'Unknown Post',
@@ -120,7 +122,7 @@ const NotificationSidebar: FC<Props> = ({ buttonRef }) => {
     <Wrapper data-testid={NOTIFICATION_CONTAINER_TEST_ID} visible={isSidebarOpened} ref={wrapperRef}>
       <TitleWrapper>
         <Title>Notifications</Title>
-        <Link to={`${getPath(Page.NOTIFICATIONS)}`}>
+        <Link to={Page.NOTIFICATION_SETTINGS}>
           <Button variant='primary' onClick={handleSettingsClick}>
             Settings
           </Button>
