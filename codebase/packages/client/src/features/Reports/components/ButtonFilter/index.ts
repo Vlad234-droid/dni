@@ -1,1 +1,1 @@
-export { default } from './ButtonFilter';
+export { default } from './components/ButtonFilter';

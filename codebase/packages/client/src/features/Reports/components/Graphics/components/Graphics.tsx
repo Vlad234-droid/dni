@@ -1,20 +1,19 @@
-import React, { FC, useEffect, useMemo } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { FC, useMemo } from 'react';
+import { useDispatch } from 'react-redux';
 import DropdownGroup from '@beans/dropdown-group';
 import styled from 'styled-components';
 
 import { ToastSkin, toasterActions } from 'features/Toaster';
-import { getList as getNetworks } from 'features/Network';
-import { getList as getEvents } from 'features/Event';
 import store from 'store';
+import { now } from 'utils/date';
 
-import AreaChart from '../components/AreaChart';
-import BarChart from '../components/BarChart';
-import RangeDateTimePicker from '../components/RangeDateTimePicker';
-import DateTimePicker, { Type } from '../components/DateTimePicker';
+import AreaChart from '../../AreaChart';
+import BarChart from '../../BarChart';
+import RangeDateTimePicker from '../../RangeDateTimePicker';
+import DateTimePicker, { Type } from '../../DateTimePicker';
 import { DropdownWrapper } from './styled';
-import { actions, getReportsByTime, getReportsByRegion, getReportsByFormat } from '../store';
-import * as T from '../config/types';
+import * as T from '../../../config/types';
+import { actions, getReportsByTime, getReportsByRegion, getReportsByFormat } from '../../../store';
 
 const RangeWrapper = styled.div`
   padding: 0 8px;
@@ -61,26 +60,17 @@ const periodButtons = [
   },
 ];
 
-const getEntities = {
-  0: getNetworks,
-  1: getEvents,
-};
-
 type Props = {
   entityType: T.Entity;
   filter: T.Filter;
   filterFilter: T.FilterFilter;
   dateInterval: T.Interval;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: any;
 };
 
 const Graphics: FC<Props> = ({ entityType, filter, filterFilter, dateInterval, data }) => {
   const dispatch = useDispatch();
 
-  const { ids } = useSelector(() => store.getState()[entityType === 0 ? 'networks' : 'events']);
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handlePeriodPick = (event: any) => {
     event.preventDefault();
 
@@ -164,6 +154,8 @@ const Graphics: FC<Props> = ({ entityType, filter, filterFilter, dateInterval, d
       return;
     }
 
+    const { ids } = store.getState().reports[entityType === 0 ? 'networks' : 'events'];
+
     dispatch(
       getReportsByTime({
         entityType,
@@ -171,50 +163,10 @@ const Graphics: FC<Props> = ({ entityType, filter, filterFilter, dateInterval, d
         filterFilter,
         from: dateFrom.toISOString(),
         to: dateTo.toISOString(),
+        ids,
       }),
     );
   };
-
-  const handleGraphicsEffect = () => {
-    if (ids.length === 0) {
-      dispatch(
-        getEntities[entityType]({
-          _start: 0,
-          _limit: 100,
-        }),
-      );
-
-      return;
-    }
-
-    if (filter === T.PERIOD && filterFilter !== T.Period.PICK_PERIOD) {
-      dispatch(
-        getReportsByTime({
-          entityType,
-          filter,
-          filterFilter,
-        }),
-      );
-    }
-
-    if (filter === T.REGION) {
-      dispatch(
-        getReportsByRegion({
-          entityType,
-        }),
-      );
-    }
-
-    if (filter === T.FORMAT) {
-      dispatch(
-        getReportsByFormat({
-          entityType,
-        }),
-      );
-    }
-  };
-
-  useEffect(handleGraphicsEffect, [ids, entityType, filter, filterFilter]);
 
   const memoizedDatePicker = useMemo(
     () => (
@@ -249,7 +201,7 @@ const Graphics: FC<Props> = ({ entityType, filter, filterFilter, dateInterval, d
               required
               id='graphics'
               value={filterFilter}
-              labelText='Time Period'
+              labelText='Time interval'
               onChange={handlePeriodPick}
               style={{
                 width: 208,
