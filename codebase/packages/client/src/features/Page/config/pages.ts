@@ -26,7 +26,7 @@ const pages: Record<Page, PageElement> = {
   [Page.NETWORK_POST]: NetworkNews,
   [Page.REPORTS]: Reports,
   [Page.PROFILE]: Profile,
-  [Page.NOTIFICATIONS]: Notifications,
+  [Page.NOTIFICATION_SETTINGS]: Notifications,
   [Page.UNAUTHORIZED]: Unauthorized,
   [Page.FORBIDDEN]: Forbidden,
   [Page.SERVER_ERROR]: ServerError,

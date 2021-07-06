@@ -11,10 +11,10 @@ const TEST_ID = 'container-notifications';
 const Notifications: FC = () => {
   return (
     <BasePage
-      data-testid={`${PAGE_PREFIX}${Page.NOTIFICATIONS}`}
+      data-testid={`${PAGE_PREFIX}${Page.NOTIFICATION_SETTINGS}`}
       renderMain={() => (
         <div data-testid={TEST_ID}>
-          <PageWrapper renderContent={() => <NotificationSettings />} pageName={'Notifications'} withBorder />
+          <PageWrapper renderContent={() => <NotificationSettings />} pageName={'Notification Settings'} withBorder />
         </div>
       )}
     />
