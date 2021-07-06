@@ -12,7 +12,6 @@ import { Page } from 'features/Page';
 import Loading from 'types/loading';
 import { Type } from 'features/Tile';
 import Participants from 'features/Participants';
-import { useNotification, EntityType } from 'features/Notification';
 
 import Event, { Filter } from '../../config/types';
 import { initialListFilters } from '../../config/filters';
@@ -63,7 +62,6 @@ const EventList: FC<Props> = ({
     ...getPayloadWhere(networks),
     ...getPayloadPeriod(filter),
   };
-  const { acknowledge } = useNotification();
 
   const handleFilterChange = useCallback((filter: Filter) => {
     onFilterChange(filter);
@@ -74,10 +72,6 @@ const EventList: FC<Props> = ({
       _start: page * DEFAULT_PAGINATION._limit,
     });
   }, []);
-
-  useEffect(() => {
-    events && events.forEach((event) => acknowledge({ entityId: event.id, entityType: EntityType.EVENT }));
-  }, [events]);
 
   useEffect(() => {
     loadCount(filters);
