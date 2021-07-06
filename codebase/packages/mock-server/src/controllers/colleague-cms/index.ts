@@ -1,6 +1,6 @@
 import express from 'express';
 
-import { DNI_CMS_API_URLS } from '@dni-connectors/colleague-cms-api';
+import { COLLEAGUE_CMS_API_URLS } from '@dni-connectors/colleague-cms-api';
 
 import { cmsPostsApiRouter } from './post';
 import { cmsEmojisApiRouter } from './emoji';
@@ -10,7 +10,7 @@ import { cmsEventsApiRouter } from './event';
 import { cmsEmotionsApiRouter } from './emotion';
 import { cmsUploadApiRouter } from './upload';
 
-const API_PATH = DNI_CMS_API_URLS.LOCAL;
+const API_PATH = COLLEAGUE_CMS_API_URLS.LOCAL;
 
 export const colleagueCmsApiRouter = express
   .Router()

@@ -7,9 +7,7 @@ import { networksAdapter } from './slice';
 import serializer from './serializer';
 import { Network } from '../config/types';
 
-const networksSelectors = networksAdapter.getSelectors(
-  (state: RootState) => state.networks,
-);
+const networksSelectors = networksAdapter.getSelectors((state: RootState) => state.networks);
 const [selectAll, selectById] = getEntitySelectors(networksSelectors);
 
 const byIdSelector = (id: Network['id']) =>

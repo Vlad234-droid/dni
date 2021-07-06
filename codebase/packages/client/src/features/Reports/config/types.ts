@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { EntityId } from '@reduxjs/toolkit';
 import Loading from 'types/loading';
 

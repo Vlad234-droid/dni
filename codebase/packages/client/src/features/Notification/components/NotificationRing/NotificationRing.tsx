@@ -1,62 +1,61 @@
-import React, { FC } from 'react';
-import { shallowEqual, useDispatch, useSelector } from 'react-redux';
+import React, { FC, RefObject } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
-import Link from '@beans/link';
+import Icon from '@beans/icon';
+import Button from '@beans/button';
 
-import store from 'store';
-import { actions } from '../../store/slice';
-import { notificationItemsSelector } from '../../store/selectors';
+import Media from 'styles/media';
+import { toggleSidebar, notificationsSelector } from '../../store';
 
 const NotificationCounter = styled.div`
   position: absolute;
-  top: 8px;
-  left: 4px;
+  top: -4px;
+  right: 4px;
   font-size: 10px;
   color: white;
   padding: 0 4px;
   cursor: pointer;
   border-radius: 8px;
   background-color: red;
+
+  ${Media.desktop`
+    top: -3px;
+    right: -19px;
+  `}
 `;
 
-const NotificationRingWrapper = styled.div`
+const NotificationRingWrapper = styled(Button)`
   position: relative;
+  width: 40px;
+  height: inherit;
 `;
 
-const notificationRingTestId = 'notificationer-ring-test-id';
+const NOTIFICATION_RING_TEST_ID = 'notificationer-ring-test-id';
 
 interface NotificationerRingProps {
   inverse: boolean;
+  buttonRef: RefObject<HTMLButtonElement>;
 }
 
-const NotificationRing: FC<NotificationerRingProps> = ({ inverse }) => {
+const NotificationRing: FC<NotificationerRingProps> = ({ inverse, buttonRef }) => {
   const dispatch = useDispatch();
-
-  const notifications = useSelector(() => notificationItemsSelector(store.getState().notification), shallowEqual);
+  const notifications = useSelector(notificationsSelector);
 
   return (
     <NotificationRingWrapper
-      data-testid={notificationRingTestId}
-      onClick={(event) => {
-        event.preventDefault();
-
-        // if (notifications.length === 0) {
-        //   return;
-        // }
-
-        dispatch(actions.toggleNotificationSidebar());
+      domRef={buttonRef}
+      variant={inverse ? 'link' : 'primary'}
+      data-testid={NOTIFICATION_RING_TEST_ID}
+      onClick={() => {
+        dispatch(toggleSidebar());
       }}
     >
-      <Link
-        href={'/'}
-        inverse={inverse}
-        icon={{ graphic: 'notification', position: { global: 'right' } }}
-        variant='iconButton'
-      />
+      <Icon href={'/'} inverse={inverse} graphic='notification' position={{ global: 'right' }} />
       {notifications.length > 0 && <NotificationCounter>{notifications.length}</NotificationCounter>}
     </NotificationRingWrapper>
   );
 };
 
+export { NOTIFICATION_RING_TEST_ID };
+
 export default NotificationRing;
-export { notificationRingTestId };

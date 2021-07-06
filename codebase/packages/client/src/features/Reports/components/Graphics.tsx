@@ -71,6 +71,7 @@ type Props = {
   filter: T.Filter;
   filterFilter: T.FilterFilter;
   dateInterval: T.Interval;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: any;
 };
 
@@ -79,6 +80,7 @@ const Graphics: FC<Props> = ({ entityType, filter, filterFilter, dateInterval, d
 
   const { ids } = useSelector(() => store.getState()[entityType === 0 ? 'networks' : 'events']);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handlePeriodPick = (event: any) => {
     event.preventDefault();
 

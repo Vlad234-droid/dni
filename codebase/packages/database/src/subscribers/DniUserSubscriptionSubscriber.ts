@@ -1,4 +1,4 @@
-import { DniUserActionEnum, DniUserSubscription, DniUserSubscriptionLog } from '../../entities/v2';
+import { DniUserActionEnum, DniUserSubscription, DniUserSubscriptionLog } from '../entities';
 import { EntitySubscriberInterface, EventSubscriber, getManager, InsertEvent, RemoveEvent } from 'typeorm';
 
 @EventSubscriber()

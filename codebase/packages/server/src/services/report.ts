@@ -1,6 +1,4 @@
-import { getManager } from '@dni/database';
-
-interface ConnectionOptionsWithSchema { schema? : string; };
+import { getManager, getSchemaPrefix } from '@dni/database';
 
 const getMembersReportBy = async (
   entityType: string,
@@ -9,12 +7,9 @@ const getMembersReportBy = async (
   from: string,
   to: string,
 ) => {
-  const connection = getManager().connection;
-  const schema = (connection.options as ConnectionOptionsWithSchema).schema;
-  const schemaPrefix = schema ? `"${schema}".` : '';
-
+  const schemaPrefix = getSchemaPrefix();
   return (
-    await connection.query(
+    await getManager().connection.query(
       `SELECT
         report::json->'data' AS data,
         report::json->'metadata' AS metadata
@@ -31,12 +26,9 @@ const getMembersReportBy = async (
 };
 
 const getRegionsReportBy = async (entityType: string, entityIds: string[], from: string, to: string) => {
-  const connection = getManager().connection;
-  const schema = (connection.options as ConnectionOptionsWithSchema).schema;
-  const schemaPrefix = schema ? `"${schema}".` : '';
-
+  const schemaPrefix = getSchemaPrefix();
   return (
-    await connection.query(
+    await getManager().connection.query(
       `SELECT
         report::json->'data' AS data,
         report::json->'metadata' AS metadata
@@ -52,12 +44,9 @@ const getRegionsReportBy = async (entityType: string, entityIds: string[], from:
 };
 
 const getDepartmentsReportBy = async (entityType: string, entityIds: string[], from: string, to: string) => {
-  const connection = getManager().connection;
-  const schema = (connection.options as ConnectionOptionsWithSchema).schema;
-  const schemaPrefix = schema ? `"${schema}".` : '';
-
+  const schemaPrefix = getSchemaPrefix();
   return (
-    await connection.query(
+    await getManager().connection.query(
       `SELECT
         report::json->'data' AS data,
         report::json->'metadata' AS metadata

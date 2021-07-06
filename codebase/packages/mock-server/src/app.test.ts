@@ -1,14 +1,14 @@
 import { AddressInfo } from 'net';
 import request from 'supertest';
 
-import { DNI_CMS_API_URLS } from '@dni-connectors/colleague-cms-api';
+import { COLLEAGUE_CMS_API_URLS } from '@dni-connectors/colleague-cms-api';
 import { TESCO_API_URLS } from '@energon-connectors/core';
 
 import server from './app';
 import config from 'config';
 
 const COLLEAGUE_API_LOCAL = TESCO_API_URLS.LOCAL;
-const DNI_CMS_API_LOCAL = DNI_CMS_API_URLS.LOCAL;
+const DNI_CMS_API_LOCAL = COLLEAGUE_CMS_API_URLS.LOCAL;
 
 describe('Server run', () => {
   afterAll(async () => {

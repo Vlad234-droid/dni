@@ -13,6 +13,7 @@ export type ColleagueRequestCtx = RequestCtx<ColleagueContextConfig, ColleagueSe
 
 export const buildContext: (config: ProcessConfig) => ContextProvider<ColleagueContextConfig, ColleagueSessionData> =
   (config: ProcessConfig) => (req, res) => ({
+
     identityUserToken: () => {
       const token = getIdentityData<ExtractedUSTData>(res)?.access_token;
       if (!token) {

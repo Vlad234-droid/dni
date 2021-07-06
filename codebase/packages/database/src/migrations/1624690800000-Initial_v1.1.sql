@@ -147,7 +147,8 @@ COMMENT ON TABLE capi_department IS 'Colleague API departments dictionary';
 CREATE TYPE ccms_trigger_event_enum AS ENUM (
 	'created',
 	'updated',
-	'deleted'
+	'deleted',
+	'published'
 	);
 
 
@@ -162,7 +163,6 @@ CREATE TABLE IF NOT EXISTS ccms_notification (
 	entity_type dni_entity_type_enum NOT NULL,
 	entity_created_at timestamptz(0) NOT NULL,
 	entity_updated_at timestamptz(0) NULL,
-	entity_instance jsonb NULL,
 	received_at timestamptz(0) NOT NULL DEFAULT now(),
 	CONSTRAINT "c_notification__pk" PRIMARY KEY (notification_uuid)
 );
@@ -173,8 +173,6 @@ CREATE INDEX "c_notification$entity_received_at__idx" ON ccms_notification (rece
 
 CREATE INDEX "c_notification$entity_created_at__idx" ON ccms_notification (entity_created_at);
 
-CREATE INDEX "c_notification$entity_instance__idx" ON ccms_notification USING gin(entity_instance);
-
 
 -- ===========
 -- ccms_entity
@@ -184,6 +182,7 @@ CREATE TABLE IF NOT EXISTS ccms_entity (
 	entity_id int4 NOT NULL,
 	entity_type dni_entity_type_enum NOT NULL,
 	slug varchar(128) NOT NULL,
+	entity_instance jsonb NULL,
 	entity_created_at timestamptz(0) NOT NULL,
 	entity_updated_at timestamptz(0) NULL,
 	entity_published_at timestamptz(0) NULL,
@@ -203,6 +202,8 @@ COMMENT ON TABLE ccms_entity IS 'Collleague CMS Entities cache';
 CREATE INDEX "c_entity$created_at__idx" ON ccms_entity (created_at);
 
 CREATE INDEX "c_entity$entity_created_at__idx" ON ccms_entity (entity_created_at);
+
+CREATE INDEX "c_entity$entity_instance__idx" ON ccms_entity USING gin(entity_instance);
 
 
 -- ======================
@@ -330,7 +331,9 @@ BEGIN
       FROM (
          SELECT 
             ce.*, 
-            fn_get_ccms_entity_root_ancestor(ROW(ce.entity_id , ce.entity_type), false) as root_ancestor
+            fn_get_ccms_entity_root_ancestor(
+               p_entity := ROW(ce.entity_id , ce.entity_type), 
+               p_only_published := true) as root_ancestor
          FROM ccms_entity ce
          WHERE 
             ce.entity_type = ANY(p_filter_entity_types) 
@@ -341,7 +344,7 @@ BEGIN
       LEFT JOIN fn_get_dni_user_recent_notification_acknowledgement(p_colleague_uuid) recent_acknowledge
         ON all_entities.entity_id = recent_acknowledge.acknowledged_entity_id
        AND all_entities.entity_type = recent_acknowledge.acknowledged_entity_type
-      WHERE ((root_ancestor).type = ANY(p_filter_subscription_entity_types) 
+      WHERE (((root_ancestor).type = ANY(p_filter_subscription_entity_types)  AND dus.colleague_uuid = p_colleague_uuid)
          OR (root_ancestor IS NULL AND dus.colleague_uuid IS NULL))
         AND (p_return_only_non_acknowledged = FALSE OR recent_acknowledge.acknowledged_at IS NULL)
       ;

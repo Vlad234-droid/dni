@@ -24,6 +24,6 @@ export type EventApiParams = {
   network_eq?: string;
 } & BaseApiParams;
 
-export type EventBody = Omit<Network, 'id'>;
+export type EventBody = Omit<Event, 'id'>;
 
 export default Event;

@@ -38,7 +38,7 @@ export const mainMenuItems = [
     text: 'News & Views',
   },
   {
-    href: '#',
+    href: `${OURTESCO_URL}/reward-and-benefits`,
     id: 'reward-and-benefits',
     text: 'Reward & Benefits',
   },

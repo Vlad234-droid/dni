@@ -18,6 +18,7 @@ const Entity = {
 };
 
 interface Props {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: Array<any>;
   onChange: (id: string, checked: boolean) => void;
   entityType: T.Entity;

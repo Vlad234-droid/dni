@@ -1,16 +1,16 @@
 import { File } from '../built-in';
 import { BaseApiParams, BaseType } from '../types';
 
-type Organization = {
+export type Organization = {
   title: string;
   contact: string;
   image?: File | null;
 } & BaseType;
 
-type OrganizationBody = Omit<Organization, 'id'>;
-
-type OrganizationApiParams = {
+export type OrganizationApiParams = {
   id: string;
 } & BaseApiParams;
 
-export type { Organization, OrganizationApiParams, OrganizationBody };
+export type OrganizationBody = Omit<Organization, 'id'>;
+
+export default Organization;

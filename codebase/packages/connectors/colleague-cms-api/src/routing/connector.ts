@@ -16,10 +16,9 @@ export const cmsRoutingApiConnector = (ctx: ConnectorContext) => {
   const apiConsumer = buildApiConsumer(ctx, cmsRoutingApiDef);
 
   return {
-    getRoutingConfig: async (tenantkey: string) => {
+    getRoutingConfig: async () => {
       return apiConsumer.getRoutingConfig({
         params: { slug: '1', type: 'rfr' },
-        fetchOpts: { headers: { tenantkey } },
       });
     },
   };

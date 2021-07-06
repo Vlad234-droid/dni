@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useState, useRef } from 'react';
 import Icon from '@beans/icon';
 
 import { MenuDesktop, MainMenuMobile } from 'features/Menu';
@@ -13,6 +13,7 @@ const TEST_ID = 'header';
 const Header: FC = () => {
   const { isDesktop } = useMedia();
   const [isOpened, setIsOpened] = useState(false);
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   const handleOpenMenu = () => setIsOpened(true);
   const handleCloseMenu = () => setIsOpened(false);
@@ -28,7 +29,7 @@ const Header: FC = () => {
       {!isDesktop && <Title>{'Diversity & Inclusion'}</Title>}
       <Icons>
         <IconWrapper>
-          <NotificationRing inverse={!isDesktop} />
+          <NotificationRing buttonRef={buttonRef} inverse={!isDesktop} />
         </IconWrapper>
         {/*<IconWrapper>*/}
         {/*  <Link*/}
@@ -46,7 +47,7 @@ const Header: FC = () => {
       </Icons>
       <ToasterWrapper>
         <Toaster />
-        <NotificationSidebar />
+        <NotificationSidebar buttonRef={buttonRef} />
       </ToasterWrapper>
     </Wrapper>
   );

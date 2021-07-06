@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { getOpenIdUserInfo } from '@energon/onelogin';
-import { getManager, getRepository, DniUserSubscription, DniEntityTypeEnum, DniUser } from '@dni/database';
+import { getRepository, DniUserSubscription, DniEntityTypeEnum, DniUser } from '@dni/database';
 import { colleagueApiConnector, ColleagueV2 } from '@dni-connectors/colleague-api';
 import { defaultConfig } from '../config/default';
 import { getInstance as getCacheInstance } from './cache';
@@ -30,8 +30,9 @@ const colleagueUUIDExtractor = async (req: Request, res: Response): Promise<stri
   const userInfo = infoExtractor(req, res);
   const employeeNumber = userInfo?.params?.employeeNumber;
   if (!employeeNumber) {
-    res.status(403).json({ 
-      error: 'Unauthorized. employeeNumber is missing.' });
+    res.status(403).json({
+      error: 'Unauthorized. employeeNumber is missing.',
+    });
 
     return null;
   }
@@ -77,8 +78,9 @@ const colleagueUUIDExtractor = async (req: Request, res: Response): Promise<stri
     }
   }
 
-  res.status(403).json({ 
-    error: `Unauthorized. colleagueUUID is missing for the employee: ${employeeNumber}` });
+  res.status(403).json({
+    error: `Unauthorized. colleagueUUID is missing for the employee: ${employeeNumber}`,
+  });
 
   return null;
 };
@@ -156,8 +158,8 @@ const createOrUpdateDniUser = async (colleague: ColleagueV2) => {
 const createSubscriptionEntity = async (
   colleagueUUID: string,
   subscriptionEntityId: number,
-  subscriptionEntityType: DniEntityTypeEnum) => {
-
+  subscriptionEntityType: DniEntityTypeEnum,
+) => {
   await getRepository(DniUserSubscription).save({
     colleagueUUID,
     subscriptionEntityId,
@@ -168,8 +170,8 @@ const createSubscriptionEntity = async (
 const removeSubscriptionEntity = async (
   colleagueUUID: string,
   subscriptionEntityId: number,
-  subscriptionEntityType: DniEntityTypeEnum) => {
-
+  subscriptionEntityType: DniEntityTypeEnum,
+) => {
   const userSubscriptionToRemove = {
     colleagueUUID,
     subscriptionEntityId,

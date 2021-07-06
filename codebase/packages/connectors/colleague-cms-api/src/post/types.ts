@@ -3,7 +3,7 @@ import { Network } from '../network';
 import { Event } from '../event';
 import { BaseApiParams, BaseType } from '../types';
 
-type Post = {
+export type Post = {
   title: string;
   content: string;
   slug: string;
@@ -16,12 +16,12 @@ type Post = {
   attachments?: File[];
 } & BaseType;
 
-type PostApiParams = {
+export type PostApiParams = {
   id: string;
   network_eq?: string;
   event_eq?: string;
 } & BaseApiParams;
 
-type PostBody = Omit<Post, 'id'>;
+export type PostBody = Omit<Post, 'id'>;
 
-export type { Post, PostApiParams, PostBody };
+export default Post;

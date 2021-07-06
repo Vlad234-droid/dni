@@ -1,133 +1,77 @@
-import {
-  getRepository,
-  Notification,
-  NotificationEmployee,
-  NotificationActionType,
-  NotificationEntityType,
-} from '@dni/database';
-import { Network, Event, Post } from '@dni-connectors/colleague-cms-api';
-
-type Input = {
-  event: 'entry.update' | 'entry.create' | 'entry.delete';
-  created_at: string;
-  model: 'post' | 'event' | 'network';
-  entry: Network | Event | Post;
-};
-
-const handleData = async (data: Input) => {
-  try {
-    const preparedData = analyze(data);
-
-    if (preparedData) {
-      getRepository(Notification).save(preparedData);
-    }
-  } catch (e) {
-    console.log(e);
-  }
-};
-
-const analyze = (data: Input) => {
-  const entityType = analyzeEntityType(data);
-  const entity = data.entry;
-  const action = analyzeAction(data, entityType);
-
-  if (entityType && action) {
-    return {
-      entityType,
-      action,
-      entity,
-    };
-  }
-};
-
-const analyzeEntityType = (data: Input) => {
-  switch (data.model) {
-    case 'post':
-      return NotificationEntityType.POST;
-    case 'event':
-      return NotificationEntityType.EVENT;
-    case 'network':
-      return NotificationEntityType.NETWORK;
-    default:
-      return;
-  }
-};
-
-const analyzeAction = (data: Input, entityType: NotificationEntityType | undefined) => {
-  if (!entityType) {
-    return;
-  }
-
-  switch (data.event) {
-    case 'entry.create':
-      switch (entityType) {
-        case NotificationEntityType.POST:
-          return NotificationActionType.POST_CREATED;
-        case NotificationEntityType.EVENT:
-          return NotificationActionType.EVENT_CREATED;
-        case NotificationEntityType.NETWORK:
-          return NotificationActionType.NETWORK_CREATED;
-        default:
-          return;
-      }
-    case 'entry.update':
-      switch (entityType) {
-        case NotificationEntityType.POST: {
-          const post = data.entry as Post;
-          if (post.archived) {
-            return NotificationActionType.POST_ARCHIVED;
-          } else {
-            return NotificationActionType.POST_UPDATED;
-          }
-        }
-        case NotificationEntityType.EVENT:
-          return NotificationActionType.EVENT_UPDATED;
-        case NotificationEntityType.NETWORK:
-          return NotificationActionType.NETWORK_UPDATED;
-        default:
-          return;
-      }
-    case 'entry.delete':
-      switch (entityType) {
-        case NotificationEntityType.POST:
-          return NotificationActionType.POST_REMOVED;
-        case NotificationEntityType.EVENT:
-          return NotificationActionType.EVENT_REMOVED;
-        case NotificationEntityType.NETWORK:
-          return NotificationActionType.NETWORK_REMOVED;
-        default:
-          return;
-      }
-    default:
-      return;
-  }
-};
+import { getManager, getSchemaPrefix, DniUserNotificationAcknowledge, DniEntityTypeEnum } from '@dni/database';
 
 const findNotifications = (colleagueUUID: string) => {
-  return (
-    getRepository(Notification)
-      .createQueryBuilder('n')
-      .select('n')
-      // .leftJoin('n.employees', 'em')
-      // .where('em.colleagueUUID IS NULL')
-      .orderBy('n.createdAt', 'DESC')
-      .getMany()
+  const schemaPrefix = getSchemaPrefix();
+  return getManager().connection.query(
+    `SELECT
+      fn.entity_type AS "entityType",
+      fn.entity_id AS "entityId",
+      e.entity_instance AS "entity",
+      root.entity_type AS "rootAncestorType",
+      root.entity_id AS "rootAncestorId",
+      root.entity_instance AS "rootAncestor",
+      parent.entity_type AS "parentType",
+      parent.entity_id AS "parentId",
+      parent.entity_instance AS "parent",
+      e.entity_created_at AS "createdAt",
+      e.entity_updated_at AS "updatedAt",
+      e.entity_published_at AS "publishedAt"
+    FROM ${schemaPrefix}fn_get_dni_user_notification_list(
+      $1::uuid,
+      ARRAY['post'::${schemaPrefix}dni_entity_type_enum]::${schemaPrefix}dni_entity_type_enum[],
+      ARRAY['network'::${schemaPrefix}dni_entity_type_enum, 'event'::${schemaPrefix}dni_entity_type_enum]::${schemaPrefix}dni_entity_type_enum[],
+      TRUE::boolean
+    ) fn
+    LEFT JOIN ${schemaPrefix}ccms_entity e
+    ON fn.entity_id = e.entity_id AND fn.entity_type = e.entity_type
+    LEFT JOIN ${schemaPrefix}ccms_entity parent
+    ON e.parent_entity_id = parent.entity_id AND e.parent_entity_type = parent.entity_type
+    LEFT JOIN ${schemaPrefix}ccms_entity root
+    ON fn.root_ancestor_id = root.entity_id AND fn.root_ancestor_type = root.entity_type
+    ORDER BY fn.notified_at DESC`,
+    [colleagueUUID],
   );
 };
 
 const findNetworkNotifications = (colleagueUUID: string) => {
-  return getRepository(Notification).find({
-    order: {
-      createdAt: 'DESC',
-    },
-  });
+  const schemaPrefix = getSchemaPrefix();
+  return getManager().connection.query(
+    `SELECT
+      fn.entity_type AS "entityType",
+      ARRAY_AGG(fn.entity_id) AS "entitiesIds",
+      fn.root_ancestor_type AS "rootAncestorType",
+      fn.root_ancestor_id AS "rootAncestorId",
+      p.entity_instance AS "rootAncestor",
+      COUNT(*) as "count"
+      FROM ${schemaPrefix}fn_get_dni_user_notification_list(
+        $1::uuid,
+        ARRAY['post'::${schemaPrefix}dni_entity_type_enum]::${schemaPrefix}dni_entity_type_enum[],
+        ARRAY['network'::${schemaPrefix}dni_entity_type_enum, 'event'::${schemaPrefix}dni_entity_type_enum]::${schemaPrefix}dni_entity_type_enum[],
+        TRUE::boolean
+      ) fn
+      LEFT JOIN ccms_entity p
+      ON fn.root_ancestor_id = p.entity_id AND fn.root_ancestor_type = p.entity_type
+      GROUP BY
+        fn.colleague_uuid, 
+        fn.root_ancestor_id, 
+        fn.root_ancestor_type, 
+        fn.entity_type,
+        p.entity_instance
+      ORDER BY max(fn.notified_at) DESC`,
+    [colleagueUUID],
+  );
 };
 
-const createColleagueRelation = (notificationId: number, colleagueUUID: string) => {
-  return getRepository(NotificationEmployee).save({
-    notificationId,
+const createColleagueNotificationRelation = async (
+  entityId: number,
+  entityType: DniEntityTypeEnum,
+  colleagueUUID: string,
+) => {
+  return await getManager().getRepository(DniUserNotificationAcknowledge).save({
     colleagueUUID,
+    acknowledgeEntityType: entityType,
+    acknowledgeEntityId: entityId,
   });
 };
 
-export { analyze, handleData, findNotifications, findNetworkNotifications, createColleagueRelation };
+export { findNotifications, findNetworkNotifications, createColleagueNotificationRelation };

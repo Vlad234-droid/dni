@@ -5,28 +5,18 @@ import { buildApiConsumer, buildParams } from '../utils';
 import { DniCmsApiContext, ApiInput } from '../types';
 
 export const cmsEmojisApiDef = defineAPI((endpoint) => ({
-  getEmoji: endpoint
-    .get('/emojis/:id')
-    .params<Pick<EmojiApiParams, 'id'>>()
-    .response<Emoji>()
-    .build(),
+  getEmoji: endpoint.get('/emojis/:id').params<Pick<EmojiApiParams, 'id'>>().response<Emoji>().build(),
 
-  getEmojis: endpoint
-    .get('/emojis')
-    .params<EmojiApiParams>()
-    .response<Emoji[]>()
-    .build(),
+  getEmojis: endpoint.get('/emojis').params<EmojiApiParams>().response<Emoji[]>().build(),
 }));
 
 export const cmsEmojisApiConnector = (ctx: DniCmsApiContext) => {
   const apiConsumer = buildApiConsumer(ctx, cmsEmojisApiDef);
 
   return {
-    getEmoji: async ({ params, tenantkey }: ApiInput<EmojiApiParams>) =>
-      apiConsumer.getEmoji(buildParams(params, tenantkey)),
+    getEmoji: async ({ params }: ApiInput<EmojiApiParams>) => apiConsumer.getEmoji(buildParams(params)),
 
-    getEmojis: ({ params, tenantkey }: ApiInput<EmojiApiParams>) =>
-      apiConsumer.getEmojis(buildParams(params, tenantkey)),
+    getEmojis: ({ params }: ApiInput<EmojiApiParams>) => apiConsumer.getEmojis(buildParams(params)),
   };
 };
 

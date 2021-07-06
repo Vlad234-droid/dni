@@ -42,40 +42,21 @@ export const cmsOrganizationsApiConnector = (ctx: DniCmsApiContext) => {
   const apiConsumer = buildApiConsumer(ctx, cmsOrganizationsApiDef);
 
   return {
-    getOrganization: async ({
-      params,
-      tenantkey,
-    }: ApiInput<OrganizationApiParams>) =>
-      apiConsumer.getOrganization(buildParams(params, tenantkey)),
+    getOrganization: async ({ params }: ApiInput<OrganizationApiParams>) =>
+      apiConsumer.getOrganization(buildParams(params)),
 
-    getOrganizations: ({
-      params,
-      tenantkey,
-    }: ApiInput<Omit<OrganizationApiParams, 'id'>>) =>
-      apiConsumer.getOrganizations(buildParams(params, tenantkey)),
+    getOrganizations: ({ params }: ApiInput<Omit<OrganizationApiParams, 'id'>>) =>
+      apiConsumer.getOrganizations(buildParams(params)),
 
-    postOrganization: async ({
-      params,
-      body,
-      tenantkey,
-    }: ApiInput<OrganizationApiParams, OrganizationBody>) =>
-      apiConsumer.postOrganization(buildParams(params, tenantkey, body!)),
+    postOrganization: async ({ params, body }: ApiInput<OrganizationApiParams, OrganizationBody>) =>
+      apiConsumer.postOrganization(buildParams(params, body!)),
 
-    putOrganization: async ({
-      params,
-      body,
-      tenantkey,
-    }: ApiInput<OrganizationApiParams, OrganizationBody>) =>
-      apiConsumer.putOrganization(buildParams(params, tenantkey, body!)),
+    putOrganization: async ({ params, body }: ApiInput<OrganizationApiParams, OrganizationBody>) =>
+      apiConsumer.putOrganization(buildParams(params, body!)),
 
-    deleteOrganization: ({
-      params,
-      tenantkey,
-    }: ApiInput<Pick<OrganizationApiParams, 'id'>>) =>
-      apiConsumer.deleteOrganization(buildParams(params, tenantkey)),
+    deleteOrganization: ({ params }: ApiInput<Pick<OrganizationApiParams, 'id'>>) =>
+      apiConsumer.deleteOrganization(buildParams(params)),
   };
 };
 
-export type CmsOrganizationsApi = ReturnType<
-  typeof cmsOrganizationsApiConnector
->;
+export type CmsOrganizationsApi = ReturnType<typeof cmsOrganizationsApiConnector>;

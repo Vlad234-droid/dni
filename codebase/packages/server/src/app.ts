@@ -43,13 +43,6 @@ const startServer = async () => {
     console.log(`Current build environment: ${config.buildEnvironment}`);
     console.log(`Current infrastructure environment: ${config.environment}`);
 
-    // // test
-    // const tpx = 'UK45006148';
-    // const ctx = await prepareContext();
-    // const connector = colleagueApiConnector(ctx);
-    // const response = await connector.v2.getColleagues({ params: { 'externalSystems.iam.id': tpx } });
-    // console.log(`colleague with TPX ${tpx}`, response.data[0]);
-
     // initialize connection to DB
     await initializeTypeOrm();
 
@@ -76,7 +69,8 @@ const startServer = async () => {
       app.use(await openId);
     }
 
-    app.use(colleagueUUIDExtractor);
+    app.use(colleagueUUIDExtractor('/api/cms-events'));
+
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
     app.use('/api/upload', upload.any(), formData);

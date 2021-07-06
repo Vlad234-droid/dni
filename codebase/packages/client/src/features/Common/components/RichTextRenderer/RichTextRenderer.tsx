@@ -90,6 +90,20 @@ const MarkdownRendererContainer = styled(Box)`
     font-size: 13px;
     color: rgb(131, 148, 150);
   }
+  blockquote {
+    margin-top: 41px;
+    margin-bottom: 34px;
+    font-size: 16px;
+    font-weight: 400;
+    border-left: 5px solid #eee;
+    font-style: italic;
+    padding: 10px 20px;
+    color: black;
+  }
+  blockquote > p {
+    margin-top: 0;
+    margin-bottom: 1rem;
+  }
 `;
 
 const getLinkHref = (url: string) => (url.indexOf('http') === -1 ? `https://${url}` : url);

@@ -1,3 +1,4 @@
+export * from './ccrm-event-consumer';
 export * from './notification';
 export * from './employee';
 export * from './report';
