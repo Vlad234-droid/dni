@@ -38,25 +38,6 @@ type NetworkNotification = {
   count: number;
 };
 
-// type Notification = {
-//   entityId: number;
-//   entityType: EntityType;
-//   parentId: number;
-//   parentType: EntityType;
-//   createdAt: string;
-//   entity?: Entity;
-//   parent?: Entity;
-// };
-
-// type NetworkNotification = {
-//   entitiesIds: number[];
-//   entityType: EntityType;
-//   parentId: number;
-//   parentType: EntityType;
-//   count: number;
-//   parent?: Entity;
-// };
-
 type EntityIds = {
   networkIds: number[];
   eventIds: number[];

@@ -106,7 +106,7 @@ const NotificationSidebar: FC<Props> = ({ buttonRef }) => {
           parent,
           createdAt,
         }) => ({
-          key: parentId || 'network-news',
+          key: entityId || `network-news-${entityId}`,
           href: buildLink(parentId, parentType),
           name: parent?.title || 'Diversity & Inclusion News',
           title: entity?.title || 'Unknown Post',
