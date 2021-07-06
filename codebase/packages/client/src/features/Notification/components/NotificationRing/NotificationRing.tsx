@@ -50,8 +50,8 @@ const NotificationRing: FC<NotificationerRingProps> = ({ inverse, buttonRef }) =
         dispatch(toggleSidebar());
       }}
     >
-      <Icon href={'/'} inverse={inverse} graphic='notification' position={{ global: 'right' }} />
-      {notifications.length > 0 && <NotificationCounter>{notifications.length}</NotificationCounter>}
+      <Icon key='ring' href={'/'} inverse={inverse} graphic='notification' position={{ global: 'right' }} />
+      {notifications.length > 0 && <NotificationCounter key='counter'>{notifications.length}</NotificationCounter>}
     </NotificationRingWrapper>
   );
 };
