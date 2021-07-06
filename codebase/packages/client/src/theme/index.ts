@@ -3,7 +3,7 @@ import merge from 'lodash.merge';
 
 import graphics from './graphics';
 
-export default merge(defaultTheme, {
+const theme = merge(defaultTheme, {
   colors: {
     background: {
       dark: '#F2F6FA', // override
@@ -26,3 +26,7 @@ export default merge(defaultTheme, {
     graphics,
   },
 });
+
+export type AppTheme = typeof theme;
+
+export default theme;

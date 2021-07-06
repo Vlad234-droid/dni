@@ -4,29 +4,26 @@ import { useMedia } from 'context/InterfaceContext';
 import theme from 'theme';
 
 import { Wrapper, Inner, Description, StyledIcon, Explanation } from './styled';
+import { Level, DEFAULT_DESCRIPTION, DEFAULT_EXPLANATION } from './config';
 
 type Props = {
   description: string | JSX.Element;
   explanation?: string;
-  showIcon?: boolean;
+  level?: Level;
 };
-
-const DEFAULT_DESCRIPTION = 'Something went wrong';
-const DEFAULT_EXPLANATION =
-  'Unfortunately, we did not find any matches for your request. Please change your filtering criteria to try again.';
 
 const EmptyContainer: FC<Props> = ({
   description = DEFAULT_DESCRIPTION,
   explanation = DEFAULT_EXPLANATION,
-  showIcon = true,
+  level = Level.ERROR,
 }) => {
   const { isDesktop } = useMedia();
 
   return (
     <Wrapper data-testid='empty-container'>
       <Inner>
-        <Description>{description}</Description>
-        {showIcon && (
+        <Description level={level}>{description}</Description>
+        {level == Level.ERROR && (
           <StyledIcon
             graphic='error'
             size={isDesktop ? 'xl' : 'sm'}

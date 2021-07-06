@@ -14,7 +14,7 @@ export { default as IconWrapper } from './components/IconWrapper';
 export { default as Checkbox } from './components/Checkbox';
 export { default as Decrease } from './components/Decrease';
 export { default as Increase } from './components/Increase';
-export { default as EmptyContainer } from './components/EmptyContainer';
+export { default as EmptyContainer, Level } from './components/EmptyContainer';
 export { default as Spinner } from './components/Spinner';
 export { default as CopyLink } from './components/CopyLink';
 export { default as RichTextRenderer } from './components/RichTextRenderer';
