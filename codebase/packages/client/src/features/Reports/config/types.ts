@@ -1,6 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import { EntityId } from '@reduxjs/toolkit';
+import { EntityId, EntityState } from '@reduxjs/toolkit';
+
 import Loading from 'types/loading';
+import Network from 'features/Network';
+import Event from 'features/Event';
 
 const PERIOD = 'PERIOD';
 const REGION = 'REGION';
@@ -136,6 +138,8 @@ type State = {
   [Entity.event]: any;
   loading: Loading;
   error?: string;
+  networks: EntityState<Network>;
+  events: EntityState<Event>;
 };
 
 type EntryId = {

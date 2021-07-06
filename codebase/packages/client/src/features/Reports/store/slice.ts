@@ -1,9 +1,10 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import keyBy from 'lodash.keyby';
 import sort from 'lodash.filter';
 
 import Loading from 'types/loading';
+import { getList as getNetworks, networksAdapter } from 'features/Network';
+import { getList as getEvents, eventsAdapter } from 'features/Event';
 
 import * as T from '../config/types';
 import * as A from './actionTypes';
@@ -20,8 +21,17 @@ const initialState: T.State = {
   [T.Entity.event]: getEntityState(),
   loading: Loading.IDLE,
   error: undefined,
+  networks: {
+    ids: [],
+    entities: {},
+  },
+  events: {
+    ids: [],
+    entities: {},
+  },
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const getReportsByTime = createAsyncThunk<any, any>(A.GET_REPORTS_BY_TIME, reportsByTimeMiddleware);
 const getReportsByRegion = createAsyncThunk<any, any>(A.GET_REPORTS_BY_REGION, reportsByRegionMiddleware);
 const getReportsByFormat = createAsyncThunk<any, any>(A.GET_REPORTS_BY_FORMAT, reportsByFormatMiddleware);
@@ -35,8 +45,7 @@ const slice = createSlice({
     },
 
     setFilter(state, { payload: { key } }) {
-      state[T.Entity.network].filter = key;
-      state[T.Entity.event].filter = key;
+      state[state.entityType].filter = key;
     },
 
     setTimePeriodFilter(state, { payload: { period } }) {
@@ -204,12 +213,24 @@ const slice = createSlice({
       })
       .addCase(getReportsByFormat.rejected, setFailed)
 
+      .addCase(getNetworks.fulfilled, (state: T.State, { payload }) => {
+        networksAdapter.upsertMany(state.networks, payload);
+
+        setSucceeded(state);
+      })
+
+      .addCase(getEvents.fulfilled, (state: T.State, { payload }) => {
+        eventsAdapter.upsertMany(state.events, payload);
+
+        setSucceeded(state);
+      })
+
       .addDefaultCase((state) => state);
   },
 });
 
 export const { actions } = slice;
 
-export { getReportsByTime, getReportsByRegion, getReportsByFormat };
+export { getReportsByTime, getReportsByRegion, getReportsByFormat, getNetworks, getEvents };
 
 export default slice.reducer;

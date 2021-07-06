@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import keyBy from 'lodash.keyby';
 import sort from 'lodash.filter';
 
@@ -35,7 +34,9 @@ const getGraphicsState = () =>
     chart: getChartState(),
     statistics: getStatisticsState(),
     dateInterval: getDateIntervalState(),
-    color,
+    color: {
+      ...color,
+    },
     counter: 0,
   } as T.GraphicsItem);
 
@@ -101,14 +102,15 @@ const reportsByTimeMiddleware = async ({
   filterFilter,
   from,
   to,
+  ids,
 }: {
   entityType: T.Entity;
   filter: T.Filter;
   filterFilter: T.Period;
   from: string;
   to: string;
+  ids: (number | string)[];
 }) => {
-  const { ids, entities } = store.getState()[entityType === 0 ? 'networks' : 'events'];
   const date = new Date(new Date().getTime() + 1000 * 60 * 60 * 24);
 
   date.setUTCHours(0, 0, 0, 0);
@@ -157,11 +159,13 @@ const reportsByTimeMiddleware = async ({
 
   const { data, metadata } = await API.report.members<any>(query);
 
+  const { entities } = store.getState().reports[entityType === 0 ? 'networks' : 'events'];
   const groupState = store.getState().reports[entityType][filter][filterFilter];
   const group = getGraphicsState() as T.GraphicsItem;
 
   group.color = groupState.color;
   group.dateInterval = groupState.dateInterval;
+  group.counter = groupState.counter || 0;
 
   group.chart.entities = data.map((element: { period: string; entities: T.PeriodEntityData[] }) => {
     const point = {
@@ -217,13 +221,13 @@ const reportsByRegionMiddleware = async ({
   entityType,
   from,
   to,
+  ids,
 }: {
   entityType: T.Entity;
   from: string;
   to: string;
+  ids: (number | string)[];
 }) => {
-  const { ids, entities } = store.getState()[entityType === 0 ? 'networks' : 'events'];
-
   const dateTo = to || now().toISOString();
   const dateFrom = from || dateMinusDuration(dateTo, { week: 1 }).toISOString();
 
@@ -240,12 +244,14 @@ const reportsByRegionMiddleware = async ({
 
   const { data, metadata } = await API.report.regions<T.Response<T.RegionEntityData>>(query);
 
+  const { entities } = store.getState().reports[entityType === 0 ? 'networks' : 'events'];
   const groupState = store.getState().reports[entityType][T.REGION][T.Region.PICK_PERIOD];
   const group = getGraphicsState() as T.GraphicsItem;
 
   group.color = groupState.color;
   group.dateInterval.from = toDateInterval(dateFrom);
   group.dateInterval.to = toDateInterval(dateTo);
+  group.counter = groupState.counter || 0;
 
   group.statistics = metadata.entities.map(({ entityId }) => {
     const entityName = entities[entityId]?.title || 'Default entity name';
@@ -259,7 +265,7 @@ const reportsByRegionMiddleware = async ({
     );
 
     row.name = entityName;
-    row.checked = false;
+    row.checked = typeof rowState?.['checked'] === 'boolean' ? rowState.checked : false;
     row.color = typeof rowState?.['color'] === 'string' ? rowState.color : '';
 
     const dataEntities = data.find((element) => element.entityId == entityId)!.entities || [];
@@ -278,7 +284,7 @@ const reportsByRegionMiddleware = async ({
     return row;
   });
 
-  // group.chart.entities = sort(group.statistics, ['checked', true]);
+  group.chart.entities = sort(group.statistics, ['checked', true]);
 
   group.chart.elements = groupState.chart.elements;
 
@@ -292,13 +298,13 @@ const reportsByFormatMiddleware = async ({
   entityType,
   from,
   to,
+  ids,
 }: {
   entityType: T.Entity;
   from: string;
   to: string;
+  ids: (number | string)[];
 }) => {
-  const { ids, entities } = store.getState()[entityType === 0 ? 'networks' : 'events'];
-
   const dateTo = to || now().toISOString();
   const dateFrom = from || dateMinusDuration(dateTo, { week: 1 }).toISOString();
 
@@ -315,12 +321,14 @@ const reportsByFormatMiddleware = async ({
 
   const { data, metadata } = await API.report.departments<T.Response<T.FormatEntityData>>(query);
 
+  const { entities } = store.getState().reports[entityType === 0 ? 'networks' : 'events'];
   const groupState = store.getState().reports[entityType][T.FORMAT][T.Region.PICK_PERIOD];
   const group = getGraphicsState() as T.GraphicsItem;
 
   group.color = groupState.color;
   group.dateInterval.from = toDateInterval(dateFrom);
   group.dateInterval.to = toDateInterval(dateTo);
+  group.counter = groupState.counter || 0;
 
   group.statistics = metadata.entities.map(({ entityId }) => {
     const entityName = entities[entityId]?.title || 'Default entity name';
@@ -334,7 +342,7 @@ const reportsByFormatMiddleware = async ({
     );
 
     row.name = entityName;
-    row.checked = false;
+    row.checked = typeof rowState?.['checked'] === 'boolean' ? rowState.checked : false;
     row.color = typeof rowState?.['color'] === 'string' ? rowState.color : '';
 
     const dataEntities = data.find((element) => element.entityId == entityId)!.entities || [];
@@ -353,7 +361,7 @@ const reportsByFormatMiddleware = async ({
     return row;
   });
 
-  // group.chart.entities = sort(group.statistics, ['checked', true]);
+  group.chart.entities = sort(group.statistics, ['checked', true]);
 
   group.chart.elements = groupState.chart.elements;
 

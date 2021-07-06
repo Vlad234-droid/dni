@@ -1,10 +1,12 @@
 import React, { ChangeEvent } from 'react';
 import styled from 'styled-components';
-import Checkbox from '@beans/checkbox';
+// import Checkbox from '@beans/checkbox';
 
 import { TextWithEllipsis } from 'features/Common';
 
 import * as T from '../../../config/types';
+
+import Checkbox from '../../Checkbox';
 
 const Entity = {
   [T.Entity.network]: {
@@ -18,7 +20,6 @@ const Entity = {
 };
 
 interface Props {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: Array<any>;
   onChange: (id: string, checked: boolean) => void;
   entityType: T.Entity;
@@ -42,12 +43,12 @@ const Statistics = ({ data, onChange, entityType, filter }: Props) => {
               <Cell>{'left during the period'}</Cell>
             </>
           )}
-          {(filter === T.REGION || filter === T.FORMAT) && <Cell>{'Subscribers'}</Cell>}
+          {(filter === T.REGION || filter === T.FORMAT) && <Cell>{'Participants'}</Cell>}
         </Row>
         {data.map((item) => (
           <Row key={item.entityId}>
             <CellName color={item.color}>
-              <Checkbox checked={item.checked} id={item.entityId} onChange={handleChangeItem} />
+              <Checkbox checked={item.checked} entityId={item.entityId} onChange={handleChangeItem} />
               <TextWithEllipsis>{item.name}</TextWithEllipsis>
             </CellName>
             {filter === T.PERIOD && (
