@@ -27,11 +27,10 @@ const EventSidebarContainer: FC = () => {
   const { networks } = useStore((state) => state.auth.user);
   const [page, setPage] = useState<number>(0);
   const [filter, setFilter] = useState<Filter>(ALL);
-  const errorMessage = useMemo(() => listError || countError || participants.error, [
-    participants,
-    listError,
-    countError,
-  ]);
+  const errorMessage = useMemo(
+    () => listError || countError || participants.error,
+    [participants, listError, countError],
+  );
 
   const loadEvents = (filters: EntityListPayload) => dispatch(getEvents(filters));
   const loadCount = (filters: EntityListPayload) => dispatch(getCount(filters));

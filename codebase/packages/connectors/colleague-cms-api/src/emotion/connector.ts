@@ -5,46 +5,24 @@ import { buildApiConsumer, buildParams } from '../utils';
 import { DniCmsApiContext, ApiInput } from '../types';
 
 export const cmsEmotionsApiDef = defineAPI((endpoint) => ({
-  postEmotion: endpoint
-    .post('/emotions')
-    .params<EmotionApiParams>()
-    .body<EmotionBody>()
-    .response<Emotion>()
-    .build(),
+  postEmotion: endpoint.post('/emotions').params<EmotionApiParams>().body<EmotionBody>().response<Emotion>().build(),
 
-  putEmotion: endpoint
-    .put('/emotions/:id')
-    .params<EmotionApiParams>()
-    .body<EmotionBody>()
-    .response<Emotion>()
-    .build(),
+  putEmotion: endpoint.put('/emotions/:id').params<EmotionApiParams>().body<EmotionBody>().response<Emotion>().build(),
 
-  deleteEmotion: endpoint
-    .delete('/emotions/:id')
-    .params<EmotionApiParams>()
-    .response<Emotion>()
-    .build(),
+  deleteEmotion: endpoint.delete('/emotions/:id').params<EmotionApiParams>().response<Emotion>().build(),
 }));
 
 export const cmsEmotionsApiConnector = (ctx: DniCmsApiContext) => {
   const apiConsumer = buildApiConsumer(ctx, cmsEmotionsApiDef);
 
   return {
-    postEmotion: async ({
-      params,
-      body,
-    }: ApiInput<EmotionApiParams, EmotionBody>) =>
+    postEmotion: async ({ params, body }: ApiInput<EmotionApiParams, EmotionBody>) =>
       apiConsumer.postEmotion(buildParams(params, body!)),
 
-    putEmotion: async ({
-      params,
-      body,
-    }: ApiInput<EmotionApiParams, EmotionBody>) =>
+    putEmotion: async ({ params, body }: ApiInput<EmotionApiParams, EmotionBody>) =>
       apiConsumer.putEmotion(buildParams(params, body!)),
 
-    deleteEmotion: ({
-      params,
-    }: ApiInput<Pick<EmotionApiParams, 'id'>>) =>
+    deleteEmotion: ({ params }: ApiInput<Pick<EmotionApiParams, 'id'>>) =>
       apiConsumer.deleteEmotion(buildParams(params)),
   };
 };

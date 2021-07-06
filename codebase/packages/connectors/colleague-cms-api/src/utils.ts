@@ -8,6 +8,8 @@ import { COLLEAGUE_CMS_API_URLS, COLLEAGUE_CMS_TENANT_KEY } from './config';
 import { DniCmsApiContext } from './types';
 import { SimpleFetchClient } from '@energon/fetch-client';
 
+const tenantkey = () => process.env.COLLEAGUE_CMS_TENANT_KEY || COLLEAGUE_CMS_TENANT_KEY;
+
 const buildApiConsumer = <T extends ApiDefinition>(ctx: DniCmsApiContext, apiDef: T) => {
   const client = buildClient(ctx);
   return createApiConsumer(apiDef, client);
@@ -15,11 +17,9 @@ const buildApiConsumer = <T extends ApiDefinition>(ctx: DniCmsApiContext, apiDef
 
 function buildClient(ctx: DniCmsApiContext): SimpleFetchClient {
   const baseUrl = process.env.COLLEAGUE_CMS_URL || resolveBaseUrl(COLLEAGUE_CMS_API_URLS, ctx);
-  const tenantkey = process.env.COLLEAGUE_CMS_TENANT_KEY || COLLEAGUE_CMS_TENANT_KEY;
 
   const headers = {
     Auth: () => `Bearer ${ctx.identityClientToken()}`,
-    tenantkey,
   };
 
   return fetchClient(baseUrl, headers, ctx);
@@ -29,22 +29,27 @@ const buildParams = <T, U = unknown>(
   params: T,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   body: U = undefined as any,
-) => ({
-  params,
-  body,
-});
+) => {
+  return {
+    params,
+    fetchOpts: { headers: { tenantkey: tenantkey() } },
+    body,
+  };
+};
 
 const buildFetchParams = <U = unknown>(
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   body: U = undefined as any,
   fetchParams = {},
-) =>
-  merge(
+) => {
+  return merge(
     {
+      headers: { tenantkey: tenantkey() },
       body,
     },
     fetchParams,
   );
+};
 
 const buildFetchClient = (ctx: DniCmsApiContext) => {
   const client = buildClient(ctx);

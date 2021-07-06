@@ -42,35 +42,21 @@ export const cmsOrganizationsApiConnector = (ctx: DniCmsApiContext) => {
   const apiConsumer = buildApiConsumer(ctx, cmsOrganizationsApiDef);
 
   return {
-    getOrganization: async ({
-      params,
-    }: ApiInput<OrganizationApiParams>) =>
+    getOrganization: async ({ params }: ApiInput<OrganizationApiParams>) =>
       apiConsumer.getOrganization(buildParams(params)),
 
-    getOrganizations: ({
-      params,
-    }: ApiInput<Omit<OrganizationApiParams, 'id'>>) =>
+    getOrganizations: ({ params }: ApiInput<Omit<OrganizationApiParams, 'id'>>) =>
       apiConsumer.getOrganizations(buildParams(params)),
 
-    postOrganization: async ({
-      params,
-      body,
-    }: ApiInput<OrganizationApiParams, OrganizationBody>) =>
+    postOrganization: async ({ params, body }: ApiInput<OrganizationApiParams, OrganizationBody>) =>
       apiConsumer.postOrganization(buildParams(params, body!)),
 
-    putOrganization: async ({
-      params,
-      body,
-    }: ApiInput<OrganizationApiParams, OrganizationBody>) =>
+    putOrganization: async ({ params, body }: ApiInput<OrganizationApiParams, OrganizationBody>) =>
       apiConsumer.putOrganization(buildParams(params, body!)),
 
-    deleteOrganization: ({
-      params,
-    }: ApiInput<Pick<OrganizationApiParams, 'id'>>) =>
+    deleteOrganization: ({ params }: ApiInput<Pick<OrganizationApiParams, 'id'>>) =>
       apiConsumer.deleteOrganization(buildParams(params)),
   };
 };
 
-export type CmsOrganizationsApi = ReturnType<
-  typeof cmsOrganizationsApiConnector
->;
+export type CmsOrganizationsApi = ReturnType<typeof cmsOrganizationsApiConnector>;

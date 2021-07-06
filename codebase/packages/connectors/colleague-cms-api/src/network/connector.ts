@@ -1,39 +1,17 @@
 import { defineAPI } from '@energon/rest-api-definition';
 
 import { Network, NetworkApiParams, NetworkBody } from './types';
-import {
-  buildApiConsumer,
-  buildParams,
-  buildFetchClient,
-  buildFetchParams,
-} from '../utils';
+import { buildApiConsumer, buildParams, buildFetchClient, buildFetchParams } from '../utils';
 import { DniCmsApiContext, ApiInput } from '../types';
 
 export const cmsNetworksApiDef = defineAPI((endpoint) => ({
-  getNetworksCount: endpoint
-    .get('/networks/count')
-    .params<NetworkApiParams>()
-    .response<number>()
-    .build(),
+  getNetworksCount: endpoint.get('/networks/count').params<Omit<NetworkApiParams, 'id'>>().response<number>().build(),
 
-  getNetwork: endpoint
-    .get('/networks/:id')
-    .params<Pick<NetworkApiParams, 'id'>>()
-    .response<Network>()
-    .build(),
+  getNetwork: endpoint.get('/networks/:id').params<Pick<NetworkApiParams, 'id'>>().response<Network>().build(),
 
-  getNetworks: endpoint
-    .get('/networks')
-    .params<NetworkApiParams>()
-    .response<Network[]>()
-    .build(),
+  getNetworks: endpoint.get('/networks').params<Omit<NetworkApiParams, 'id'>>().response<Network[]>().build(),
 
-  postNetwork: endpoint
-    .post('/networks')
-    .params<NetworkApiParams>()
-    .body<NetworkBody>()
-    .response<Network>()
-    .build(),
+  postNetwork: endpoint.post('/networks').params<NetworkApiParams>().body<NetworkBody>().response<Network>().build(),
 
   putNetwork: endpoint
     .put('/networks/:id')
@@ -42,11 +20,7 @@ export const cmsNetworksApiDef = defineAPI((endpoint) => ({
     .response<Network>()
     .build(),
 
-  deleteNetwork: endpoint
-    .delete('/networks/:id')
-    .params<Pick<NetworkApiParams, 'id'>>()
-    .response<Network>()
-    .build(),
+  deleteNetwork: endpoint.delete('/networks/:id').params<Pick<NetworkApiParams, 'id'>>().response<Network>().build(),
 }));
 
 export const cmsNetworksApiConnector = (ctx: DniCmsApiContext) => {
@@ -54,38 +28,21 @@ export const cmsNetworksApiConnector = (ctx: DniCmsApiContext) => {
   const fetchClient = buildFetchClient(ctx);
 
   return {
-    getNetwork: async ({ params }: ApiInput<NetworkApiParams>) =>
-      apiConsumer.getNetwork(buildParams(params)),
+    getNetwork: async ({ params }: ApiInput<NetworkApiParams>) => apiConsumer.getNetwork(buildParams(params)),
 
-    getNetworks: ({ params }: ApiInput<NetworkApiParams>) =>
-      fetchClient<Network[]>(
-        cmsNetworksApiDef.getNetworks,
-        params,
-        buildFetchParams(),
-      ),
+    getNetworks: ({ params }: ApiInput<Omit<NetworkApiParams, 'id'>>) =>
+      fetchClient<Network[]>(cmsNetworksApiDef.getNetworks, params, buildFetchParams()),
 
-    getNetworksCount: ({ params }: ApiInput<NetworkApiParams>) =>
-      fetchClient<number>(
-        cmsNetworksApiDef.getNetworksCount,
-        params,
-        buildFetchParams(),
-      ),
+    getNetworksCount: ({ params }: ApiInput<Omit<NetworkApiParams, 'id'>>) =>
+      fetchClient<number>(cmsNetworksApiDef.getNetworksCount, params, buildFetchParams()),
 
-    postNetwork: async ({
-      params,
-      body,
-    }: ApiInput<NetworkApiParams, NetworkBody>) =>
+    postNetwork: async ({ params, body }: ApiInput<NetworkApiParams, NetworkBody>) =>
       apiConsumer.postNetwork(buildParams(params, body!)),
 
-    putNetwork: async ({
-      params,
-      body,
-    }: ApiInput<NetworkApiParams, NetworkBody>) =>
+    putNetwork: async ({ params, body }: ApiInput<NetworkApiParams, NetworkBody>) =>
       apiConsumer.putNetwork(buildParams(params, body!)),
 
-    deleteNetwork: ({
-      params,
-    }: ApiInput<Pick<NetworkApiParams, 'id'>>) =>
+    deleteNetwork: ({ params }: ApiInput<Pick<NetworkApiParams, 'id'>>) =>
       apiConsumer.deleteNetwork(buildParams(params)),
   };
 };

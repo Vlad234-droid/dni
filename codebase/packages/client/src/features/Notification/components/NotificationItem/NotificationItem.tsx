@@ -1,57 +1,45 @@
 import React, { FC } from 'react';
 import Icon from '@beans/icon';
+import { isoDateToFormat, FULL_FORMAT } from 'utils/date';
 
-import { skins } from '../../config/skins';
-import { Id, ActionType } from '../../config/types';
-import { onNotificationCloserClick } from '../../store/handlers';
-import {
-  CreatorAvatar,
-  CreatorName,
-  NotificationHead,
-  NotificactionContent,
-  NotificationCore,
-  NotificationCloser,
-  NotificationDate,
-  NotificationLink,
-  NotificationWrapper,
-} from './styled';
+import { CreatorAvatar, CreatorName, Head, Content, Core, Closer, Date, Title, CustomLink, Wrapper } from './styled';
 
-interface NotificationItemProps {
-  id: Id;
+type NotificationItem = {
   href: string;
   name: string;
   avatar: string;
+  title?: string;
   createdAt: string;
-  actionType: ActionType;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  entity: any;
-}
+  onCloserClick: () => void;
+};
 
-const notificationItemTestId = 'notificationer-item-test-id';
+type Props = NotificationItem;
 
-const NotificationerItem: FC<NotificationItemProps> = ({ id, href, name, avatar, createdAt, actionType, entity }) => {
-  const skin = skins[actionType];
-  const Content = skin?.Content;
+const NOTIFICATION_ITEM_TEST_ID = 'notificationer-item-test-id';
 
+const NotificationerItem: FC<Props> = ({ href, name, avatar, title, createdAt, onCloserClick }) => {
   return (
-    <NotificationWrapper data-testid={notificationItemTestId}>
-      <NotificationCore>
-        <NotificationHead>
+    <Wrapper data-testid={NOTIFICATION_ITEM_TEST_ID}>
+      <Core>
+        <Head>
           <CreatorAvatar avatar={avatar} />
           <CreatorName>{name}</CreatorName>
-          <NotificationCloser onClick={() => onNotificationCloserClick({ id })}>
+          <Closer onClick={onCloserClick}>
             <Icon graphic='close' />
-          </NotificationCloser>
-        </NotificationHead>
-        <NotificactionContent>
-          {Content && <Content id={id} entity={entity} />}
-          <NotificationDate>{new Date(createdAt).toUTCString()}</NotificationDate>
-        </NotificactionContent>
-      </NotificationCore>
-      <NotificationLink to={href} title={'Click to view'} />
-    </NotificationWrapper>
+          </Closer>
+        </Head>
+        <Content>
+          {title && <Title>{title}</Title>}
+          <Date>{isoDateToFormat(createdAt, FULL_FORMAT)}</Date>
+        </Content>
+      </Core>
+      <CustomLink to={href} title={'Click to view'} />
+    </Wrapper>
   );
 };
 
+export { NOTIFICATION_ITEM_TEST_ID };
+
+export type { NotificationItem };
+
 export default NotificationerItem;
-export { notificationItemTestId };

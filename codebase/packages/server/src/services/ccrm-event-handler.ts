@@ -1,9 +1,5 @@
 import { EntityManager } from 'typeorm';
-import {
-  getManager,
-  CcmsNotification,
-  DniEntityTypeEnum,
-} from '@dni/database';
+import { getManager, CcmsNotification, DniEntityTypeEnum } from '@dni/database';
 
 import {
   Network,
@@ -14,11 +10,9 @@ import {
   cmsNetworksApiConnector,
 } from '@dni-connectors/colleague-cms-api';
 
-
 import { prepareContext, RequestCtx } from './context';
 import { Request, Response } from 'express';
 import { CepPayload } from '../controllers';
-
 
 export const handleCepRequest = async (req: Request<{}, CepPayload>, res: Response) => {
   const payload = req.body;
@@ -37,9 +31,9 @@ export const handleCepRequest = async (req: Request<{}, CepPayload>, res: Respon
   const cmsEntity: Post | Event | Network | undefined = (await analyzeEntity(payload, ctx))?.data;
 
   // 3. store notification into the db
-  await getManager().transaction(async (entityManager: EntityManager) => {
-    await entityManager.getRepository(CcmsNotification).save(notification, { data: { entityInstance : cmsEntity } });
-  });
+  await getManager()
+    .getRepository(CcmsNotification)
+    .save(notification, { data: { entityInstance: cmsEntity } });
 };
 
 const analyzeEntity = async (payload: CepPayload, ctx: RequestCtx) => {
@@ -62,4 +56,3 @@ const analyzeEntity = async (payload: CepPayload, ctx: RequestCtx) => {
     }
   }
 };
-

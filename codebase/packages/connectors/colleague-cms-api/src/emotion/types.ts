@@ -1,15 +1,15 @@
 import { Emoji } from '../emoji';
 import { BaseType } from '../types';
 
-type Emotion = {
+export type Emotion = {
   count: number;
   emoji: Emoji;
 } & BaseType;
 
-type EmotionApiParams = {
+export type EmotionApiParams = {
   id: string;
 };
 
-type EmotionBody = Omit<Emotion, 'id'>;
+export type EmotionBody = Omit<Emotion, 'id'>;
 
-export type { Emotion, EmotionApiParams, EmotionBody };
+export default Emotion;

@@ -1,76 +1,33 @@
-import { createEntityAdapter } from '@reduxjs/toolkit';
+import { isUndefined } from 'lodash';
+import { RootState } from 'store/rootReducer';
+import { AcknowledgePayload } from '../config/types';
 
-import { NotificationState } from './slice';
-import { EntityType, NotificationView, GroupByEntityId } from '../config/types';
+const networkNotificationsSelector = (state: RootState) => state.notifications.networkNotifications.list;
 
-const notificationAdapter = createEntityAdapter<NotificationView>({
-  selectId: (notification) => notification.id,
-  sortComparer: (a, b) => b.createdAt.localeCompare(a.createdAt),
-});
+const networkNotificationIdsSelector = (state: RootState): number[] =>
+  state.notifications.networkNotifications.list
+    .filter((nn) => !isUndefined(nn.rootAncestorId))
+    .reduce((acc, nn) => [...acc, nn.rootAncestorId!], [] as number[]);
 
-const notificationItemsSelector = notificationAdapter.getSelectors<NotificationState>((state) => state.all).selectAll;
+const networkNotificationMetadataSelector = (state: RootState) => state.notifications.networkNotifications.metadata;
 
-const notificationItemSelector = notificationAdapter.getSelectors<NotificationState>((state) => state.all).selectById;
+const notificationsSelector = (state: RootState) => state.notifications.notifications.list;
 
-const notificationByPostIdAdapter = createEntityAdapter<GroupByEntityId>({
-  selectId: (notificationByPostId) => notificationByPostId.id,
-});
+const notificationsMetadataSelector = (state: RootState) => state.notifications.notifications.metadata;
 
-const notificationByPostIdSelector = notificationByPostIdAdapter.getSelectors<NotificationState>(
-  (state) => state[EntityType.POST],
-).selectById;
+const notificationSelector = (state: RootState, selector: AcknowledgePayload) =>
+  state.notifications.notifications.list.find(
+    (n) => n.entityId == selector.entityId && n.entityType == selector.entityType,
+  );
 
-const notificationByEventIdAdapter = createEntityAdapter<GroupByEntityId>({
-  selectId: (notificationByEventId) => notificationByEventId.id,
-});
-
-const notificationByEventIdSelector = notificationByPostIdAdapter.getSelectors<NotificationState>(
-  (state) => state[EntityType.EVENT],
-).selectById;
-
-const notificationByNetworkIdAdapter = createEntityAdapter<GroupByEntityId>({
-  selectId: (notificationByNetworkId) => notificationByNetworkId.id,
-});
-
-const notificationByNetworkIdSelector = notificationByPostIdAdapter.getSelectors<NotificationState>(
-  (state) => state[EntityType.NETWORK],
-).selectById;
-
-const networkUpdatesAdapter = createEntityAdapter<GroupByEntityId>({
-  selectId: (notification) => notification.id,
-});
-
-const networkUpdatesSelector = networkUpdatesAdapter.getSelectors<NotificationState>((state) => state.networkUpdates)
-  .selectAll;
-
-const networkUpdateSelector = networkUpdatesAdapter.getSelectors<NotificationState>((state) => state.networkUpdates)
-  .selectById;
-
-const entityAdapter = {
-  [EntityType.POST]: notificationByPostIdAdapter,
-  [EntityType.EVENT]: notificationByEventIdAdapter,
-  [EntityType.NETWORK]: notificationByNetworkIdAdapter,
-};
-
-const entitySelector = {
-  [EntityType.POST]: notificationByPostIdSelector,
-  [EntityType.EVENT]: notificationByEventIdSelector,
-  [EntityType.NETWORK]: notificationByNetworkIdSelector,
-};
+const isSidebarOpenedSelector = (state: RootState) => state.notifications.isSidebarOpened;
 
 export {
-  networkUpdatesAdapter,
-  networkUpdatesSelector,
-  networkUpdateSelector,
-  notificationAdapter,
-  notificationItemSelector,
-  notificationItemsSelector,
-  notificationByPostIdAdapter,
-  notificationByPostIdSelector,
-  notificationByEventIdAdapter,
-  notificationByEventIdSelector,
-  notificationByNetworkIdAdapter,
-  notificationByNetworkIdSelector,
-  entityAdapter,
-  entitySelector,
+  networkNotificationsSelector,
+  networkNotificationIdsSelector,
+  networkNotificationMetadataSelector,
+  notificationsSelector,
+  notificationsMetadataSelector,
+  notificationSelector,
+  isSidebarOpenedSelector,
 };

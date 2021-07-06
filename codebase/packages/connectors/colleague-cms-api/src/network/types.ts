@@ -5,7 +5,7 @@ import { Organization } from '../organization';
 import { Question } from '../question';
 import { BaseApiParams, BaseType } from '../types';
 
-type Network = {
+export type Network = {
   title: string;
   slug: string;
   description: string;
@@ -16,11 +16,11 @@ type Network = {
   events: Event[];
 } & BaseType;
 
-type NetworkApiParams = {
+export type NetworkApiParams = {
   id: string;
   id_in?: string[];
 } & BaseApiParams;
 
-type NetworkBody = Omit<Network, 'id'>;
+export type NetworkBody = Omit<Network, 'id'>;
 
-export type { NetworkApiParams, Network, NetworkBody };
+export default Network;

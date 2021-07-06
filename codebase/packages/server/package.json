@@ -15,7 +15,8 @@
     "run:prod": "cross-env BUILD_ENV=production env-cmd --silent --no-override --fallback -f .env.${BUILD_ENV} node build/app.js",
     "test": "jest",
     "test:coverage": "jest --coverage",
-    "test:watch": "jest --watch"
+    "test:watch": "jest --watch",
+    "cli:cms-entities-init": "cross-env BUILD_ENV=development env-cmd --silent --no-override --fallback -f .env.${BUILD_ENV} ts-node --script-mode src/cli/ccmsEntitiesInit.ts"
   },
   "dependencies": {
     "@dni-connectors/colleague-api": "1.0.0",

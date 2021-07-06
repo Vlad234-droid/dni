@@ -11,6 +11,7 @@ import GlobalStyle from 'styles';
 import history from 'utils/history';
 import Auth from 'features/Auth';
 import Routes from 'features/Routes';
+import { NotificationProvider } from 'features/Notification';
 
 import reportWebVitals from './reportWebVitals';
 
@@ -18,19 +19,19 @@ const globalThemeStyles = {
   normalize: true,
 };
 
-console.log('theme', theme);
-
 ReactDOM.render(
   <ThemeProvider theme={theme} globalStyles={globalThemeStyles}>
     <Provider store={store}>
       <Auth>
         <InterfaceProvider>
-          <Router history={history}>
-            <React.StrictMode>
-              <GlobalStyle />
-              <Routes />
-            </React.StrictMode>
-          </Router>
+          <NotificationProvider>
+            <Router history={history}>
+              <React.StrictMode>
+                <GlobalStyle />
+                <Routes />
+              </React.StrictMode>
+            </Router>
+          </NotificationProvider>
         </InterfaceProvider>
       </Auth>
     </Provider>

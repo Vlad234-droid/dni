@@ -6,7 +6,7 @@ import Layout, { ExtraLayoutProps } from 'features/Layout';
 import { Header, HeaderMain, HeaderLink } from 'features/Header';
 import { MenuMobile } from 'features/Menu';
 import { useMedia } from 'context/InterfaceContext';
-import NetworkUpdates from 'features/NetworkUpdates';
+import { NetworkUpdates } from 'features/Notification';
 import { LINKS } from 'config/constants';
 
 const TEST_ID = 'base-page';
@@ -29,10 +29,10 @@ const BasePage: FC<ExtraLayoutProps> = (props) => {
                 </UpdatesWrapper>
                 <LinksWrapper>
                   <Link href={LINKS.termsAndConditions} target='_self'>
-                      Terms & Conditions
+                    Terms & Conditions
                   </Link>
                   <Link href={LINKS.privacyPolicy} target='_self'>
-                      Privacy Policy
+                    Privacy Policy
                   </Link>
                 </LinksWrapper>
               </>
@@ -54,11 +54,11 @@ const UpdatesWrapper = styled.div`
 const LinksWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  
+
   a:last-child {
     margin-top: 10px;
   }
-`
+`;
 
 export { TEST_ID };
 

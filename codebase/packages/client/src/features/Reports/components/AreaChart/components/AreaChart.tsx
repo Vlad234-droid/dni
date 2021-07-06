@@ -9,6 +9,7 @@ import Loading from 'types/loading';
 
 export type Data = {
   elements: Record<string, Record<'color', string>>;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   entities: any[];
 };
 

@@ -3,12 +3,8 @@ import { FetchError } from '@energon/fetch-client';
 
 type QueryType = number | string;
 
-const buildCRUD = <T extends BaseType>(
-  generateAll: () => T[],
-  generateOne: () => T,
-) => {
-  const defaultSort = (data: T[]) =>
-    data.sort((a, b) => (a.id > b.id ? 1 : -1));
+const buildCRUD = <T extends BaseType>(generateAll: () => T[], generateOne: () => T) => {
+  const defaultSort = (data: T[]) => data.sort((a, b) => (a.id > b.id ? 1 : -1));
 
   const notFound = () => {
     throw new FetchError('GET', '', 404, 'Not Found');
