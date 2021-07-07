@@ -14,11 +14,11 @@ import {
   notificationsSelector,
   notificationsMetadataSelector,
   isSidebarOpenedSelector,
-  acknowledge,
 } from '../../store';
 import { EntityType, AcknowledgePayload } from '../../config/types';
 import NotificationerItem, { NotificationItem } from '../NotificationItem';
 import { Wrapper, Title, TitleWrapper } from './styled';
+import { useNotification } from '../../context/NotificationContext';
 
 const NOTIFICATION_CONTAINER_TEST_ID = 'notification-container-test-id';
 
@@ -28,6 +28,7 @@ type Props = {
 
 const NotificationSidebar: FC<Props> = ({ buttonRef }) => {
   const dispatch = useDispatch();
+  const { acknowledge } = useNotification();
 
   const [items, setItems] = useState<Array<NotificationItem & { key: string | number }>>([]);
 
@@ -55,7 +56,7 @@ const NotificationSidebar: FC<Props> = ({ buttonRef }) => {
   };
 
   const handleCloserClick = useCallback((payload: AcknowledgePayload) => {
-    dispatch(acknowledge(payload));
+    acknowledge(payload);
   }, []);
 
   const isSidebarOpened = useSelector(isSidebarOpenedSelector);
@@ -99,21 +100,26 @@ const NotificationSidebar: FC<Props> = ({ buttonRef }) => {
           entityType,
           entityId,
           entity,
-          //rootAncestorId,
-          //rootAncestorType,
-          //rootAncestor,
+          rootAncestorId,
+          rootAncestorType,
+          rootAncestor,
           parentId,
           parentType,
           parent,
           createdAt,
         }) => ({
-          key: entityId || `network-news-${entityId}`,
-          href: buildLink(parentId, parentType),
+          key: `${entityType}-${entityId}` || `network-news-${entityId}`,
+          href: EntityType.EVENT == entityType ? buildLink(entityId, entityType) : buildLink(parentId, parentType),
           name: parent?.title || 'Diversity & Inclusion News',
           title: entity?.title || 'Unknown Post',
+          subName:
+            rootAncestorId != parentId && rootAncestorType != parentType
+              ? `on behalf of ${rootAncestor?.title}`
+              : undefined,
           avatar: parent?.image?.url || '',
           createdAt,
           onCloserClick: () => handleCloserClick({ entityType, entityId }),
+          onLinkClick: () => (EntityType.EVENT == entityType ? handleCloserClick({ entityType, entityId }) : null),
         }),
       ),
     );
