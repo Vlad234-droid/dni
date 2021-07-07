@@ -49,7 +49,7 @@ const findNetworkNotifications = (colleagueUUID: string) => {
         ARRAY['network'::${schemaPrefix}dni_entity_type_enum, 'event'::${schemaPrefix}dni_entity_type_enum]::${schemaPrefix}dni_entity_type_enum[],
         TRUE::boolean
       ) fn
-      LEFT JOIN ccms_entity p
+      LEFT JOIN ${schemaPrefix}ccms_entity p
       ON fn.root_ancestor_id = p.entity_id AND fn.root_ancestor_type = p.entity_type
       GROUP BY
         fn.colleague_uuid, 
