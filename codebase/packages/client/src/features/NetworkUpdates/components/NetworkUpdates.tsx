@@ -27,7 +27,7 @@ const NetworkUpdates: FC = () => (
         </Item>
       ))}
     </List>
-    <Link to={Page.NETWORKS}>
+    <Link to={`/${Page.NETWORKS}`}>
       <Button variant='secondary'>See all</Button>
     </Link>
   </Wrapper>
