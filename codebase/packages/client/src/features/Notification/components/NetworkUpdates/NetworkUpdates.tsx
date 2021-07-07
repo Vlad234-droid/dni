@@ -6,7 +6,7 @@ import isEmpty from 'lodash.isempty';
 
 import { Page } from 'features/Page';
 import Loading from 'types/loading';
-import { EmptyContainer, Error, Spinner } from 'features/Common';
+import { EmptyContainer, Level, Error, Spinner } from 'features/Common';
 import { networkNotificationsSelector, networkNotificationMetadataSelector } from '../../store';
 import { Wrapper, Title, List } from './styled';
 import NetworkUpdatesItem, { UpdateItem } from '../NetworkUpdatesItem';
@@ -39,7 +39,7 @@ const NetworkUpdates: FC = () => {
     if (isEmpty(items) && isLoading) return <Spinner height='200px' />;
 
     if (loading === Loading.SUCCEEDED && isEmpty(items))
-      return <EmptyContainer description='Nothing to show' showIcon={false} explanation='' />;
+      return <EmptyContainer description='No updates' level={Level.INFO} explanation='' />;
 
     return (
       <List>

@@ -7,7 +7,7 @@ import isEmpty from 'lodash.isempty';
 import { Page } from 'features/Page';
 
 import Loading from 'types/loading';
-import { EmptyContainer, Error, Spinner } from 'features/Common';
+import { EmptyContainer, Level, Error, Spinner } from 'features/Common';
 import {
   hideSidebar,
   toggleSidebar,
@@ -33,7 +33,7 @@ const NotificationSidebar: FC<Props> = ({ buttonRef }) => {
 
   const wrapperRef = useRef<HTMLDivElement>(null);
 
-  const handleOnBodyClick = (e: MouseEvent) => {
+  const handleOnBodyClick = useCallback((e: MouseEvent) => {
     if (
       buttonRef?.current &&
       !buttonRef?.current.contains(e.target as Node) &&
@@ -42,7 +42,7 @@ const NotificationSidebar: FC<Props> = ({ buttonRef }) => {
     ) {
       dispatch(hideSidebar());
     }
-  };
+  }, []);
 
   useEffect(() => {
     document.addEventListener('click', handleOnBodyClick, false);
@@ -69,7 +69,8 @@ const NotificationSidebar: FC<Props> = ({ buttonRef }) => {
 
     if (isEmpty(items) && isLoading) return <Spinner height='270px' />;
 
-    if (loading === Loading.SUCCEEDED && isEmpty(items)) return <EmptyContainer description='Nothing to show' />;
+    if (loading === Loading.SUCCEEDED && isEmpty(items))
+      return <EmptyContainer level={Level.INFO} explanation='' description='No new notifications' />;
 
     return (
       <>
@@ -98,8 +99,8 @@ const NotificationSidebar: FC<Props> = ({ buttonRef }) => {
           entityType,
           entityId,
           entity,
-          //rootAncestorId, 
-          //rootAncestorType, 
+          //rootAncestorId,
+          //rootAncestorType,
           //rootAncestor,
           parentId,
           parentType,
