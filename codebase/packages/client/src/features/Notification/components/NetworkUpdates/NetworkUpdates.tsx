@@ -54,7 +54,7 @@ const NetworkUpdates: FC = () => {
     <Wrapper data-testid={NETWORK_UPDATES_TEST_ID}>
       <Title>Updates in my Networks</Title>
       {memoizedContent}
-      <Link to={Page.NETWORKS}>
+      <Link to={`/${Page.NETWORKS}`}>
         <Button variant='secondary'>See all</Button>
       </Link>
     </Wrapper>

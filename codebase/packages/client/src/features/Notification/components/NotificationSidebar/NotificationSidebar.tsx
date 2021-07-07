@@ -123,7 +123,7 @@ const NotificationSidebar: FC<Props> = ({ buttonRef }) => {
     <Wrapper data-testid={NOTIFICATION_CONTAINER_TEST_ID} visible={isSidebarOpened} ref={wrapperRef}>
       <TitleWrapper>
         <Title>Notifications</Title>
-        <Link to={Page.NOTIFICATION_SETTINGS}>
+        <Link to={`/${Page.NOTIFICATION_SETTINGS}`}>
           <Button variant='primary' onClick={handleSettingsClick}>
             Settings
           </Button>
