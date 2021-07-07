@@ -3,6 +3,20 @@ import styled from 'styled-components';
 import Icon from '@beans/icon';
 
 import Media from 'styles/media';
+import { Level, LevelProps } from './config';
+import { AppTheme } from 'theme';
+
+const levelColor = (theme: AppTheme, level: Level) => {
+  switch (level) {
+    case Level.ERROR:
+      return theme.colors.error;
+    case Level.WARNING:
+      return theme.colors.warning;
+    case Level.INFO:
+    default:
+      return theme.colors.text.dark;
+  }
+};
 
 const Wrapper = styled.div`
   width: 100%;
@@ -28,9 +42,9 @@ const Inner = styled.div`
   `}
 `;
 
-const Description = styled.div`
+const Description = styled.div<LevelProps>`
   margin-right: 12px;
-  color: ${({ theme }) => theme.colors.error};
+  color: ${({ theme, level }) => levelColor(theme, level)};
   ${textXS};
   font-weight: bold;
 

@@ -4,6 +4,7 @@ import Button from '@beans/button';
 import useStore from 'hooks/useStore';
 import useDispatch from 'hooks/useDispatch';
 import { joinNetwork, leaveNetwork, leaveEvent } from 'features/Auth';
+import { useNotification } from 'features/Notification';
 import Event from 'features/Event';
 
 import { ModalJoin, ModalLeave } from '../Modal';
@@ -21,6 +22,7 @@ const NetworkAction: FC<Props> = ({ id, events, onLeave, onJoin }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { networks = [] } = useStore((state) => state.auth.user);
   const isJoined = networks.includes(+id);
+  const { refetchNotificationsWithDelay } = useNotification();
 
   const handleJoin = () => setIsModalOpen(true);
   const handleLeave = () => setIsModalOpen(true);
@@ -35,6 +37,8 @@ const NetworkAction: FC<Props> = ({ id, events, onLeave, onJoin }) => {
     await dispatch(leaveNetwork({ networkId: id }));
     dispatch(leaveParticipant(id));
 
+    refetchNotificationsWithDelay();
+
     onLeave && onLeave();
   };
 
@@ -43,6 +47,8 @@ const NetworkAction: FC<Props> = ({ id, events, onLeave, onJoin }) => {
 
     await dispatch(joinNetwork({ networkId: id }));
     dispatch(joinParticipant(id));
+
+    refetchNotificationsWithDelay();
 
     onJoin && onJoin();
   };

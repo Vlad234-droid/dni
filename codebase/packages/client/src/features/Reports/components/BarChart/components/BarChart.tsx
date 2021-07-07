@@ -1,13 +1,12 @@
 import { BarChart, CartesianGrid, XAxis, YAxis, Tooltip, Legend, Bar, LabelList, ResponsiveContainer } from 'recharts';
 
 type Props = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   data: any;
 };
 
 const BarChartContainer = ({ data }: Props) => {
   return (
-    <ResponsiveContainer height={700} width={'95%'}>
+    <ResponsiveContainer height={700} width={'96%'}>
       <BarChart
         barGap={0.5}
         barCategoryGap={8}

@@ -6,16 +6,20 @@ import { AcknowledgePayload } from '../config/types';
 
 type NotificationData = {
   refetchNotifications: () => void;
+  refetchNotificationsWithDelay: (delay?: number) => void;
   clear: () => void;
   toggleSidebar: () => void;
   acknowledge: (payload: AcknowledgePayload) => void;
+  acknowledgeWithDelay: (payload: AcknowledgePayload, delay?: number) => void;
 };
 
 export const defaultValue: NotificationData = {
   refetchNotifications: () => null,
+  refetchNotificationsWithDelay: () => null,
   clear: () => null,
   toggleSidebar: () => null,
   acknowledge: () => null,
+  acknowledgeWithDelay: () => null,
 };
 
 const NotificationContext = createContext(defaultValue);
@@ -31,6 +35,10 @@ export const NotificationProvider: FC = ({ children }) => {
     await dispatch(getListGroupByNetwork());
   };
 
+  const handleFetchNotificationsWithDelay = (dalay = 1000) => {
+    setTimeout(() => handleFetchNotifications(), dalay);
+  };
+
   const handleClear = () => {
     dispatch(clear());
   };
@@ -43,13 +51,19 @@ export const NotificationProvider: FC = ({ children }) => {
     dispatch(acknowledge(payload));
   };
 
+  const handleAcknowledgeWithDelay = (payload: AcknowledgePayload, dalay = 1000) => {
+    setTimeout(() => handleAcknowledge(payload), dalay);
+  };
+
   return (
     <NotificationContext.Provider
       value={{
         refetchNotifications: handleFetchNotifications,
+        refetchNotificationsWithDelay: handleFetchNotificationsWithDelay,
         clear: handleClear,
         toggleSidebar: handleToggleSidebar,
         acknowledge: handleAcknowledge,
+        acknowledgeWithDelay: handleAcknowledgeWithDelay,
       }}
     >
       {children}
@@ -59,6 +73,6 @@ export const NotificationProvider: FC = ({ children }) => {
 
 export const NotificationConsumer = NotificationContext.Consumer;
 
-export const useNotificationContext = () => useContext(NotificationContext);
+export const useNotification = () => useContext(NotificationContext);
 
 export default NotificationContext;

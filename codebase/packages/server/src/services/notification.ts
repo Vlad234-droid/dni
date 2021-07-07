@@ -18,7 +18,7 @@ const findNotifications = (colleagueUUID: string) => {
       e.entity_published_at AS "publishedAt"
     FROM ${schemaPrefix}fn_get_dni_user_notification_list(
       $1::uuid,
-      ARRAY['post'::${schemaPrefix}dni_entity_type_enum]::${schemaPrefix}dni_entity_type_enum[],
+      ARRAY['post'::${schemaPrefix}dni_entity_type_enum, 'event'::${schemaPrefix}dni_entity_type_enum]::${schemaPrefix}dni_entity_type_enum[],
       ARRAY['network'::${schemaPrefix}dni_entity_type_enum, 'event'::${schemaPrefix}dni_entity_type_enum]::${schemaPrefix}dni_entity_type_enum[],
       TRUE::boolean
     ) fn
@@ -42,7 +42,7 @@ const findNetworkNotifications = (colleagueUUID: string) => {
       fn.root_ancestor_type AS "rootAncestorType",
       fn.root_ancestor_id AS "rootAncestorId",
       root.entity_instance AS "rootAncestor",
-      COUNT(*) as "count"
+      COUNT(*) AS "count"
       FROM ${schemaPrefix}fn_get_dni_user_notification_list(
         $1::uuid,
         ARRAY['post'::${schemaPrefix}dni_entity_type_enum]::${schemaPrefix}dni_entity_type_enum[],
