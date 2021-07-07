@@ -1,5 +1,4 @@
-import { EntityManager } from 'typeorm';
-import { getManager, CcmsNotification, DniEntityTypeEnum } from '@dni/database';
+import { getManager, CcmsNotification, DniEntityTypeEnum, CcmsTriggerEventEnum } from '@dni/database';
 
 import {
   Network,
@@ -27,8 +26,11 @@ export const handleCepRequest = async (req: Request<{}, CepPayload>, res: Respon
   notification.entityUpdatedAt = payload.updated_at; // use payload vlaue, since entity doesn't have field updated_at
 
   // 2. try to get cms entity from Colleague CMS
-  const ctx = await prepareContext(req, res);
-  const cmsEntity: Post | Event | Network | undefined = (await analyzeEntity(payload, ctx))?.data;
+  let cmsEntity: Post | Event | Network | undefined;
+  if (CcmsTriggerEventEnum.DELETED != payload.trigger) {
+    const ctx = await prepareContext(req, res);
+    cmsEntity = (await analyzeEntity(payload, ctx))?.data;
+  }
 
   // 3. store notification into the db
   await getManager()

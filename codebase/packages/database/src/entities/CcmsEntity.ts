@@ -26,6 +26,9 @@ class CcmsEntity {
   @Column('timestamp with time zone', { name: 'entity_published_at', nullable: true })
   entityPublishedAt?: Date;
 
+  @Column('timestamp with time zone', { name: 'entity_deleted_at', nullable: true })
+  entityDeletedAt?: Date;
+
   @Column('integer', { name: 'parent_entity_id', nullable: true })
   parentEntityId?: number;
 
