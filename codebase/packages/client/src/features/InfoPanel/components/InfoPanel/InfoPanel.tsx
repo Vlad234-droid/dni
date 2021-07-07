@@ -37,7 +37,7 @@ const InfoPanel: FC<Props> = ({ type, title, content, footnote, infoLink, custom
       {footnote && <InfoPanelFootnote footnote={footnote} />}
       {!(type === Type.INFO) && (
         <Link href={infoLink} icon={{ graphic: 'externalLink', position: { global: 'right' } }} variant='textButton'>
-          Fill the survey
+          Take part here
         </Link>
       )}
     </Content>
