@@ -45,7 +45,9 @@ CREATE INDEX "dni_user$capi_properties__idx" ON dni_user USING gin(capi_properti
 CREATE TYPE dni_entity_type_enum AS ENUM (
 	'network',
 	'event',
-	'post'
+	'post',
+	'partner',
+	'meta-category'
 	);
 
 
@@ -186,6 +188,7 @@ CREATE TABLE IF NOT EXISTS ccms_entity (
 	entity_created_at timestamptz(0) NOT NULL,
 	entity_updated_at timestamptz(0) NULL,
 	entity_published_at timestamptz(0) NULL,
+   entity_deleted_at timestamptz(0) NULL,
 	parent_entity_id int4 NULL,
 	parent_entity_type dni_entity_type_enum NULL,
 	notification_uuid uuid NULL,
@@ -335,8 +338,9 @@ BEGIN
                p_entity := ROW(ce.entity_id , ce.entity_type), 
                p_only_published := true) as root_ancestor
          FROM ccms_entity ce
-         WHERE 
-            ce.entity_type = ANY(p_filter_entity_types) 
+         WHERE ce.entity_type = ANY(p_filter_entity_types) 
+           AND ce.entity_deleted_at IS NULL 
+           AND ce.entity_published_at IS NOT NULL 
       ) all_entities 
       LEFT JOIN dni_user_subscription dus 
         ON (all_entities.root_ancestor).id = dus.subscription_entity_id 

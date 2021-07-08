@@ -106,7 +106,8 @@ const slice = createSlice({
           .filter((nn) => nn.count > 0);
 
         state.notifications.list = state.notifications.list.filter(
-          (n) => n.entityId != acknowledge?.acknowledgeEntityId && n.entityType == acknowledge?.acknowledgeEntityType,
+          (n) =>
+            !(n.entityId == acknowledge?.acknowledgeEntityId && n.entityType == acknowledge?.acknowledgeEntityType),
         );
       })
       .addDefaultCase((state) => state);
