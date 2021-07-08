@@ -50,6 +50,7 @@ const analyzeEntities = async (entityType: DniEntityTypeEnum, ctx: RequestCtx): 
     params: {
       _start: '0',
       _limit: '100',
+      _publicationState: 'preview',
     },
   };
 
@@ -84,8 +85,8 @@ const prepareCcmsEntities = (entities: CommonEntity[], entityType: DniEntityType
       entityType,
       slug: entity.slug || slugify(entity.title),
       entityInstance: entity,
-      entityCreatedAt: entity.published_at,
-      entityUpdatedAt: entity.published_at,
+      entityCreatedAt: entity.created_at || entity.published_at || new Date(),
+      entityUpdatedAt: entity.updated_at || entity.published_at,
       entityPublishedAt: entity.published_at,
       ...prepareParentCcmsPartial(entity),
     }),

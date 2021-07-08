@@ -32,7 +32,12 @@ export class CcmsNotificationSubscriber implements EntitySubscriberInterface<Ccm
         .getRepository(CcmsEntity)
         .createQueryBuilder()
         .update()
-        .set({ entityDeletedAt: new Date() })
+        .set({ 
+          notificationUUID: ccrmNotification.notificationUUID, 
+          notificationTriggerEvent: ccrmNotification.notificationTriggerEvent,
+          updatedAt: new Date(), 
+          entityDeletedAt: ccrmNotification.receivedAt,   
+        })
         .where(`entityId = :entityId AND entityType = :entityType`, {
           entityId: ccrmNotification.entityId,
           entityType: ccrmNotification.entityType,
@@ -57,10 +62,15 @@ export class CcmsNotificationSubscriber implements EntitySubscriberInterface<Ccm
       if (entityInstance) {
         ccrmEntity.slug = entityInstance.slug || slugify(entityInstance.title);
         ccrmEntity.entityInstance = entityInstance;
-        ccrmEntity.entityCreatedAt = entityInstance.published_at;
-        ccrmEntity.entityUpdatedAt = entityInstance.published_at;
+        ccrmEntity.entityCreatedAt = 
+          entityInstance.created_at || entityInstance.published_at || ccrmNotification.receivedAt || new Date;
+
+        ccrmEntity.entityUpdatedAt = entityInstance.updated_at || ccrmNotification.receivedAt || new Date;
         ccrmEntity.entityPublishedAt = entityInstance.published_at;
 
+        ccrmEntity.notificationUUID = ccrmNotification.notificationUUID;
+        ccrmEntity.notificationTriggerEvent = ccrmNotification.notificationTriggerEvent;
+  
         const parent = entityInstance.event || entityInstance.network;
         if (parent) {
           const parentEntityType = entityInstance.event?.id
@@ -69,28 +79,25 @@ export class CcmsNotificationSubscriber implements EntitySubscriberInterface<Ccm
             ? DniEntityTypeEnum.NETWORK
             : undefined;
 
-          const ccrmParentEntity = new CcmsEntity();
+          // const ccrmParentEntity = new CcmsEntity();
 
-          ccrmParentEntity.entityId = parent.id;
-          ccrmParentEntity.entityType = parentEntityType!;
-          ccrmParentEntity.slug = parent?.slug || slugify(parent!.title);
-          ccrmParentEntity.entityInstance = parent;
-          ccrmParentEntity.entityCreatedAt = parent?.published_at;
-          ccrmParentEntity.entityUpdatedAt = parent?.published_at;
-          ccrmParentEntity.entityPublishedAt = parent?.published_at;
+          // ccrmParentEntity.entityId = parent.id;
+          // ccrmParentEntity.entityType = parentEntityType!;
+          // ccrmParentEntity.slug = parent?.slug || slugify(parent!.title);
+          // ccrmParentEntity.entityInstance = parent;
+          // ccrmParentEntity.entityCreatedAt = parent?.published_at;
+          // ccrmParentEntity.entityUpdatedAt = parent?.published_at;
+          // ccrmParentEntity.entityPublishedAt = parent?.published_at;
 
-          ccrmParentEntity.notificationUUID = ccrmNotification.notificationUUID;
-          ccrmParentEntity.notificationTriggerEvent = ccrmNotification.notificationTriggerEvent;
+          // ccrmParentEntity.notificationUUID = ccrmNotification.notificationUUID;
+          // ccrmParentEntity.notificationTriggerEvent = ccrmNotification.notificationTriggerEvent;
 
-          manager.save(ccrmParentEntity);
+          // manager.save(ccrmParentEntity);
 
           ccrmEntity.parentEntityId = parent.id;
           ccrmEntity.parentEntityType = parentEntityType;
         }
       }
-
-      ccrmEntity.notificationUUID = ccrmNotification.notificationUUID;
-      ccrmEntity.notificationTriggerEvent = ccrmNotification.notificationTriggerEvent;
 
       manager.save(ccrmEntity);
     }

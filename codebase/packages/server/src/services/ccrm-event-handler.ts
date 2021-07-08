@@ -41,7 +41,13 @@ export const handleCepRequest = async (req: Request<{}, CepPayload>, res: Respon
 const analyzeEntity = async (payload: CepPayload, ctx: RequestCtx) => {
   const { id, model } = payload;
 
-  const reqPayload = { params: { id } };
+  // prepare payload
+  const reqPayload = { 
+    params: { 
+      id,  
+      _publicationState: 'preview',
+    } 
+  };
 
   switch (model) {
     case DniEntityTypeEnum.POST: {
