@@ -32,6 +32,7 @@
     "ws:connector:colleague": "yarn workspace @dni-connectors/colleague-api",
     "ws:connector:identity": "yarn workspace @dni-connectors/identity-api",
     "ws:connector:colleague-cms": "yarn workspace @dni-connectors/colleague-cms-api",
+    "ws:connector:contact": "yarn workspace @dni-connectors/contact-api",
     "ws:connector:common": "yarn workspace @dni-common/connector-utils",
     "ws:connector:confirmit": "yarn workspace @dni-connectors/confirmit-api",
     "ws:db": "yarn workspace @dni/database",

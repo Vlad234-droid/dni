@@ -46,7 +46,7 @@ const PostPublished: FC<PostPublishedProps> = ({ item }) => {
         <PostDescription>
           <RichTextRenderer source={content} />
         </PostDescription>
-        <CopyLink to={`${Page.NETWORK_NEWS}/${id}`} />
+        <CopyLink to={`/${Page.NETWORK_NEWS}/${id}`} />
         {/*<PostControls id={id} emotions={emotions} /> */}
       </PostContent>
     </PostPublishedWrapper>

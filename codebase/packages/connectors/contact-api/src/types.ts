@@ -17,13 +17,14 @@ export type ApiMsgBody = {
 };
 
 export type ApiEmailAddressBody = {
+  alias: 'Personal';
   emailAddress: string;
 };
 
 export type ApiParams = {
   templateId?: string;
-  colleagueUUID?: string;
-  emailIndex?: string;
+  userId?: string;
+  addressIdentifier?: string;
 };
 
 export type ApiInput<T, U = unknown> = {
@@ -44,20 +45,9 @@ export type ApiMsgOutput = {
 };
 
 export type ApiEmailAddressesOutput = {
-  emailAddresses: [
-    {
-      emailIndex: string;
-      emailAddress: string;
-      isPrimary: boolean;
-      tags: string[];
-    },
-  ];
-  domain: {
-    returned: string[];
-    omitted: string[];
-  };
-  ghsSuccess: boolean;
-  ngcSuccess: boolean;
+  addressIdentifier: string;
+  alias: string;
+  emailAddress: string;
 };
 
 export type ApiEmailAddressOutput = {

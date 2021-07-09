@@ -45,8 +45,12 @@ const api = (requestCtx: ContextProvider<any>) =>
       const res = await contactApiConnector(ctx).getEmailAddresses({ params });
       return unsafelyUnpackResponseData(res);
     },
-    updateEmailAddress: async ({ params }, ctx) => {
-      const res = await contactApiConnector(ctx).updateEmailAddress({ params });
+    updateEmailAddress: async ({ params, body }, ctx) => {
+      const res = await contactApiConnector(ctx).updateEmailAddress({ params, body });
+      return unsafelyUnpackResponseData(res);
+    },
+    createEmailAddress: async ({ params, body }, ctx) => {
+      const res = await contactApiConnector(ctx).createEmailAddress({ params, body });
       return unsafelyUnpackResponseData(res);
     },
     // Emojis
