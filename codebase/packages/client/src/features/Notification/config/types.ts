@@ -81,6 +81,19 @@ type FormData = {
   email: string;
 };
 
+type EmailNotificationSettings = {
+  settingProperties: {
+    receivePostsEmailNotifications: false;
+    receiveEventsEmailNotifications: false;
+  };
+};
+
+type EmailAddress = {
+  emailAddress: string;
+  alias: 'Personal' | string;
+  addressIdentifier: string;
+};
+
 export { EntityType };
 
 export type {
@@ -93,4 +106,6 @@ export type {
   State,
   FormData,
   EntityIds,
+  EmailNotificationSettings,
+  EmailAddress,
 };

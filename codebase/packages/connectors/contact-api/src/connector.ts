@@ -14,6 +14,8 @@ import {
   ContactAPIHeaders,
 } from './types';
 
+export const USER_PREFIX = 'trn:tesco:uid:uuid';
+
 export type ElementType<T extends ReadonlyArray<unknown>> = T extends ReadonlyArray<infer ElementType>
   ? ElementType
   : never;
@@ -37,7 +39,7 @@ export const contactApiDef = defineAPI((endpoint) => ({
     .response<ApiEmailAddressOutput>()
     .build(),
   createEmailAddress: endpoint
-    .post('/contact/v1/addressbook/emailaddresses')
+    .post('/contact/v1/addressbook/emailaddresses/:userId')
     .params<ApiParams>()
     .body<ApiEmailAddressBody>()
     .response<ApiEmailAddressOutput>()

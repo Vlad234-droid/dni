@@ -12,6 +12,7 @@ interface User {
   roles: UserRole[];
   networks: number[];
   events: number[];
+  colleagueUUID: string;
 }
 
 interface DefaultUser extends Partial<User> {

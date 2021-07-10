@@ -44,18 +44,15 @@ export type ApiMsgOutput = {
   ];
 };
 
-export type ApiEmailAddressesOutput = {
+type ApiEmailAddresses = {
   addressIdentifier: string;
   alias: string;
   emailAddress: string;
 };
 
-export type ApiEmailAddressOutput = {
-  code: string;
-  message: string;
-  info: string;
-  errors: string[];
-};
+export type ApiEmailAddressesOutput = ApiEmailAddresses[];
+
+export type ApiEmailAddressOutput = ApiEmailAddresses;
 
 export type ContactAPIHeaders = {
   Authorization: () => string;

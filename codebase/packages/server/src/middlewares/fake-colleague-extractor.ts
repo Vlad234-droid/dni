@@ -3,7 +3,7 @@ import { ColleagueV2 } from '@dni-connectors/colleague-api';
 
 export const fakeColleagueExtractor: Middleware = async (req, res, next) => {
   const userInfo = infoExtractor(req, res);
-  const colleagueUUID = '023c05c5-b825-43ac-813b-b362721ad6da';
+  const colleagueUUID = '213ea7d6-1d3e-4429-8a2d-8007d6c11731';
   const colleague = {
     colleagueUUID,
     externalSystems: {
