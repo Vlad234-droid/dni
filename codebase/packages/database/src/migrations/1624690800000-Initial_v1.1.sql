@@ -336,7 +336,7 @@ BEGIN
             ce.*, 
             fn_get_ccms_entity_root_ancestor(
                p_entity := ROW(ce.entity_id , ce.entity_type), 
-               p_only_published := true) as root_ancestor
+               p_only_published := TRUE) as root_ancestor
          FROM ccms_entity ce
          WHERE ce.entity_type = ANY(p_filter_entity_types) 
            AND ce.entity_deleted_at IS NULL 
@@ -352,6 +352,70 @@ BEGIN
          OR (root_ancestor IS NULL AND dus.colleague_uuid IS NULL))
         AND (p_return_only_non_acknowledged = FALSE OR recent_acknowledge.acknowledged_at IS NULL)
       ;
+END
+$function$
+;
+
+
+-- ============================
+-- fn_get_dni_user_mailing_data
+-- ============================
+CREATE OR REPLACE FUNCTION fn_get_dni_user_mailing_data(
+     p_entity_type dni_entity_type_enum,
+     p_entity_id int4 DEFAULT NULL
+     )
+  RETURNS jsonb 
+  LANGUAGE plpgsql
+AS $function$
+DECLARE
+    mailing_data_jsonb jsonb;
+BEGIN
+   IF p_entity_type IS NULL
+   THEN
+      RAISE EXCEPTION '`p_entity_type` parameter is required'
+         USING HINT = 'These options are available: `network`, `event`, `post`';
+   END IF;
+
+   SET search_path TO "$user", dni, public;
+
+   WITH 
+      params AS (SELECT 
+         p_entity_type as entity_type,
+         p_entity_id as entity_id
+      ),
+      root_ancestor AS (SELECT
+         entity_type,
+         entity_id,
+         "type" as root_ancestor_type,
+         "id" as root_ancestor_id
+      FROM params, fn_get_ccms_entity_root_ancestor(p_entity := ROW(entity_id , entity_type), p_only_published := TRUE)
+      ),
+      entity_hierarchy AS (SELECT
+         ce.entity_instance,
+         ce.parent_entity_type,
+         ce.parent_entity_id,
+         ra.root_ancestor_type,
+         ra.root_ancestor_id
+      FROM root_ancestor ra
+      JOIN ccms_entity ce ON ra.entity_id = ce.entity_id AND ra.entity_type = ce.entity_type
+      ),
+      affected_users AS (SELECT
+         jsonb_agg(dus.colleague_uuid) AS colleague_uuids
+      FROM dni_user_subscription dus 
+      WHERE 
+         ((dus.subscription_entity_id IN (select parent_entity_id FROM entity_hierarchy)) AND (dus.subscription_entity_type IN (select parent_entity_type FROM entity_hierarchy))) OR 
+         ((dus.subscription_entity_id IN (select root_ancestor_id FROM entity_hierarchy)) AND (dus.subscription_entity_type IN (select root_ancestor_type FROM entity_hierarchy))) 
+      )
+   SELECT 
+      jsonb_build_object(
+         'entity', entity_hierarchy.entity_instance,
+         'affectedColleagueUuids', affected_users.colleague_uuids
+      ) as contact_data
+   INTO mailing_data_jsonb
+   FROM entity_hierarchy, affected_users
+   ;
+
+   RETURN mailing_data_jsonb;
 END
 $function$
 ;
