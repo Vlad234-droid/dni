@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import tlogo from 'assets/t-logo.svg';
 
 const CreatorAvatar = styled.div<{
   avatar: string;
@@ -10,7 +11,7 @@ const CreatorAvatar = styled.div<{
   flex-shrink: 0;
   background-size: cover;
   background-position: center;
-  background-image: url(${({ avatar }) => avatar});
+  background-image: url(${({ avatar }) => (avatar.length > 0 ? avatar : tlogo)});
   background-color: ${({ theme }) => theme.colors.tost};
 `;
 

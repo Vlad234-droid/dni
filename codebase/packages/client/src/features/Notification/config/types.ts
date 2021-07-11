@@ -21,21 +21,19 @@ type Notification = {
   rootAncestorType?: EntityType;
   rootAncestorId?: number;
   rootAncestor?: Entity;
-  parentType?: EntityType;
-  parentId?: number;
-  parent?: Entity;
-  createdAt: string;
-  updatedAt?: string;
-  publishedAt?: string;
+  parentEntityType?: EntityType;
+  parentEntityId?: number;
+  parentEntity?: Entity;
+  notifiedAt: string;
 };
 
 type NetworkNotification = {
-  entityType: EntityType;
-  entitiesIds: number[];
   rootAncestorType?: EntityType;
   rootAncestorId?: number;
   rootAncestor?: Entity;
-  count: number;
+  entitiesDetails: { entityType: EntityType; entitiesIds: number[] }[];
+  recentNotifiedAt: string;
+  totalEntitiesCount: number;
 };
 
 type EntityIds = {
