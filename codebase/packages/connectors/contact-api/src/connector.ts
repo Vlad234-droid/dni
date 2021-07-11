@@ -14,7 +14,7 @@ import {
   ContactAPIHeaders,
 } from './types';
 
-export const USER_PREFIX = 'trn:tesco:uid:uuid';
+export const USER_UID_PREFIX = 'trn:tesco:uid:uuid';
 
 export type ElementType<T extends ReadonlyArray<unknown>> = T extends ReadonlyArray<infer ElementType>
   ? ElementType

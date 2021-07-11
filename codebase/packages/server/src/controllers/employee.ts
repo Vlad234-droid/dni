@@ -102,15 +102,18 @@ const getNetworksParticipants: Middleware = (_, res) => {
 };
 
 const getPersonalEmail: Middleware = async (req: Request, res: Response) => {
-  return executeSafe(res, async () => res.json(await fetchPersonalEmail(req, res)));
+  const colleagueUUID = await colleagueUUIDExtractor(req, res);
+  return executeSafe(res, async () => res.json(await fetchPersonalEmail(colleagueUUID!, req, res)));
 };
 
 const addPersonalEmail: Middleware = async (req: Request, res: Response) => {
-  return executeSafe(res, async () => res.json(await createPersonalEmail(req, res)));
+  const colleagueUUID = await colleagueUUIDExtractor(req, res);
+  return executeSafe(res, async () => res.json(await createPersonalEmail(colleagueUUID!, req, res)));
 };
 
 const refreshPersonalEmail: Middleware = async (req: Request, res: Response) => {
-  return executeSafe(res, async () => res.json(await updatePersonalEmail(req, res)));
+  const colleagueUUID = await colleagueUUIDExtractor(req, res);
+  return executeSafe(res, async () => res.json(await updatePersonalEmail(colleagueUUID!, req, res)));
 };
 
 const refreshSetting: Middleware = async (req: Request<{}, {}, EmailNotificationSettings>, res: Response) => {

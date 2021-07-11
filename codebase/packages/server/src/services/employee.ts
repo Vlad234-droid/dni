@@ -2,7 +2,6 @@ import { Request, Response } from 'express';
 import { getOpenIdUserInfo } from '@energon/onelogin';
 import { getRepository, DniUserSubscription, DniEntityTypeEnum, DniUser } from '@dni/database';
 import { colleagueApiConnector, ColleagueV2 } from '@dni-connectors/colleague-api';
-import { contactApiConnector, USER_PREFIX } from '@dni-connectors/contact-api';
 import { defaultConfig } from '../config/default';
 import { getInstance as getCacheInstance } from './cache';
 import { prepareContext } from './context';
@@ -18,18 +17,9 @@ type EmailNotificationSettings = {
   receiveEventsEmailNotifications: boolean;
 };
 
-type EmailAddressesFilter = {
-  userId?: string;
-  addressIdentifier?: string;
-};
-
-type EmailAddresses = {
-  alias: string;
-  emailAddress: string;
-  addressIdentifier: string;
-};
-
-const PERSONAL_ALIAS = 'Personal';
+type ColleagueRequest = {
+  colleagueUUID?: string | null;
+} & Request;
 
 const infoExtractor = (req: Request, res: Response) => {
   const userInfo = getOpenIdUserInfo(res) || req.cookies[process.env.COOKIE_USER_KEY!] || {};
@@ -41,7 +31,7 @@ const infoExtractor = (req: Request, res: Response) => {
   return userInfo;
 };
 
-const colleagueUUIDExtractor = async (req: Request, res: Response): Promise<string | null> => {
+const colleagueUUIDExtractor = async (req: ColleagueRequest, res: Response): Promise<string | null> => {
   if (req.colleagueUUID) {
     return req.colleagueUUID!;
   }
@@ -254,58 +244,7 @@ const findSettings = async (colleagueUUID: string) => {
     .getOne();
 };
 
-const getContactApiConnector = async (req: Request, res: Response) => {
-  const ctx = await prepareContext(req, res);
-  return contactApiConnector(ctx);
-};
-
-const fetchPersonalEmail = async (req: Request, res: Response) => {
-  const colleagueUUID = await colleagueUUIDExtractor(req, res);
-  const connector = await getContactApiConnector(req, res);
-
-  const emails: EmailAddresses[] =
-    (
-      await connector.getEmailAddresses({
-        params: { userId: `${USER_PREFIX}:${colleagueUUID}` },
-      })
-    ).data || [];
-
-  return emails.find((email) => email.alias === PERSONAL_ALIAS);
-};
-
-const createPersonalEmail = async (req: Request, res: Response) => {
-  const colleagueUUID = await colleagueUUIDExtractor(req, res);
-  const connector = await getContactApiConnector(req, res);
-
-  return (
-    await connector.createEmailAddress({
-      params: { userId: `${USER_PREFIX}:${colleagueUUID}` },
-      body: {
-        ...req.body,
-        alias: PERSONAL_ALIAS,
-      },
-    })
-  ).data;
-};
-
-const updatePersonalEmail = async (req: Request, res: Response) => {
-  const connector = await getContactApiConnector(req, res);
-
-  const colleagueUUID = await colleagueUUIDExtractor(req, res);
-  const { addressId } = req.params;
-
-  return (
-    await connector.updateEmailAddress({
-      params: {
-        addressIdentifier: addressId as string,
-        userId: `${USER_PREFIX}:${colleagueUUID}`,
-      },
-      body: req.body,
-    })
-  ).data;
-};
-
-export type { EmailNotificationSettings, EmailAddressesFilter, EmailAddresses };
+export type { EmailNotificationSettings };
 
 export {
   createOrUpdateDniUser,
@@ -321,7 +260,4 @@ export {
   colleagueUUIDExtractor,
   storeSettings,
   findSettings,
-  fetchPersonalEmail,
-  createPersonalEmail,
-  updatePersonalEmail,
 };

@@ -12,7 +12,7 @@
     "clean:all": "yarn clean && rimraf node_modules",
     "build:prod": "tsc -p .",
     "run:dev": "cross-env BUILD_ENV=development env-cmd --silent --no-override --fallback -f .env.${BUILD_ENV} nodemon --watch \"src/**/*\" -e ts,tsx --exec \"ts-node --files\" src/app.ts",
-    "run:prod": "cross-env BUILD_ENV=production env-cmd --silent --no-override --fallback -f .env.${BUILD_ENV} node build/app.js",
+    "run:prod": "cross-env BUILD_ENV=production env-cmd --silent --no-override --fallback -f .env.production node build/app.js",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "test:watch": "jest --watch",

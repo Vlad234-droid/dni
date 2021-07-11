@@ -4,8 +4,8 @@ export type ApiMsgBody = {
   recipients: [
     {
       _type?: 'static' | 'customer';
-      destination: 'emailTo' | 'sms';
-      property: 'defaultToAddress';
+      destination: 'emailTo';
+      property?: 'defaultToAddress';
       address: string;
     },
   ];
