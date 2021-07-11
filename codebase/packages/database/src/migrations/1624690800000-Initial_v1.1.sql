@@ -373,7 +373,7 @@ BEGIN
    IF p_entity_type IS NULL
    THEN
       RAISE EXCEPTION '`p_entity_type` parameter is required'
-         USING HINT = 'These options are available: `network`, `event`, `post`';
+         USING HINT = 'These options are available: `event`, `post`';
    END IF;
 
    SET search_path TO "$user", dni, public;
@@ -398,13 +398,22 @@ BEGIN
          ra.root_ancestor_id
       FROM root_ancestor ra
       JOIN ccms_entity ce ON ra.entity_id = ce.entity_id AND ra.entity_type = ce.entity_type
+      WHERE ce.entity_published_at IS NOT NULL AND ce.entity_deleted_at IS NULL
       ),
       affected_users AS (SELECT
          jsonb_agg(dus.colleague_uuid) AS colleague_uuids
-      FROM dni_user_subscription dus 
+      FROM params, dni_user_subscription dus 
+      JOIN dni_user du ON dus.colleague_uuid = du.colleague_uuid 
       WHERE 
-         ((dus.subscription_entity_id IN (select parent_entity_id FROM entity_hierarchy)) AND (dus.subscription_entity_type IN (select parent_entity_type FROM entity_hierarchy))) OR 
-         ((dus.subscription_entity_id IN (select root_ancestor_id FROM entity_hierarchy)) AND (dus.subscription_entity_type IN (select root_ancestor_type FROM entity_hierarchy))) 
+         (
+            ((dus.subscription_entity_id IN (select parent_entity_id FROM entity_hierarchy)) AND (dus.subscription_entity_type IN (select parent_entity_type FROM entity_hierarchy))) OR 
+            ((dus.subscription_entity_id IN (select root_ancestor_id FROM entity_hierarchy)) AND (dus.subscription_entity_type IN (select root_ancestor_type FROM entity_hierarchy)))
+         )
+         AND 
+         (
+            (entity_type = 'post'::dni_entity_type_enum AND (du.setting_properties->>'receivePostsEmailNotifications')::boolean = TRUE) OR 
+            (entity_type = 'event'::dni_entity_type_enum AND (du.setting_properties->>'receiveEventsEmailNotifications')::boolean = TRUE) 
+         )
       )
    SELECT 
       jsonb_build_object(
@@ -460,7 +469,8 @@ BEGIN
       FROM ccms_entity
       WHERE entity_type = p_entity_type
         AND entity_published_at IS NOT NULL 
-        AND notification_trigger_event <> 'deleted';
+        AND entity_deleted_at IS NULL
+      ;
    END IF;
    */
   
@@ -628,7 +638,8 @@ BEGIN
       FROM ccms_entity
       WHERE entity_type = p_entity_type
         AND entity_published_at IS NOT NULL 
-        AND notification_trigger_event <> 'deleted';
+        AND entity_deleted_at IS NULL
+      ;
    END IF;
    */
   
@@ -799,7 +810,8 @@ BEGIN
       FROM ccms_entity
       WHERE entity_type = p_entity_type
         AND entity_published_at IS NOT NULL 
-        AND notification_trigger_event <> 'deleted';
+        AND entity_deleted_at IS NULL
+      ;
    END IF;
    */
   
