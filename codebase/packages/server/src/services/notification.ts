@@ -1,65 +1,50 @@
 import { getManager, getSchemaPrefix, DniUserNotificationAcknowledge, DniEntityTypeEnum } from '@dni/database';
 
-const findNotifications = (colleagueUUID: string) => {
+const findNotifications = async (colleagueUUID: string) => {
   const schemaPrefix = getSchemaPrefix();
-  return getManager().connection.query(
-    `SELECT
-      fn.entity_type AS "entityType",
-      fn.entity_id AS "entityId",
-      e.entity_instance AS "entity",
-      root.entity_type AS "rootAncestorType",
-      root.entity_id AS "rootAncestorId",
-      root.entity_instance AS "rootAncestor",
-      parent.entity_type AS "parentType",
-      parent.entity_id AS "parentId",
-      parent.entity_instance AS "parent",
-      e.entity_created_at AS "createdAt",
-      e.entity_updated_at AS "updatedAt",
-      e.entity_published_at AS "publishedAt"
-    FROM ${schemaPrefix}fn_get_dni_user_notification_list(
-      $1::uuid,
-      ARRAY['post'::${schemaPrefix}dni_entity_type_enum, 'event'::${schemaPrefix}dni_entity_type_enum]::${schemaPrefix}dni_entity_type_enum[],
-      ARRAY['network'::${schemaPrefix}dni_entity_type_enum, 'event'::${schemaPrefix}dni_entity_type_enum]::${schemaPrefix}dni_entity_type_enum[],
-      TRUE::boolean
-    ) fn
-    LEFT JOIN ${schemaPrefix}ccms_entity e
-    ON fn.entity_id = e.entity_id AND fn.entity_type = e.entity_type
-    LEFT JOIN ${schemaPrefix}ccms_entity parent
-    ON e.parent_entity_id = parent.entity_id AND e.parent_entity_type = parent.entity_type
-    LEFT JOIN ${schemaPrefix}ccms_entity root
-    ON fn.root_ancestor_id = root.entity_id AND fn.root_ancestor_type = root.entity_type
-    ORDER BY fn.notified_at DESC`,
+  const enrichedNotificationList = await getManager().connection.query(
+    `SELECT 
+        entity_type AS "entityType",
+        entity_id AS "entityId",
+        entity_instance AS "entity",
+        root_ancestor_type AS "rootAncestorType",
+        root_ancestor_id AS "rootAncestorId",
+        root_ancestor_instance AS "rootAncestor",
+        parent_entity_type AS "parentEntityType",
+        parent_entity_id AS "parentEntityId",
+        parent_entity_instance AS "parentEntity",
+        notified_at AS "notifiedAt"
+    FROM ${schemaPrefix}fn_get_dni_user_notification_enriched_list(
+      p_colleague_uuid := $1::uuid, 
+      p_filter_entity_types := ARRAY['post'::${schemaPrefix}dni_entity_type_enum, 'event'::${schemaPrefix}dni_entity_type_enum],
+      p_filter_subscription_entity_types := ARRAY['network'::${schemaPrefix}dni_entity_type_enum, 'event'::${schemaPrefix}dni_entity_type_enum]
+    )`,
     [colleagueUUID],
   );
+
+  return enrichedNotificationList;
 };
 
-const findNetworkNotifications = (colleagueUUID: string) => {
+const findNetworkNotifications = async (colleagueUUID: string) => {
   const schemaPrefix = getSchemaPrefix();
-  return getManager().connection.query(
-    `SELECT
-      fn.entity_type AS "entityType",
-      ARRAY_AGG(fn.entity_id) AS "entitiesIds",
-      fn.root_ancestor_type AS "rootAncestorType",
-      fn.root_ancestor_id AS "rootAncestorId",
-      root.entity_instance AS "rootAncestor",
-      COUNT(*) AS "count"
-      FROM ${schemaPrefix}fn_get_dni_user_notification_list(
-        $1::uuid,
-        ARRAY['post'::${schemaPrefix}dni_entity_type_enum]::${schemaPrefix}dni_entity_type_enum[],
-        ARRAY['network'::${schemaPrefix}dni_entity_type_enum, 'event'::${schemaPrefix}dni_entity_type_enum]::${schemaPrefix}dni_entity_type_enum[],
-        TRUE::boolean
-      ) fn
-      LEFT JOIN ${schemaPrefix}ccms_entity root
-      ON fn.root_ancestor_id = root.entity_id AND fn.root_ancestor_type = root.entity_type
-      GROUP BY
-        fn.colleague_uuid, 
-        fn.root_ancestor_id, 
-        fn.root_ancestor_type, 
-        fn.entity_type,
-        root.entity_instance
-      ORDER BY max(fn.notified_at) DESC`,
+  const grouppedNotificationList = await getManager().connection.query(
+    `SELECT 
+        root_ancestor_type AS "rootAncestorType",
+        root_ancestor_id AS "rootAncestorId",
+        root_ancestor_instance AS "rootAncestor",
+        details_as_array AS "entitiesDetails", 
+        recent_notified_at AS "recentNotifiedAt",
+        total_entities_count AS "totalEntitiesCount"
+    FROM ${schemaPrefix}fn_get_dni_user_notification_groupped_list(
+      p_colleague_uuid := $1::uuid, 
+      p_filter_entity_types := ARRAY['post'::${schemaPrefix}dni_entity_type_enum, 'event'::${schemaPrefix}dni_entity_type_enum],
+      p_filter_subscription_entity_types := ARRAY['network'::${schemaPrefix}dni_entity_type_enum, 'event'::${schemaPrefix}dni_entity_type_enum]
+    )
+    WHERE root_ancestor_type IS NULL OR root_ancestor_type = 'network'::${schemaPrefix}dni_entity_type_enum`,
     [colleagueUUID],
   );
+
+  return grouppedNotificationList;
 };
 
 const createColleagueNotificationRelation = async (

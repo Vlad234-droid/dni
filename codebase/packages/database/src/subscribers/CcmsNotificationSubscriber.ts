@@ -28,6 +28,7 @@ export class CcmsNotificationSubscriber implements EntitySubscriberInterface<Ccm
 
   async upsertCcrmEntity(ccrmNotification: CcmsNotification, manager: EntityManager, entityInstance: CommonCcrmEntity) {
     if (CcmsTriggerEventEnum.DELETED == ccrmNotification.notificationTriggerEvent) {
+      // Process DELETED event
       const builder = manager
         .getRepository(CcmsEntity)
         .createQueryBuilder()
@@ -52,6 +53,7 @@ export class CcmsNotificationSubscriber implements EntitySubscriberInterface<Ccm
 
       builder.execute();
     } else {
+      // Process CREATED,UPDATED event
       const ccrmEntity = new CcmsEntity();
 
       ccrmEntity.entityId = ccrmNotification.entityId;

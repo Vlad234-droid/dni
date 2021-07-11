@@ -23,12 +23,12 @@ const NetworkUpdates: FC = () => {
 
   useEffect(() => {
     setItems(
-      networkNotifications.map(({ rootAncestorId, rootAncestor, count }, idx) => ({
+      networkNotifications.map(({ rootAncestorId, rootAncestor, totalEntitiesCount }, idx) => ({
         key: rootAncestorId || `network-news-${idx}`,
         href: rootAncestorId ? `/${Page.NETWORKS}/${rootAncestorId}` : `/${Page.NETWORK_NEWS}`,
         name: rootAncestor?.title || 'D&I News',
         avatar: rootAncestor?.image?.url || '',
-        count,
+        count: totalEntitiesCount,
       })),
     );
   }, [networkNotifications]);
