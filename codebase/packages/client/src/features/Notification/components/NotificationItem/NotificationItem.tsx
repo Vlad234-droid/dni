@@ -23,7 +23,7 @@ type NotificationItem = {
   subName?: string;
   avatar: string;
   title?: string;
-  createdAt: string;
+  notifiedAt: string;
   onCloserClick: () => void;
   onLinkClick: () => void;
 };
@@ -38,7 +38,7 @@ const NotificationerItem: FC<Props> = ({
   subName,
   avatar,
   title,
-  createdAt,
+  notifiedAt,
   onCloserClick,
   onLinkClick,
 }) => {
@@ -57,7 +57,7 @@ const NotificationerItem: FC<Props> = ({
         </Head>
         <Content>
           {title && <Title>{title}</Title>}
-          <Date>{isoDateToFormat(createdAt, FULL_FORMAT)}</Date>
+          <Date>{isoDateToFormat(notifiedAt, FULL_FORMAT)}</Date>
         </Content>
       </Core>
       <CustomLink to={href} title={'Click to view'} onClick={onLinkClick} />

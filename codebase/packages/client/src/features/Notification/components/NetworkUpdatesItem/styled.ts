@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { NavLink } from 'react-router-dom';
+import tlogo from 'assets/t-logo.svg';
 
 export const Wrapper = styled(NavLink)`
   display: flex;
@@ -39,7 +40,7 @@ export const Avatar = styled.div<{
   flex-shrink: 0;
   background-size: cover;
   background-position: center;
-  background-image: url(${({ avatar }) => avatar});
+  background-image: url(${({ avatar }) => (avatar.length > 0 ? avatar : tlogo)});
   background-color: ${({ theme }) => theme.colors.tost};
   overflow: hidden;
   position: relative;

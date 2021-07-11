@@ -103,21 +103,24 @@ const NotificationSidebar: FC<Props> = ({ buttonRef }) => {
           rootAncestorId,
           rootAncestorType,
           rootAncestor,
-          parentId,
-          parentType,
-          parent,
-          createdAt,
+          parentEntityId,
+          parentEntityType,
+          parentEntity,
+          notifiedAt,
         }) => ({
           key: `${entityType}-${entityId}` || `network-news-${entityId}`,
-          href: EntityType.EVENT == entityType ? buildLink(entityId, entityType) : buildLink(parentId, parentType),
-          name: parent?.title || 'Diversity & Inclusion News',
+          href:
+            EntityType.EVENT == entityType
+              ? buildLink(entityId, entityType)
+              : buildLink(parentEntityId, parentEntityType),
+          name: parentEntity?.title || 'Diversity & Inclusion News',
           title: entity?.title || 'Unknown Post',
           subName:
-            rootAncestorId != parentId && rootAncestorType != parentType
+            rootAncestor && rootAncestorId != parentEntityId && rootAncestorType != parentEntityType
               ? `on behalf of ${rootAncestor?.title}`
               : undefined,
-          avatar: parent?.image?.url || '',
-          createdAt,
+          avatar: parentEntity?.image?.url || '',
+          notifiedAt,
           onCloserClick: () => handleCloserClick({ entityType, entityId }),
           onLinkClick: () => (EntityType.EVENT == entityType ? handleCloserClick({ entityType, entityId }) : null),
         }),

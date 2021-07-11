@@ -5,7 +5,6 @@ import styled from 'styled-components';
 
 import { ToastSkin, toasterActions } from 'features/Toaster';
 import store from 'store';
-import { now } from 'utils/date';
 
 import AreaChart from '../../AreaChart';
 import BarChart from '../../BarChart';

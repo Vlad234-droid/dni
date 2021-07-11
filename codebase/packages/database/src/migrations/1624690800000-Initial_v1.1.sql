@@ -295,63 +295,211 @@ $function$
 ;
 
 
--- =================================
--- fn_get_dni_user_notification_list
--- =================================
-CREATE OR REPLACE FUNCTION fn_get_dni_user_notification_list(
-     p_colleague_uuid uuid,
-     p_filter_entity_types dni_entity_type_enum[] DEFAULT ARRAY['event'::dni_entity_type_enum, 'post'::dni_entity_type_enum],
-     p_filter_subscription_entity_types dni_entity_type_enum[] DEFAULT ARRAY['network'::dni_entity_type_enum],
-     p_return_only_non_acknowledged boolean DEFAULT TRUE
-     )
+-- =====================================
+-- fn_get_dni_user_notification_raw_list
+-- =====================================
+CREATE OR REPLACE FUNCTION fn_get_dni_user_notification_raw_list(
+     p_colleague_uuid uuid, 
+     p_filter_entity_types dni_entity_type_enum[] DEFAULT ARRAY['event'::dni_entity_type_enum, 'post'::dni_entity_type_enum], 
+     p_filter_subscription_entity_types dni_entity_type_enum[] DEFAULT ARRAY['network'::dni_entity_type_enum], 
+     p_return_only_non_acknowledged boolean DEFAULT true)
   RETURNS TABLE(
      colleague_uuid uuid, 
-     entity_id int4, 
      entity_type dni_entity_type_enum, 
-     root_ancestor_id int4, 
+     entity_id integer, 
+     parent_entity_type dni_entity_type_enum, 
+     parent_entity_id integer, 
      root_ancestor_type dni_entity_type_enum, 
-     notified_at timestamptz,
-     acknowledged_at timestamptz)
+     root_ancestor_id integer, 
+     notified_at timestamp with time zone, 
+     acknowledged_at timestamp with time zone)
   LANGUAGE plpgsql
 AS $function$
 BEGIN
    SET search_path TO "$user", dni, public;
 
-   RETURN QUERY
+   RETURN QUERY SELECT 
+      p_colleague_uuid as colleague_uuid,
+      all_entities.entity_type as entity_type,
+      all_entities.entity_id as entity_id,
+      all_entities.parent_entity_type as parent_entity_type,
+      all_entities.parent_entity_id as parent_entity_id,
+      (all_entities.root_ancestor).type as root_ancestor_type,
+      (all_entities.root_ancestor).id as root_ancestor_id,
+      coalesce(
+         all_entities.entity_updated_at, 
+         all_entities.entity_published_at, 
+         all_entities.entity_created_at, now()) as notified_at,
+      recent_acknowledge.acknowledged_at
+   FROM (
       SELECT 
+         ce.entity_type,
+         ce.entity_id,
+         ce.parent_entity_type,
+         ce.parent_entity_id,
+         ce.entity_created_at,
+         ce.entity_updated_at,
+         ce.entity_published_at,
+         ce.entity_deleted_at,
+         fn_get_ccms_entity_root_ancestor(
+            p_entity := ROW(ce.entity_id , ce.entity_type), 
+            p_only_published := true) as root_ancestor
+      FROM ccms_entity ce
+      WHERE ce.entity_type = ANY(p_filter_entity_types) 
+         AND ce.entity_deleted_at IS NULL 
+         AND ce.entity_published_at IS NOT NULL 
+   ) all_entities 
+   LEFT JOIN dni_user_subscription dus 
+      ON (all_entities.root_ancestor).id = dus.subscription_entity_id 
+      AND (all_entities.root_ancestor).type = dus.subscription_entity_type
+   LEFT JOIN fn_get_dni_user_recent_notification_acknowledgement(p_colleague_uuid) recent_acknowledge
+      ON all_entities.entity_id = recent_acknowledge.acknowledged_entity_id
+      AND all_entities.entity_type = recent_acknowledge.acknowledged_entity_type
+   WHERE (((root_ancestor).type = ANY(p_filter_subscription_entity_types)  AND dus.colleague_uuid = p_colleague_uuid)
+      OR (root_ancestor IS NULL AND dus.colleague_uuid IS NULL))
+      AND (p_return_only_non_acknowledged = FALSE OR recent_acknowledge.acknowledged_at IS NULL)
+   ;
+END
+$function$
+;
+
+
+-- ==========================================
+-- fn_get_dni_user_notification_enriched_list
+-- ==========================================
+CREATE OR REPLACE FUNCTION fn_get_dni_user_notification_enriched_list(
+     p_colleague_uuid uuid, 
+     p_filter_entity_types dni_entity_type_enum[] DEFAULT ARRAY['event'::dni_entity_type_enum, 'post'::dni_entity_type_enum], 
+     p_filter_subscription_entity_types dni_entity_type_enum[] DEFAULT ARRAY['network'::dni_entity_type_enum, 'event'::dni_entity_type_enum]
+     )
+  RETURNS TABLE(
+     entity_type dni_entity_type_enum, 
+     entity_id integer, 
+     entity_instance jsonb, 
+     root_ancestor_type dni_entity_type_enum, 
+     root_ancestor_id integer, 
+     root_ancestor_instance jsonb, 
+     parent_entity_type dni_entity_type_enum, 
+     parent_entity_id integer, 
+     parent_entity_instance jsonb, 
+     notified_at timestamp with time zone)
+  LANGUAGE plpgsql
+AS $function$
+BEGIN
+   SET search_path TO "$user", dni, public;
+
+   RETURN QUERY WITH 
+      params AS (SELECT 
          p_colleague_uuid as colleague_uuid,
-         all_entities.entity_id as entity_id,
-         all_entities.entity_type as entity_type,
-         (all_entities.root_ancestor).id as root_ancestor_id,
-         (all_entities.root_ancestor).type as root_ancestor_type,
-         coalesce(
-            all_entities.entity_updated_at, 
-            all_entities.updated_at,
-            all_entities.entity_published_at, 
-            all_entities.entity_created_at,
-            all_entities.created_at) as notified_at,
-         recent_acknowledge.acknowledged_at
-      FROM (
-         SELECT 
-            ce.*, 
-            fn_get_ccms_entity_root_ancestor(
-               p_entity := ROW(ce.entity_id , ce.entity_type), 
-               p_only_published := TRUE) as root_ancestor
-         FROM ccms_entity ce
-         WHERE ce.entity_type = ANY(p_filter_entity_types) 
-           AND ce.entity_deleted_at IS NULL 
-           AND ce.entity_published_at IS NOT NULL 
-      ) all_entities 
-      LEFT JOIN dni_user_subscription dus 
-        ON (all_entities.root_ancestor).id = dus.subscription_entity_id 
-       AND (all_entities.root_ancestor).type = dus.subscription_entity_type
-      LEFT JOIN fn_get_dni_user_recent_notification_acknowledgement(p_colleague_uuid) recent_acknowledge
-        ON all_entities.entity_id = recent_acknowledge.acknowledged_entity_id
-       AND all_entities.entity_type = recent_acknowledge.acknowledged_entity_type
-      WHERE (((root_ancestor).type = ANY(p_filter_subscription_entity_types)  AND dus.colleague_uuid = p_colleague_uuid)
-         OR (root_ancestor IS NULL AND dus.colleague_uuid IS NULL))
-        AND (p_return_only_non_acknowledged = FALSE OR recent_acknowledge.acknowledged_at IS NULL)
-      ;
+         p_filter_entity_types as filter_entity_types, 
+         p_filter_subscription_entity_types as filter_subscription_entity_types, 
+         TRUE::boolean as return_only_non_acknowledged
+      )
+   SELECT
+      fn.entity_type AS entity_type,
+      fn.entity_id AS entity_id,
+      entity.entity_instance AS entity_instance,
+      fn.root_ancestor_type AS root_ancestor_type,
+      fn.root_ancestor_id AS root_ancestor_id,
+      ancestor.entity_instance AS root_ancestor_instance,
+      fn.parent_entity_type AS parent_entity_type,
+      fn.parent_entity_id AS parent_entity_id,
+      parent.entity_instance AS parent_entity_instance,
+      fn.notified_at AS notified_at
+   FROM params, fn_get_dni_user_notification_raw_list(
+      p_colleague_uuid := colleague_uuid
+      , p_filter_entity_types := filter_entity_types
+      , p_filter_subscription_entity_types := filter_subscription_entity_types
+      , p_return_only_non_acknowledged := return_only_non_acknowledged
+   ) fn
+   LEFT JOIN ccms_entity entity
+   ON fn.entity_id = entity.entity_id AND fn.entity_type = entity.entity_type
+   LEFT JOIN ccms_entity parent
+   ON fn.parent_entity_id = parent.entity_id AND fn.parent_entity_type = parent.entity_type
+   LEFT JOIN ccms_entity ancestor
+   ON fn.root_ancestor_id = ancestor.entity_id AND fn.root_ancestor_type = ancestor.entity_type
+   ORDER BY fn.notified_at DESC
+   ;
+END
+$function$
+;
+
+
+-- ==========================================
+-- fn_get_dni_user_notification_groupped_list
+-- ==========================================
+CREATE OR REPLACE FUNCTION fn_get_dni_user_notification_groupped_list(
+     p_colleague_uuid uuid, 
+     p_filter_entity_types dni_entity_type_enum[] DEFAULT ARRAY['event'::dni_entity_type_enum, 'post'::dni_entity_type_enum], 
+     p_filter_subscription_entity_types dni_entity_type_enum[] DEFAULT ARRAY['network'::dni_entity_type_enum, 'event'::dni_entity_type_enum]
+     )
+  RETURNS TABLE(
+     root_ancestor_type dni_entity_type_enum, 
+     root_ancestor_id integer, 
+     root_ancestor_instance jsonb, 
+     details_as_object jsonb, 
+     details_as_array jsonb, 
+     recent_notified_at timestamp with time zone, 
+     total_entities_count integer)
+  LANGUAGE plpgsql
+AS $function$
+BEGIN
+   SET search_path TO "$user", dni, public;
+
+   RETURN QUERY WITH 
+      params AS (SELECT 
+         p_colleague_uuid as colleague_uuid,
+         p_filter_entity_types as filter_entity_types, 
+         p_filter_subscription_entity_types as filter_subscription_entity_types, 
+         TRUE::boolean as return_only_non_acknowledged
+      ),
+      raw_notifications AS (SELECT
+         fn.entity_type as entity_type,
+         jsonb_agg(fn.entity_id) AS entity_ids,
+         fn.root_ancestor_type AS root_ancestor_type,
+         fn.root_ancestor_id AS root_ancestor_id,
+         max(fn.notified_at) AS recent_notified_at,
+         COUNT(*) as entities_count
+      FROM params, fn_get_dni_user_notification_raw_list(
+         p_colleague_uuid := colleague_uuid
+         , p_filter_entity_types := filter_entity_types
+         , p_filter_subscription_entity_types := filter_subscription_entity_types
+         , p_return_only_non_acknowledged := return_only_non_acknowledged
+      ) fn
+      GROUP BY
+         fn.entity_type,
+         fn.colleague_uuid, 
+         fn.root_ancestor_id, 
+         fn.root_ancestor_type
+      ),
+      aggregated_notifications AS (SELECT 
+         rn.root_ancestor_type,
+         rn.root_ancestor_id,
+         root.entity_instance as root_ancestor_instance,
+         jsonb_object_agg(rn.entity_type, rn.entity_ids) as details_as_object,
+         jsonb_agg(jsonb_build_object('entityType', rn.entity_type, 'entitiesIds', rn.entity_ids)) as details_as_array,
+         MAX(rn.recent_notified_at) AS recent_notified_at,
+         SUM(rn.entities_count) as total_entities_count
+      FROM raw_notifications rn
+      LEFT JOIN ccms_entity root
+      ON rn.root_ancestor_id = root.entity_id AND rn.root_ancestor_type = root.entity_type
+      GROUP BY
+         rn.root_ancestor_type,
+         rn.root_ancestor_id,
+         root.entity_instance
+      )
+   SELECT 
+      an.root_ancestor_type,
+      an.root_ancestor_id,
+      an.root_ancestor_instance,
+      an.details_as_object,
+      an.details_as_array,
+      an.recent_notified_at,
+      an.total_entities_count::integer as total_entities_count
+   FROM aggregated_notifications an
+   ORDER BY an.recent_notified_at DESC
+   ;
+
 END
 $function$
 ;
@@ -469,8 +617,7 @@ BEGIN
       FROM ccms_entity
       WHERE entity_type = p_entity_type
         AND entity_published_at IS NOT NULL 
-        AND entity_deleted_at IS NULL
-      ;
+        AND notification_trigger_event <> 'deleted';
    END IF;
    */
   
@@ -638,8 +785,7 @@ BEGIN
       FROM ccms_entity
       WHERE entity_type = p_entity_type
         AND entity_published_at IS NOT NULL 
-        AND entity_deleted_at IS NULL
-      ;
+        AND notification_trigger_event <> 'deleted';
    END IF;
    */
   
@@ -810,8 +956,7 @@ BEGIN
       FROM ccms_entity
       WHERE entity_type = p_entity_type
         AND entity_published_at IS NOT NULL 
-        AND entity_deleted_at IS NULL
-      ;
+        AND notification_trigger_event <> 'deleted';
    END IF;
    */
   
