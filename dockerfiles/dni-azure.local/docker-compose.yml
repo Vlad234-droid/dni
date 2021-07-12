@@ -19,6 +19,12 @@ services:
             - NODE_ENV=ppe
             - NODE_PORT=9000
             - PUBLIC_URL=/
+            - DNI_APP_URL=http://localhost:9000
+            - DNI_APP_POST_URL=/network-news/%ID%
+            - DNI_APP_EVENT_URL=/events/%ID%
+            - DNI_APP_UNSUBSCRIBE_URL=/notification/settings?unsubscribe=true
+            - MAIL_TEMPLATE_ID=dfge2b6d-qfaa-47c6-bfw9-b4214y0a2e88
+            - MAIL_SEND_CHUNKS_NUMBER=30
             - WITH_ONE_LOGIN=true
             - OIDC_CLIENT_ID=cc1a44c0-7b26-0139-86ba-06f79909864e37548
             - OIDC_CLIENT_SECRET=1aaaab9d7016c7b2ad0497d2fd55260dddb8ea6f1d8d38fcab79e17c6764d29e
@@ -39,8 +45,9 @@ services:
             - TYPEORM_USERNAME=dni
             - TYPEORM_PASSWORD=dn1
             - TYPEORM_SSL=false
-            - TYPEORM_RUN_MIGRATION=true
-            - CCRM_RUN_SYNC=true
+            - TYPEORM_RUN_MIGRATION=false
+            - CCRM_RUN_SYNC=false
+            - CACHE_COLLEAGUE_TTL=3600
             - COOKIE_SESSION_KEY=dni_cookie
             - COOKIE_USER_KEY=user_data
             # Roles groups

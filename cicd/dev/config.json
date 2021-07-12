@@ -159,11 +159,11 @@
       },
       "TYPEORM_RUN_MIGRATION": {
         "type": "plain",
-        "value": "true"
+        "value": "false"
       },
       "CCRM_RUN_SYNC": {
         "type": "plain",
-        "value": "true"
+        "value": "false"
       },
       "CACHE_COLLEAGUE_TTL": {
         "type": "plain",
