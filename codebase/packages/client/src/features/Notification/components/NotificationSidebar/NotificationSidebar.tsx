@@ -84,8 +84,8 @@ const NotificationSidebar: FC<Props> = ({ buttonRef }) => {
 
   const buildLink = (entityId?: number, entityType?: EntityType) => {
     switch (entityType) {
-      case EntityType.NETWORK:
-        return `/${Page.NETWORKS}/${entityId}`;
+      case EntityType.POST:
+        return `/${Page.NETWORK_NEWS}/${entityId}`;
       case EntityType.EVENT:
         return `/${Page.EVENTS}/${entityId}`;
       default:
@@ -109,10 +109,7 @@ const NotificationSidebar: FC<Props> = ({ buttonRef }) => {
           notifiedAt,
         }) => ({
           key: `${entityType}-${entityId}` || `network-news-${entityId}`,
-          href:
-            EntityType.EVENT == entityType
-              ? buildLink(entityId, entityType)
-              : buildLink(parentEntityId, parentEntityType),
+          href: buildLink(entityId, entityType),
           name: parentEntity?.title || 'Diversity & Inclusion News',
           title: entity?.title || 'Unknown Post',
           subName:
