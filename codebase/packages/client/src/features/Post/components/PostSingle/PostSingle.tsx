@@ -19,10 +19,7 @@ type Props = {
 };
 
 const PostSingle: FC<Props> = ({ postId, loadPost, loading, post, error }) => {
-  const isLoading = useMemo(
-    () => loading !== Loading.SUCCEEDED && loading !== Loading.FAILED,
-    [loading],
-  );
+  const isLoading = useMemo(() => loading !== Loading.SUCCEEDED && loading !== Loading.FAILED, [loading]);
 
   useEffect(() => {
     if (postId) {
@@ -35,10 +32,9 @@ const PostSingle: FC<Props> = ({ postId, loadPost, loading, post, error }) => {
 
     if (!post && isLoading) return <Spinner height='500px' />;
 
-    if (post && post!.archived)
-      return <EmptyContainer description='Post has been archived' />;
+    if (post && post!.archived) return <EmptyContainer description='Post has been archived' />;
 
-    return <PostItem item={post!} />;
+    return post ? <PostItem item={post} /> : null;
   }, [post, error, loading]);
 
   return (

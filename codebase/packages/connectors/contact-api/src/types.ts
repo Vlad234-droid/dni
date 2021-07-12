@@ -4,8 +4,8 @@ export type ApiMsgBody = {
   recipients: [
     {
       _type?: 'static' | 'customer';
-      destination: 'emailTo' | 'sms';
-      property: 'defaultToAddress';
+      destination: 'emailTo';
+      property?: 'defaultToAddress';
       address: string;
     },
   ];
@@ -17,18 +17,20 @@ export type ApiMsgBody = {
 };
 
 export type ApiEmailAddressBody = {
+  alias: 'Personal';
   emailAddress: string;
 };
 
 export type ApiParams = {
   templateId?: string;
-  colleagueUUID?: string;
-  emailIndex?: string;
+  userId?: string;
+  addressIdentifier?: string;
 };
 
 export type ApiInput<T, U = unknown> = {
   params: T;
   body?: U;
+  traceId: string;
 };
 
 export type ApiMsgOutput = {
@@ -43,29 +45,15 @@ export type ApiMsgOutput = {
   ];
 };
 
-export type ApiEmailAddressesOutput = {
-  emailAddresses: [
-    {
-      emailIndex: string;
-      emailAddress: string;
-      isPrimary: boolean;
-      tags: string[];
-    },
-  ];
-  domain: {
-    returned: string[];
-    omitted: string[];
-  };
-  ghsSuccess: boolean;
-  ngcSuccess: boolean;
+type ApiEmailAddresses = {
+  addressIdentifier: string;
+  alias: string;
+  emailAddress: string;
 };
 
-export type ApiEmailAddressOutput = {
-  code: string;
-  message: string;
-  info: string;
-  errors: string[];
-};
+export type ApiEmailAddressesOutput = ApiEmailAddresses[];
+
+export type ApiEmailAddressOutput = ApiEmailAddresses;
 
 export type ContactAPIHeaders = {
   Authorization: () => string;

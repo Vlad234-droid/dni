@@ -9,6 +9,12 @@ import {
   // employee-events
   addEventToEmployee,
   deleteEventFromEmployee,
+  // employee contact
+  refreshSetting,
+  getSetting,
+  getPersonalEmail,
+  addPersonalEmail,
+  refreshPersonalEmail,
   // ccrm-events
   consumeCepEvent,
   // notification
@@ -43,6 +49,12 @@ api.delete('/employees/networks/:networkId', deleteNetworkFromEmployee);
 
 api.post('/employees/events', addEventToEmployee);
 api.delete('/employees/events/:eventId', deleteEventFromEmployee);
+
+api.get('/employees/email-notifications-settings', getSetting);
+api.post('/employees/email-notifications-settings', refreshSetting);
+api.put('/employees/personal-email/:addressId', refreshPersonalEmail);
+api.get('/employees/personal-email', getPersonalEmail);
+api.post('/employees/personal-email', addPersonalEmail);
 
 api.get('/events/participants', getEventsParticipants);
 api.get('/networks/participants', getNetworksParticipants);

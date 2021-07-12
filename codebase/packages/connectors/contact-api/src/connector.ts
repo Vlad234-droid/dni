@@ -14,24 +14,48 @@ import {
   ContactAPIHeaders,
 } from './types';
 
+export const USER_UID_PREFIX = 'trn:tesco:uid:uuid';
+
+const buildParams = <T, U = unknown>({
+  params,
+  traceId,
+  body = undefined,
+}: {
+  params: T;
+  traceId: string;
+  body?: U;
+}) => {
+  return {
+    params,
+    body: body!,
+    fetchOpts: { headers: { traceId } },
+  };
+};
+
 export type ElementType<T extends ReadonlyArray<unknown>> = T extends ReadonlyArray<infer ElementType>
   ? ElementType
   : never;
 
 export const contactApiDef = defineAPI((endpoint) => ({
   sendMessages: endpoint
-    .post('/messaging/v1/send/:templateId')
+    .post('/contact/messaging/v1/send/:templateId')
     .params<ApiParams>()
     .body<ApiMsgBody>()
     .response<ApiMsgOutput>()
     .build(),
   getEmailAddresses: endpoint
-    .get('/contact/addressbook/v3/users/:colleagueUUID/emailaddresses')
+    .get('/contact/v1/addressbook/emailaddresses')
     .params<ApiParams>()
     .response<ApiEmailAddressesOutput>()
     .build(),
   updateEmailAddress: endpoint
-    .put('/contact/addressbook/v3/users/:colleagueUUID/emailaddresses/:emailIndex')
+    .put('/contact/v1/addressbook/emailaddresses')
+    .params<ApiParams>()
+    .body<ApiEmailAddressBody>()
+    .response<ApiEmailAddressOutput>()
+    .build(),
+  createEmailAddress: endpoint
+    .post('/contact/v1/addressbook/emailaddresses/:userId')
     .params<ApiParams>()
     .body<ApiEmailAddressBody>()
     .response<ApiEmailAddressOutput>()
@@ -47,11 +71,12 @@ export const contactApiConnector = (ctx: ContactApiContext) => {
   const apiConsumer = createApiConsumer(contactApiDef, fetchClient(baseUrl, headers, ctx));
 
   return {
-    sendMessages: ({ params, body }: ApiInput<ApiParams, ApiMsgBody>) =>
-      apiConsumer.sendMessages({ params, body: body! }),
-    getEmailAddresses: (input: ApiInput<ApiParams>) => apiConsumer.getEmailAddresses(input),
-    updateEmailAddress: ({ params, body }: ApiInput<ApiParams, ApiEmailAddressBody>) =>
-      apiConsumer.updateEmailAddress({ params, body: body! }),
+    sendMessages: (input: ApiInput<ApiParams, ApiMsgBody>) => apiConsumer.sendMessages(buildParams(input)),
+    getEmailAddresses: (input: ApiInput<ApiParams>) => apiConsumer.getEmailAddresses(buildParams(input)),
+    updateEmailAddress: (input: ApiInput<ApiParams, ApiEmailAddressBody>) =>
+      apiConsumer.updateEmailAddress(buildParams(input)),
+    createEmailAddress: (input: ApiInput<ApiParams, ApiEmailAddressBody>) =>
+      apiConsumer.createEmailAddress(buildParams(input)),
   };
 };
 

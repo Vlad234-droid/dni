@@ -1,3 +1,11 @@
+/*
+ * DATABASE INITIALISATION SCRIPT
+ * version: 1.1
+ * date: July 10, 2021
+ * author: Igor Tsentilo <igor.tsentilo@tesco.com>
+ */
+
+
 SET search_path TO public;
 
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
@@ -5,8 +13,8 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
 -- !!! ----------------------------------------------------------------
--- WARNING: IF NEXT COMMAND IS UNCOMMENTED WHOLE SCHEMA WILL BE DROPPED 
-DROP SCHEMA IF EXISTS "dni" CASCADE;
+-- WARNING: IF NEXT COMMAND IS UNCOMMENTED WHOLE SCHEMA WILL BE DROPPED
+--DROP SCHEMA IF EXISTS "dni" CASCADE;
 -- !!! ----------------------------------------------------------------
 
 CREATE SCHEMA IF NOT EXISTS "dni";
@@ -20,9 +28,6 @@ SET search_path TO "$user", dni, public;
 CREATE TABLE IF NOT EXISTS dni_user (
 	colleague_uuid uuid NOT NULL,
 	employee_number varchar(12) NOT NULL,
-	capi_properties jsonb NULL,
-   setting_properties jsonb NULL,
-	last_login_at timestamptz(0) NULL,
 	created_at timestamptz(0) NOT NULL DEFAULT now(),
 	updated_at timestamptz(0) NULL,
 	CONSTRAINT "dni_user__pk" PRIMARY KEY (colleague_uuid)
@@ -31,16 +36,35 @@ CREATE TABLE IF NOT EXISTS dni_user (
 -- Column comments
 COMMENT ON COLUMN dni_user.colleague_uuid IS 'ColleagueUUID';
 COMMENT ON COLUMN dni_user.employee_number IS 'a.k.a. TPX';
-COMMENT ON COLUMN dni_user.capi_properties IS 'Colleague API properties';
 
 CREATE INDEX "dni_user$created_at__idx" ON dni_user (created_at);
 
-CREATE INDEX "dni_user$capi_properties__idx" ON dni_user USING gin(capi_properties);
+
+-- ===============
+-- dni_user_extras
+-- ===============
+-- DROP TABLE dni.dni_user_extras;
+CREATE TABLE dni_user_extras (
+	colleague_uuid uuid NOT NULL,
+   last_login_at timestamptz(0) NULL,
+	colleague_properties jsonb NULL,
+   settings jsonb NULL,
+	metadata jsonb NULL,
+	CONSTRAINT "dni_user_extras__pk" PRIMARY KEY (colleague_uuid),
+	CONSTRAINT "dni_user_extras$colleague_uuid__fk" FOREIGN KEY (colleague_uuid) REFERENCES dni_user(colleague_uuid) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+COMMENT ON COLUMN dni_user_extras.colleague_properties IS 'Colleague API properties';
+
+CREATE INDEX "dni_user_extras$last_login_at__idx" ON dni_user_extras (last_login_at);
+CREATE INDEX "dni_user_extras$colleague_properties__idx" ON dni_user_extras USING gin(colleague_properties);
+CREATE INDEX "dni_user_extras$settings__idx" ON dni_user_extras USING gin(settings);
+CREATE INDEX "dni_user_extras$metadata__idx" ON dni_user_extras USING gin(metadata);
 
 
--- ========================
+-- ====================
 -- dni_entity_type_enum
--- ========================
+-- ====================
 --DROP TYPE IF EXISTS dni_entity_type_enum CASCADE;
 CREATE TYPE dni_entity_type_enum AS ENUM (
 	'network',
@@ -126,7 +150,7 @@ CREATE TABLE IF NOT EXISTS capi_region (
 
 COMMENT ON TABLE capi_region IS 'Colleague API regions dictionary';
 
--- \copy capi_region FROM './data/CAPI_region.csv' WITH CSV HEADER;
+-- \copy capi_region FROM '../data/CAPI_region.csv' WITH CSV HEADER;
 
 -- ===============
 -- capi_department
@@ -140,7 +164,7 @@ CREATE TABLE IF NOT EXISTS capi_department (
 
 COMMENT ON TABLE capi_department IS 'Colleague API departments dictionary';
 
--- \copy capi_department FROM './data/CAPI_departments.csv' WITH CSV HEADER;
+-- \copy capi_department FROM '../data/CAPI_departments.csv' WITH CSV HEADER;
 
 -- =================
 -- ccms_trigger_enum
@@ -185,6 +209,7 @@ CREATE TABLE IF NOT EXISTS ccms_entity (
 	entity_type dni_entity_type_enum NOT NULL,
 	slug varchar(128) NOT NULL,
 	entity_instance jsonb NULL,
+   entity_metadata jsonb NULL,
 	entity_created_at timestamptz(0) NOT NULL,
 	entity_updated_at timestamptz(0) NULL,
 	entity_published_at timestamptz(0) NULL,
@@ -207,6 +232,8 @@ CREATE INDEX "c_entity$created_at__idx" ON ccms_entity (created_at);
 CREATE INDEX "c_entity$entity_created_at__idx" ON ccms_entity (entity_created_at);
 
 CREATE INDEX "c_entity$entity_instance__idx" ON ccms_entity USING gin(entity_instance);
+
+CREATE INDEX "c_entity$entity_metadata__idx" ON ccms_entity USING gin(entity_metadata);
 
 
 -- ======================
@@ -240,12 +267,14 @@ BEGIN
       FROM ccms_entity
       WHERE entity_id = p_entity.id AND entity_type = p_entity."type"
         AND ((entity_published_at IS NOT NULL) OR (p_only_published = FALSE))
+        AND entity_deleted_at IS NULL
       UNION ALL
          SELECT e.entity_id, e.entity_type, e.parent_entity_id, e.parent_entity_type
          FROM ccms_entity e 
          JOIN entities
          ON  entities.parent_entity_id = e.entity_id AND entities.parent_entity_type = e.entity_type 
          WHERE ((e.entity_published_at IS NOT NULL) OR (p_only_published = FALSE))
+           AND entity_deleted_at IS NULL
            -- additional dummy check for circular recursion
            AND e.entity_id <> p_entity.id AND e.entity_type <> p_entity."type"
    )
@@ -505,6 +534,80 @@ $function$
 ;
 
 
+-- ============================
+-- fn_get_dni_user_mailing_data
+-- ============================
+CREATE OR REPLACE FUNCTION fn_get_dni_user_mailing_data(
+     p_entity_type dni_entity_type_enum,
+     p_entity_id int4 DEFAULT NULL
+     )
+  RETURNS jsonb 
+  LANGUAGE plpgsql
+AS $function$
+DECLARE
+    mailing_data_jsonb jsonb;
+BEGIN
+   IF p_entity_type IS NULL
+   THEN
+      RAISE EXCEPTION '"p_entity_type" parameter is required'
+         USING HINT = 'These options are available: "event", "post"';
+   END IF;
+
+   SET search_path TO "$user", dni, public;
+
+   WITH 
+      params AS (SELECT 
+         p_entity_type as entity_type,
+         p_entity_id as entity_id
+      ),
+      root_ancestor AS (SELECT
+         entity_type,
+         entity_id,
+         "type" as root_ancestor_type,
+         "id" as root_ancestor_id
+      FROM params, fn_get_ccms_entity_root_ancestor(p_entity := ROW(entity_id , entity_type), p_only_published := TRUE)
+      ),
+      entity_hierarchy AS (SELECT
+         ce.entity_instance,
+         ce.parent_entity_type,
+         ce.parent_entity_id,
+         ra.root_ancestor_type,
+         ra.root_ancestor_id
+      FROM root_ancestor ra
+      JOIN ccms_entity ce ON ra.entity_id = ce.entity_id AND ra.entity_type = ce.entity_type
+      WHERE ce.entity_published_at IS NOT NULL 
+        AND ce.entity_deleted_at IS NULL
+      ),
+      affected_users AS (SELECT
+         coalesce(jsonb_agg(dus.colleague_uuid), '[]'::jsonb) AS colleague_uuids
+      FROM params, dni_user_subscription dus 
+      JOIN dni_user_extras due ON dus.colleague_uuid = due.colleague_uuid 
+      WHERE 
+         (
+            ((dus.subscription_entity_id IN (select parent_entity_id FROM entity_hierarchy)) AND (dus.subscription_entity_type IN (select parent_entity_type FROM entity_hierarchy))) OR 
+            ((dus.subscription_entity_id IN (select root_ancestor_id FROM entity_hierarchy)) AND (dus.subscription_entity_type IN (select root_ancestor_type FROM entity_hierarchy)))
+         )
+         AND 
+         (
+            (entity_type = 'post'::dni_entity_type_enum AND (due.settings->>'receivePostsEmailNotifications')::boolean = TRUE) OR 
+            (entity_type = 'event'::dni_entity_type_enum AND (due.settings->>'receiveEventsEmailNotifications')::boolean = TRUE) 
+         )
+      )
+   SELECT 
+      jsonb_build_object(
+         'entity', entity_hierarchy.entity_instance,
+         'affectedColleagueUuids', affected_users.colleague_uuids
+      ) as contact_data
+   INTO mailing_data_jsonb
+   FROM entity_hierarchy, affected_users
+   ;
+
+   RETURN mailing_data_jsonb;
+END
+$function$
+;
+
+
 -- ==============================
 -- fn_build_dni_timeseries_report
 -- ==============================
@@ -523,30 +626,29 @@ DECLARE
 BEGIN
    IF NOT p_granularity = ANY(ARRAY['year','quarter','month','week','day'])
    THEN
-      RAISE EXCEPTION 'Invalid `p_granularity` parameter. Granularity `%` is not supported', p_granularity
-         USING HINT = 'Only these are supported: `year`,`quarter`,`month`,`week`,`day`';
+      RAISE EXCEPTION 'Invalid "p_granularity" parameter. Granularity "%" is not supported', p_granularity
+         USING HINT = 'Only these are supported: "year","quarter","month","week","day"';
    END IF;
    
    IF p_entity_type IS NULL
    THEN
-      RAISE EXCEPTION '`p_entity_type` parameter is required'
-         USING HINT = 'These options are available: `network`, `event`';
+      RAISE EXCEPTION '"p_entity_type" parameter is required'
+         USING HINT = 'These options are available: "network", "event"';
    END IF;
 
    SET search_path TO "$user", dni, public;
 
    -- populate array of IDs, if NULL 
-   /*
    IF p_entity_ids IS NULL
    THEN 
       SELECT array_agg(entity_id)
       INTO p_entity_ids
       FROM ccms_entity
       WHERE entity_type = p_entity_type
-        AND entity_published_at IS NOT NULL 
-        AND notification_trigger_event <> 'deleted';
+         AND entity_published_at IS NOT NULL 
+         AND entity_deleted_at IS NULL;
    END IF;
-   */
+   
   
    WITH 
       params AS (SELECT 
@@ -697,25 +799,23 @@ DECLARE
 BEGIN
    IF p_entity_type IS NULL
    THEN
-      RAISE EXCEPTION '`p_entity_type` parameter is required'
-         USING HINT = 'These options are available: `network`, `event`';
+      RAISE EXCEPTION '"p_entity_type" parameter is required'
+         USING HINT = 'These options are available: "network", "event"';
    END IF;
 
    SET search_path TO "$user", dni, public;
 
    -- populate array of IDs, if NULL 
-   /*
    IF p_entity_ids IS NULL
    THEN 
       SELECT array_agg(entity_id)
       INTO p_entity_ids
       FROM ccms_entity
       WHERE entity_type = p_entity_type
-        AND entity_published_at IS NOT NULL 
-        AND notification_trigger_event <> 'deleted';
+         AND entity_published_at IS NOT NULL 
+         AND entity_deleted_at IS NULL;
    END IF;
-   */
-  
+   
    WITH 
       params AS (SELECT 
          p_entity_type as entity_type,
@@ -728,11 +828,11 @@ BEGIN
          ur.region_name
       FROM (
          SELECT DISTINCT
-            du.colleague_uuid, 
+            due.colleague_uuid, 
             cr.region_name 
-         FROM dni_user du
+         FROM dni_user_extras due
          LEFT JOIN capi_region cr
-         ON upper(coalesce(left(du.capi_properties->>'addressPostcode', length(cr.post_index_prefix)), 'XX')) = upper(cr.post_index_prefix)
+         ON upper(coalesce(left(due.colleague_properties->>'addressPostcode', length(cr.post_index_prefix)), 'XX')) = upper(cr.post_index_prefix)
          ) ur
       JOIN (
          SELECT DISTINCT 
@@ -868,25 +968,23 @@ DECLARE
 BEGIN
    IF p_entity_type IS NULL
    THEN
-      RAISE EXCEPTION '`p_entity_type` parameter is required'
-         USING HINT = 'These options are available: `network`, `event`';
+      RAISE EXCEPTION '"p_entity_type" parameter is required'
+         USING HINT = 'These options are available: "network", "event"';
    END IF;
 
    SET search_path TO "$user", dni, public;
 
    -- populate array of IDs, if NULL 
-   /*
    IF p_entity_ids IS NULL
    THEN 
       SELECT array_agg(entity_id)
       INTO p_entity_ids
       FROM ccms_entity
       WHERE entity_type = p_entity_type
-        AND entity_published_at IS NOT NULL 
-        AND notification_trigger_event <> 'deleted';
+         AND entity_published_at IS NOT NULL 
+         AND entity_deleted_at IS NULL;
    END IF;
-   */
-  
+   
    WITH 
       params AS (SELECT 
          p_entity_type as entity_type,
@@ -899,11 +997,11 @@ BEGIN
          ud.department_name
       FROM (
          SELECT DISTINCT
-            du.colleague_uuid, 
+            due.colleague_uuid, 
             coalesce(cd.department_name, 'Unknown') as department_name
-         FROM dni_user du
+         FROM dni_user_extras due
          LEFT JOIN capi_department cd 
-         ON upper(du.capi_properties->>'businessType') = upper(cd.capi_business_type)
+         ON upper(due.colleague_properties->>'businessType') = upper(cd.capi_business_type)
          ) ud
       JOIN (
          SELECT DISTINCT 
@@ -1047,9 +1145,9 @@ BEGIN
       ),
       affected_colleague_ids AS (SELECT 
          colleague_uuid 
-      FROM params, dni_user du
-      WHERE ((du.capi_properties->>'leavingDate')::date + params.retention_period::INTERVAL) < now()
-         OR (du.last_login_at + params.retention_period::INTERVAL) < now()
+      FROM params, dni_user_extras due
+      WHERE ((due.colleague_properties->>'leavingDate')::date + params.retention_period::INTERVAL) < now()
+         OR (due.last_login_at + params.retention_period::INTERVAL) < now()
       ),
       dusl_deleted AS (
          DELETE FROM dni_user_subscription_log dusl 
@@ -1065,6 +1163,11 @@ BEGIN
          DELETE FROM dni_user_notification_acknowledge duna 
          WHERE duna.colleague_uuid IN (SELECT colleague_uuid FROM affected_colleague_ids)
          RETURNING duna.acknowledge_uuid
+      ),
+      due_deleted as (
+         DELETE FROM dni_user_extras due
+         WHERE due.colleague_uuid IN (SELECT colleague_uuid FROM affected_colleague_ids)
+         RETURNING colleague_uuid
       ),
       du_deleted as (
          DELETE FROM dni_user du

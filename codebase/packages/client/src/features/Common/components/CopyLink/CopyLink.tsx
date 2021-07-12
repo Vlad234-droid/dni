@@ -13,10 +13,10 @@ type Props = {
 
 const CopyLink: FC<Props> = ({ showNotification, hideNotification, to }) => {
   const handleClick = useCallback(() => {
-    const { host, pathname } = window.location;
+    const { host, pathname, protocol } = window.location;
 
     const path = to ? getPath(to) : pathname;
-    const url = `${host}${path}`;
+    const url = `${protocol}//${host}${path}`;
 
     copy(url);
 
