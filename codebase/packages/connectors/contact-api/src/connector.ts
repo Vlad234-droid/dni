@@ -16,6 +16,22 @@ import {
 
 export const USER_UID_PREFIX = 'trn:tesco:uid:uuid';
 
+const buildParams = <T, U = unknown>({
+  params,
+  traceId,
+  body = undefined,
+}: {
+  params: T;
+  traceId: string;
+  body?: U;
+}) => {
+  return {
+    params,
+    body: body!,
+    fetchOpts: { headers: { traceId } },
+  };
+};
+
 export type ElementType<T extends ReadonlyArray<unknown>> = T extends ReadonlyArray<infer ElementType>
   ? ElementType
   : never;
@@ -55,13 +71,12 @@ export const contactApiConnector = (ctx: ContactApiContext) => {
   const apiConsumer = createApiConsumer(contactApiDef, fetchClient(baseUrl, headers, ctx));
 
   return {
-    sendMessages: ({ params, body }: ApiInput<ApiParams, ApiMsgBody>) =>
-      apiConsumer.sendMessages({ params, body: body! }),
-    getEmailAddresses: (input: ApiInput<ApiParams>) => apiConsumer.getEmailAddresses(input),
-    updateEmailAddress: ({ params, body }: ApiInput<ApiParams, ApiEmailAddressBody>) =>
-      apiConsumer.updateEmailAddress({ params, body: body! }),
-    createEmailAddress: ({ params, body }: ApiInput<ApiParams, ApiEmailAddressBody>) =>
-      apiConsumer.createEmailAddress({ params, body: body! }),
+    sendMessages: (input: ApiInput<ApiParams, ApiMsgBody>) => apiConsumer.sendMessages(buildParams(input)),
+    getEmailAddresses: (input: ApiInput<ApiParams>) => apiConsumer.getEmailAddresses(buildParams(input)),
+    updateEmailAddress: (input: ApiInput<ApiParams, ApiEmailAddressBody>) =>
+      apiConsumer.updateEmailAddress(buildParams(input)),
+    createEmailAddress: (input: ApiInput<ApiParams, ApiEmailAddressBody>) =>
+      apiConsumer.createEmailAddress(buildParams(input)),
   };
 };
 

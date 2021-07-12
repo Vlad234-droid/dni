@@ -9,6 +9,7 @@ import {
   cmsEmotionsApiConnector,
   cmsUploadApiConnector,
 } from '@dni-connectors/colleague-cms-api';
+import { v4 as uuidv4 } from 'uuid';
 
 import { contactApiConnector } from '@dni-connectors/contact-api';
 import { colleagueApiConnector } from '@dni-connectors/colleague-api';
@@ -38,19 +39,19 @@ const api = (requestCtx: ContextProvider<any>) =>
     },
     // contact api
     sendMessages: async (payload, ctx) => {
-      const res = await contactApiConnector(ctx).sendMessages(payload);
+      const res = await contactApiConnector(ctx).sendMessages({ ...payload, traceId: uuidv4() });
       return unsafelyUnpackResponseData(res);
     },
     getEmailAddresses: async ({ params }, ctx) => {
-      const res = await contactApiConnector(ctx).getEmailAddresses({ params });
+      const res = await contactApiConnector(ctx).getEmailAddresses({ params, traceId: uuidv4() });
       return unsafelyUnpackResponseData(res);
     },
-    updateEmailAddress: async ({ params, body }, ctx) => {
-      const res = await contactApiConnector(ctx).updateEmailAddress({ params, body });
+    updateEmailAddress: async (payload, ctx) => {
+      const res = await contactApiConnector(ctx).updateEmailAddress({ ...payload, traceId: uuidv4() });
       return unsafelyUnpackResponseData(res);
     },
-    createEmailAddress: async ({ params, body }, ctx) => {
-      const res = await contactApiConnector(ctx).createEmailAddress({ params, body });
+    createEmailAddress: async (payload, ctx) => {
+      const res = await contactApiConnector(ctx).createEmailAddress({ ...payload, traceId: uuidv4() });
       return unsafelyUnpackResponseData(res);
     },
     // Emojis

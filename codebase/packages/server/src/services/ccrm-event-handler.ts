@@ -12,7 +12,7 @@ import {
 import { prepareContext, RequestCtx } from './context';
 import { Request, Response } from 'express';
 import { CepPayload } from '../controllers';
-import { massMailing } from '../services/mailer';
+import { massMailing, prepareMailingData } from '../services/mailer';
 
 export const handleCepRequest = async (req: Request<{}, CepPayload>, res: Response) => {
   const payload = req.body;
@@ -39,15 +39,11 @@ export const handleCepRequest = async (req: Request<{}, CepPayload>, res: Respon
     .save(notification, { data: { entityInstance: cmsEntity } });
 
   // 4. send letters to recipients
-  // TODO: fetch data from db
-  massMailing(
-    [
-      /* colleagueUUIDs */
-    ],
-    {
-      /* template data */
-    },
-  );
+  if ([DniEntityTypeEnum.POST, DniEntityTypeEnum.EVENT].includes(payload.model)) {
+    const [colleagueUUIDs, placeholders] = await prepareMailingData(payload.model, payload.id);
+
+    massMailing(colleagueUUIDs, placeholders);
+  }
 };
 
 const analyzeEntity = async (payload: CepPayload, ctx: RequestCtx) => {

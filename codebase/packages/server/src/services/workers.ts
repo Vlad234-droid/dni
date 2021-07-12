@@ -4,10 +4,10 @@ import os from 'os';
 
 import { partition } from '../utils/array';
 
-export const spawnWorkers = <T, P>(workerName: string, list: T[], payload: P) => {
-  const cpuCount = os.cpus().length - 1;
-  console.log('cpuCount', cpuCount);
-  const partitions = partition(list, cpuCount);
+export const standardWorkersCount = () => os.cpus().length - 1;
+
+export const spawnWorkers = <T, P>(workerName: string, list: T[], payload: P, count: number) => {
+  const partitions = partition(list, count);
 
   for (const partition of partitions) {
     const worker = new Worker(path.resolve(__dirname, '..', 'workers', 'worker.js'), {

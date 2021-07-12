@@ -30,6 +30,7 @@ export type ApiParams = {
 export type ApiInput<T, U = unknown> = {
   params: T;
   body?: U;
+  traceId: string;
 };
 
 export type ApiMsgOutput = {

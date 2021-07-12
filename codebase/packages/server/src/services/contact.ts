@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { contactApiConnector, USER_UID_PREFIX, ApiMsgBody } from '@dni-connectors/contact-api';
 import { prepareContext } from './context';
+import { v4 as uuidv4 } from 'uuid';
 
 type Recipient = {
   destination: 'emailTo';
@@ -34,6 +35,7 @@ const fetchPersonalEmail = async (colleagueUUID: string, req: Request, res: Resp
     (
       await connector.getEmailAddresses({
         params: { userId: `${USER_UID_PREFIX}:${colleagueUUID}` },
+        traceId: uuidv4(),
       })
     ).data || [];
 
@@ -46,6 +48,7 @@ const createPersonalEmail = async (colleagueUUID: string, req: Request, res: Res
   return (
     await connector.createEmailAddress({
       params: { userId: `${USER_UID_PREFIX}:${colleagueUUID}` },
+      traceId: uuidv4(),
       body: {
         ...req.body,
         alias: PERSONAL_ALIAS,
@@ -65,6 +68,7 @@ const updatePersonalEmail = async (colleagueUUID: string, req: Request, res: Res
         addressIdentifier: addressId as string,
         userId: `${USER_UID_PREFIX}:${colleagueUUID}`,
       },
+      traceId: uuidv4(),
       body: req.body,
     })
   ).data;
@@ -82,6 +86,7 @@ const sendEmails = async (recipients: Recipient[], data: EmailData, req: Request
       params: {
         templateId: process.env.MAIL_TAMPLATE_ID,
       },
+      traceId: uuidv4(),
       body: {
         recipients: recipients as ApiMsgBody['recipients'],
         data,
