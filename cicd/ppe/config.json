@@ -159,11 +159,11 @@
       },
       "TYPEORM_RUN_MIGRATION": {
         "type": "plain",
-        "value": "true"
+        "value": "false"
       },
       "CCRM_RUN_SYNC": {
         "type": "plain",
-        "value": "true"
+        "value": "false"
       },
       "CACHE_COLLEAGUE_TTL": {
         "type": "plain",
@@ -176,10 +176,6 @@
       "COOKIE_USER_KEY": {
         "type": "plain",
         "value": "user_data"
-      },
-      "WEB_HOOKS_SECRET": {
-        "type": "secret",
-        "value": "web_hooks_secret"
       },
       "OIDC_GROUPS_ADMIN_ROLE": {
         "type": "plain",

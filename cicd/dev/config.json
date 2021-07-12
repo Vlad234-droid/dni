@@ -177,10 +177,6 @@
         "type": "plain",
         "value": "user_data"
       },
-      "WEB_HOOKS_SECRET": {
-        "type": "secret",
-        "value": "web_hooks_secret"
-      },
       "OIDC_GROUPS_ADMIN_ROLE": {
         "type": "plain",
         "value": "GG-UK-TescoGlobal-DiversityAndInclusion-PPE-Admin"
