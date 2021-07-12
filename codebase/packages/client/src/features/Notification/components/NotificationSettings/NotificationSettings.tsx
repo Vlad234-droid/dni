@@ -85,12 +85,12 @@ const NotificationSettings: FC = () => {
   // fetch settings
   useEffect(() => {
     (async () => {
-      const settings = await API.contact.getNotificationsSettings<EmailNotificationSettings>();
+      const emailNotificationSettings = await API.contact.getNotificationsSettings<EmailNotificationSettings>();
 
-      if (settings?.settingProperties) {
+      if (emailNotificationSettings?.settings) {
         setFormData((formData) => ({
           ...formData,
-          ...settings.settingProperties,
+          ...emailNotificationSettings.settings,
         }));
       }
     })();

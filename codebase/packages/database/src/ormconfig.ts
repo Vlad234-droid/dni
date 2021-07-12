@@ -44,6 +44,8 @@ const typeOrmConfig = {
   subscribers: [buildPathWithExt(SUBSCRIBERS_DIR)],
   entitySchemas: [buildPathWithExt(SCHEMAS_DIR, '*.json')],
   migrations: [buildPathWithExt(MIGRATIONS_DIR)],
+  migrationsTableName: 'dni_migrations',
+  migrationsTransactionMode: 'each',
   cli: {
     entitiesDir: ENTITIES_DIR,
     migrationsDir: MIGRATIONS_DIR,

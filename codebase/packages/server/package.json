@@ -16,7 +16,8 @@
     "test": "jest",
     "test:coverage": "jest --coverage",
     "test:watch": "jest --watch",
-    "cli:cms-entities-init": "cross-env BUILD_ENV=development env-cmd --silent --no-override --fallback -f .env.${BUILD_ENV} ts-node --script-mode src/cli/ccms-entities-init.ts"
+    "cli:cms-entities-init:dev": "cross-env BUILD_ENV=development env-cmd --silent --no-override --fallback -f .env.${BUILD_ENV} ts-node --script-mode src/cli/ccms-entities-init.ts",
+    "cli:cms-entities-init:prod": "cross-env BUILD_ENV=production env-cmd --silent --no-override --fallback -f .env.${BUILD_ENV} ts-node --script-mode src/cli/ccms-entities-init.ts"
   },
   "dependencies": {
     "@dni-connectors/colleague-api": "1.0.0",

@@ -80,9 +80,9 @@ type FormData = {
 };
 
 type EmailNotificationSettings = {
-  settingProperties: {
-    receivePostsEmailNotifications: false;
-    receiveEventsEmailNotifications: false;
+  settings: {
+    receivePostsEmailNotifications: boolean;
+    receiveEventsEmailNotifications: boolean;
   };
 };
 

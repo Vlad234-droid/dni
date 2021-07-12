@@ -35,10 +35,12 @@ services:
             - TYPEORM_HOST=postgres
             - TYPEORM_PORT=5432
             - TYPEORM_DATABASE=dni_database
+            - TYPEORM_SCHEMA=dni
             - TYPEORM_USERNAME=dni
             - TYPEORM_PASSWORD=dn1
             - TYPEORM_SSL=false
             - TYPEORM_RUN_MIGRATION=true
+            - CCRM_RUN_SYNC=true
             - COOKIE_SESSION_KEY=dni_cookie
             - COOKIE_USER_KEY=user_data
             # Roles groups
@@ -58,5 +60,13 @@ services:
         volumes:
             - ./postgres/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
         ports:
-            - 6543:5432
-    
+            - 4321:5432
+    pgadmin:
+        image: dpage/pgadmin4:5.4
+        container_name: 'azure_dni_pgadmin4'
+        environment: 
+            - PGADMIN_DEFAULT_EMAIL=dni@tesco.com
+            - PGADMIN_DEFAULT_PASSWORD=dn1
+        ports:
+            - 4343:80
+            

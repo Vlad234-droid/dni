@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { getOpenIdUserInfo } from '@energon/onelogin';
-import { getRepository, DniUserSubscription, DniEntityTypeEnum, DniUser } from '@dni/database';
+import { getRepository, DniUserSubscription, DniEntityTypeEnum, DniUser, DniUserExtras } from '@dni/database';
 import { colleagueApiConnector, ColleagueV2 } from '@dni-connectors/colleague-api';
 import { defaultConfig } from '../config/default';
 import { getInstance as getCacheInstance } from './cache';
@@ -53,12 +53,12 @@ const colleagueUUIDExtractor = async (req: ColleagueRequest, res: Response): Pro
     return cache.get(cacheEmployeeNumber)!;
   }
 
-  // 1. try to get colleagueUUID from DB
-  const dniUser = await findDniUser(employeeNumber);
-  if (dniUser) {
-    cache.set(cacheEmployeeNumber, dniUser.colleagueUUID, process.env.CACHE_COLLEAGUE_TTL || 3600);
-    return dniUser.colleagueUUID;
-  }
+  // // 1. try to get colleagueUUID from DB
+  // const dniUser = await findDniUser(employeeNumber);
+  // if (dniUser) {
+  //   cache.set(cacheEmployeeNumber, dniUser.colleagueUUID, process.env.CACHE_COLLEAGUE_TTL || 3600);
+  //   return dniUser.colleagueUUID;
+  // }
 
   // 2. try to get colleagueUUID from Colleague API
   const ctx = await prepareContext(req, res);
@@ -130,38 +130,32 @@ const findSubscriptionEntityIdsBy = async (colleagueUUID: string, subscriptionEn
   );
 };
 
-const findDniUser = async (employeeNumber: string) => {
-  return await getRepository(DniUser).findOne({ where: { employeeNumber } });
-};
+// const findDniUser = async (employeeNumber: string) => {
+//   return await getRepository(DniUser).findOne({ where: { employeeNumber } });
+// };
 
 const createOrUpdateDniUser = async (colleague: ColleagueV2) => {
-  const dniUser = new DniUser();
+  const repository = getRepository(DniUser);
+  const dniUser = (await repository.preload({ colleagueUUID: colleague.colleagueUUID })) || new DniUser();
+
+  console.log(JSON.stringify(dniUser));
 
   dniUser.colleagueUUID = colleague.colleagueUUID;
   dniUser.employeeNumber = colleague.externalSystems.iam.id;
-  dniUser.lastLoginAt = new Date();
-  dniUser.capiProperties = {
+
+  await repository.save(dniUser);
+
+  const dniUserExtras = dniUser.extras || dniUser.initExtras();
+
+  dniUserExtras.lastLoginAt = new Date();
+  dniUserExtras.colleagueProperties = {
     addressPostcode: colleague.contact?.addresses?.[0]?.postcode,
     hireDate: colleague.serviceDates?.hireDate,
     leavingDate: colleague.serviceDates?.leavingDate,
     businessType: colleague.workRelationships?.[0]?.department?.businessType,
   };
 
-  await getRepository(DniUser)
-    .createQueryBuilder()
-    .insert()
-    .values(dniUser)
-    .onConflict(
-      `ON CONSTRAINT "dni_user__pk" ` +
-        `DO UPDATE ` +
-        `SET employee_number = :employeeNumber ` +
-        `  , capi_properties = :capiProperties ` +
-        `  , last_login_at = now() ` +
-        `  , updated_at = now() `,
-    )
-    .setParameter('employeeNumber', dniUser.employeeNumber)
-    .setParameter('capiProperties', dniUser.capiProperties)
-    .execute();
+  await repository.save(dniUser);
 };
 
 const createSubscriptionEntity = async (
@@ -225,23 +219,38 @@ const findEventsParticipants = async () => {
 };
 
 const storeSettings = async (colleagueUUID: string, settings: EmailNotificationSettings) => {
-  return (
-    await getRepository(DniUser)
-      .createQueryBuilder()
-      .update()
-      .set({ settingProperties: settings })
-      .where(`colleagueUUID = :colleagueUUID`, { colleagueUUID })
-      .returning(['colleagueUUID', 'settingProperties'])
-      .execute()
-  ).raw[0];
+  const repository = getRepository(DniUser);
+  const dniUser = await repository.findOneOrFail({ colleagueUUID });
+
+  console.log(JSON.stringify(dniUser));
+  console.log(JSON.stringify(dniUser?.extras));
+
+  if (!dniUser.extras) {
+    dniUser.initExtras();
+  }
+
+  console.log(JSON.stringify(settings));
+
+  dniUser.extras!.settings = { ...dniUser.extras!.settings, ...settings };
+
+  console.log(JSON.stringify(dniUser));
+
+  repository.save(dniUser);
+
+  return { colleagueUUID, settings };
 };
 
 const findSettings = async (colleagueUUID: string) => {
-  return await getRepository(DniUser)
-    .createQueryBuilder('du')
-    .select(['du.colleagueUUID', 'du.settingProperties'])
-    .where(`du.colleagueUUID = :colleagueUUID`, { colleagueUUID })
-    .getOne();
+  const repository = getRepository(DniUserExtras);
+  const dniUserExtras = await repository.findOne({ colleagueUUID });
+
+  console.log(JSON.stringify(dniUserExtras));
+  console.log(JSON.stringify(dniUserExtras?.settings));
+
+  const settings = dniUserExtras?.settings || {};
+  console.log(JSON.stringify(settings));
+
+  return dniUserExtras || { colleagueUUID };
 };
 
 export type { EmailNotificationSettings };
