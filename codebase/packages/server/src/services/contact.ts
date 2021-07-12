@@ -75,7 +75,7 @@ const updatePersonalEmail = async (colleagueUUID: string, req: Request, res: Res
 };
 
 const sendEmails = async (recipients: Recipient[], data: EmailData, req: Request, res: Response) => {
-  if (!process.env.MAIL_TAMPLATE_ID) {
+  if (!process.env.MAIL_TEMPLATE_ID) {
     throw new Error("Can't execute without template id");
   }
 
@@ -84,7 +84,7 @@ const sendEmails = async (recipients: Recipient[], data: EmailData, req: Request
   return (
     await connector.sendMessages({
       params: {
-        templateId: process.env.MAIL_TAMPLATE_ID,
+        templateId: process.env.MAIL_TEMPLATE_ID,
       },
       traceId: uuidv4(),
       body: {

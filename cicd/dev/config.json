@@ -45,6 +45,30 @@
         "type": "plain",
         "value": "/diversity-and-inclusion"
       },
+      "DNI_APP_URL": {
+        "type": "plain",
+        "value": "https://diversity-and-inclusion.dev.thp.tescocloud.com"
+      },
+      "DNI_APP_POST_URL": {
+        "type": "plain",
+        "value": "/network-news/%ID%"
+      },
+      "DNI_APP_EVENT_URL": {
+        "type": "plain",
+        "value": "/events/%ID%"
+      },
+      "DNI_APP_UNSUBSCRIBE_URL": {
+        "type": "plain",
+        "value": "/notification/settings?unsubscribe=true"
+      },
+      "MAIL_TEMPLATE_ID": {
+        "type": "plain",
+        "value": "dfge2b6d-qfaa-47c6-bfw9-b4214y0a2e88"
+      },
+      "MAIL_SEND_CHUNKS_NUMBER": {
+        "type": "plain",
+        "value": "30"
+      },
       "WITH_ONE_LOGIN": {
         "type": "plain",
         "value": "true"
@@ -135,7 +159,15 @@
       },
       "TYPEORM_RUN_MIGRATION": {
         "type": "plain",
-        "value": "false"
+        "value": "true"
+      },
+      "CCRM_RUN_SYNC": {
+        "type": "plain",
+        "value": "true"
+      },
+      "CACHE_COLLEAGUE_TTL": {
+        "type": "plain",
+        "value": "43200"
       },
       "COOKIE_SESSION_KEY": {
         "type": "plain",
