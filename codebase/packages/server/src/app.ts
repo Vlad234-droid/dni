@@ -21,6 +21,7 @@ import {
 } from './middlewares';
 import { buildContext } from './context';
 import { initializeTypeOrm } from './config/db';
+import { ViewPathPredicate, withReturnTo } from '@energon/onelogin';
 
 envAccessor.validate();
 
@@ -59,9 +60,18 @@ const startServer = async () => {
       app.use(fakeUserExtractor);
     } else {
       const { openId, openIdCookieParser, clientScopedToken } = openIdConfig(config);
+
+      const isViewPath: ViewPathPredicate = (path) => {
+        const exclude = "^(/api|/auth|/sso)"
+        return !path.match(exclude)
+      }
+
       app.use(openIdCookieParser);
       app.use(clientScopedToken());
-      app.use(await openId);
+      app.use(withReturnTo(await openId, { 
+        isViewPath, 
+        appPath: config.publicUrl 
+      }));
     }
 
     app.use(colleagueUUIDExtractor('/api/cms-events'));

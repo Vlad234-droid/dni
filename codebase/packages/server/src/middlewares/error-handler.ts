@@ -40,7 +40,7 @@ const shouldApplyPageReload = (err: Error) => {
 
 export const errorHandler: ErrorMiddleware = (error: unknown, req, res, _) => {
   if (shouldApplyPageReload(error as Error)) {
-    console.log(`Page reload workaround is applying`);
+    console.log(`Page reload workaround is applying for request: ${req.originalUrl}`);
     return res.status(200).sendFile(path.resolve(path.join('public', 'reload.html')));
   }
 
