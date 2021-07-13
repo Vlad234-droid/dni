@@ -5,15 +5,14 @@ import styled from 'styled-components';
 import { TextWithEllipsis } from 'features/Common';
 
 import * as T from '../../../config/types';
-
 import Checkbox from '../../Checkbox';
 
 const Entity = {
-  [T.Entity.network]: {
+  [T.EntityType.NETWORK]: {
     name: 'Networks',
     members: 'subscribers',
   },
-  [T.Entity.event]: {
+  [T.EntityType.EVENT]: {
     name: 'Events',
     members: 'participants',
   },
@@ -22,11 +21,11 @@ const Entity = {
 interface Props {
   data: Array<any>;
   onChange: (id: string, checked: boolean) => void;
-  entityType: T.Entity;
-  filter: string;
+  reportType: T.ReportType;
+  entityType: T.EntityType;
 }
 
-const Statistics = ({ data, onChange, entityType, filter }: Props) => {
+const Statistics = ({ data, onChange, entityType, reportType }: Props) => {
   const handleChangeItem = (e: ChangeEvent<HTMLInputElement>) => onChange(e.target.id, e.target.checked);
 
   return (
@@ -34,7 +33,7 @@ const Statistics = ({ data, onChange, entityType, filter }: Props) => {
       <tbody>
         <Row>
           <CellName>{Entity[entityType].name}</CellName>
-          {filter === T.PERIOD && (
+          {reportType === T.ReportType.PERIOD && (
             <>
               <Cell>{`${Entity[entityType].members} at the period start`}</Cell>
               <Cell>{`${Entity[entityType].members} at the period end`}</Cell>
@@ -43,7 +42,9 @@ const Statistics = ({ data, onChange, entityType, filter }: Props) => {
               <Cell>{'left during the period'}</Cell>
             </>
           )}
-          {(filter === T.REGION || filter === T.FORMAT) && <Cell>{'Participants'}</Cell>}
+          {(reportType === T.ReportType.REGION || reportType === T.ReportType.FORMAT) && (
+            <Cell>{'Participants'}</Cell>
+          )}
         </Row>
         {data.map((item) => (
           <Row key={item.entityId}>
@@ -51,7 +52,7 @@ const Statistics = ({ data, onChange, entityType, filter }: Props) => {
               <Checkbox checked={item.checked} entityId={item.entityId} onChange={handleChangeItem} />
               <TextWithEllipsis>{item.name}</TextWithEllipsis>
             </CellName>
-            {filter === T.PERIOD && (
+            {reportType === T.ReportType.PERIOD && (
               <>
                 <Cell>{item.startMembers}</Cell>
                 <Cell>{item.endMembers}</Cell>
@@ -60,7 +61,9 @@ const Statistics = ({ data, onChange, entityType, filter }: Props) => {
                 <Cell>{item.leave}</Cell>
               </>
             )}
-            {(filter === T.REGION || filter === T.FORMAT) && <Cell>{item.participants}</Cell>}
+            {(reportType === T.ReportType.REGION || reportType === T.ReportType.FORMAT) && (
+              <Cell>{item.participants}</Cell>
+            )}
           </Row>
         ))}
       </tbody>

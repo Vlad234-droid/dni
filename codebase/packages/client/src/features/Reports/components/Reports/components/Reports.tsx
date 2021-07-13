@@ -23,35 +23,35 @@ import {
 } from '../../../store';
 import * as T from '../../../config/types';
 
-const filterButtons = [
+const reportButtons = [
   {
-    key: T.PERIOD,
+    key: T.ReportType.PERIOD,
     title: 'Time period',
   },
   {
-    key: T.REGION,
+    key: T.ReportType.REGION,
     title: 'Region',
   },
   {
-    key: T.FORMAT,
+    key: T.ReportType.FORMAT,
     title: 'Business area',
   },
 ];
 
 const entityButtons = [
   {
-    key: T.Entity.network,
+    key: T.EntityType.NETWORK,
     title: 'Network',
   },
   {
-    key: T.Entity.event,
+    key: T.EntityType.EVENT,
     title: 'Event',
   },
 ];
 
 const getEntities = {
-  1: getEvents,
-  0: getNetworks,
+  [T.EntityType.EVENT]: getEvents,
+  [T.EntityType.NETWORK]: getNetworks,
 };
 
 export const REPORT_TEST_ID = 'reports';
@@ -59,24 +59,21 @@ export const REPORT_TEST_ID = 'reports';
 const Reports: FC = () => {
   const dispatch = useDispatch();
 
-  const { entityType } = useSelector(() => store.getState().reports);
+  const { reportType } = useSelector(() => store.getState().reports.filters);
+  const { entityType } = useSelector(() => store.getState().reports.filters);
+  const { periodType } = useSelector(() => store.getState().reports.filters);
 
-  const { filter } = useSelector(() => store.getState().reports[entityType]);
-
-  const filterFilter = useSelector(() => store.getState().reports[entityType][filter].filter);
-
-  const { ids } = useSelector(() => store.getState().reports[entityType === 0 ? 'networks' : 'events']);
+  const { ids } = useSelector(() => store.getState().reports[entityType]);
 
   const { chart, statistics, dateInterval } = useSelector(
-    () => store.getState().reports[entityType][filter][filterFilter],
+    () => store.getState().reports.groups[reportType],
   );
 
   const handleUpdateStatistics = (id: string, checked: boolean) => {
     dispatch(
       actions.updateStatistics({
+        reportType,
         entityType,
-        filter,
-        filterFilter,
         checked,
         id,
       }),
@@ -99,14 +96,15 @@ const Reports: FC = () => {
 
     const paddingX = 130;
     const paddingY = 130;
-    const offsetX = 120;
-    const offsetY = 270;
 
     Html2Canvas(input).then((canvas) => {
-      const imgData = canvas.toDataURL('image/png');
+      const imgData = canvas.toDataURL('image/jpeg');
       const pdf = new jsPDF({
-        format: [input.clientWidth + paddingX * 2 + offsetX, input.clientHeight + paddingY * 2 + offsetY],
-        unit: 'px',
+        format: [
+          input.clientWidth,
+          input.clientHeight,
+        ],
+        unit: 'mm',
       }) as any;
 
       pdf.addImage(imgData, 'JPEG', paddingX, paddingY);
@@ -129,12 +127,14 @@ const Reports: FC = () => {
       return;
     }
 
-    if (filter === T.PERIOD && filterFilter !== T.Period.PICK_PERIOD) {
+    if (
+      reportType === T.ReportType.PERIOD &&
+      periodType !== T.PeriodType.PICK_PERIOD
+    ) {
       dispatch(
         getReportsByTime({
           entityType,
-          filter,
-          filterFilter,
+          periodType,
           ids,
         }),
       );
@@ -151,7 +151,7 @@ const Reports: FC = () => {
       dateTo = new Date(`${to.mm} ${to.dd} ${to.yyyy}`).toISOString();
     }
 
-    if (filter === T.REGION) {
+    if (reportType === T.ReportType.REGION) {
       dispatch(
         getReportsByRegion({
           entityType,
@@ -163,7 +163,7 @@ const Reports: FC = () => {
       return;
     }
 
-    if (filter === T.FORMAT) {
+    if (reportType === T.ReportType.FORMAT) {
       dispatch(
         getReportsByFormat({
           entityType,
@@ -176,15 +176,15 @@ const Reports: FC = () => {
     }
   };
 
-  useEffect(handleReportsEffect, [ids, entityType, filter, filterFilter]);
+  useEffect(handleReportsEffect, [ids, reportType, entityType, periodType]);
 
   return (
     <Wrapper data-testid={REPORT_TEST_ID}>
       <Buttons>
         <ButtonFilter
-          value={filter}
-          initialFilters={filterButtons}
-          onChange={(event: any) => dispatch(actions.setFilter({ key: event.target.value }))}
+          value={reportType}
+          initialFilters={reportButtons}
+          onChange={(event: any) => dispatch(actions.setReportType({ key: event.target.value }))}
           name='filters'
         />
         <ButtonLoader>
@@ -193,9 +193,9 @@ const Reports: FC = () => {
       </Buttons>
       <div ref={ref}>
         <Graphics
+          reportType={reportType}
           entityType={entityType}
-          filter={filter}
-          filterFilter={filterFilter}
+          periodType={periodType}
           dateInterval={dateInterval}
           data={chart}
         />
@@ -207,11 +207,16 @@ const Reports: FC = () => {
           <ButtonFilter
             value={entityType}
             initialFilters={entityButtons}
-            onChange={(event: any) => dispatch(actions.setEntityType({ entityType: event.target.value }))}
+            onChange={(event: any) => dispatch(actions.setEntityType({ key: event.target.value }))}
             name='entities'
           />
         </div>
-        <Statistics entityType={entityType} filter={filter} data={statistics} onChange={handleUpdateStatistics} />
+        <Statistics
+          reportType={reportType}
+          entityType={entityType}
+          data={statistics}
+          onChange={handleUpdateStatistics}
+        />
       </div>
     </Wrapper>
   );

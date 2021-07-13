@@ -1,19 +1,15 @@
 import React, { FC } from 'react';
-import { useSelector } from 'react-redux';
 import styled from 'styled-components';
 
 import { Page, PAGE_PREFIX } from 'features/Page';
-import Reports, { Entity } from 'features/Reports';
+import Reports from 'features/Reports';
 import { menuItemsDesktop } from 'features/Menu';
-import store from 'store';
 
 import BasePage from '../BasePage';
 import PageWrapper from '../PageWrapper';
 import { TEST_ID } from '../Networks/Networks';
 
 const ReportPage: FC = () => {
-  const { entityType } = useSelector(() => store.getState().reports);
-
   return (
     <BasePage
       data-testid={`${PAGE_PREFIX}${Page.REPORTS}`}
@@ -22,8 +18,7 @@ const ReportPage: FC = () => {
           <PageWrapper
             renderContent={() => (
               <ContentWrapper>
-                {entityType === Entity.network && <Reports />}
-                {entityType === Entity.event && <Reports />}
+                <Reports />
               </ContentWrapper>
             )}
             pageName={menuItemsDesktop[Page.REPORTS]}
