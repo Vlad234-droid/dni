@@ -10,6 +10,7 @@ import { EmptyContainer, Level, Error, Spinner } from 'features/Common';
 import { networkNotificationsSelector, networkNotificationMetadataSelector } from '../../store';
 import { Wrapper, Title, List } from './styled';
 import NetworkUpdatesItem, { UpdateItem } from '../NetworkUpdatesItem';
+import DefaultLogo from '../../assets/colleague-network-logo.jpg';
 
 const NETWORK_UPDATES_TEST_ID = 'network-updates-test-id';
 
@@ -27,7 +28,7 @@ const NetworkUpdates: FC = () => {
         key: rootAncestorId || `network-news-${idx}`,
         href: rootAncestorId ? `/${Page.NETWORKS}/${rootAncestorId}` : `/${Page.NETWORK_NEWS}`,
         name: rootAncestor?.title || 'D&I News',
-        avatar: rootAncestor?.image?.url || '',
+        avatar: rootAncestor?.image?.url || DefaultLogo,
         count: totalEntitiesCount,
       })),
     );
@@ -54,8 +55,10 @@ const NetworkUpdates: FC = () => {
     <Wrapper data-testid={NETWORK_UPDATES_TEST_ID}>
       <Title>Updates in my Networks</Title>
       {memoizedContent}
-      <Link to={`/${Page.NETWORKS}`}>
-        <Button variant='secondary'>See all</Button>
+      <Link to={Page.NETWORKS}>
+        {!isEmpty(items) && (
+          <Button variant='secondary'>See all</Button>
+        )}
       </Link>
     </Wrapper>
   );

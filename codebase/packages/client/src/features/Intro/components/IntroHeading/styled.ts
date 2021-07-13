@@ -4,12 +4,9 @@ import Media from 'styles/media';
 import { headingXS, headingXL } from 'styles';
 
 const Wrapper = styled.div`
-  margin-bottom: 24px;
+  padding: 40px;
   color: ${({ theme }) => theme.colors.white};
-
-  ${Media.tablet`
-     margin-bottom: 40px;
-  `}
+  background-color: ${({ theme }) => theme.colors.tescoBlue};
 `;
 
 const Title = styled.h2`
@@ -28,8 +25,8 @@ const Subtitle = styled.h4`
   ${headingXS};
 
   ${Media.tablet`
-     font-size: 24px;
-     line-height: 28px;
+    font-size: 24px;
+    line-height: 28px;
   `}
 
   p {

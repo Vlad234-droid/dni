@@ -27,38 +27,30 @@ const getChartState = () =>
     entities: [],
   } as T.ChartItem);
 
-const getStatisticsState = () => [] as T.Statistics;
+const getGroupState = () => ({
+  chart: getChartState(),
+  statistics: [],
+  dateInterval: getDateIntervalState(),
+  color: {
+    ...color,
+  },
+  counter: 0,
+})
 
-const getGraphicsState = () =>
+const getGroupByPeriodState = () =>
   ({
-    chart: getChartState(),
-    statistics: getStatisticsState(),
-    dateInterval: getDateIntervalState(),
-    color: {
-      ...color,
-    },
-    counter: 0,
-  } as T.GraphicsItem);
+    ...getGroupState(),
+  } as T.GroupByPeriod);
 
-const getEntityState = () =>
+const getGroupByRegionState = () =>
   ({
-    filter: T.PERIOD,
-    [T.PERIOD]: {
-      filter: T.Period.THIS_YEAR,
-      [T.Period.THIS_YEAR]: getGraphicsState(),
-      [T.Period.LAST_MONTH]: getGraphicsState(),
-      [T.Period.LAST_WEEK]: getGraphicsState(),
-      [T.Period.PICK_PERIOD]: getGraphicsState(),
-    },
-    [T.REGION]: {
-      filter: T.Region.PICK_PERIOD,
-      [T.Region.PICK_PERIOD]: getGraphicsState(),
-    },
-    [T.FORMAT]: {
-      filter: T.Format.PICK_PERIOD,
-      [T.Region.PICK_PERIOD]: getGraphicsState(),
-    },
-  } as T.EntityItem);
+    ...getGroupState(),
+  } as T.GroupByRegion);
+
+const getGroupByFormatState = () =>
+  ({
+    ...getGroupState(),
+  } as T.GroupByFormat);
 
 const calculateDifference = ({ start, end }: { start: number; end: number }) => {
   if (start === 0 && end === 0) {
@@ -75,7 +67,7 @@ const calculateDifference = ({ start, end }: { start: number; end: number }) => 
 
 const buildTimePeriodQuery = ({ entityType, groupBy, from, to, ids }: T.Params) => {
   const requestQuery = {
-    entityType: entityType == 0 ? 'network' : 'event',
+    entityType,
     groupBy,
     from,
     to,
@@ -87,7 +79,7 @@ const buildTimePeriodQuery = ({ entityType, groupBy, from, to, ids }: T.Params) 
 
 const buildRegionOrFormatQuery = ({ entityType, from, to, ids }: T.Params) => {
   const requestQuery = {
-    entityType: entityType == 0 ? 'network' : 'event',
+    entityType,
     from,
     to,
     entityIds: ids.join(','),
@@ -98,15 +90,13 @@ const buildRegionOrFormatQuery = ({ entityType, from, to, ids }: T.Params) => {
 
 const reportsByTimeMiddleware = async ({
   entityType,
-  filter,
-  filterFilter,
+  periodType,
   from,
   to,
   ids,
 }: {
-  entityType: T.Entity;
-  filter: T.Filter;
-  filterFilter: T.Period;
+  entityType: T.EntityType;
+  periodType: T.PeriodType;
   from: string;
   to: string;
   ids: (number | string)[];
@@ -122,22 +112,22 @@ const reportsByTimeMiddleware = async ({
     to: date.toISOString(),
   };
 
-  switch (filterFilter) {
-    case T.Period.THIS_YEAR:
+  switch (periodType) {
+    case T.PeriodType.THIS_YEAR:
       groupBy = T.GroupBy.WEEK;
       date.setFullYear(date.getFullYear() - 1);
       date.setUTCHours(0, 0, 0, 0);
       interval.from = date.toISOString();
       break;
 
-    case T.Period.LAST_MONTH:
+    case T.PeriodType.LAST_MONTH:
       groupBy = T.GroupBy.DAY;
       date.setMonth(date.getMonth() - 1);
       date.setUTCHours(0, 0, 0, 0);
       interval.from = date.toISOString();
       break;
 
-    case T.Period.LAST_WEEK:
+    case T.PeriodType.LAST_WEEK:
       groupBy = T.GroupBy.DAY;
       date.setDate(date.getDate() - 7);
       date.setUTCHours(0, 0, 0, 0);
@@ -148,7 +138,7 @@ const reportsByTimeMiddleware = async ({
   const query = buildTimePeriodQuery({
     entityType,
     groupBy,
-    ...(filterFilter === T.Period.PICK_PERIOD
+    ...(periodType === T.PeriodType.PICK_PERIOD
       ? {
           from,
           to,
@@ -159,9 +149,9 @@ const reportsByTimeMiddleware = async ({
 
   const { data, metadata } = await API.report.members<any>(query);
 
-  const { entities } = store.getState().reports[entityType === 0 ? 'networks' : 'events'];
-  const groupState = store.getState().reports[entityType][filter][filterFilter];
-  const group = getGraphicsState() as T.GraphicsItem;
+  const { entities } = store.getState().reports[entityType];
+  const groupState = store.getState().reports.groups[T.ReportType.PERIOD];
+  const group = getGroupState() as T.GroupByPeriod;
 
   group.color = groupState.color;
   group.dateInterval = groupState.dateInterval;
@@ -190,14 +180,14 @@ const reportsByTimeMiddleware = async ({
         endMembers: endSubscribers,
         subscribe: joined,
         leave: leaved,
-      } as T.StatisticsItem;
+      } as T.StatisticsItemByPeriod;
 
       row.percentages = calculateDifference({
         start: startSubscribers!,
         end: endSubscribers!,
       });
 
-      const rowState = groupState.statistics.find((element: T.StatisticsItem) => element.entityId == row.entityId);
+      const rowState = groupState.statistics.find((element: T.StatisticsItemByPeriod) => element.entityId == row.entityId);
 
       row.name = entities[entityId]?.title || 'Default entity name';
       row.checked = typeof rowState?.['checked'] === 'boolean' ? rowState.checked : false;
@@ -211,8 +201,6 @@ const reportsByTimeMiddleware = async ({
 
   return {
     entityType,
-    filter,
-    filterFilter,
     data: group,
   };
 };
@@ -223,7 +211,7 @@ const reportsByRegionMiddleware = async ({
   to,
   ids,
 }: {
-  entityType: T.Entity;
+  entityType: T.EntityType;
   from: string;
   to: string;
   ids: (number | string)[];
@@ -243,10 +231,10 @@ const reportsByRegionMiddleware = async ({
   });
 
   const { data, metadata } = await API.report.regions<T.Response<T.RegionEntityData>>(query);
-
-  const { entities } = store.getState().reports[entityType === 0 ? 'networks' : 'events'];
-  const groupState = store.getState().reports[entityType][T.REGION][T.Region.PICK_PERIOD];
-  const group = getGraphicsState() as T.GraphicsItem;
+  
+  const { entities } = store.getState().reports[entityType];
+  const groupState = store.getState().reports.groups[T.ReportType.REGION];
+  const group = getGroupState() as T.GroupByRegion;
 
   group.color = groupState.color;
   group.dateInterval.from = toDateInterval(dateFrom);
@@ -300,7 +288,7 @@ const reportsByFormatMiddleware = async ({
   to,
   ids,
 }: {
-  entityType: T.Entity;
+  entityType: T.EntityType;
   from: string;
   to: string;
   ids: (number | string)[];
@@ -320,10 +308,10 @@ const reportsByFormatMiddleware = async ({
   });
 
   const { data, metadata } = await API.report.departments<T.Response<T.FormatEntityData>>(query);
-
-  const { entities } = store.getState().reports[entityType === 0 ? 'networks' : 'events'];
-  const groupState = store.getState().reports[entityType][T.FORMAT][T.Region.PICK_PERIOD];
-  const group = getGraphicsState() as T.GraphicsItem;
+  
+  const { entities } = store.getState().reports[entityType];
+  const groupState = store.getState().reports.groups[T.ReportType.FORMAT];
+  const group = getGroupState() as T.GroupByFormat;
 
   group.color = groupState.color;
   group.dateInterval.from = toDateInterval(dateFrom);
@@ -382,4 +370,12 @@ const toDateInterval = (isoDate: string) => {
   };
 };
 
-export { getEntityState, reportsByTimeMiddleware, reportsByRegionMiddleware, reportsByFormatMiddleware };
+export {
+  getGroupByPeriodState,
+  getGroupByRegionState,
+  getGroupByFormatState,
+  reportsByTimeMiddleware,
+  reportsByRegionMiddleware,
+  reportsByFormatMiddleware,
+  toDateInterval,
+};

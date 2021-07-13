@@ -2,27 +2,27 @@ import React, { FC } from 'react';
 
 import DateTimePicker, { Type } from '../../DateTimePicker';
 import { Wrapper, ItemWrapper } from './styled';
-import { DatePoint } from '../../../config/types';
+import * as T from '../../../config/types';
 
 type Props = {
-  from: DatePoint;
-  to: DatePoint;
+  from: T.DatePoint;
+  to: T.DatePoint;
   required?: boolean;
-  handleRangeChange: ({ value, prop }: { value: DatePoint; prop: string }) => void;
+  handleRangeChange: ({ value, prop }: { value: T.DatePoint; prop: T.Prop }) => void;
 };
 
 const RangeDateTimePicker: FC<Props> = ({ from, to, required = true, handleRangeChange }) => {
-  const handleStartChange = (value: DatePoint) => {
+  const handleStartChange = (value: T.DatePoint) => {
     handleRangeChange({
       value,
-      prop: 'from',
+      prop: T.Prop.FROM,
     });
   };
 
-  const handleEndChange = (value: DatePoint) => {
+  const handleEndChange = (value: T.DatePoint) => {
     handleRangeChange({
       value,
-      prop: 'to',
+      prop: T.Prop.TO,
     });
   };
 

@@ -9,23 +9,38 @@ import { getList as getEvents, eventsAdapter } from 'features/Event';
 import * as T from '../config/types';
 import * as A from './actionTypes';
 import {
-  getEntityState,
+  getGroupByPeriodState,
+  getGroupByRegionState,
+  getGroupByFormatState,
   reportsByTimeMiddleware,
   reportsByRegionMiddleware,
   reportsByFormatMiddleware,
 } from '../utils';
 
 const initialState: T.State = {
-  entityType: T.Entity.network,
-  [T.Entity.network]: getEntityState(),
-  [T.Entity.event]: getEntityState(),
+  filters: {
+    reportType: T.ReportType.PERIOD,
+    entityType: T.EntityType.NETWORK,
+    periodType: T.PeriodType.THIS_YEAR,
+  },
+  groups: {
+    [T.ReportType.PERIOD]: getGroupByPeriodState(),
+    [T.ReportType.REGION]: getGroupByRegionState(),
+    [T.ReportType.FORMAT]: getGroupByFormatState(),
+
+    [T.EntityType.NETWORK]: [],
+    [T.EntityType.EVENT]: [],
+  },
+
   loading: Loading.IDLE,
   error: undefined,
-  networks: {
+
+  [T.EntityType.NETWORK]: {
     ids: [],
     entities: {},
   },
-  events: {
+
+  [T.EntityType.EVENT]: {
     ids: [],
     entities: {},
   },
@@ -40,53 +55,51 @@ const slice = createSlice({
   name: A.ROOT,
   initialState,
   reducers: {
-    setEntityType(state, { payload: { entityType } }) {
-      state.entityType = Number(entityType);
+    setReportType(state, { payload: { key } }) {
+      state.filters.reportType = key as T.ReportType;
     },
 
-    setFilter(state, { payload: { key } }) {
-      state[state.entityType].filter = key;
+    setEntityType(state, { payload: { key } }) {
+      state.filters.entityType = key as T.EntityType;
     },
 
-    setTimePeriodFilter(state, { payload: { period } }) {
-      const { filter } = state[state.entityType];
-      state[state.entityType][filter].filter = period;
+    setPeriodType(state, { payload: { key } }) {
+      state.filters.periodType = key as T.PeriodType;
     },
 
     updatePeriodInterval(state, { payload }) {
-      const { entityType, value, prop, filter } = payload as {
-        entityType: T.Entity;
+      const { prop, value, reportType, entityType } = payload as {
+        prop: T.Prop;
         value: T.DatePoint;
-        prop: string;
-        filter: T.Filter;
+        reportType: T.ReportType;
+        entityType: T.EntityType;
       };
 
-      const group = state[entityType][filter][T.Period.PICK_PERIOD];
+      const groupByReportType = state.groups[reportType] as T.Group;
 
-      group.dateInterval[prop] = value;
+      groupByReportType.dateInterval[prop] = value;
     },
 
     updateStatistics(state, { payload }) {
-      const { entityType, filter, filterFilter, id, checked } = payload as {
-        entityType: T.Entity;
-        filter: T.Filter;
-        filterFilter: T.Period;
+      const { id, checked, reportType, entityType } = payload as {
         checked: boolean;
         id: string;
+        reportType: T.ReportType;
+        entityType: T.EntityType;
       };
 
-      const group = state[entityType][filter][filterFilter];
+      const group = state.groups[reportType] as T.Group;
 
       if (group.counter === 5 && checked === true) {
         return;
       }
 
-      group.statistics = group.statistics.map((item: T.StatisticsItem) => {
+      group.statistics = group.statistics.map((item) => {
         if (item.entityId != id) {
           return item;
         }
 
-        let color;
+        let color = '';
 
         if (checked === true) {
           color = Object.keys(group.color).find((key) => {
@@ -98,25 +111,25 @@ const slice = createSlice({
             }
 
             return false;
-          });
+          }) || color;
         }
 
         if (checked === false) {
-          group.color[item.color] = false;
+          group.color[item.color || color] = false;
           group.counter -= 1;
         }
 
         return { ...item, checked, color };
       });
 
-      if (filter === T.PERIOD) {
+      if (reportType === T.ReportType.PERIOD) {
         group.chart.elements = keyBy(
           sort(group.statistics, ['checked', true]),
           (o: Partial<{ name: string }>) => o.name,
         );
       }
 
-      if (filter === T.REGION) {
+      if (reportType === T.ReportType.REGION) {
         group.chart.elements = [];
 
         group.chart.entities = sort(group.statistics, ['checked', true]);
@@ -141,7 +154,7 @@ const slice = createSlice({
         });
       }
 
-      if (filter === T.FORMAT) {
+      if (reportType === T.ReportType.FORMAT) {
         group.chart.elements = [];
 
         group.chart.entities = sort(group.statistics, ['checked', true]);
@@ -165,6 +178,8 @@ const slice = createSlice({
           group.chart.elements.push(element);
         });
       }
+
+      // state.groups[entityType] = { ...group };
     },
   },
   extraReducers: (builder) => {
@@ -185,9 +200,13 @@ const slice = createSlice({
     builder
       .addCase(getReportsByTime.pending, setPending)
       .addCase(getReportsByTime.fulfilled, (state: T.State, { payload }) => {
-        const { entityType, filter, filterFilter, data } = payload as T.PeriodFulfilledArgs;
+        const { entityType, data } = payload as {
+          data: T.GroupByPeriod;
+          entityType: T.EntityType;
+        };
 
-        state[entityType][filter][filterFilter] = data;
+        state.groups[T.ReportType.PERIOD] = data;
+        // state.groups[entityType] = data;
 
         setSucceeded(state);
       })
@@ -195,9 +214,13 @@ const slice = createSlice({
 
       .addCase(getReportsByRegion.pending, setPending)
       .addCase(getReportsByRegion.fulfilled, (state: T.State, { payload }) => {
-        const { entityType, data } = payload as T.RegionFulfilledArgs;
+        const { entityType, data } = payload as {
+          data: T.GroupByRegion;
+          entityType: T.EntityType;
+        };
 
-        state[entityType][T.REGION][T.Region.PICK_PERIOD] = data;
+        state.groups[T.ReportType.REGION] = data;
+        // state.groups[entityType] = data;
 
         setSucceeded(state);
       })
@@ -205,22 +228,26 @@ const slice = createSlice({
 
       .addCase(getReportsByFormat.pending, setPending)
       .addCase(getReportsByFormat.fulfilled, (state: T.State, { payload }) => {
-        const { entityType, data } = payload as T.FormatFulfilledArgs;
+        const { entityType, data } = payload as {
+          data: T.GroupByFormat;
+          entityType: T.EntityType;
+        };
 
-        state[entityType][T.FORMAT][T.Format.PICK_PERIOD] = data;
+        state.groups[T.ReportType.FORMAT] = data;
+        // state.groups[entityType] = data;
 
         setSucceeded(state);
       })
       .addCase(getReportsByFormat.rejected, setFailed)
 
       .addCase(getNetworks.fulfilled, (state: T.State, { payload }) => {
-        networksAdapter.upsertMany(state.networks, payload);
+        networksAdapter.upsertMany(state[T.EntityType.NETWORK], payload);
 
         setSucceeded(state);
       })
 
       .addCase(getEvents.fulfilled, (state: T.State, { payload }) => {
-        eventsAdapter.upsertMany(state.events, payload);
+        eventsAdapter.upsertMany(state[T.EntityType.EVENT], payload);
 
         setSucceeded(state);
       })
