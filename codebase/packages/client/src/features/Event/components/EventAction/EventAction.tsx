@@ -5,6 +5,7 @@ import useStore from 'hooks/useStore';
 import useDispatch from 'hooks/useDispatch';
 import { ConfirmationModal } from 'features/Common';
 import { joinEvent, leaveEvent } from 'features/Auth';
+import { useNotification } from 'features/Notification';
 
 import { joinParticipant, leaveParticipant } from '../../store';
 
@@ -18,6 +19,7 @@ const EventAction: FC<Props> = ({ id, disabled }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { events = [] } = useStore((state) => state.auth.user);
   const isJoined = events.includes(+id);
+  const { refetchNotificationsWithDelay } = useNotification();
 
   const handleLeave = () => setIsModalOpen(true);
   const handleModalClose = () => setIsModalOpen(false);
@@ -27,6 +29,7 @@ const EventAction: FC<Props> = ({ id, disabled }) => {
 
     await dispatch(joinEvent({ eventId: id }));
     dispatch(joinParticipant(id));
+    refetchNotificationsWithDelay();
   };
 
   const handleConfirmLeave = async () => {
@@ -34,6 +37,7 @@ const EventAction: FC<Props> = ({ id, disabled }) => {
 
     await dispatch(leaveEvent({ eventId: id }));
     dispatch(leaveParticipant(id));
+    refetchNotificationsWithDelay();
   };
 
   return isJoined ? (

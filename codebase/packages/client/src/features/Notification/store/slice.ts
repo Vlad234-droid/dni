@@ -97,16 +97,17 @@ const slice = createSlice({
         state.networkNotifications.list = state.networkNotifications.list
           .map((nn) => ({
             ...nn,
-            count:
-              nn.entitiesIds.includes(acknowledge?.acknowledgeEntityId) &&
-              nn.entityType == acknowledge?.acknowledgeEntityType
-                ? nn.count - 1
-                : nn.count,
+            totalEntitiesCount:
+              nn.entitiesDetails.some((d) => d.entitiesIds.includes(acknowledge?.acknowledgeEntityId)) &&
+              nn.entitiesDetails.some((d) => d.entityType == acknowledge?.acknowledgeEntityType)
+                ? nn.totalEntitiesCount - 1
+                : nn.totalEntitiesCount,
           }))
-          .filter((nn) => nn.count > 0);
+          .filter((nn) => nn.totalEntitiesCount > 0);
 
         state.notifications.list = state.notifications.list.filter(
-          (n) => n.entityId != acknowledge?.acknowledgeEntityId && n.entityType == acknowledge?.acknowledgeEntityType,
+          (n) =>
+            !(n.entityId == acknowledge?.acknowledgeEntityId && n.entityType == acknowledge?.acknowledgeEntityType),
         );
       })
       .addDefaultCase((state) => state);

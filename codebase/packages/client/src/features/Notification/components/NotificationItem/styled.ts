@@ -1,5 +1,6 @@
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
+import tlogo from 'assets/t-logo.svg';
 
 const CreatorAvatar = styled.div<{
   avatar: string;
@@ -10,7 +11,7 @@ const CreatorAvatar = styled.div<{
   flex-shrink: 0;
   background-size: cover;
   background-position: center;
-  background-image: url(${({ avatar }) => avatar});
+  background-image: url(${({ avatar }) => (avatar.length > 0 ? avatar : tlogo)});
   background-color: ${({ theme }) => theme.colors.tost};
 `;
 
@@ -18,9 +19,22 @@ const CreatorName = styled.div`
   font-size: 16px;
   line-height: 24px;
   font-weight: bold;
-  padding: 0 16px;
-  flex-grow: 1;
   color: ${({ theme }) => theme.colors.text.dark};
+`;
+
+const CreatorSubName = styled.div`
+  font-size: 14px;
+  line-height: 18px;
+  align-self: flex-end;
+  color: ${({ theme }) => theme.colors.text.dark};
+`;
+
+const NameWrapper = styled.div`
+  align-self: flex-start;
+  flex-grow: 1;
+  padding: 0 16px;
+  display: flex;
+  flex-direction: column;
 `;
 
 const Closer = styled.div`
@@ -80,4 +94,17 @@ const Wrapper = styled.div`
   margin-bottom: 20px;
 `;
 
-export { CreatorAvatar, CreatorName, Head, Content, Core, Closer, Date, Title, CustomLink, Wrapper };
+export {
+  CreatorAvatar,
+  CreatorName,
+  CreatorSubName,
+  NameWrapper,
+  Head,
+  Content,
+  Core,
+  Closer,
+  Date,
+  Title,
+  CustomLink,
+  Wrapper,
+};

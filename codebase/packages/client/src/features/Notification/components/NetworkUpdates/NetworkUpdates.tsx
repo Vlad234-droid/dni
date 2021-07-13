@@ -6,7 +6,7 @@ import isEmpty from 'lodash.isempty';
 
 import { Page } from 'features/Page';
 import Loading from 'types/loading';
-import { EmptyContainer, Error, Spinner } from 'features/Common';
+import { EmptyContainer, Level, Error, Spinner } from 'features/Common';
 import { networkNotificationsSelector, networkNotificationMetadataSelector } from '../../store';
 import { Wrapper, Title, List } from './styled';
 import NetworkUpdatesItem, { UpdateItem } from '../NetworkUpdatesItem';
@@ -24,12 +24,12 @@ const NetworkUpdates: FC = () => {
 
   useEffect(() => {
     setItems(
-      networkNotifications.map(({ rootAncestorId, rootAncestor, count }, idx) => ({
+      networkNotifications.map(({ rootAncestorId, rootAncestor, totalEntitiesCount }, idx) => ({
         key: rootAncestorId || `network-news-${idx}`,
         href: rootAncestorId ? `/${Page.NETWORKS}/${rootAncestorId}` : `/${Page.NETWORK_NEWS}`,
         name: rootAncestor?.title || 'D&I News',
         avatar: rootAncestor?.image?.url || DefaultLogo,
-        count,
+        count: totalEntitiesCount,
       })),
     );
   }, [networkNotifications]);
@@ -40,7 +40,7 @@ const NetworkUpdates: FC = () => {
     if (isEmpty(items) && isLoading) return <Spinner height='200px' />;
 
     if (loading === Loading.SUCCEEDED && isEmpty(items))
-      return <EmptyContainer description='Nothing to show' showIcon={false} explanation='' />;
+      return <EmptyContainer description='No updates' level={Level.INFO} explanation='' />;
 
     return (
       <List>

@@ -5,9 +5,6 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import { isDEV } from './config/env';
 
-//import { colleagueApiConnector } from '@dni-connectors/colleague-api';
-//import { prepareContext } from './services/context';
-
 import { envAccessor, getConfig } from './services';
 import { healthCheck, api } from './routes';
 import {
@@ -21,10 +18,10 @@ import {
   fakeLoginConfig,
   fakeUserExtractor,
   colleagueUUIDExtractor,
-  fakeColleagueExtractor,
 } from './middlewares';
 import { buildContext } from './context';
 import { initializeTypeOrm } from './config/db';
+import { ViewPathPredicate, withReturnTo } from '@energon/onelogin';
 
 envAccessor.validate();
 
@@ -61,12 +58,20 @@ const startServer = async () => {
       app.use(cookieParser());
       app.use(fakeLoginConfig(context, config));
       app.use(fakeUserExtractor);
-      app.use(fakeColleagueExtractor);
     } else {
       const { openId, openIdCookieParser, clientScopedToken } = openIdConfig(config);
+
+      const isViewPath: ViewPathPredicate = (path) => {
+        const exclude = "^(/api|/auth|/sso)"
+        return !path.match(exclude)
+      }
+
       app.use(openIdCookieParser);
       app.use(clientScopedToken());
-      app.use(await openId);
+      app.use(withReturnTo(await openId, { 
+        isViewPath, 
+        appPath: config.publicUrl 
+      }));
     }
 
     app.use(colleagueUUIDExtractor('/api/cms-events'));

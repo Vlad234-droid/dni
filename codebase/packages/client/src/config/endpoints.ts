@@ -1,7 +1,7 @@
 import { AxiosInstance } from 'axios';
 
 type Config = {
-  [key: string]: string | number | object | undefined;
+  [key: string]: boolean | string | number | object | undefined;
 };
 
 export enum Endpoint {
@@ -34,6 +34,9 @@ export enum Endpoint {
   NOTIFICATIONS = '/notifications',
   NOTIFICATIONS_NETWORKS = '/notifications/networks',
   NOTIFICATIONS_ACKNOWLEDGE = '/notifications/acknowledge',
+  // contact
+  CONTACT_PERSONAL_EMAIL = '/employees/personal-email',
+  CONTACT_EMAIL_NOTIFICATIONS_SETTINGS = '/employees/email-notifications-settings',
 }
 
 export default (httpClient: AxiosInstance) => ({
@@ -84,5 +87,14 @@ export default (httpClient: AxiosInstance) => ({
     fetchAll: <T>() => httpClient.get<T>(Endpoint.NOTIFICATIONS),
     fetchAllGroupByNetwork: <T>() => httpClient.get<T>(Endpoint.NOTIFICATIONS_NETWORKS),
     acknowledge: <T>(data: Config = {}) => httpClient.post<T>(Endpoint.NOTIFICATIONS_ACKNOWLEDGE, data),
+  },
+  contact: {
+    getPersonalEmail: <T>() => httpClient.get<T>(Endpoint.CONTACT_PERSONAL_EMAIL),
+    createPersonalEmail: <T>(data: Config = {}) => httpClient.post<T>(Endpoint.CONTACT_PERSONAL_EMAIL, data),
+    updatePersonalEmail: <T>(uuid: string, data: Config = {}) =>
+      httpClient.put<T>(`${Endpoint.CONTACT_PERSONAL_EMAIL}/${uuid}`, data),
+    getNotificationsSettings: <T>() => httpClient.get<T>(Endpoint.CONTACT_EMAIL_NOTIFICATIONS_SETTINGS),
+    updateNotificationsSettings: <T>(data: Config = {}) =>
+      httpClient.post<T>(Endpoint.CONTACT_EMAIL_NOTIFICATIONS_SETTINGS, data),
   },
 });

@@ -7,18 +7,18 @@ import isEmpty from 'lodash.isempty';
 import { Page } from 'features/Page';
 
 import Loading from 'types/loading';
-import { EmptyContainer, Error, Spinner } from 'features/Common';
+import { EmptyContainer, Level, Error, Spinner } from 'features/Common';
 import {
   hideSidebar,
   toggleSidebar,
   notificationsSelector,
   notificationsMetadataSelector,
   isSidebarOpenedSelector,
-  acknowledge,
 } from '../../store';
 import { EntityType, AcknowledgePayload } from '../../config/types';
 import NotificationerItem, { NotificationItem } from '../NotificationItem';
 import { Wrapper, Title, TitleWrapper } from './styled';
+import { useNotification } from '../../context/NotificationContext';
 
 const NOTIFICATION_CONTAINER_TEST_ID = 'notification-container-test-id';
 
@@ -28,12 +28,13 @@ type Props = {
 
 const NotificationSidebar: FC<Props> = ({ buttonRef }) => {
   const dispatch = useDispatch();
+  const { acknowledge } = useNotification();
 
   const [items, setItems] = useState<Array<NotificationItem & { key: string | number }>>([]);
 
   const wrapperRef = useRef<HTMLDivElement>(null);
 
-  const handleOnBodyClick = (e: MouseEvent) => {
+  const handleOnBodyClick = useCallback((e: MouseEvent) => {
     if (
       buttonRef?.current &&
       !buttonRef?.current.contains(e.target as Node) &&
@@ -42,7 +43,7 @@ const NotificationSidebar: FC<Props> = ({ buttonRef }) => {
     ) {
       dispatch(hideSidebar());
     }
-  };
+  }, []);
 
   useEffect(() => {
     document.addEventListener('click', handleOnBodyClick, false);
@@ -55,7 +56,7 @@ const NotificationSidebar: FC<Props> = ({ buttonRef }) => {
   };
 
   const handleCloserClick = useCallback((payload: AcknowledgePayload) => {
-    dispatch(acknowledge(payload));
+    acknowledge(payload);
   }, []);
 
   const isSidebarOpened = useSelector(isSidebarOpenedSelector);
@@ -69,7 +70,8 @@ const NotificationSidebar: FC<Props> = ({ buttonRef }) => {
 
     if (isEmpty(items) && isLoading) return <Spinner height='270px' />;
 
-    if (loading === Loading.SUCCEEDED && isEmpty(items)) return <EmptyContainer description='Nothing to show' />;
+    if (loading === Loading.SUCCEEDED && isEmpty(items))
+      return <EmptyContainer level={Level.INFO} explanation='' description='No new notifications' />;
 
     return (
       <>
@@ -82,8 +84,8 @@ const NotificationSidebar: FC<Props> = ({ buttonRef }) => {
 
   const buildLink = (entityId?: number, entityType?: EntityType) => {
     switch (entityType) {
-      case EntityType.NETWORK:
-        return `/${Page.NETWORKS}/${entityId}`;
+      case EntityType.POST:
+        return `/${Page.NETWORK_NEWS}/${entityId}`;
       case EntityType.EVENT:
         return `/${Page.EVENTS}/${entityId}`;
       default:
@@ -98,21 +100,26 @@ const NotificationSidebar: FC<Props> = ({ buttonRef }) => {
           entityType,
           entityId,
           entity,
-          //rootAncestorId, 
-          //rootAncestorType, 
-          //rootAncestor,
-          parentId,
-          parentType,
-          parent,
-          createdAt,
+          rootAncestorId,
+          rootAncestorType,
+          rootAncestor,
+          parentEntityId,
+          parentEntityType,
+          parentEntity,
+          notifiedAt,
         }) => ({
-          key: entityId || `network-news-${entityId}`,
-          href: buildLink(parentId, parentType),
-          name: parent?.title || 'Diversity & Inclusion News',
+          key: `${entityType}-${entityId}` || `network-news-${entityId}`,
+          href: buildLink(entityId, entityType),
+          name: parentEntity?.title || 'Diversity & Inclusion News',
           title: entity?.title || 'Unknown Post',
-          avatar: parent?.image?.url || '',
-          createdAt,
+          subName:
+            rootAncestor && rootAncestorId != parentEntityId && rootAncestorType != parentEntityType
+              ? `on behalf of ${rootAncestor?.title}`
+              : undefined,
+          avatar: parentEntity?.image?.url || '',
+          notifiedAt,
           onCloserClick: () => handleCloserClick({ entityType, entityId }),
+          onLinkClick: () => (EntityType.EVENT == entityType ? handleCloserClick({ entityType, entityId }) : null),
         }),
       ),
     );
@@ -122,7 +129,7 @@ const NotificationSidebar: FC<Props> = ({ buttonRef }) => {
     <Wrapper data-testid={NOTIFICATION_CONTAINER_TEST_ID} visible={isSidebarOpened} ref={wrapperRef}>
       <TitleWrapper>
         <Title>Notifications</Title>
-        <Link to={Page.NOTIFICATION_SETTINGS}>
+        <Link to={`/${Page.NOTIFICATION_SETTINGS}`}>
           <Button variant='primary' onClick={handleSettingsClick}>
             Settings
           </Button>

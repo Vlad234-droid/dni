@@ -17,6 +17,9 @@ class CcmsEntity {
   @Column('jsonb', { name: 'entity_instance', nullable: true })
   entityInstance?: object;
 
+  @Column('jsonb', { name: 'entity_metadata', nullable: true })
+  entityMetadata?: object;
+
   @Column('timestamp with time zone', { name: 'entity_created_at', default: () => 'now()' })
   entityCreatedAt!: Date;
 
@@ -25,6 +28,9 @@ class CcmsEntity {
 
   @Column('timestamp with time zone', { name: 'entity_published_at', nullable: true })
   entityPublishedAt?: Date;
+
+  @Column('timestamp with time zone', { name: 'entity_deleted_at', nullable: true })
+  entityDeletedAt?: Date;
 
   @Column('integer', { name: 'parent_entity_id', nullable: true })
   parentEntityId?: number;

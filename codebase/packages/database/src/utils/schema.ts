@@ -1,11 +1,11 @@
-import { getManager } from 'typeorm';
+import { getConnection } from 'typeorm';
 
 interface ConnectionOptionsWithSchema {
   schema?: string;
 }
 
 const getSchema = () => {
-  const connection = getManager().connection;
+  const connection = getConnection();
   return (connection.options as ConnectionOptionsWithSchema).schema;
 };
 

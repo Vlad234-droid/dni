@@ -45,6 +45,30 @@
         "type": "plain",
         "value": "/diversity-and-inclusion"
       },
+      "DNI_APP_URL": {
+        "type": "plain",
+        "value": "https://ppe.ourtesco.com"
+      },
+      "DNI_APP_POST_URL": {
+        "type": "plain",
+        "value": "/network-news/%ID%"
+      },
+      "DNI_APP_EVENT_URL": {
+        "type": "plain",
+        "value": "/events/%ID%"
+      },
+      "DNI_APP_UNSUBSCRIBE_URL": {
+        "type": "plain",
+        "value": "/notification/settings?unsubscribe=true"
+      },
+      "MAIL_TEMPLATE_ID": {
+        "type": "plain",
+        "value": "dfge2b6d-qfaa-47c6-bfw9-b4214y0a2e88"
+      },
+      "MAIL_SEND_CHUNKS_NUMBER": {
+        "type": "plain",
+        "value": "30"
+      },
       "WITH_ONE_LOGIN": {
         "type": "plain",
         "value": "true"
@@ -137,6 +161,14 @@
         "type": "plain",
         "value": "false"
       },
+      "CCRM_RUN_SYNC": {
+        "type": "plain",
+        "value": "false"
+      },
+      "CACHE_COLLEAGUE_TTL": {
+        "type": "plain",
+        "value": "43200"
+      },
       "COOKIE_SESSION_KEY": {
         "type": "plain",
         "value": "dni_cookie"
@@ -144,10 +176,6 @@
       "COOKIE_USER_KEY": {
         "type": "plain",
         "value": "user_data"
-      },
-      "WEB_HOOKS_SECRET": {
-        "type": "secret",
-        "value": "web_hooks_secret"
       },
       "OIDC_GROUPS_ADMIN_ROLE": {
         "type": "plain",

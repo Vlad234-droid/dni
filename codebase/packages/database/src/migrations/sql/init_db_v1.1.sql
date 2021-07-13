@@ -1,3 +1,11 @@
+/*
+ * DATABASE INITIALISATION SCRIPT
+ * version: 1.1
+ * date: July 10, 2021
+ * author: Igor Tsentilo <igor.tsentilo@tesco.com>
+ */
+
+
 SET search_path TO public;
 
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
@@ -5,8 +13,8 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
 -- !!! ----------------------------------------------------------------
--- WARNING: IF NEXT COMMAND IS UNCOMMENTED WHOLE SCHEMA WILL BE DROPPED 
-DROP SCHEMA IF EXISTS "dni" CASCADE;
+-- WARNING: IF NEXT COMMAND IS UNCOMMENTED WHOLE SCHEMA WILL BE DROPPED
+--DROP SCHEMA IF EXISTS "dni" CASCADE;
 -- !!! ----------------------------------------------------------------
 
 CREATE SCHEMA IF NOT EXISTS "dni";
@@ -20,9 +28,6 @@ SET search_path TO "$user", dni, public;
 CREATE TABLE IF NOT EXISTS dni_user (
 	colleague_uuid uuid NOT NULL,
 	employee_number varchar(12) NOT NULL,
-	capi_properties jsonb NULL,
-   setting_properties jsonb NULL,
-	last_login_at timestamptz(0) NULL,
 	created_at timestamptz(0) NOT NULL DEFAULT now(),
 	updated_at timestamptz(0) NULL,
 	CONSTRAINT "dni_user__pk" PRIMARY KEY (colleague_uuid)
@@ -31,21 +36,42 @@ CREATE TABLE IF NOT EXISTS dni_user (
 -- Column comments
 COMMENT ON COLUMN dni_user.colleague_uuid IS 'ColleagueUUID';
 COMMENT ON COLUMN dni_user.employee_number IS 'a.k.a. TPX';
-COMMENT ON COLUMN dni_user.capi_properties IS 'Colleague API properties';
 
 CREATE INDEX "dni_user$created_at__idx" ON dni_user (created_at);
 
-CREATE INDEX "dni_user$capi_properties__idx" ON dni_user USING gin(capi_properties);
+
+-- ===============
+-- dni_user_extras
+-- ===============
+-- DROP TABLE dni.dni_user_extras;
+CREATE TABLE dni_user_extras (
+	colleague_uuid uuid NOT NULL,
+   last_login_at timestamptz(0) NULL,
+	colleague_properties jsonb NULL,
+   settings jsonb NULL,
+	metadata jsonb NULL,
+	CONSTRAINT "dni_user_extras__pk" PRIMARY KEY (colleague_uuid),
+	CONSTRAINT "dni_user_extras$colleague_uuid__fk" FOREIGN KEY (colleague_uuid) REFERENCES dni_user(colleague_uuid) ON UPDATE CASCADE ON DELETE CASCADE
+);
+
+COMMENT ON COLUMN dni_user_extras.colleague_properties IS 'Colleague API properties';
+
+CREATE INDEX "dni_user_extras$last_login_at__idx" ON dni_user_extras (last_login_at);
+CREATE INDEX "dni_user_extras$colleague_properties__idx" ON dni_user_extras USING gin(colleague_properties);
+CREATE INDEX "dni_user_extras$settings__idx" ON dni_user_extras USING gin(settings);
+CREATE INDEX "dni_user_extras$metadata__idx" ON dni_user_extras USING gin(metadata);
 
 
--- ========================
+-- ====================
 -- dni_entity_type_enum
--- ========================
+-- ====================
 --DROP TYPE IF EXISTS dni_entity_type_enum CASCADE;
 CREATE TYPE dni_entity_type_enum AS ENUM (
 	'network',
 	'event',
-	'post'
+	'post',
+	'partner',
+	'meta-category'
 	);
 
 
@@ -124,7 +150,7 @@ CREATE TABLE IF NOT EXISTS capi_region (
 
 COMMENT ON TABLE capi_region IS 'Colleague API regions dictionary';
 
--- \copy capi_region FROM './data/CAPI_region.csv' WITH CSV HEADER;
+-- \copy capi_region FROM '../data/CAPI_region.csv' WITH CSV HEADER;
 
 -- ===============
 -- capi_department
@@ -138,7 +164,7 @@ CREATE TABLE IF NOT EXISTS capi_department (
 
 COMMENT ON TABLE capi_department IS 'Colleague API departments dictionary';
 
--- \copy capi_department FROM './data/CAPI_departments.csv' WITH CSV HEADER;
+-- \copy capi_department FROM '../data/CAPI_departments.csv' WITH CSV HEADER;
 
 -- =================
 -- ccms_trigger_enum
@@ -183,9 +209,11 @@ CREATE TABLE IF NOT EXISTS ccms_entity (
 	entity_type dni_entity_type_enum NOT NULL,
 	slug varchar(128) NOT NULL,
 	entity_instance jsonb NULL,
+   entity_metadata jsonb NULL,
 	entity_created_at timestamptz(0) NOT NULL,
 	entity_updated_at timestamptz(0) NULL,
 	entity_published_at timestamptz(0) NULL,
+   entity_deleted_at timestamptz(0) NULL,
 	parent_entity_id int4 NULL,
 	parent_entity_type dni_entity_type_enum NULL,
 	notification_uuid uuid NULL,
@@ -204,6 +232,8 @@ CREATE INDEX "c_entity$created_at__idx" ON ccms_entity (created_at);
 CREATE INDEX "c_entity$entity_created_at__idx" ON ccms_entity (entity_created_at);
 
 CREATE INDEX "c_entity$entity_instance__idx" ON ccms_entity USING gin(entity_instance);
+
+CREATE INDEX "c_entity$entity_metadata__idx" ON ccms_entity USING gin(entity_metadata);
 
 
 -- ======================
@@ -237,12 +267,14 @@ BEGIN
       FROM ccms_entity
       WHERE entity_id = p_entity.id AND entity_type = p_entity."type"
         AND ((entity_published_at IS NOT NULL) OR (p_only_published = FALSE))
+        AND entity_deleted_at IS NULL
       UNION ALL
          SELECT e.entity_id, e.entity_type, e.parent_entity_id, e.parent_entity_type
          FROM ccms_entity e 
          JOIN entities
          ON  entities.parent_entity_id = e.entity_id AND entities.parent_entity_type = e.entity_type 
          WHERE ((e.entity_published_at IS NOT NULL) OR (p_only_published = FALSE))
+           AND entity_deleted_at IS NULL
            -- additional dummy check for circular recursion
            AND e.entity_id <> p_entity.id AND e.entity_type <> p_entity."type"
    )
@@ -292,62 +324,285 @@ $function$
 ;
 
 
--- =================================
--- fn_get_dni_user_notification_list
--- =================================
-CREATE OR REPLACE FUNCTION fn_get_dni_user_notification_list(
-     p_colleague_uuid uuid,
-     p_filter_entity_types dni_entity_type_enum[] DEFAULT ARRAY['event'::dni_entity_type_enum, 'post'::dni_entity_type_enum],
-     p_filter_subscription_entity_types dni_entity_type_enum[] DEFAULT ARRAY['network'::dni_entity_type_enum],
-     p_return_only_non_acknowledged boolean DEFAULT TRUE
-     )
+-- =====================================
+-- fn_get_dni_user_notification_raw_list
+-- =====================================
+CREATE OR REPLACE FUNCTION fn_get_dni_user_notification_raw_list(
+     p_colleague_uuid uuid, 
+     p_filter_entity_types dni_entity_type_enum[] DEFAULT ARRAY['event'::dni_entity_type_enum, 'post'::dni_entity_type_enum], 
+     p_filter_subscription_entity_types dni_entity_type_enum[] DEFAULT ARRAY['network'::dni_entity_type_enum], 
+     p_return_only_non_acknowledged boolean DEFAULT true)
   RETURNS TABLE(
      colleague_uuid uuid, 
-     entity_id int4, 
      entity_type dni_entity_type_enum, 
-     root_ancestor_id int4, 
+     entity_id integer, 
+     parent_entity_type dni_entity_type_enum, 
+     parent_entity_id integer, 
      root_ancestor_type dni_entity_type_enum, 
-     notified_at timestamptz,
-     acknowledged_at timestamptz)
+     root_ancestor_id integer, 
+     notified_at timestamp with time zone, 
+     acknowledged_at timestamp with time zone)
   LANGUAGE plpgsql
 AS $function$
 BEGIN
    SET search_path TO "$user", dni, public;
 
-   RETURN QUERY
+   RETURN QUERY SELECT 
+      p_colleague_uuid as colleague_uuid,
+      all_entities.entity_type as entity_type,
+      all_entities.entity_id as entity_id,
+      all_entities.parent_entity_type as parent_entity_type,
+      all_entities.parent_entity_id as parent_entity_id,
+      (all_entities.root_ancestor).type as root_ancestor_type,
+      (all_entities.root_ancestor).id as root_ancestor_id,
+      coalesce(
+         all_entities.entity_updated_at, 
+         all_entities.entity_published_at, 
+         all_entities.entity_created_at, now()) as notified_at,
+      recent_acknowledge.acknowledged_at
+   FROM (
       SELECT 
+         ce.entity_type,
+         ce.entity_id,
+         ce.parent_entity_type,
+         ce.parent_entity_id,
+         ce.entity_created_at,
+         ce.entity_updated_at,
+         ce.entity_published_at,
+         ce.entity_deleted_at,
+         fn_get_ccms_entity_root_ancestor(
+            p_entity := ROW(ce.entity_id , ce.entity_type), 
+            p_only_published := true) as root_ancestor
+      FROM ccms_entity ce
+      WHERE ce.entity_type = ANY(p_filter_entity_types) 
+         AND ce.entity_deleted_at IS NULL 
+         AND ce.entity_published_at IS NOT NULL 
+   ) all_entities 
+   LEFT JOIN dni_user_subscription dus 
+      ON (all_entities.root_ancestor).id = dus.subscription_entity_id 
+      AND (all_entities.root_ancestor).type = dus.subscription_entity_type
+   LEFT JOIN fn_get_dni_user_recent_notification_acknowledgement(p_colleague_uuid) recent_acknowledge
+      ON all_entities.entity_id = recent_acknowledge.acknowledged_entity_id
+      AND all_entities.entity_type = recent_acknowledge.acknowledged_entity_type
+   WHERE (((root_ancestor).type = ANY(p_filter_subscription_entity_types)  AND dus.colleague_uuid = p_colleague_uuid)
+      OR (root_ancestor IS NULL AND dus.colleague_uuid IS NULL))
+      AND (p_return_only_non_acknowledged = FALSE OR recent_acknowledge.acknowledged_at IS NULL)
+   ;
+END
+$function$
+;
+
+
+-- ==========================================
+-- fn_get_dni_user_notification_enriched_list
+-- ==========================================
+CREATE OR REPLACE FUNCTION fn_get_dni_user_notification_enriched_list(
+     p_colleague_uuid uuid, 
+     p_filter_entity_types dni_entity_type_enum[] DEFAULT ARRAY['event'::dni_entity_type_enum, 'post'::dni_entity_type_enum], 
+     p_filter_subscription_entity_types dni_entity_type_enum[] DEFAULT ARRAY['network'::dni_entity_type_enum, 'event'::dni_entity_type_enum]
+     )
+  RETURNS TABLE(
+     entity_type dni_entity_type_enum, 
+     entity_id integer, 
+     entity_instance jsonb, 
+     root_ancestor_type dni_entity_type_enum, 
+     root_ancestor_id integer, 
+     root_ancestor_instance jsonb, 
+     parent_entity_type dni_entity_type_enum, 
+     parent_entity_id integer, 
+     parent_entity_instance jsonb, 
+     notified_at timestamp with time zone)
+  LANGUAGE plpgsql
+AS $function$
+BEGIN
+   SET search_path TO "$user", dni, public;
+
+   RETURN QUERY WITH 
+      params AS (SELECT 
          p_colleague_uuid as colleague_uuid,
-         all_entities.entity_id as entity_id,
-         all_entities.entity_type as entity_type,
-         (all_entities.root_ancestor).id as root_ancestor_id,
-         (all_entities.root_ancestor).type as root_ancestor_type,
-         coalesce(
-            all_entities.entity_updated_at, 
-            all_entities.updated_at,
-            all_entities.entity_published_at, 
-            all_entities.entity_created_at,
-            all_entities.created_at) as notified_at,
-         recent_acknowledge.acknowledged_at
-      FROM (
-         SELECT 
-            ce.*, 
-            fn_get_ccms_entity_root_ancestor(
-               p_entity := ROW(ce.entity_id , ce.entity_type), 
-               p_only_published := true) as root_ancestor
-         FROM ccms_entity ce
-         WHERE 
-            ce.entity_type = ANY(p_filter_entity_types) 
-      ) all_entities 
-      LEFT JOIN dni_user_subscription dus 
-        ON (all_entities.root_ancestor).id = dus.subscription_entity_id 
-       AND (all_entities.root_ancestor).type = dus.subscription_entity_type
-      LEFT JOIN fn_get_dni_user_recent_notification_acknowledgement(p_colleague_uuid) recent_acknowledge
-        ON all_entities.entity_id = recent_acknowledge.acknowledged_entity_id
-       AND all_entities.entity_type = recent_acknowledge.acknowledged_entity_type
-      WHERE (((root_ancestor).type = ANY(p_filter_subscription_entity_types)  AND dus.colleague_uuid = p_colleague_uuid)
-         OR (root_ancestor IS NULL AND dus.colleague_uuid IS NULL))
-        AND (p_return_only_non_acknowledged = FALSE OR recent_acknowledge.acknowledged_at IS NULL)
-      ;
+         p_filter_entity_types as filter_entity_types, 
+         p_filter_subscription_entity_types as filter_subscription_entity_types, 
+         TRUE::boolean as return_only_non_acknowledged
+      )
+   SELECT
+      fn.entity_type AS entity_type,
+      fn.entity_id AS entity_id,
+      entity.entity_instance AS entity_instance,
+      fn.root_ancestor_type AS root_ancestor_type,
+      fn.root_ancestor_id AS root_ancestor_id,
+      ancestor.entity_instance AS root_ancestor_instance,
+      fn.parent_entity_type AS parent_entity_type,
+      fn.parent_entity_id AS parent_entity_id,
+      parent.entity_instance AS parent_entity_instance,
+      fn.notified_at AS notified_at
+   FROM params, fn_get_dni_user_notification_raw_list(
+      p_colleague_uuid := colleague_uuid
+      , p_filter_entity_types := filter_entity_types
+      , p_filter_subscription_entity_types := filter_subscription_entity_types
+      , p_return_only_non_acknowledged := return_only_non_acknowledged
+   ) fn
+   LEFT JOIN ccms_entity entity
+   ON fn.entity_id = entity.entity_id AND fn.entity_type = entity.entity_type
+   LEFT JOIN ccms_entity parent
+   ON fn.parent_entity_id = parent.entity_id AND fn.parent_entity_type = parent.entity_type
+   LEFT JOIN ccms_entity ancestor
+   ON fn.root_ancestor_id = ancestor.entity_id AND fn.root_ancestor_type = ancestor.entity_type
+   ORDER BY fn.notified_at DESC
+   ;
+END
+$function$
+;
+
+
+-- ==========================================
+-- fn_get_dni_user_notification_groupped_list
+-- ==========================================
+CREATE OR REPLACE FUNCTION fn_get_dni_user_notification_groupped_list(
+     p_colleague_uuid uuid, 
+     p_filter_entity_types dni_entity_type_enum[] DEFAULT ARRAY['event'::dni_entity_type_enum, 'post'::dni_entity_type_enum], 
+     p_filter_subscription_entity_types dni_entity_type_enum[] DEFAULT ARRAY['network'::dni_entity_type_enum, 'event'::dni_entity_type_enum]
+     )
+  RETURNS TABLE(
+     root_ancestor_type dni_entity_type_enum, 
+     root_ancestor_id integer, 
+     root_ancestor_instance jsonb, 
+     details_as_object jsonb, 
+     details_as_array jsonb, 
+     recent_notified_at timestamp with time zone, 
+     total_entities_count integer)
+  LANGUAGE plpgsql
+AS $function$
+BEGIN
+   SET search_path TO "$user", dni, public;
+
+   RETURN QUERY WITH 
+      params AS (SELECT 
+         p_colleague_uuid as colleague_uuid,
+         p_filter_entity_types as filter_entity_types, 
+         p_filter_subscription_entity_types as filter_subscription_entity_types, 
+         TRUE::boolean as return_only_non_acknowledged
+      ),
+      raw_notifications AS (SELECT
+         fn.entity_type as entity_type,
+         jsonb_agg(fn.entity_id) AS entity_ids,
+         fn.root_ancestor_type AS root_ancestor_type,
+         fn.root_ancestor_id AS root_ancestor_id,
+         max(fn.notified_at) AS recent_notified_at,
+         COUNT(*) as entities_count
+      FROM params, fn_get_dni_user_notification_raw_list(
+         p_colleague_uuid := colleague_uuid
+         , p_filter_entity_types := filter_entity_types
+         , p_filter_subscription_entity_types := filter_subscription_entity_types
+         , p_return_only_non_acknowledged := return_only_non_acknowledged
+      ) fn
+      GROUP BY
+         fn.entity_type,
+         fn.colleague_uuid, 
+         fn.root_ancestor_id, 
+         fn.root_ancestor_type
+      ),
+      aggregated_notifications AS (SELECT 
+         rn.root_ancestor_type,
+         rn.root_ancestor_id,
+         root.entity_instance as root_ancestor_instance,
+         jsonb_object_agg(rn.entity_type, rn.entity_ids) as details_as_object,
+         jsonb_agg(jsonb_build_object('entityType', rn.entity_type, 'entitiesIds', rn.entity_ids)) as details_as_array,
+         MAX(rn.recent_notified_at) AS recent_notified_at,
+         SUM(rn.entities_count) as total_entities_count
+      FROM raw_notifications rn
+      LEFT JOIN ccms_entity root
+      ON rn.root_ancestor_id = root.entity_id AND rn.root_ancestor_type = root.entity_type
+      GROUP BY
+         rn.root_ancestor_type,
+         rn.root_ancestor_id,
+         root.entity_instance
+      )
+   SELECT 
+      an.root_ancestor_type,
+      an.root_ancestor_id,
+      an.root_ancestor_instance,
+      an.details_as_object,
+      an.details_as_array,
+      an.recent_notified_at,
+      an.total_entities_count::integer as total_entities_count
+   FROM aggregated_notifications an
+   ORDER BY an.recent_notified_at DESC
+   ;
+
+END
+$function$
+;
+
+
+-- ============================
+-- fn_get_dni_user_mailing_data
+-- ============================
+CREATE OR REPLACE FUNCTION fn_get_dni_user_mailing_data(
+     p_entity_type dni_entity_type_enum,
+     p_entity_id int4 DEFAULT NULL
+     )
+  RETURNS jsonb 
+  LANGUAGE plpgsql
+AS $function$
+DECLARE
+    mailing_data_jsonb jsonb;
+BEGIN
+   IF p_entity_type IS NULL
+   THEN
+      RAISE EXCEPTION '"p_entity_type" parameter is required'
+         USING HINT = 'These options are available: "event", "post"';
+   END IF;
+
+   SET search_path TO "$user", dni, public;
+
+   WITH 
+      params AS (SELECT 
+         p_entity_type as entity_type,
+         p_entity_id as entity_id
+      ),
+      root_ancestor AS (SELECT
+         entity_type,
+         entity_id,
+         "type" as root_ancestor_type,
+         "id" as root_ancestor_id
+      FROM params, fn_get_ccms_entity_root_ancestor(p_entity := ROW(entity_id , entity_type), p_only_published := TRUE)
+      ),
+      entity_hierarchy AS (SELECT
+         ce.entity_instance,
+         ce.parent_entity_type,
+         ce.parent_entity_id,
+         ra.root_ancestor_type,
+         ra.root_ancestor_id
+      FROM root_ancestor ra
+      JOIN ccms_entity ce ON ra.entity_id = ce.entity_id AND ra.entity_type = ce.entity_type
+      WHERE ce.entity_published_at IS NOT NULL 
+        AND ce.entity_deleted_at IS NULL
+      ),
+      affected_users AS (SELECT
+         coalesce(jsonb_agg(dus.colleague_uuid), '[]'::jsonb) AS colleague_uuids
+      FROM params, dni_user_subscription dus 
+      JOIN dni_user_extras due ON dus.colleague_uuid = due.colleague_uuid 
+      WHERE 
+         (
+            ((dus.subscription_entity_id IN (select parent_entity_id FROM entity_hierarchy)) AND (dus.subscription_entity_type IN (select parent_entity_type FROM entity_hierarchy))) OR 
+            ((dus.subscription_entity_id IN (select root_ancestor_id FROM entity_hierarchy)) AND (dus.subscription_entity_type IN (select root_ancestor_type FROM entity_hierarchy)))
+         )
+         AND 
+         (
+            (entity_type = 'post'::dni_entity_type_enum AND (due.settings->>'receivePostsEmailNotifications')::boolean = TRUE) OR 
+            (entity_type = 'event'::dni_entity_type_enum AND (due.settings->>'receiveEventsEmailNotifications')::boolean = TRUE) 
+         )
+      )
+   SELECT 
+      jsonb_build_object(
+         'entity', entity_hierarchy.entity_instance,
+         'affectedColleagueUuids', affected_users.colleague_uuids
+      ) as contact_data
+   INTO mailing_data_jsonb
+   FROM entity_hierarchy, affected_users
+   ;
+
+   RETURN mailing_data_jsonb;
 END
 $function$
 ;
@@ -371,30 +626,29 @@ DECLARE
 BEGIN
    IF NOT p_granularity = ANY(ARRAY['year','quarter','month','week','day'])
    THEN
-      RAISE EXCEPTION 'Invalid `p_granularity` parameter. Granularity `%` is not supported', p_granularity
-         USING HINT = 'Only these are supported: `year`,`quarter`,`month`,`week`,`day`';
+      RAISE EXCEPTION 'Invalid "p_granularity" parameter. Granularity "%" is not supported', p_granularity
+         USING HINT = 'Only these are supported: "year","quarter","month","week","day"';
    END IF;
    
    IF p_entity_type IS NULL
    THEN
-      RAISE EXCEPTION '`p_entity_type` parameter is required'
-         USING HINT = 'These options are available: `network`, `event`';
+      RAISE EXCEPTION '"p_entity_type" parameter is required'
+         USING HINT = 'These options are available: "network", "event"';
    END IF;
 
    SET search_path TO "$user", dni, public;
 
    -- populate array of IDs, if NULL 
-   /*
    IF p_entity_ids IS NULL
    THEN 
       SELECT array_agg(entity_id)
       INTO p_entity_ids
       FROM ccms_entity
       WHERE entity_type = p_entity_type
-        AND entity_published_at IS NOT NULL 
-        AND notification_trigger_event <> 'deleted';
+         AND entity_published_at IS NOT NULL 
+         AND entity_deleted_at IS NULL;
    END IF;
-   */
+   
   
    WITH 
       params AS (SELECT 
@@ -545,25 +799,23 @@ DECLARE
 BEGIN
    IF p_entity_type IS NULL
    THEN
-      RAISE EXCEPTION '`p_entity_type` parameter is required'
-         USING HINT = 'These options are available: `network`, `event`';
+      RAISE EXCEPTION '"p_entity_type" parameter is required'
+         USING HINT = 'These options are available: "network", "event"';
    END IF;
 
    SET search_path TO "$user", dni, public;
 
    -- populate array of IDs, if NULL 
-   /*
    IF p_entity_ids IS NULL
    THEN 
       SELECT array_agg(entity_id)
       INTO p_entity_ids
       FROM ccms_entity
       WHERE entity_type = p_entity_type
-        AND entity_published_at IS NOT NULL 
-        AND notification_trigger_event <> 'deleted';
+         AND entity_published_at IS NOT NULL 
+         AND entity_deleted_at IS NULL;
    END IF;
-   */
-  
+   
    WITH 
       params AS (SELECT 
          p_entity_type as entity_type,
@@ -576,11 +828,11 @@ BEGIN
          ur.region_name
       FROM (
          SELECT DISTINCT
-            du.colleague_uuid, 
+            due.colleague_uuid, 
             cr.region_name 
-         FROM dni_user du
+         FROM dni_user_extras due
          LEFT JOIN capi_region cr
-         ON upper(coalesce(left(du.capi_properties->>'addressPostcode', length(cr.post_index_prefix)), 'XX')) = upper(cr.post_index_prefix)
+         ON upper(coalesce(left(due.colleague_properties->>'addressPostcode', length(cr.post_index_prefix)), 'XX')) = upper(cr.post_index_prefix)
          ) ur
       JOIN (
          SELECT DISTINCT 
@@ -716,25 +968,23 @@ DECLARE
 BEGIN
    IF p_entity_type IS NULL
    THEN
-      RAISE EXCEPTION '`p_entity_type` parameter is required'
-         USING HINT = 'These options are available: `network`, `event`';
+      RAISE EXCEPTION '"p_entity_type" parameter is required'
+         USING HINT = 'These options are available: "network", "event"';
    END IF;
 
    SET search_path TO "$user", dni, public;
 
    -- populate array of IDs, if NULL 
-   /*
    IF p_entity_ids IS NULL
    THEN 
       SELECT array_agg(entity_id)
       INTO p_entity_ids
       FROM ccms_entity
       WHERE entity_type = p_entity_type
-        AND entity_published_at IS NOT NULL 
-        AND notification_trigger_event <> 'deleted';
+         AND entity_published_at IS NOT NULL 
+         AND entity_deleted_at IS NULL;
    END IF;
-   */
-  
+   
    WITH 
       params AS (SELECT 
          p_entity_type as entity_type,
@@ -747,11 +997,11 @@ BEGIN
          ud.department_name
       FROM (
          SELECT DISTINCT
-            du.colleague_uuid, 
+            due.colleague_uuid, 
             coalesce(cd.department_name, 'Unknown') as department_name
-         FROM dni_user du
+         FROM dni_user_extras due
          LEFT JOIN capi_department cd 
-         ON upper(du.capi_properties->>'businessType') = upper(cd.capi_business_type)
+         ON upper(due.colleague_properties->>'businessType') = upper(cd.capi_business_type)
          ) ud
       JOIN (
          SELECT DISTINCT 
@@ -895,9 +1145,9 @@ BEGIN
       ),
       affected_colleague_ids AS (SELECT 
          colleague_uuid 
-      FROM params, dni_user du
-      WHERE ((du.capi_properties->>'leavingDate')::date + params.retention_period::INTERVAL) < now()
-         OR (du.last_login_at + params.retention_period::INTERVAL) < now()
+      FROM params, dni_user_extras due
+      WHERE ((due.colleague_properties->>'leavingDate')::date + params.retention_period::INTERVAL) < now()
+         OR (due.last_login_at + params.retention_period::INTERVAL) < now()
       ),
       dusl_deleted AS (
          DELETE FROM dni_user_subscription_log dusl 
@@ -913,6 +1163,11 @@ BEGIN
          DELETE FROM dni_user_notification_acknowledge duna 
          WHERE duna.colleague_uuid IN (SELECT colleague_uuid FROM affected_colleague_ids)
          RETURNING duna.acknowledge_uuid
+      ),
+      due_deleted as (
+         DELETE FROM dni_user_extras due
+         WHERE due.colleague_uuid IN (SELECT colleague_uuid FROM affected_colleague_ids)
+         RETURNING colleague_uuid
       ),
       du_deleted as (
          DELETE FROM dni_user du

@@ -1,5 +1,4 @@
-import { EntityManager } from 'typeorm';
-import { getManager, CcmsNotification, DniEntityTypeEnum } from '@dni/database';
+import { getManager, CcmsNotification, DniEntityTypeEnum, CcmsTriggerEventEnum } from '@dni/database';
 
 import {
   Network,
@@ -13,6 +12,7 @@ import {
 import { prepareContext, RequestCtx } from './context';
 import { Request, Response } from 'express';
 import { CepPayload } from '../controllers';
+import { massMailing, prepareMailingData } from '../services/mailer';
 
 export const handleCepRequest = async (req: Request<{}, CepPayload>, res: Response) => {
   const payload = req.body;
@@ -27,19 +27,35 @@ export const handleCepRequest = async (req: Request<{}, CepPayload>, res: Respon
   notification.entityUpdatedAt = payload.updated_at; // use payload vlaue, since entity doesn't have field updated_at
 
   // 2. try to get cms entity from Colleague CMS
-  const ctx = await prepareContext(req, res);
-  const cmsEntity: Post | Event | Network | undefined = (await analyzeEntity(payload, ctx))?.data;
+  let cmsEntity: Post | Event | Network | undefined;
+  if (CcmsTriggerEventEnum.DELETED != payload.trigger) {
+    const ctx = await prepareContext(req, res);
+    cmsEntity = (await analyzeEntity(payload, ctx))?.data;
+  }
 
   // 3. store notification into the db
   await getManager()
     .getRepository(CcmsNotification)
     .save(notification, { data: { entityInstance: cmsEntity } });
+
+  // 4. send letters to recipients
+  if ([DniEntityTypeEnum.POST, DniEntityTypeEnum.EVENT].includes(payload.model)) {
+    const [colleagueUUIDs, placeholders] = await prepareMailingData(payload.model, payload.id);
+
+    massMailing(colleagueUUIDs, placeholders);
+  }
 };
 
 const analyzeEntity = async (payload: CepPayload, ctx: RequestCtx) => {
   const { id, model } = payload;
 
-  const reqPayload = { params: { id } };
+  // prepare payload
+  const reqPayload = {
+    params: {
+      id,
+      _publicationState: 'preview',
+    },
+  };
 
   switch (model) {
     case DniEntityTypeEnum.POST: {
