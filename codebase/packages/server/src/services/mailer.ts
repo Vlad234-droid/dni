@@ -28,12 +28,23 @@ const prepareMailingData = async (
 
   if (mailingData?.entity && mailingData?.colleagueUUIDs) {
     const entity = mailingData?.entity;
+    const markdownEntityTitle = entity.title;
+    const markdownEntityContent = entity.description || entity.content || '';
+    const markdownNetworkTitle = entity.network ? entity.network!.title : 'Diversity and Inclusion';
+    const linkToEntityPage = buildFrontURI(entityType, entityId);
+    const linkToUnsubscribePage = buildFrontURI(UNSUBSCRIBE_KEY);
+
     const payload = {
-      markdownTitle: entity.title,
-      markdownMessage_content: entity.description || entity.content || '',
-      Hyperlink_to_post: buildFrontURI(entityType, entityId),
-      markdownColleague_network: entity.network ? entity.network!.title : 'Diversity and Inclusion',
-      UNSUBSCRIBE_URL: buildFrontURI(UNSUBSCRIBE_KEY),
+      markdownTitle: markdownEntityTitle,
+      markdownMessage_content: markdownEntityContent,
+      Hyperlink_to_post: linkToEntityPage,
+      markdownColleague_network: markdownNetworkTitle,
+      UNSUBSCRIBE_URL: linkToUnsubscribePage,
+      markdownEntityTitle,
+      markdownEntityContent,
+      linkToEntityPage,
+      markdownNetworkTitle,
+      linkToUnsubscribePage,
     };
 
     return [mailingData?.colleagueUUIDs, payload];
@@ -50,16 +61,6 @@ const buildFrontURI = (type: DniEntityTypeEnum | typeof UNSUBSCRIBE_KEY, entityI
     applicationUrlTemplateEvent,
     applicationUrlUnsubscribe,
   } = getConfig();
-
-  // if (!(APPLICATION_URL_ROOT && APPLICATION_PUBLIC_URL && APPLICATION_URL_TEMPLATE_POST && APPLICATION_URL_TEMPLATE_EVENT && APPLICATION_URL_UNSUBSCRIBE)) {
-  //   throw new Error(`Needs front-end integration configuration:
-  //     APPLICATION_URL_ROOT: ${APPLICATION_URL_ROOT};
-  //     APPLICATION_PUBLIC_URL: ${APPLICATION_PUBLIC_URL};
-  //     APPLICATION_URL_TEMPLATE_POST: ${APPLICATION_URL_TEMPLATE_POST};
-  //     APPLICATION_URL_TEMPLATE_EVENT: ${APPLICATION_URL_TEMPLATE_EVENT};
-  //     APPLICATION_URL_UNSUBSCRIBE: ${APPLICATION_URL_UNSUBSCRIBE};
-  //   `);
-  // }
 
   const baseUrl = `${applicationUrlRoot()}${applicationPublicUrl() === '/' ? '' : applicationPublicUrl()}`;
   switch (type) {
