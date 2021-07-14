@@ -93,21 +93,29 @@ const Reports: FC = () => {
     }
 
     const input = ref.current as HTMLElement;
-
+    
     const paddingX = 130;
     const paddingY = 130;
+    const k = window.devicePixelRatio > 1.5 ? 2 : 3;
 
     Html2Canvas(input).then((canvas) => {
       const imgData = canvas.toDataURL('image/jpeg');
       const pdf = new jsPDF({
         format: [
-          input.clientWidth,
-          input.clientHeight,
+          input.clientWidth + paddingX * k,
+          input.clientHeight + paddingY * k,
         ],
-        unit: 'mm',
+        unit: 'px',
       }) as any;
 
-      pdf.addImage(imgData, 'JPEG', paddingX, paddingY);
+      pdf.addImage(
+        imgData,
+        'JPEG',
+        paddingX,
+        paddingY,
+        input.clientWidth,
+        input.clientHeight,
+      );
 
       pdf.save('network-members-report.pdf');
 
