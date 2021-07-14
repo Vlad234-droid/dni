@@ -2,3 +2,6 @@
 **/*.test.jsx
 **/*.test.ts
 **/*.test.tsx
+
+**/version.js
+**/version.ts
