@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 
-export class Migration_Initial_1624690800000 implements MigrationInterface {
+export class Migration_InitialFunctions implements MigrationInterface {
   name = 'InitialFunctions-1624690800001';
 
   public async up(queryRunner: QueryRunner): Promise<void> {

@@ -1,5 +1,6 @@
-import { ProcessConfig } from 'services/config-accessor';
 import { ContextProvider } from '@energon/rest-api-provider';
+
+import { ProcessConfig } from '../config/config-accessor';
 import { enrichResWithToken } from '../services/context';
 
 export const fakeLoginConfig = (

@@ -18,25 +18,30 @@ services:
         environment:
             - NODE_ENV=ppe
             - NODE_PORT=9000
-            - PUBLIC_URL=/
-            - DNI_APP_URL=http://localhost:9000
-            - DNI_APP_POST_URL=/network-news/%ID%
-            - DNI_APP_EVENT_URL=/events/%ID%
-            - DNI_APP_UNSUBSCRIBE_URL=/notification/settings?unsubscribe=true
-            - MAIL_TEMPLATE_ID=dfge2b6d-qfaa-47c6-bfw9-b4214y0a2e88
-            - MAIL_SEND_CHUNKS_NUMBER=30
-            - WITH_ONE_LOGIN=true
+            - APPLICATION_PUBLIC_URL=/
+            - APPLICATION_URL_ROOT=http://localhost:9000
+            - APPLICATION_URL_TEMPLATE_POST=/network-news/%ID%
+            - APPLICATION_URL_TEMPLATE_EVENT=/events/%ID%
+            - APPLICATION_URL_UNSUBSCRIBE=/notification/settings?unsubscribe=true
+            - APPLICATION_USER_DATA_COOKIE_NAME=dni.userdata
+            - APPLICATION_COOKIE_PARSER_SECRET=f4fada1a-9aff-4fae-9940-4ec6cede101a
+            - MAILING_TEMPLATE_ID=dfge2b6d-qfaa-47c6-bfw9-b4214y0a2e88
+            - MAILING_CHUNK_SIZE=30
+            - CACHE_COLLEAGUE_TTL=3600
+            - USE_ONELOGIN=true
+            - ONELOGIN_ISSUER_URL=https://loginppe.ourtesco.com/oidc/2
+            - ONELOGIN_CALLBACK_PATH=/auth/openid/callback
+            - ONELOGIN_REDIRECT_AFTER_LOGOUT_URL=https://loginppe.ourtesco.com/oidc/2/logout?logout=true
             - OIDC_CLIENT_ID=cc1a44c0-7b26-0139-86ba-06f79909864e37548
             - OIDC_CLIENT_SECRET=1aaaab9d7016c7b2ad0497d2fd55260dddb8ea6f1d8d38fcab79e17c6764d29e
-            - ISSUER_URL=https://loginppe.ourtesco.com/oidc/2
-            - REGISTERED_CALLBACK_URL_ROOT=http://localhost:9000
-            - REGISTERED_CALLBACK_URL_PATH=/auth/openid/callback
-            - REDIRECT_AFTER_LOGOUT_URL=https://loginppe.ourtesco.com/logout
-            - REFRESH_TOKEN_SECRET=c8E3Q6qEFWSkzBJaYDZ6mybtTQm4R6aB
+            - OIDC_REFRESH_TOKEN_SECRET=f6037124-c51b-4c48-aed8-7226d82277c1
+            # Roles groups
+            - OIDC_GROUPS_ADMIN_ROLE=GG-UK-TescoGlobal-DiversityAndInclusion-PPE-Admin
+            - OIDC_GROUPS_MANAGER_ROLE=GG-UK-TescoGlobal-DiversityAndInclusion-PPE-Manager
             - IDENTITY_CLIENT_ID=181739bc-937d-438f-a15a-aa63095f8205
             - IDENTITY_CLIENT_SECRET=801787eb-f6b4-4801-93c5-a7bd696111a6
-            - IDENTITY_USER_SCOPED_TOKEN_COOKIE_SECRET=aa63095f8205801787eba15a937d4801
-            - IDENTITY_USER_SCOPED_TOKEN_COOKIE_NAME=identity-user-token
+            - IDENTITY_USER_SCOPED_TOKEN_COOKIE_NAME=identity-user-scoped-token
+            - IDENTITY_USER_SCOPED_TOKEN_COOKIE_SECRET=cd33de5f-edc5-43a5-b478-3898478df87b
             - TYPEORM_TYPE=postgres
             - TYPEORM_HOST=postgres
             - TYPEORM_PORT=5432
@@ -49,12 +54,6 @@ services:
             - TYPEORM_LOGGING=true
             - TYPEORM_RUN_MIGRATION=false
             - CCRM_RUN_SYNC=false
-            - CACHE_COLLEAGUE_TTL=3600
-            - COOKIE_SESSION_KEY=dni_cookie
-            - COOKIE_USER_KEY=user_data
-            # Roles groups
-            - OIDC_GROUPS_ADMIN_ROLE=GG-UK-TescoGlobal-DiversityAndInclusion-PPE-Admin
-            - OIDC_GROUPS_MANAGER_ROLE=GG-UK-TescoGlobal-DiversityAndInclusion-PPE-Manager
         ports:
             - 9000:9000
         restart: always

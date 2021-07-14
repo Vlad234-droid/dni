@@ -8,7 +8,7 @@ import pgCopy from 'pg-copy-streams';
 import fs from 'fs';
 import path from 'path';
 
-export class Migration_BAckfill_1624690800001 implements MigrationInterface {
+export class Migration_Backfill implements MigrationInterface {
   name = 'BackfillData-1624690800002';
 
   public async up(queryRunner: QueryRunner): Promise<void> {

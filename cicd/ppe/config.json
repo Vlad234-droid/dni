@@ -25,6 +25,10 @@
         "type": "plain",
         "value": "https://ppe.ourtesco.com"
       },
+      "REACT_APP_LOGOUT_URL": {
+        "type": "plain",
+        "value": "/sso/logout"
+      },
       "PUBLIC_URL": {
         "type": "plain",
         "value": "/diversity-and-inclusion"
@@ -41,35 +45,43 @@
         "type": "plain",
         "value": "9000"
       },
-      "PUBLIC_URL": {
+      "APPLICATION_PUBLIC_URL": {
         "type": "plain",
         "value": "/diversity-and-inclusion"
       },
-      "DNI_APP_URL": {
+      "APPLICATION_URL_ROOT": {
         "type": "plain",
         "value": "https://ppe.ourtesco.com"
       },
-      "DNI_APP_POST_URL": {
+      "APPLICATION_URL_TEMPLATE_POST": {
         "type": "plain",
         "value": "/network-news/%ID%"
       },
-      "DNI_APP_EVENT_URL": {
+      "APPLICATION_URL_TEMPLATE_EVENT": {
         "type": "plain",
         "value": "/events/%ID%"
       },
-      "DNI_APP_UNSUBSCRIBE_URL": {
+      "APPLICATION_URL_UNSUBSCRIBE": {
         "type": "plain",
         "value": "/notification/settings?unsubscribe=true"
       },
-      "MAIL_TEMPLATE_ID": {
+      "APPLICATION_USER_DATA_COOKIE_NAME": {
+        "type": "plain",
+        "value": "dni.userdata"
+      },
+      "APPLICATION_COOKIE_PARSER_SECRET": {
+        "type": "secret",
+        "value": "cookie_parser_secret"
+      },
+      "MAILING_TEMPLATE_ID": {
         "type": "plain",
         "value": "dfge2b6d-qfaa-47c6-bfw9-b4214y0a2e88"
       },
-      "MAIL_SEND_CHUNKS_NUMBER": {
+      "MAILING_CHUNK_SIZE": {
         "type": "plain",
         "value": "30"
       },
-      "WITH_ONE_LOGIN": {
+      "USE_ONELOGIN": {
         "type": "plain",
         "value": "true"
       },
@@ -81,23 +93,19 @@
         "type": "secret",
         "name": "oidc_client_secret"
       },
-      "ISSUER_URL": {
+      "ONELOGIN_ISSUER_URL": {
         "type": "plain",
         "value": "https://loginppe.ourtesco.com/oidc/2"
       },
-      "REGISTERED_CALLBACK_URL_ROOT": {
-        "type": "plain",
-        "value": "https://ppe.ourtesco.com"
-      },
-      "REGISTERED_CALLBACK_URL_PATH": {
+      "ONELOGIN_CALLBACK_PATH": {
         "type": "plain",
         "value": "/auth/openid/callback"
       },
-      "REDIRECT_AFTER_LOGOUT_URL": {
+      "ONELOGIN_REDIRECT_AFTER_LOGOUT_URL": {
         "type": "plain",
-        "value": "https://loginppe.ourtesco.com/logout"
+        "value": "https://loginppe.ourtesco.com/oidc/2/logout"
       },
-      "REFRESH_TOKEN_SECRET": {
+      "OIDC_REFRESH_TOKEN_SECRET": {
         "type": "secret",
         "value": "refresh_token_secret"
       },
@@ -115,7 +123,7 @@
       },
       "IDENTITY_USER_SCOPED_TOKEN_COOKIE_NAME": {
         "type": "plain",
-        "value": "identity-user-token"
+        "value": "identity-user-scoped-token"
       },
       "TYPEORM_TYPE": {
         "type": "plain",
@@ -168,14 +176,6 @@
       "CACHE_COLLEAGUE_TTL": {
         "type": "plain",
         "value": "43200"
-      },
-      "COOKIE_SESSION_KEY": {
-        "type": "plain",
-        "value": "dni_cookie"
-      },
-      "COOKIE_USER_KEY": {
-        "type": "plain",
-        "value": "user_data"
       },
       "OIDC_GROUPS_ADMIN_ROLE": {
         "type": "plain",

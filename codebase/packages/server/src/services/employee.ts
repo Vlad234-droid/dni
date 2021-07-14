@@ -2,11 +2,12 @@ import { Request, Response } from 'express';
 import { getOpenIdUserInfo } from '@energon/onelogin';
 import { getRepository, DniUserSubscription, DniEntityTypeEnum, DniUser, DniUserExtras } from '@dni/database';
 import { colleagueApiConnector, ColleagueV2 } from '@dni-connectors/colleague-api';
-import { defaultConfig } from '../config/default';
+
+import { isPROD } from '../config/env';
+import { getConfig } from '../config/config-accessor';
+
 import { getInstance as getCacheInstance } from './cache';
 import { prepareContext } from './context';
-import { isPROD } from '../config/env';
-import { getConfig } from './config-accessor';
 
 import colleagueApiRawData from './data/colleague_api_data.json';
 
@@ -22,7 +23,7 @@ type ColleagueRequest = {
 } & Request;
 
 const infoExtractor = (req: Request, res: Response) => {
-  const userInfo = getOpenIdUserInfo(res) || req.cookies[process.env.COOKIE_USER_KEY!] || {};
+  const userInfo = getOpenIdUserInfo(res) || req.cookies[getConfig().applicationUserDataCookieName()] || {};
 
   if (!userInfo) {
     return res.status(403).send(JSON.stringify({ error: 'Cannot extract userInfo' }));
@@ -56,7 +57,7 @@ const colleagueUUIDExtractor = async (req: ColleagueRequest, res: Response): Pro
   // // 1. try to get colleagueUUID from DB
   // const dniUser = await findDniUser(employeeNumber);
   // if (dniUser) {
-  //   cache.set(cacheEmployeeNumber, dniUser.colleagueUUID, process.env.CACHE_COLLEAGUE_TTL || 3600);
+  //   cache.set(cacheEmployeeNumber, dniUser.colleagueUUID, getConfig().cacheColleagueTtl());
   //   return dniUser.colleagueUUID;
   // }
 
@@ -68,11 +69,11 @@ const colleagueUUIDExtractor = async (req: ColleagueRequest, res: Response): Pro
     const colleague = colleagues.data[0];
     await createOrUpdateDniUser(colleague!);
 
-    cache.set(cacheEmployeeNumber, colleague.colleagueUUID, process.env.CACHE_COLLEAGUE_TTL || 3600);
+    cache.set(cacheEmployeeNumber, colleague.colleagueUUID, getConfig().cacheColleagueTtl());
     return colleague.colleagueUUID;
   }
 
-  if (!isPROD(getConfig().environment)) {
+  if (!isPROD(getConfig().environment())) {
     // 3. and finally fallback to local file with predefine users
     const colleague = colleagueApiData.find((c) => c.externalSystems.iam.id === employeeNumber);
     console.log(JSON.stringify(colleague));
@@ -82,7 +83,7 @@ const colleagueUUIDExtractor = async (req: ColleagueRequest, res: Response): Pro
       );
       await createOrUpdateDniUser(colleague);
 
-      cache.set(cacheEmployeeNumber, colleague.colleagueUUID, process.env.CACHE_COLLEAGUE_TTL || 3600);
+      cache.set(cacheEmployeeNumber, colleague.colleagueUUID, getConfig().cacheColleagueTtl());
       return colleague.colleagueUUID;
     }
   }
@@ -111,7 +112,7 @@ const profileInfoExtractor = async (req: Request, res: Response) => {
   return {
     colleagueUUID,
     userInfo,
-    roles: [...(userInfo.roles || []), defaultConfig.defaultRole],
+    roles: [...(userInfo.roles || []), ...getConfig().defaultRoles()],
     networks,
     events,
   };

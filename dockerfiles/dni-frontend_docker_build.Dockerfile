@@ -8,6 +8,7 @@ ARG PUBLIC_URL=/
 
 ARG REACT_APP_API_URL=/api
 ARG REACT_APP_WS_URL=/socket.io
+ARG REACT_APP_LOGOUT_URL=/sso/logout
 ARG REACT_APP_OURTESCO_URL
 
 WORKDIR /home/app
@@ -40,6 +41,7 @@ ENV PUBLIC_URL=$PUBLIC_URL
 
 ENV REACT_APP_API_URL=$REACT_APP_API_URL
 ENV REACT_APP_WS_URL=$REACT_APP_WS_URL
+ENV REACT_APP_LOGOUT_URL=$REACT_APP_LOGOUT_URL
 ENV REACT_APP_OURTESCO_URL=$REACT_APP_OURTESCO_URL
 
 ENV SKIP_PREFLIGHT_CHECK=true
@@ -50,7 +52,7 @@ RUN yarn build:prod
 # These ENV variable must be set to run app:
 # ==========================================
 # By default turn on SSO
-ENV WITH_ONE_LOGIN=true
+ENV USE_ONELOGIN=true
 
 # Mock server (must not be empty)
 ENV MOCK_SERVER_URL=<none>
@@ -67,8 +69,8 @@ ENV TYPEORM_TYPE=postgres
 ENV TYPEORM_SYNCHRONIZE=false
 ENV TYPEORM_LOGGING=false
 
-#   WITH_ONE_LOGIN
-#   COOKIE_USER_KEY
+#   USE_ONELOGIN
+#   APPLICATION_USER_DATA_COOKIE_NAME
 
 #ENTRYPOINT [ "yarn", "run:prod" ]
 CMD ./run.sh

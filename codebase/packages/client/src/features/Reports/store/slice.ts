@@ -68,11 +68,10 @@ const slice = createSlice({
     },
 
     updatePeriodInterval(state, { payload }) {
-      const { prop, value, reportType, entityType } = payload as {
+      const { prop, value, reportType } = payload as {
         prop: T.Prop;
         value: T.DatePoint;
         reportType: T.ReportType;
-        entityType: T.EntityType;
       };
 
       const groupByReportType = state.groups[reportType] as T.Group;
@@ -81,11 +80,10 @@ const slice = createSlice({
     },
 
     updateStatistics(state, { payload }) {
-      const { id, checked, reportType, entityType } = payload as {
+      const { id, checked, reportType } = payload as {
         checked: boolean;
         id: string;
         reportType: T.ReportType;
-        entityType: T.EntityType;
       };
 
       const group = state.groups[reportType] as T.Group;
@@ -102,16 +100,17 @@ const slice = createSlice({
         let color = '';
 
         if (checked === true) {
-          color = Object.keys(group.color).find((key) => {
-            if (group.color[key] === false) {
-              group.color[key] = true;
-              group.counter += 1;
+          color =
+            Object.keys(group.color).find((key) => {
+              if (group.color[key] === false) {
+                group.color[key] = true;
+                group.counter += 1;
 
-              return true;
-            }
+                return true;
+              }
 
-            return false;
-          }) || color;
+              return false;
+            }) || color;
         }
 
         if (checked === false) {
@@ -178,8 +177,6 @@ const slice = createSlice({
           group.chart.elements.push(element);
         });
       }
-
-      // state.groups[entityType] = { ...group };
     },
   },
   extraReducers: (builder) => {
@@ -200,13 +197,11 @@ const slice = createSlice({
     builder
       .addCase(getReportsByTime.pending, setPending)
       .addCase(getReportsByTime.fulfilled, (state: T.State, { payload }) => {
-        const { entityType, data } = payload as {
+        const { data } = payload as {
           data: T.GroupByPeriod;
-          entityType: T.EntityType;
         };
 
         state.groups[T.ReportType.PERIOD] = data;
-        // state.groups[entityType] = data;
 
         setSucceeded(state);
       })
@@ -214,13 +209,11 @@ const slice = createSlice({
 
       .addCase(getReportsByRegion.pending, setPending)
       .addCase(getReportsByRegion.fulfilled, (state: T.State, { payload }) => {
-        const { entityType, data } = payload as {
+        const { data } = payload as {
           data: T.GroupByRegion;
-          entityType: T.EntityType;
         };
 
         state.groups[T.ReportType.REGION] = data;
-        // state.groups[entityType] = data;
 
         setSucceeded(state);
       })
@@ -228,13 +221,11 @@ const slice = createSlice({
 
       .addCase(getReportsByFormat.pending, setPending)
       .addCase(getReportsByFormat.fulfilled, (state: T.State, { payload }) => {
-        const { entityType, data } = payload as {
+        const { data } = payload as {
           data: T.GroupByFormat;
-          entityType: T.EntityType;
         };
 
         state.groups[T.ReportType.FORMAT] = data;
-        // state.groups[entityType] = data;
 
         setSucceeded(state);
       })

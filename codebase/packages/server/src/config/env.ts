@@ -1,6 +1,6 @@
 import { ApiEnv } from '@energon-connectors/core';
 
-const getAppEnv = (env: string, localBaseUrl: string) => {
+const getAppEnv = (env: string, localBaseUrl?: string) => {
   switch (true) {
     case isPROD(env):
       return ApiEnv.prod();
@@ -8,7 +8,7 @@ const getAppEnv = (env: string, localBaseUrl: string) => {
       return ApiEnv.ppe();
     case isDEV(env):
     default:
-      return ApiEnv.local(localBaseUrl);
+      return ApiEnv.local(localBaseUrl!);
   }
 };
 

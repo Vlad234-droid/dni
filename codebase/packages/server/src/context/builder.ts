@@ -1,10 +1,11 @@
 import { getIdentityData, getUserData, getIdentityClientData } from '@energon/onelogin';
 import { ConfirmitConfig } from '@dni-connectors/confirmit-api';
+import { addCustomLog, markApiCall } from '@energon/splunk-logger';
+
+import { getAppEnv, isDEV } from '../config/env';
+import { ProcessConfig } from '../config/config-accessor';
 import { BasicUserData, ContextProvider, RequestCtx, ExtractedOpenIdData, ExtractedUSTData } from './request-context';
 import { ExtendedSessionData, getExtendedSessionData } from './session-data';
-import { addCustomLog, markApiCall } from '@energon/splunk-logger';
-import { ProcessConfig } from 'services/config-accessor';
-import { getAppEnv } from '../config/env';
 
 export type ColleagueContextConfig = ConfirmitConfig;
 export type ColleagueSessionData = BasicUserData & ExtendedSessionData & { groups: string[] };
@@ -13,7 +14,6 @@ export type ColleagueRequestCtx = RequestCtx<ColleagueContextConfig, ColleagueSe
 
 export const buildContext: (config: ProcessConfig) => ContextProvider<ColleagueContextConfig, ColleagueSessionData> =
   (config: ProcessConfig) => (req, res) => ({
-
     identityUserToken: () => {
       const token = getIdentityData<ExtractedUSTData>(res)?.access_token;
       if (!token) {
@@ -24,14 +24,15 @@ export const buildContext: (config: ProcessConfig) => ContextProvider<ColleagueC
 
     identityClientToken: () => {
       const token = getIdentityClientData(res)?.access_token || '';
-      if (!token && config.environment !== 'dev') {
+      if (!token && !isDEV(config.environment())) {
         throw new Error('Identity client scoped token not available!');
       }
 
       return token;
     },
 
-    apiEnv: () => getAppEnv(config.environment, config.mockServerUrl!),
+    apiEnv: () =>
+      getAppEnv(config.environment(), isDEV(config.buildEnvironment()) ? config.mockServerUrl() : undefined),
 
     markApiCall: markApiCall(res),
 
@@ -60,7 +61,7 @@ export const buildContext: (config: ProcessConfig) => ContextProvider<ColleagueC
     },
 
     config: () => ({
-      confirmitPassword: config.confirmitPassword,
+      confirmitPassword: config.confirmitPassword(),
     }),
 
     sendLog: (message) => addCustomLog(res, message),

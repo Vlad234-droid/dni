@@ -1,4 +1,7 @@
 import { getManager, DniEntityTypeEnum, getSchemaPrefix } from '@dni/database';
+
+import { getConfig } from '../config/config-accessor';
+
 import { spawnWorkers, standardWorkersCount } from './workers';
 
 type CommonCcrmEntity = {
@@ -6,7 +9,8 @@ type CommonCcrmEntity = {
   slug: string;
   title: string;
   network?: CommonCcrmEntity;
-  description: string;
+  description?: string;
+  content?: string;
 };
 
 type MailingData = {
@@ -26,10 +30,10 @@ const prepareMailingData = async (
     const entity = mailingData?.entity;
     const payload = {
       markdownTitle: entity.title,
-      markdownMessage_content: entity.description,
+      markdownMessage_content: entity.description || entity.content || '',
       Hyperlink_to_post: buildFrontURI(entityType, entityId),
       markdownColleague_network: entity.network!.title,
-      UNSUBSCRIBE_URL: buildFrontURI(UNSUBSCRIBE_KEY, entityId),
+      UNSUBSCRIBE_URL: buildFrontURI(UNSUBSCRIBE_KEY),
     };
 
     return [mailingData?.colleagueUUIDs, payload];
@@ -38,32 +42,39 @@ const prepareMailingData = async (
   return [[], {}];
 };
 
-const buildFrontURI = (type: DniEntityTypeEnum | typeof UNSUBSCRIBE_KEY, entityId: string) => {
-  const { DNI_APP_URL, PUBLIC_URL, DNI_APP_POST_URL, DNI_APP_EVENT_URL, DNI_APP_UNSUBSCRIBE_URL } = process.env;
+const buildFrontURI = (type: DniEntityTypeEnum | typeof UNSUBSCRIBE_KEY, entityId?: string) => {
+  const {
+    applicationUrlRoot,
+    applicationPublicUrl,
+    applicationUrlTemplatePost,
+    applicationUrlTemplateEvent,
+    applicationUrlUnsubscribe,
+  } = getConfig();
 
-  if (!(DNI_APP_URL && PUBLIC_URL && DNI_APP_POST_URL && DNI_APP_EVENT_URL && DNI_APP_UNSUBSCRIBE_URL)) {
-    throw new Error(`Needs front-end integration configuration:
-      DNI_APP_URL: ${DNI_APP_URL};
-      PUBLIC_URL: ${PUBLIC_URL};
-      DNI_APP_POST_URL: ${DNI_APP_POST_URL};
-      DNI_APP_EVENT_URL: ${DNI_APP_EVENT_URL};
-      DNI_APP_UNSUBSCRIBE_URL: ${DNI_APP_UNSUBSCRIBE_URL};
-    `);
-  }
+  // if (!(APPLICATION_URL_ROOT && APPLICATION_PUBLIC_URL && APPLICATION_URL_TEMPLATE_POST && APPLICATION_URL_TEMPLATE_EVENT && APPLICATION_URL_UNSUBSCRIBE)) {
+  //   throw new Error(`Needs front-end integration configuration:
+  //     APPLICATION_URL_ROOT: ${APPLICATION_URL_ROOT};
+  //     APPLICATION_PUBLIC_URL: ${APPLICATION_PUBLIC_URL};
+  //     APPLICATION_URL_TEMPLATE_POST: ${APPLICATION_URL_TEMPLATE_POST};
+  //     APPLICATION_URL_TEMPLATE_EVENT: ${APPLICATION_URL_TEMPLATE_EVENT};
+  //     APPLICATION_URL_UNSUBSCRIBE: ${APPLICATION_URL_UNSUBSCRIBE};
+  //   `);
+  // }
 
-  const baseURL = `${DNI_APP_URL}${PUBLIC_URL == '/' ? '' : PUBLIC_URL}`;
+  const baseUrl = `${applicationUrlRoot()}${applicationPublicUrl() === '/' ? '' : applicationPublicUrl()}`;
   switch (type) {
     case DniEntityTypeEnum.POST: {
-      return `${baseURL}${DNI_APP_POST_URL}`.replace(/%\w+%/, entityId);
+      return `${baseUrl}${applicationUrlTemplatePost()}`.replace(/%\w+%/, entityId!);
     }
     case DniEntityTypeEnum.EVENT: {
-      return `${baseURL}${DNI_APP_EVENT_URL}`.replace(/%\w+%/, entityId);
+      return `${baseUrl}${applicationUrlTemplateEvent()}`.replace(/%\w+%/, entityId!);
     }
     case UNSUBSCRIBE_KEY: {
-      return `${baseURL}${DNI_APP_UNSUBSCRIBE_URL}`;
+      return `${baseUrl}${applicationUrlUnsubscribe()}`;
     }
-    default:
+    default: {
       throw new Error('Unsupported type for building URI');
+    }
   }
 };
 
@@ -84,7 +95,7 @@ const getMailingData = async (entityType: string, entityId: string): Promise<Mai
 };
 
 const massMailing = <T, P>(list: T[], payload: P) => {
-  const workersCount = list.length <= +process.env.MAIL_SEND_CHUNKS_NUMBER! ? 1 : standardWorkersCount();
+  const workersCount = list.length <= +process.env.MAILING_CHUNK_SIZE! ? 1 : standardWorkersCount();
   spawnWorkers('colleague-sender', list, payload, workersCount);
 };
 

@@ -22,6 +22,7 @@ docker build ^
    --build-arg PUBLIC_URL=/diversity-and-inclusion ^
    --build-arg REACT_APP_API_URL=/api ^
    --build-arg REACT_APP_WS_URL=/socket.io ^
+   --build-arg REACT_APP_LOGOUT_URL=/sso/logout ^
    --build-arg REACT_APP_OURTESCO_URL=https://ppe.ourtesco.com ^
    --file dockerfiles/dni-frontend_docker_build.Dockerfile ^
    .

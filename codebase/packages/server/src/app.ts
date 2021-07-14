@@ -5,7 +5,8 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import { isDEV } from './config/env';
 
-import { envAccessor, getConfig } from './services';
+import { getConfig } from './config/config-accessor';
+import { getEnv } from './config/env-accessor';
 import { healthCheck, api } from './routes';
 import {
   clientStaticFolder,
@@ -21,24 +22,24 @@ import {
 } from './middlewares';
 import { buildContext } from './context';
 import { initializeTypeOrm } from './config/db';
-import { ViewPathPredicate, withReturnTo } from '@energon/onelogin';
+import { withReturnTo } from '@energon/onelogin';
 
-envAccessor.validate();
+getEnv().validate();
 
 const config = getConfig();
 
-const upload = multer({ limits: { fieldSize: config.uploadSize } });
+const upload = multer({ limits: { fieldSize: config.applicationUploadSize() } });
 
 const app = express();
 const server = http.createServer(app);
-const PORT = config.port;
+const PORT = config.port();
 
 const context = buildContext(config);
 
 const startServer = async () => {
   try {
-    console.log(`Current build environment: ${config.buildEnvironment}`);
-    console.log(`Current infrastructure environment: ${config.environment}`);
+    console.log(`Current build environment: ${config.buildEnvironment()}`);
+    console.log(`Current infrastructure environment: ${config.environment()}`);
 
     // initialize connection to DB
     await initializeTypeOrm();
@@ -47,43 +48,40 @@ const startServer = async () => {
     app.use(
       cors({
         credentials: true,
+        origin: config.applicationUrlRoot(),
       }),
     );
 
     app.use('/', healthCheck);
 
-    if (isDEV(config.buildEnvironment) || !config.withOneLogin) {
+    if (isDEV(config.buildEnvironment()) || !config.useOneLogin()) {
       console.log(`WARNING! Authentication is turned off. Fake Login is used.`);
       // fake login behavior
       app.use(cookieParser());
       app.use(fakeLoginConfig(context, config));
       app.use(fakeUserExtractor);
     } else {
-      const { openId, openIdCookieParser, clientScopedToken } = openIdConfig(config);
+      const { openId } = openIdConfig(config);
 
-      const isViewPath: ViewPathPredicate = (path) => {
-        const exclude = "^(/api|/auth|/sso)"
-        return !path.match(exclude)
-      }
-
-      app.use(openIdCookieParser);
-      app.use(clientScopedToken());
-      app.use(withReturnTo(await openId, { 
-        isViewPath, 
-        appPath: config.publicUrl 
-      }));
+      app.use(
+        withReturnTo(await openId, {
+          isViewPath: (path) => !path.match('^(/api|/auth|/sso)'),
+          appPath: config.oneLoginApplicationPath(),
+        }),
+      );
     }
 
-    app.use(colleagueUUIDExtractor('/api/cms-events'));
+    app.use(colleagueUUIDExtractor({ excludePath: ['/api/cms-events'] }));
 
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
+
     app.use('/api/upload', upload.any(), formData);
     app.use('/api', api, apiMiddleware(context));
     app.use('/api/*', (_, res) => res.sendStatus(404));
 
-    app.use(clientStaticFolder);
     app.use(publicStaticFolder);
+    app.use(clientStaticFolder);
     app.use(clientStaticFile);
     app.use(errorHandler);
 

@@ -1,101 +1,91 @@
 import {
   getOpenidMiddleware,
   identityTokenSwapPlugin,
-  userDataPlugin,
   identityClientScopedTokenPlugin,
+  userDataPlugin,
   Logger,
   LoggerEvent,
   OpenIdUserInfo,
 } from '@energon/onelogin';
 
-import cookieParser from 'cookie-parser';
 import { isPROD } from '../config/env';
 import { defaultConfig } from '../config/default';
-import { ProcessConfig } from 'services/config-accessor';
+import { ProcessConfig } from '../config/config-accessor';
 
-
-interface ErrorLogMessage {
+interface ErrorMessage {
   errorType: string;
   errorMessage: string;
   stack: string;
 }
 
-interface InfoLogMessage {
+interface LogMessage {
   message: string;
 }
 
 const OpenIdLogger: Logger = (event: LoggerEvent) => {
   switch (event.severity) {
-    case 'info':
-    case 'warning':
-      const infoLogMessage = event.payload as unknown as InfoLogMessage;
-      console.log(` --> OpenID: [${event.severity}] <${event.flow}> ${infoLogMessage.message}`);
+    case 'info': {
+      if (event.flow !== 'verification') {
+        const logMessage = event.payload as unknown as LogMessage;
+        console.log(` --> OpenID: [${event.severity}] <${event.flow}> ${logMessage.message}`);
+      }
       break;
-    case 'error':
-      const errorLogMessage = event.payload.error as unknown as ErrorLogMessage;
-      console.log(` --> OpenID: [${event.severity}] <${event.flow}> ${errorLogMessage.errorMessage}`);
+    }
+    case 'warning': {
+      const logMessage = event.payload as unknown as LogMessage;
+      console.log(` --> OpenID: [${event.severity}] <${event.flow}> ${logMessage.message}`);
       break;
+    }
+    case 'error': {
+      const errorMessage = event.payload.error as unknown as ErrorMessage;
+      console.log(` --> OpenID: [${event.severity}] <${event.flow}> ${errorMessage.errorMessage}`);
+      break;
+    }
   }
 };
 
-
 export const openIdConfig = ({
   environment,
+  applicationCookieParserSecret,
+  applicationUserDataCookieName,
+  oneLoginIssuerUrl,
+  oneLoginApplicationPath,
+  oneLoginCallbackUrlRoot,
+  oneLoginCallbackPath,
+  oneLoginRedirectAfterLogoutUrl,
   oidcClientId,
   oidcClientSecret,
-  cookieKey,
-  cookieUserKey,
-  issuerUrl,
-  refreshTokenSecret,
-  registeredCallbackUrlPath,
-  registeredCallbackUrlRoot,
-  redirectAfterLogoutUrl,
-  publicUrl,
+  oidcRefreshTokenSecret,
+  oidcGroupFiltersRegex,
+  oidcAdminGroups,
+  oidcManagerGroups,
   identityClientId,
   identityClientSecret,
   identityUserScopedTokenCookieSecret,
   identityUserScopedTokenCookieName,
-  groupFiltersRegex,
-  adminGroups,
-  managerGroups,
 }: ProcessConfig) => {
-  const openIdCookieParser = cookieParser(cookieKey);
-  const isProduction = isPROD(environment);
-  const identityIdAndSecret = `${identityClientId}:${identityClientSecret}`;
-
-  const clientScopedToken = (): Middleware => {
-    return identityClientScopedTokenPlugin({
-      identityIdAndSecret,
-      cache: true,
-    });
-  };
+  const isProduction = isPROD(environment());
+  const identityIdAndSecret = `${identityClientId()}:${identityClientSecret()}`;
 
   const enrichUserInfo = (userInfo: OpenIdUserInfo) => {
-    //console.log(` ---> OpenIdUserInfo: ${JSON.stringify(userInfo)}`);
+    console.log(` --> OpenID: [userInfo]: ${JSON.stringify(userInfo)}`);
 
     const userGroups = (
       Array.isArray(userInfo.groups) ? userInfo.groups : ((userInfo.groups as unknown as string) || '').split(',') || []
     )
       .filter(Boolean)
-      .filter(
-        (group) => groupFiltersRegex && groupFiltersRegex.length > 0 && groupFiltersRegex.some((rr) => rr.test(group)),
-      );
-
-    //console.log(` ---> User groups: [${userGroups}]`);
+      .filter((group) => oidcGroupFiltersRegex().some((rr) => rr.test(group)));
 
     const userRoles: Set<string> = new Set([defaultConfig.defaultRole]);
 
-    //console.log(` ---> Manager Groups: [${managerGroups}]`);
-    if (managerGroups.some((g) => userGroups.includes(g))) {
+    if (oidcManagerGroups().some((g) => userGroups.includes(g))) {
       userRoles.add('Manager');
     }
-
-    //console.log(` ---> Admin Groups: [${adminGroups}]`);
-    if (adminGroups.some((g) => userGroups.includes(g))) {
+    if (oidcAdminGroups().some((g) => userGroups.includes(g))) {
       userRoles.add('Admin');
     }
 
-    //console.log(` ---> User roles: [${Array.from(userRoles.values())}]`);
+    //console.log(` --> User roles: [${Array.from(userRoles.values())}]`);
 
     const userData = {
       //...userInfo,
@@ -117,43 +107,43 @@ export const openIdConfig = ({
       roles: Array.from(userRoles.values()),
     };
 
-    //console.log(` ---> User data: ${JSON.stringify(userData)}`);
+    //console.log(` --> User data: ${JSON.stringify(userData)}`);
 
     return userData;
   };
 
   const openId = getOpenidMiddleware({
     /** The OneLogin generated Client ID for your OpenID Connect app */
-    clientId: oidcClientId,
+    clientId: oidcClientId(),
 
     /** The OneLogin generated Client Secret for your OpenID Connect app */
-    clientSecret: oidcClientSecret,
+    clientSecret: oidcClientSecret(),
 
     /** A key used to sign & verify cookie values */
-    cookieKey,
+    cookieKey: applicationCookieParserSecret(),
 
     /** issuer url e.g. https://login.ourtesco.com/oidc/2 */
-    issuerUrl,
+    issuerUrl: oneLoginIssuerUrl(),
 
     /** Client secret used to encrypt refresh token */
-    refreshTokenSecret,
+    refreshTokenSecret: oidcRefreshTokenSecret(),
 
     /** A callback root that was registered for the application e.g. https://ourtesco.com (without the applicationPath) */
-    registeredCallbackUrlRoot,
+    registeredCallbackUrlRoot: oneLoginCallbackUrlRoot(),
 
     /** A callback path that was registered for the application e.g. /auth/openid/callback */
-    registeredCallbackUrlPath,
+    registeredCallbackUrlPath: oneLoginCallbackPath(),
 
     /**
      * A path the app is mounted on e.g. for https://ourtesco.com/my-shift the path is /my-shift.
      * If the app is mounted on root path do not provide this option.
      */
-    applicationPath: publicUrl,
+    applicationPath: oneLoginApplicationPath(),
 
     /**
      * Paths that won't be part of token validation and refreshing
      */
-    ignoredPathsFragments: [ '/api/cms-events' ],
+    ignoredPathsFragments: ['/api/cms-events'],
 
     /**
      * In case of error, calls containg that path framgents won't result in redirect.
@@ -174,24 +164,27 @@ export const openIdConfig = ({
      * Absolute url that we will redirect to after logout, that can lead to onelogin session termination ednpoint .
      * Default: `${applicationPath}/sso/auth`
      */
-    redirectAfterLogoutUrl,
+    redirectAfterLogoutUrl: oneLoginRedirectAfterLogoutUrl(),
 
     plugins: [
       identityTokenSwapPlugin({
         identityIdAndSecret,
         strategy: 'oidc',
         cookieConfig: {
-          cookieName: identityUserScopedTokenCookieName,
-          secret: identityUserScopedTokenCookieSecret,
+          cookieName: identityUserScopedTokenCookieName(),
+          secret: identityUserScopedTokenCookieSecret(),
           httpOnly: true,
           secure: isProduction,
           signed: isProduction,
         },
       }),
-      clientScopedToken(),
+      identityClientScopedTokenPlugin({
+        identityIdAndSecret,
+        cache: true,
+      }),
       userDataPlugin({
         cookieConfig: {
-          cookieName: cookieUserKey,
+          cookieName: applicationUserDataCookieName(),
           httpOnly: true,
           secure: false,
           signed: false,
@@ -201,9 +194,5 @@ export const openIdConfig = ({
     ],
   });
 
-  return {
-    openId,
-    openIdCookieParser,
-    clientScopedToken,
-  };
+  return { openId };
 };

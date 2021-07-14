@@ -11,7 +11,7 @@ docker build \
   --tag $IMAGE_NAME \
   --build-arg BUILD_ENV=$BUILD_ENV \
   --build-arg NPM_CREDENTIALS=$NPM_CREDENTIALS \
-  --build-arg WITH_ONE_LOGIN=$WITH_ONE_LOGIN \
+  --build-arg USE_ONELOGIN=$USE_ONELOGIN \
   --build-arg OIDC_CLIENT_ID=$OIDC_CLIENT_ID \
   --build-arg OIDC_CLIENT_SECRET=$OIDC_CLIENT_SECRET \
   --build-arg IDENTITY_CLIENT_ID=$IDENTITY_CLIENT_ID \

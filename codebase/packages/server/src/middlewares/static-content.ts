@@ -2,10 +2,10 @@ import fs from 'fs';
 import path from 'path';
 import express from 'express';
 
-import { envAccessor } from '../services';
 import { getPackageDistFolder } from '../utils';
+import { getEnv } from '../config/env-accessor';
 
-const processEnv = envAccessor.getData();
+const processEnv = getEnv().getVariables();
 
 // prepare static artifact
 const clientDistFolder = getPackageDistFolder('@dni/client', ['src', 'build']);

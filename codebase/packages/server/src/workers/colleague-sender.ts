@@ -8,7 +8,7 @@ type Data = {
   payload: EmailData;
 };
 
-const SEND_CHUNKS = process.env.MAIL_SEND_CHUNKS_NUMBER || 30;
+const SEND_CHUNKS = process.env.MAILING_CHUNK_SIZE || 30;
 
 const mailing = async () => {
   const recipients: Recipient[] = [];

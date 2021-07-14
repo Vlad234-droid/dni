@@ -47,7 +47,7 @@ RUN yarn build:prod
 # ==========================================
 
 # By default turn on SSO
-ENV WITH_ONE_LOGIN=true
+ENV USE_ONELOGIN=true
 
 # Mock server (must not be empty)
 ENV MOCK_SERVER_URL=<none>
