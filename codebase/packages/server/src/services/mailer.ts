@@ -32,7 +32,7 @@ const prepareMailingData = async (
       markdownTitle: entity.title,
       markdownMessage_content: entity.description || entity.content || '',
       Hyperlink_to_post: buildFrontURI(entityType, entityId),
-      markdownColleague_network: entity.network!.title,
+      markdownColleague_network: entity.network ? entity.network!.title : 'Diversity and Inclusion',
       UNSUBSCRIBE_URL: buildFrontURI(UNSUBSCRIBE_KEY),
     };
 
