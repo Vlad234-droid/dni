@@ -19,6 +19,7 @@ import { EntityType, AcknowledgePayload } from '../../config/types';
 import NotificationerItem, { NotificationItem } from '../NotificationItem';
 import { Wrapper, Title, TitleWrapper } from './styled';
 import { useNotification } from '../../context/NotificationContext';
+import useLocationChange from 'hooks/useLocationChange';
 
 const NOTIFICATION_CONTAINER_TEST_ID = 'notification-container-test-id';
 
@@ -34,6 +35,12 @@ const NotificationSidebar: FC<Props> = ({ buttonRef }) => {
 
   const wrapperRef = useRef<HTMLDivElement>(null);
 
+  const handleHideSidebar = () => {
+    dispatch(hideSidebar());
+  };
+
+  useLocationChange(handleHideSidebar);
+
   const handleOnBodyClick = useCallback((e: MouseEvent) => {
     if (
       buttonRef?.current &&
@@ -41,7 +48,7 @@ const NotificationSidebar: FC<Props> = ({ buttonRef }) => {
       wrapperRef.current &&
       !wrapperRef.current.contains(e.target as Node)
     ) {
-      dispatch(hideSidebar());
+      handleHideSidebar();
     }
   }, []);
 
