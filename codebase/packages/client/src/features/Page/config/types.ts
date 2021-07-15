@@ -12,7 +12,7 @@ enum Page {
   REPORTS = 'reports',
   PROFILE = 'profile',
   NOTIFICATION_SETTINGS = 'notification/settings',
-  UNAUTHORIZED = '401',
+  //UNAUTHORIZED = '401',
   FORBIDDEN = '403',
   SERVER_ERROR = '500',
   NOT_FOUND = '404',

@@ -27,7 +27,7 @@ const pages: Record<Page, PageElement> = {
   [Page.REPORTS]: Reports,
   [Page.PROFILE]: Profile,
   [Page.NOTIFICATION_SETTINGS]: Notifications,
-  [Page.UNAUTHORIZED]: Unauthorized,
+  //[Page.UNAUTHORIZED]: Unauthorized,
   [Page.FORBIDDEN]: Forbidden,
   [Page.SERVER_ERROR]: ServerError,
   [Page.NOT_FOUND]: NotFound,

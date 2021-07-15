@@ -13,16 +13,16 @@ import {
   publicStaticFolder,
   clientStaticFile,
   errorHandler,
-  openIdConfig,
+  configureOneloginMidleware,
   apiMiddleware,
   formData,
   fakeLoginConfig,
   fakeUserExtractor,
   colleagueUUIDExtractor,
 } from './middlewares';
+
 import { buildContext } from './context';
 import { initializeTypeOrm } from './config/db';
-import { withReturnTo } from '@energon/onelogin';
 
 getEnv().validate();
 
@@ -53,22 +53,19 @@ const startServer = async () => {
     );
 
     app.use('/', healthCheck);
+    //app.use(cookieParser());
 
     if (isDEV(config.buildEnvironment()) || !config.useOneLogin()) {
       console.log(`WARNING! Authentication is turned off. Fake Login is used.`);
       // fake login behavior
-      app.use(cookieParser());
       app.use(fakeLoginConfig(context, config));
       app.use(fakeUserExtractor);
     } else {
-      const { openId } = openIdConfig(config);
-
-      app.use(
-        withReturnTo(await openId, {
-          isViewPath: (path) => !path.match('^(/api|/auth|/sso)'),
-          appPath: config.oneLoginApplicationPath(),
-        }),
-      );
+      const { openIdMiddleware, identityClientScopedTokenMiddleware } = await configureOneloginMidleware(config);
+      // app.use(preAuth(config));
+      app.use(cookieParser(config.applicationCookieParserSecret()));
+      app.use(identityClientScopedTokenMiddleware());
+      app.use(openIdMiddleware);
     }
 
     app.use(colleagueUUIDExtractor({ excludePath: ['/api/cms-events'] }));
@@ -83,6 +80,7 @@ const startServer = async () => {
     app.use(publicStaticFolder);
     app.use(clientStaticFolder);
     app.use(clientStaticFile);
+
     app.use(errorHandler);
 
     server.listen(PORT, () => {

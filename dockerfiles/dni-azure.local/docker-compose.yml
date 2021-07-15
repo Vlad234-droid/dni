@@ -52,8 +52,8 @@ services:
             - TYPEORM_SSL=false
             - TYPEORM_SYNCHRONIZE=false
             - TYPEORM_LOGGING=true
-            - TYPEORM_RUN_MIGRATION=false
-            - CCRM_RUN_SYNC=false
+            - TYPEORM_RUN_MIGRATION=true
+            - CCRM_RUN_SYNC=true
         ports:
             - 9000:9000
         restart: always

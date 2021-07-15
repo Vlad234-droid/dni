@@ -37,7 +37,7 @@ const CreatePartner = ({ partner, onCancel }: Props) => {
 
   const { register, handleSubmit, errors, reset, control } = methods;
   const submit: SubmitHandler<FormData> = (data) => {
-    console.log(data);
+    //console.log(data);
   };
 
   const handleCancel = () => {

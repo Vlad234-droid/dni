@@ -83,7 +83,7 @@
       },
       "MAILING_CHUNK_SIZE": {
         "type": "plain",
-        "value": "30"
+        "value": "1"
       },
       "USE_ONELOGIN": {
         "type": "plain",

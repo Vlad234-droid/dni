@@ -27,7 +27,7 @@ export type ProcessConfig = {
   // onelogin
   useOneLogin: () => boolean;
   oneLoginIssuerUrl: () => string;
-  oneLoginApplicationPath: () => string;
+  oneLoginApplicationPath: () => string | undefined;
   oneLoginCallbackUrlRoot: () => string;
   oneLoginCallbackPath: () => string;
   oneLoginRedirectAfterLogoutUrl: () => string;
@@ -87,7 +87,7 @@ export class ConfigAccessor {
       useOneLogin: () => yn(processEnv.USE_ONELOGIN, { default: false }),
       oneLoginIssuerUrl: () => processEnv.ONELOGIN_ISSUER_URL,
       oneLoginApplicationPath: () =>
-        processEnv.APPLICATION_PUBLIC_URL === '/' ? '' : processEnv.APPLICATION_PUBLIC_URL,
+        processEnv.APPLICATION_PUBLIC_URL !== '/' ? processEnv.APPLICATION_PUBLIC_URL : undefined,
       oneLoginCallbackUrlRoot: () => processEnv.APPLICATION_URL_ROOT,
       oneLoginCallbackPath: () => processEnv.ONELOGIN_CALLBACK_PATH,
       oneLoginRedirectAfterLogoutUrl: () =>

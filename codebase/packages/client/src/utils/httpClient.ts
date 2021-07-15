@@ -6,6 +6,7 @@ import './mockHttpClient';
 import history from './history';
 
 import { PUBLIC_URL, API_URL } from 'config/constants';
+import { reloadPage } from './reload';
 
 enum ResponseStatus {
   UNAUTHORIZED = 401,
@@ -37,23 +38,24 @@ httpClient.interceptors.response.use(
     const data = response.data;
     const status = response.status;
 
-    switch (status) {
-      case ResponseStatus.UNAUTHORIZED:
-        history.push(Page.UNAUTHORIZED);
-        break;
-      case ResponseStatus.FORBIDDEN:
-        history.push(Page.FORBIDDEN);
-        break;
-      case ResponseStatus.SERVER_ERROR:
-        history.push(Page.SERVER_ERROR);
-        break;
-    }
+    if (ResponseStatus.UNAUTHORIZED === status) {
+      console.log(`Got 401 Unauthorized response from API. Enforcing reload current (${window.location}) page.`);
+      reloadPage();
 
-    return Promise.reject({
-      data,
-      message,
-      status,
-    });
+      // return setTimeout(
+      //   () => Promise.reject({ data, message, status }), 3000);
+    } else {
+      switch (status) {
+        case ResponseStatus.FORBIDDEN:
+          history.push(Page.FORBIDDEN);
+          break;
+        case ResponseStatus.SERVER_ERROR:
+          history.push(Page.SERVER_ERROR);
+          break;
+      }
+
+      return Promise.reject({ data, message, status });
+    }
   },
 );
 

@@ -6,11 +6,14 @@ import {
   Logger,
   LoggerEvent,
   OpenIdUserInfo,
+  withReturnTo,
 } from '@energon/onelogin';
 
 import { isPROD } from '../config/env';
 import { defaultConfig } from '../config/default';
 import { ProcessConfig } from '../config/config-accessor';
+import { colleagueDataPlugin } from './plugins';
+import cookieParser from 'cookie-parser';
 
 interface ErrorMessage {
   errorType: string;
@@ -44,7 +47,7 @@ const OpenIdLogger: Logger = (event: LoggerEvent) => {
   }
 };
 
-export const openIdConfig = ({
+export const configureOneloginMidleware = async ({
   environment,
   applicationCookieParserSecret,
   applicationUserDataCookieName,
@@ -112,7 +115,16 @@ export const openIdConfig = ({
     return userData;
   };
 
-  const openId = getOpenidMiddleware({
+  const identityClientScopedToken = identityClientScopedTokenPlugin({
+    identityIdAndSecret,
+    cache: true,
+  });
+
+  const identityClientScopedTokenMiddleware = (): Middleware => {
+    return identityClientScopedToken;
+  };
+
+  const openidMiddleware = getOpenidMiddleware({
     /** The OneLogin generated Client ID for your OpenID Connect app */
     clientId: oidcClientId(),
 
@@ -167,6 +179,15 @@ export const openIdConfig = ({
     redirectAfterLogoutUrl: oneLoginRedirectAfterLogoutUrl(),
 
     plugins: [
+      userDataPlugin({
+        cookieConfig: {
+          cookieName: applicationUserDataCookieName(),
+          httpOnly: true,
+          secure: isProduction,
+          signed: isProduction,
+          cookieShapeResolver: (userInfo) => enrichUserInfo(userInfo),
+        },
+      }),
       identityTokenSwapPlugin({
         identityIdAndSecret,
         strategy: 'oidc',
@@ -178,21 +199,25 @@ export const openIdConfig = ({
           signed: isProduction,
         },
       }),
-      identityClientScopedTokenPlugin({
-        identityIdAndSecret,
-        cache: true,
-      }),
-      userDataPlugin({
-        cookieConfig: {
-          cookieName: applicationUserDataCookieName(),
-          httpOnly: true,
-          secure: false,
-          signed: false,
-          cookieShapeResolver: (userInfo) => enrichUserInfo(userInfo),
-        },
-      }),
+      identityClientScopedToken,
+      // identityClientScopedTokenPlugin({
+      //   identityIdAndSecret,
+      //   cache: true,
+      // }),
+      // colleagueDataPlugin({
+      //   fields: [ "locationUUID" ],
+      //   optional: true,
+      // }),
     ],
   });
 
-  return { openId };
+  const openIdMiddleware = withReturnTo(await openidMiddleware, {
+    isViewPath: (path) => !path.match('^(/api|/auth|/sso)'),
+    appPath: oneLoginApplicationPath(),
+  });
+
+  return {
+    openIdMiddleware,
+    identityClientScopedTokenMiddleware,
+  };
 };

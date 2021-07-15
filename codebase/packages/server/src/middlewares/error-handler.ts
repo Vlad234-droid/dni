@@ -6,11 +6,11 @@ const shouldApplyPageReload = (err: Error) => {
 
   // Workaround (1) for this error:
   // Error [OneloginError]: No id token found
-  //     at new OneloginError (C:\Projects\Tesco\Colleague24Repos\reporting-dni-frontend\codebase\node_modules\@energon\onelogin\dist\main\onelogin-middleware\index.js:21:28)
-  //     at C:\Projects\Tesco\Colleague24Repos\reporting-dni-frontend\codebase\node_modules\@energon\onelogin\dist\main\onelogin-middleware\openid-protocol\get-openid-middleware.js:274:68
-  //     at step (C:\Projects\Tesco\Colleague24Repos\reporting-dni-frontend\codebase\node_modules\@energon\onelogin\dist\main\onelogin-middleware\openid-protocol\get-openid-middleware.js:44:23)
-  //     at Object.throw (C:\Projects\Tesco\Colleague24Repos\reporting-dni-frontend\codebase\node_modules\@energon\onelogin\dist\main\onelogin-middleware\openid-protocol\get-openid-middleware.js:25:53)
-  //     at rejected (C:\Projects\Tesco\Colleague24Repos\reporting-dni-frontend\codebase\node_modules\@energon\onelogin\dist\main\onelogin-middleware\openid-protocol\get-openid-middleware.js:17:65)
+  //     at new OneloginError (.\codebase\node_modules\@energon\onelogin\dist\main\onelogin-middleware\index.js:21:28)
+  //     at .\codebase\node_modules\@energon\onelogin\dist\main\onelogin-middleware\openid-protocol\get-openid-middleware.js:274:68
+  //     at step (.\codebase\node_modules\@energon\onelogin\dist\main\onelogin-middleware\openid-protocol\get-openid-middleware.js:44:23)
+  //     at Object.throw (.\codebase\node_modules\@energon\onelogin\dist\main\onelogin-middleware\openid-protocol\get-openid-middleware.js:25:53)
+  //     at rejected (.\codebase\node_modules\@energon\onelogin\dist\main\onelogin-middleware\openid-protocol\get-openid-middleware.js:17:65)
   //     at processTicksAndRejections (internal/process/task_queues.js:93:5) {
   //   flow: 'plugin',
   //   status: 500
@@ -19,13 +19,28 @@ const shouldApplyPageReload = (err: Error) => {
     return true;
   }
 
+  // Error [OneloginError]: passport.authenticate failed: tokenSet is missing
+  //     at new OneloginError (.\codebase\node_modules\@energon\onelogin\dist\main\onelogin-middleware\index.js:21:28)
+  //     at .\codebase\node_modules\@energon\onelogin\dist\main\onelogin-middleware\openid-protocol\get-openid-middleware.js:194:59
+  //     at step (.\codebase\node_modules\@energon\onelogin\dist\main\onelogin-middleware\openid-protocol\get-openid-middleware.js:44:23)
+  //     at Object.next (.\codebase\node_modules\@energon\onelogin\dist\main\onelogin-middleware\openid-protocol\get-openid-middleware.js:25:53)
+  //     at fulfilled (.\codebase\node_modules\@energon\onelogin\dist\main\onelogin-middleware\openid-protocol\get-openid-middleware.js:16:58)
+  //     at runMicrotasks (<anonymous>)
+  //     at processTicksAndRejections (internal/process/task_queues.js:93:5) {
+  //   flow: 'login',
+  //   status: 500
+  // }
+  if (err.name === 'OneloginError' && err.message.startsWith('passport.authenticate failed')) {
+    return true;
+  }
+
   // Workaround (2) for this error:
   // OneloginError: Fetch error: 400 - POST https://api-ppe.tesco.com/identity/v4/issue-token/token
-  //     at new OneloginError (C:\Projects\Tesco\Colleague24Repos\reporting-dni-frontend\codebase\node_modules\@energon\onelogin\dist\main\onelogin-middleware\index.js:21:28)
-  //     at C:\Projects\Tesco\Colleague24Repos\reporting-dni-frontend\codebase\node_modules\@energon\onelogin\dist\main\onelogin-middleware\openid-protocol\get-openid-middleware.js:274:68
-  //     at step (C:\Projects\Tesco\Colleague24Repos\reporting-dni-frontend\codebase\node_modules\@energon\onelogin\dist\main\onelogin-middleware\openid-protocol\get-openid-middleware.js:44:23)
-  //     at Object.throw (C:\Projects\Tesco\Colleague24Repos\reporting-dni-frontend\codebase\node_modules\@energon\onelogin\dist\main\onelogin-middleware\openid-protocol\get-openid-middleware.js:25:53)
-  //     at rejected (C:\Projects\Tesco\Colleague24Repos\reporting-dni-frontend\codebase\node_modules\@energon\onelogin\dist\main\onelogin-middleware\openid-protocol\get-openid-middleware.js:17:65)
+  //     at new OneloginError (.\codebase\node_modules\@energon\onelogin\dist\main\onelogin-middleware\index.js:21:28)
+  //     at .\codebase\node_modules\@energon\onelogin\dist\main\onelogin-middleware\openid-protocol\get-openid-middleware.js:274:68
+  //     at step (.\codebase\node_modules\@energon\onelogin\dist\main\onelogin-middleware\openid-protocol\get-openid-middleware.js:44:23)
+  //     at Object.throw (.\codebase\node_modules\@energon\onelogin\dist\main\onelogin-middleware\openid-protocol\get-openid-middleware.js:25:53)
+  //     at rejected (.\codebase\node_modules\@energon\onelogin\dist\main\onelogin-middleware\openid-protocol\get-openid-middleware.js:17:65)
   //     at processTicksAndRejections (internal/process/task_queues.js:93:5)
   if (
     err.name === 'OneloginError' &&
@@ -39,17 +54,23 @@ const shouldApplyPageReload = (err: Error) => {
 };
 
 export const errorHandler: ErrorMiddleware = (error: unknown, req, res, _) => {
-  if (shouldApplyPageReload(error as Error)) {
-    console.log(`Page reload workaround is applying for request: ${req.originalUrl}`);
-    return res.status(200).sendFile(path.resolve(path.join('public', 'reload.html')));
-  }
+  // console.log(` ==> !!! IN ERROR HANDLER !!!`);
 
-  console.error(error);
+  console.log(error);
+
+  const isViewPath = (p: String) => !p.match('^(/api|/auth)');
+  const isView = isViewPath(req.path);
+
+  // console.log(` ==> !!! path: ${req.path}, is view path: ${isView}`);
+  // if (isView && shouldApplyPageReload(error as Error)) {
+  //   console.log(` ==> !!! Page reload workaround is applying for request: ${req.originalUrl}`);
+  //   return res.status(200).sendFile(path.resolve(path.join('public', 'reload.html')));
+  // }
 
   const appError = appErrorFromUnknown(error);
   const respStatus = toResponseStatus(appError);
 
-  return req.url.startsWith('/api/')
-    ? res.status(respStatus).json(toResponseMessage(appError))
-    : res.status(respStatus).sendFile(path.resolve(path.join('public', toHTMLResponse(appError))));
+  return isView
+    ? res.status(respStatus).sendFile(path.resolve(path.join('public', toHTMLResponse(appError))))
+    : res.status(respStatus).json(toResponseMessage(appError));
 };
