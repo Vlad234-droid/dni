@@ -13,6 +13,10 @@ export class Backfill_population_1 implements MigrationInterface {
   name = 'Backfill_population_1-1626694074000';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.query(
+      `CREATE EXTENSION  IF NOT EXISTS "fuzzystrmatch" WITH SCHEMA "public";`
+    );
+
     const schema = (queryRunner.connection.options as PostgresConnectionOptions).schema;
     if (schema) {
       await queryRunner.query(`SET search_path TO "$user", ${schema}, public;`);
@@ -26,7 +30,7 @@ export class Backfill_population_1 implements MigrationInterface {
       businessType?: string, 
       hireDate?: string, 
       leavingDate?: string, 
-      subscribedNetworks?: number[], 
+      subscribedNetworks?: string[], 
       receiveEventsEmailNotifications?: boolean,
       receivePostsEmailNotifications?: boolean,
     };
@@ -57,12 +61,14 @@ export class Backfill_population_1 implements MigrationInterface {
     for (const employee of population) {
       console.log(`Backfilling data for user ${employee.employeeNumber} ...`);
 
+      // create user
       await queryRunner.query(
         `INSERT INTO dni_user (colleague_uuid, employee_number) VALUES($1, $2) 
         ON CONFLICT DO NOTHING;`,
         [employee.colleagueUuid, employee.employeeNumber]
       );
 
+      // create or update user extras
       await queryRunner.query(
         `INSERT INTO dni_user_extras(colleague_uuid, colleague_properties, settings) 
         VALUES($1, 
@@ -85,18 +91,30 @@ export class Backfill_population_1 implements MigrationInterface {
       );
 
       if (employee.subscribedNetworks && employee.subscribedNetworks.length > 0) {
-        for (const networkId of employee.subscribedNetworks!) {
-          await queryRunner.query(
-            `INSERT INTO dni_user_subscription(colleague_uuid, subscription_entity_id, subscription_entity_type)
-            VALUES($1, $2, 'network');`,
-            [employee.colleagueUuid, networkId]
-          );
+        for (const networkName of employee.subscribedNetworks!) {
+          const networkId = await this.acquireNetworkEntityId(queryRunner, networkName);
 
-          await queryRunner.query(
-            `INSERT INTO dni.dni_user_subscription_log(colleague_uuid, subscription_entity_id, subscription_entity_type, user_action)
-            VALUES($1, $2, 'network', 'join');`,
-            [employee.colleagueUuid, networkId]
-          );
+          if (networkId && !isNaN(networkId)) {
+            // create user subscription ...
+            const insertedUserSubscription = await queryRunner.query(
+              `INSERT INTO dni_user_subscription(colleague_uuid, subscription_entity_id, subscription_entity_type)
+              VALUES($1, $2, 'network')
+              ON CONFLICT DO NOTHING
+              RETURNING *;`,
+              [employee.colleagueUuid, networkId]
+            );
+  
+            // check if subscription was created
+            if (Array.isArray(insertedUserSubscription) && insertedUserSubscription.length === 1) {
+              // ... and create user subscription log record
+              await queryRunner.query(
+                `INSERT INTO dni.dni_user_subscription_log(colleague_uuid, subscription_entity_id, subscription_entity_type, user_action)
+                VALUES($1, $2, 'network', 'join')
+                ON CONFLICT DO NOTHING;`,
+                [employee.colleagueUuid, networkId]
+              );
+            }
+          }
         }
       }
     }
@@ -104,5 +122,34 @@ export class Backfill_population_1 implements MigrationInterface {
 
   public async down(queryRunner: QueryRunner): Promise<void> {
     console.log(`Nothing to do as part of [${this.name}] migration down operation.`);
+  }
+
+  private networks = new Map<string, number>();
+
+  private async acquireNetworkEntityId(queryRunner: QueryRunner, networkName: string): Promise<number | undefined> {
+    const networkKey = networkName.toLowerCase();
+    if (this.networks.has(networkKey)) {
+      return this.networks.get(networkKey);
+    }
+
+    const networkEntityIdResponse = await queryRunner.query(
+      `SELECT ce.entity_id AS "networkEntityId"
+      FROM ccms_entity ce 
+      WHERE ce.entity_type = 'network'
+      ORDER BY public.difference(LOWER(ce.entity_instance->>'title'), LOWER($1)) DESC
+      LIMIT 1;`,
+      [networkKey]
+    );
+
+    const networkEntityId = Array.isArray(networkEntityIdResponse) && networkEntityIdResponse.length === 1 
+      ? networkEntityIdResponse.shift().networkEntityId
+      : undefined;
+
+    if (!isNaN(Number(networkEntityId))) {
+      this.networks.set(networkKey, Number(networkEntityId));
+      return Number(networkEntityId);
+    }
+
+    return undefined;
   }
 }
