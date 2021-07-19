@@ -33,12 +33,16 @@
   },
   "dependencies": {
     "chalk": "^4.1.1",
+    "csv-parser": "^3.0.0",
     "dotenv": "^8.2.0",
+    "lodash": "^4.17.21",
     "pg": "^8.6.0",
     "pg-copy-streams": "^5.1.1",
     "pino": "^6.11.3",
     "reflect-metadata": "^0.1.13",
-    "typeorm": "^0.2.32"
+    "strip-bom-stream": "^4.0.0",
+    "typeorm": "^0.2.32",
+    "yn": "^4.0.0"
   },
   "devDependencies": {
     "@types/chalk": "^2.2.0",
