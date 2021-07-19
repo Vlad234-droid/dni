@@ -14,6 +14,7 @@ import DateTimePicker, { Type } from '../../DateTimePicker';
 import { DropdownWrapper } from './styled';
 import * as T from '../../../config/types';
 import { actions, getReportsByTime, getReportsByRegion, getReportsByFormat } from '../../../store';
+import { now } from 'utils/date';
 
 const RangeWrapper = styled.div`
   padding: 0 8px;
