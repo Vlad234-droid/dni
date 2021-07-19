@@ -50,4 +50,12 @@ const IconWrapper = styled.span`
   margin-right: 8px;
 `;
 
-export { Wrapper, IconWrapper, Label };
+const Overflower = styled.div`
+  overflow: hidden;
+
+  & > video {
+    margin: 0 -2px;
+  }
+`;
+
+export { Wrapper, IconWrapper, Overflower, Label };

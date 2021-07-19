@@ -35,7 +35,7 @@ const AddNetworkForm: FC = () => {
         skin: ToastSkin.ENTITY_CREATE_SUCCESS,
       }),
     );
-    console.log(data);
+    //console.log(data);
   };
 
   return (
@@ -131,10 +131,7 @@ const AddNetworkForm: FC = () => {
       </form>
       {formContainer.current &&
         open &&
-        createPortal(
-          <PartnersEditor partners={partners} onClose={toggleOpen} />,
-          formContainer.current,
-        )}
+        createPortal(<PartnersEditor partners={partners} onClose={toggleOpen} />, formContainer.current)}
     </FormWrapper>
   );
 };

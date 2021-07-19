@@ -1,6 +1,7 @@
 import React, { useContext, useCallback, createContext, FC } from 'react';
-import { ViewportSize } from 'config/constants';
 import __useMedia from 'hooks/useMedia';
+
+import { ViewportSize } from 'config/constants';
 
 interface InterfaceContext {
   viewport: ViewportSize;

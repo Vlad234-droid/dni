@@ -22,7 +22,7 @@ const CarouselContent: FC<Props> = ({ index, title, description, image: { src },
   const showReadMore = isMobile || isLargeMobile || isTablet;
   const adjustedIsOpen = showReadMore ? isOpen : true;
 
-  console.log(`isMobile: ${isMobile}, isLargeMobile: ${isLargeMobile}, isTablet: ${isTablet}, isDesktop: ${isDesktop}`);
+  //console.log(`isMobile: ${isMobile}, isLargeMobile: ${isLargeMobile}, isTablet: ${isTablet}, isDesktop: ${isDesktop}`);
 
   return (
     <Wrapper>
@@ -37,16 +37,16 @@ const CarouselContent: FC<Props> = ({ index, title, description, image: { src },
             )}
           </Description>
         </DescriptionWrapper>
-        { showReadMore &&
-        <Button inverse variant='primary' onClick={onButtonClick}>
-          {adjustedIsOpen ? 'Read less' : 'Read more'}
-          <Icon graphic={adjustedIsOpen ? 'contract' : 'expand'} size='xx' />
-        </Button>
-        }
+        {showReadMore && (
+          <Button inverse variant='primary' onClick={onButtonClick}>
+            {adjustedIsOpen ? 'Read less' : 'Read more'}
+            <Icon graphic={adjustedIsOpen ? 'contract' : 'expand'} size='xx' />
+          </Button>
+        )}
       </ContentWrapper>
       <Image src={src} isOpen={adjustedIsOpen} />
     </Wrapper>
   );
-}
+};
 
 export default CarouselContent;

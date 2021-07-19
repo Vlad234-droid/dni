@@ -5,6 +5,7 @@ import useStore from 'hooks/useStore';
 
 import EventComponent from './Event';
 import { getParticipants, getOne, byIdSelector } from '../../store';
+import { useNotification, EntityType } from 'features/Notification';
 
 type Props = {
   id: number;
@@ -17,6 +18,11 @@ const EventContainer: FC<Props> = ({ id }) => {
   const errorMessage = useMemo(() => error || participants.error, [error, participants]);
   const loadEvent = () => dispatch(getOne({ id }));
   const loadParticipants = () => dispatch(getParticipants());
+  const { acknowledgeWithDelay } = useNotification();
+
+  useEffect(() => {
+    id && acknowledgeWithDelay({ entityId: id, entityType: EntityType.EVENT }, 2000);
+  }, [id]);
 
   useEffect(() => {
     dispatch(getParticipants());

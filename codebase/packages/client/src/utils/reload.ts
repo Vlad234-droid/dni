@@ -7,6 +7,6 @@ export const reloadPage = () => {
     setTimeout(() => {
       window.localStorage.removeItem('refresh');
       window.location.reload();
-    }, 1000);
+    }, 300);
   }
 };

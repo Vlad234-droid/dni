@@ -9,6 +9,8 @@ export const API_URL = process.env.REACT_APP_API_URL ? process.env.REACT_APP_API
 
 export const WS_URL = process.env.REACT_APP_WS_URL ? process.env.REACT_APP_WS_URL : '/socket.io';
 
+export const LOGOUT_URL = process.env.REACT_APP_LOGOUT_URL ? process.env.REACT_APP_LOGOUT_URL : '/sso/logout';
+
 export const OURTESCO_URL = process.env.REACT_APP_OURTESCO_URL
   ? process.env.REACT_APP_OURTESCO_URL
   : 'https://www.ourtesco.com';
@@ -56,8 +58,9 @@ export const DEFAULT_FILTERS: FilterPayload = {
 };
 
 export const LINKS = {
-  signOut: `${OURTESCO_URL}/colleague/sso/logout`,
+  signOut: PUBLIC_URL === '/' ? LOGOUT_URL : `${PUBLIC_URL}${LOGOUT_URL}`,
   thisIsMeSurvey: `${OURTESCO_URL}/thisisme/office`,
   termsAndConditions: `${OURTESCO_URL}/colleague/terms-and-conditions`,
-  privacyPolicy: 'https://colleague-help.ourtesco.com/hc/en-us/articles/360001354803-Colleague-Data-Privacy-Full-Policy-and-Supporting-Documents'
+  privacyPolicy:
+    'https://colleague-help.ourtesco.com/hc/en-us/articles/360001354803-Colleague-Data-Privacy-Full-Policy-and-Supporting-Documents',
 };
