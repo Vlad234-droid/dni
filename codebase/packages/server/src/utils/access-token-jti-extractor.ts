@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { UserScopeToken } from '@energon/onelogin';
+import { UserScopeToken } from '@dni-connectors/onelogin';
 
 type CookieData = UserScopeToken;
 type DecodedAccessToken = { jti: string };

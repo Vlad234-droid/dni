@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { AuthData, OpenIdUserInfo } from '@energon/onelogin';
+import { AuthData, OpenIdUserInfo } from '@dni-connectors/onelogin';
 
 const USER_KEY = 'employeeNumber';
 

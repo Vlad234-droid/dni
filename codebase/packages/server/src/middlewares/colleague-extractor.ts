@@ -6,14 +6,15 @@ type ColleagueUUIDExtractorConfig = {
 
 export const colleagueUUIDExtractor = ({ excludePath }: ColleagueUUIDExtractorConfig): Middleware => {
   const colleagueUUIDExtractorMiddleware: Middleware = async (req, res, next) => {
-    if (excludePath && excludePath.length && excludePath.some((ep) => ep === req.path)) {
-      next();
-    } else {
-      const colleagueUUID = await extractor(req, res);
-      req.colleagueUUID = colleagueUUID;
+    // if (excludePath && excludePath.length && excludePath.some((ep) => ep === req.path)) {
+    //   next();
+    // } else {
+    //   const colleagueUUID = await extractor(req, res);
+    //   req.colleagueUUID = colleagueUUID;
 
-      next();
-    }
+    //   next();
+    // }
+    next();
   };
 
   return colleagueUUIDExtractorMiddleware;

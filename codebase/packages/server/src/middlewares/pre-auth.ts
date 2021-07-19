@@ -4,7 +4,7 @@ import {
   AUTH_DATA_COOKIE_NAME,
   getDataFromCookie,
   SESSION_COOKIE_NAME,
-} from '@energon/onelogin';
+} from '@dni-connectors/onelogin';
 //import { getAllCookies, isCookiePresent } from "@energon/cookie-utils";
 
 import { ContextProvider } from '@energon/rest-api-provider';

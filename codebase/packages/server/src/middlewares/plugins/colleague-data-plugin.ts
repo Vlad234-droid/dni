@@ -5,10 +5,15 @@ import {
   clearPluginCookiesIfSessionExpired,
   getDataFromCookie,
   getIdentityData,
-  // getOpenIdUserInfo,
+  getOpenIdUserInfo,
   getUserData,
   setDataToCookie,
- ColleagueField, ColleagueResponse, Optional, PluginCookieConfig } from '@energon/onelogin';
+  ColleagueField, 
+  ColleagueResponse, 
+  Optional, 
+  PluginCookieConfig, 
+} from '@dni-connectors/onelogin';
+import { ColleagueV2 } from '@dni-connectors/colleague-api';
 
 
 
@@ -60,7 +65,7 @@ type Config<O> = {
     /**
      * optional, method that will determine the shape of the data saved in the cookie
      */
-    cookieShapeResolver?: (data: ColleagueResponse) => O;
+    cookieShapeResolver?: (data: ColleagueV2) => O;
   };
 };
 
@@ -73,7 +78,10 @@ export const colleagueDataPlugin = <O>(config: Config<O> & Optional): Handler =>
     const {
       fields,
       shouldRun = () => true,
-      baseUrl = process.env.NODE_CONFIG_ENV === 'prod' ? 'https://api.tesco.com' : 'https://api-ppe.tesco.com',
+      baseUrl = process.env.NODE_CONFIG_ENV && process.env.NODE_CONFIG_ENV.toLowerCase() === 'prod' 
+        ? 'https://api.tesco.com' 
+        : 'https://api-ppe.tesco.com',
+
       path = '/colleague/colleagues',
       cookieConfig,
     } = config;
@@ -84,7 +92,7 @@ export const colleagueDataPlugin = <O>(config: Config<O> & Optional): Handler =>
       clearPluginCookiesIfSessionExpired(req, res, cookieConfig);
 
       const { secret, cookieName, compressed } = cookieConfig;
-      const data = getDataFromCookie<ColleagueResponse>(req, {
+      const data = getDataFromCookie<ColleagueV2>(req, {
         cookieName,
         secret,
         compressed,
@@ -126,17 +134,20 @@ export const colleagueDataPlugin = <O>(config: Config<O> & Optional): Handler =>
     // });
 
     const userData = getUserData(res);
-    //const openIdUserInfo = getOpenIdUserInfo(res);
+    console.log(` ==> userData payload: ${JSON.stringify(userData)}`);
 
-    console.log(` ==> openid payload: ${JSON.stringify(userData)}`);
+    const openIdUserInfo = getOpenIdUserInfo(res);
+    console.log(` ==> openIdUserInfo payload: ${JSON.stringify(openIdUserInfo)}`);
 
     const payload = { colleagueUUID, userData };
-
     console.log(` ==> colleague payload: ${JSON.stringify(payload)}`);
 
     if (cookieConfig) {
-      const { cookieShapeResolver = (data: any) => data } = cookieConfig;
-      //const payload = { ...cookieShapeResolver(data), sid };
+      // const { cookieShapeResolver = (data: any) => data } = cookieConfig;
+      // if (cookieShapeResolver) {
+      //   payload = { ...cookieShapeResolver(data), sid }
+      // }
+      // //const ;
       setDataToCookie(res, payload, { ...cookieConfig });
       setColleagueData(res, payload);
     } else {

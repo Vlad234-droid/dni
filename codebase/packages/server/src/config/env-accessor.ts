@@ -1,6 +1,8 @@
 import { isDEV } from '../config/env';
 
 const optionalEnvironmentParameters = [
+  'APPLICATION_COLLEAGUE_DATA_COOKIE_NAME',
+  'APPLICATION_USER_DATA_COOKIE_NAME',
   'ONELOGIN_REDIRECT_AFTER_LOGOUT_URL',
   'CONFIRMIT_PASSWORD',
   'MOCK_SERVER_URL',
@@ -22,6 +24,7 @@ export type ProcessEnv = {
   APPLICATION_URL_UNSUBSCRIBE: string;
   // cookies settings
   APPLICATION_COOKIE_PARSER_SECRET: string;
+  APPLICATION_COLLEAGUE_DATA_COOKIE_NAME: string;
   APPLICATION_USER_DATA_COOKIE_NAME: string;
   // cache related props
   CACHE_IDENTITY_TOKEN_KEY: string;
@@ -96,6 +99,7 @@ export class EnvAccessor {
       APPLICATION_URL_UNSUBSCRIBE,
       // cookies settings
       APPLICATION_COOKIE_PARSER_SECRET,
+      APPLICATION_COLLEAGUE_DATA_COOKIE_NAME,
       APPLICATION_USER_DATA_COOKIE_NAME,
       // cache related props
       CACHE_IDENTITY_TOKEN_KEY,
@@ -136,6 +140,7 @@ export class EnvAccessor {
       APPLICATION_URL_UNSUBSCRIBE,
       // cookies settings
       APPLICATION_COOKIE_PARSER_SECRET,
+      APPLICATION_COLLEAGUE_DATA_COOKIE_NAME,
       APPLICATION_USER_DATA_COOKIE_NAME,
       // cache related props
       CACHE_IDENTITY_TOKEN_KEY,

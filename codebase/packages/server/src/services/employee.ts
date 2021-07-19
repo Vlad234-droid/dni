@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { getOpenIdUserInfo } from '@energon/onelogin';
+import { getOpenIdUserInfo } from '@dni-connectors/onelogin';
 import { getRepository, DniUserSubscription, DniEntityTypeEnum, DniUser, DniUserExtras } from '@dni/database';
 import { colleagueApiConnector, ColleagueV2 } from '@dni-connectors/colleague-api';
 
@@ -23,6 +23,10 @@ type ColleagueRequest = {
 } & Request;
 
 const infoExtractor = (req: Request, res: Response) => {
+  if (res.writableEnded) {
+    return;
+  }
+
   const userInfo = getOpenIdUserInfo(res) || req.cookies[getConfig().applicationUserDataCookieName()] || {};
 
   if (!userInfo) {
@@ -33,6 +37,10 @@ const infoExtractor = (req: Request, res: Response) => {
 };
 
 const colleagueUUIDExtractor = async (req: ColleagueRequest, res: Response): Promise<string | null> => {
+  if (res.writableEnded) {
+    return null;
+  }
+
   if (req.colleagueUUID) {
     return req.colleagueUUID!;
   }
@@ -96,6 +104,10 @@ const colleagueUUIDExtractor = async (req: ColleagueRequest, res: Response): Pro
 };
 
 const profileInfoExtractor = async (req: Request, res: Response) => {
+  if (res.writableEnded) {
+    return;
+  }
+
   const userInfo = infoExtractor(req, res);
 
   const colleagueUUID = await colleagueUUIDExtractor(req, res);

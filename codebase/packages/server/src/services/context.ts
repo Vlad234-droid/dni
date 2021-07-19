@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { identityApiConnector, buildBody } from '@dni-connectors/identity-api';
-import { setIdentityClientData, ClientScopeToken } from '@energon/onelogin';
+import { setIdentityClientData, ClientScopeToken } from '@dni-connectors/onelogin';
 
 import { buildContext, RequestCtx } from '../context';
 import { getInstance as getCacheInstance } from '../services/cache';

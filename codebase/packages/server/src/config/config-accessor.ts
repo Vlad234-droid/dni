@@ -19,6 +19,7 @@ export type ProcessConfig = {
   applicationUploadSize: () => number;
   // cookies settings
   applicationCookieParserSecret: () => string;
+  applicationColleagueCookieName: () => string;
   applicationUserDataCookieName: () => string;
   // cache related props
   cacheIdentityTokenKey: () => string;
@@ -71,6 +72,8 @@ export class ConfigAccessor {
       // cookies settings
       applicationCookieParserSecret: () =>
         processEnv.APPLICATION_COOKIE_PARSER_SECRET || defaultConfig.applicationCookieParserSecret,
+      applicationColleagueCookieName: () =>
+        processEnv.APPLICATION_COLLEAGUE_DATA_COOKIE_NAME || defaultConfig.applicationColleagueCookieName,
       applicationUserDataCookieName: () =>
         processEnv.APPLICATION_USER_DATA_COOKIE_NAME || defaultConfig.applicationUserDataCookieName,
       // cache related props

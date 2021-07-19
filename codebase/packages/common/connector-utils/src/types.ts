@@ -1,6 +1,6 @@
 import { ConnectorContext } from '@energon-connectors/core';
 import { JSONValue } from '@energon/type-utils';
-import type { OpenIdUserInfo } from '@energon/onelogin';
+import type { OpenIdUserInfo } from '@dni-connectors/onelogin';
 
 type BusinessCategory = NonNullable<OpenIdUserInfo['custom_fields']>['businessCategory'];
 

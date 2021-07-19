@@ -3,17 +3,20 @@ import {
   identityTokenSwapPlugin,
   identityClientScopedTokenPlugin,
   userDataPlugin,
-  Logger,
-  LoggerEvent,
   OpenIdUserInfo,
   withReturnTo,
-} from '@energon/onelogin';
+  pinoLogger,
+} from '@dni-connectors/onelogin';
+import { ColleagueV2 } from '@dni-connectors/colleague-api';
+
+// import cookieParser from 'cookie-parser';
 
 import { isPROD } from '../config/env';
-import { defaultConfig } from '../config/default';
 import { ProcessConfig } from '../config/config-accessor';
+import { colleagueInfoResolver, openIdUserInfoResolver } from '../config/auth-data';
+
 import { colleagueDataPlugin } from './plugins';
-import cookieParser from 'cookie-parser';
+
 
 interface ErrorMessage {
   errorType: string;
@@ -25,31 +28,10 @@ interface LogMessage {
   message: string;
 }
 
-const OpenIdLogger: Logger = (event: LoggerEvent) => {
-  switch (event.severity) {
-    case 'info': {
-      if (event.flow !== 'verification') {
-        const logMessage = event.payload as unknown as LogMessage;
-        console.log(` --> OpenID: [${event.severity}] <${event.flow}> ${logMessage.message}`);
-      }
-      break;
-    }
-    case 'warning': {
-      const logMessage = event.payload as unknown as LogMessage;
-      console.log(` --> OpenID: [${event.severity}] <${event.flow}> ${logMessage.message}`);
-      break;
-    }
-    case 'error': {
-      const errorMessage = event.payload.error as unknown as ErrorMessage;
-      console.log(` --> OpenID: [${event.severity}] <${event.flow}> ${errorMessage.errorMessage}`);
-      break;
-    }
-  }
-};
-
 export const configureOneloginMidleware = async ({
   environment,
   applicationCookieParserSecret,
+  applicationColleagueCookieName,
   applicationUserDataCookieName,
   oneLoginIssuerUrl,
   oneLoginApplicationPath,
@@ -66,54 +48,10 @@ export const configureOneloginMidleware = async ({
   identityClientSecret,
   identityUserScopedTokenCookieSecret,
   identityUserScopedTokenCookieName,
+  defaultRoles,
 }: ProcessConfig) => {
   const isProduction = isPROD(environment());
   const identityIdAndSecret = `${identityClientId()}:${identityClientSecret()}`;
-
-  const enrichUserInfo = (userInfo: OpenIdUserInfo) => {
-    console.log(` --> OpenID: [userInfo]: ${JSON.stringify(userInfo)}`);
-
-    const userGroups = (
-      Array.isArray(userInfo.groups) ? userInfo.groups : ((userInfo.groups as unknown as string) || '').split(',') || []
-    )
-      .filter(Boolean)
-      .filter((group) => oidcGroupFiltersRegex().some((rr) => rr.test(group)));
-
-    const userRoles: Set<string> = new Set([defaultConfig.defaultRole]);
-
-    if (oidcManagerGroups().some((g) => userGroups.includes(g))) {
-      userRoles.add('Manager');
-    }
-    if (oidcAdminGroups().some((g) => userGroups.includes(g))) {
-      userRoles.add('Admin');
-    }
-
-    //console.log(` --> User roles: [${Array.from(userRoles.values())}]`);
-
-    const userData = {
-      //...userInfo,
-      fullName: userInfo.name,
-      firstName: userInfo.given_name || userInfo.name.split(/\s+/)[0],
-      lastName: userInfo.family_name || userInfo.name.split(/\s+/)[1],
-      email: userInfo.preferred_username,
-      params: {
-        employeeNumber: (userInfo.params?.employeeNumber || userInfo.params?.EmployeeNumber) as string,
-      },
-      //groups: userGroups,
-      aud: userInfo.aud,
-      sid: userInfo.sid,
-      iat: userInfo.iat,
-      iss: userInfo.iss,
-      sub: userInfo.sub,
-      exp: userInfo.exp,
-      updatedAt: userInfo.updated_at,
-      roles: Array.from(userRoles.values()),
-    };
-
-    //console.log(` --> User data: ${JSON.stringify(userData)}`);
-
-    return userData;
-  };
 
   const identityClientScopedToken = identityClientScopedTokenPlugin({
     identityIdAndSecret,
@@ -167,10 +105,17 @@ export const configureOneloginMidleware = async ({
     scope: ['openid', 'profile', 'params', 'groups'],
 
     /** Optional, callback that will be called with Event type objects durring authentication process */
-    logger: OpenIdLogger,
+    logger: pinoLogger({ 
+      name: 'server.express.middleware.onelogin',
+      prettyPrint: { 
+        colorize: true, 
+        translateTime: 'yyyy-mm-dd HH:MM:ss o', 
+        ignore: 'pid,hostname',
+      },
+    }),
 
     /** If true sets idToken and encRefreshToken in 'authData' cookie. */
-    requireIdToken: false,
+    requireIdToken: true,
 
     /**
      * Absolute url that we will redirect to after logout, that can lead to onelogin session termination ednpoint .
@@ -185,7 +130,9 @@ export const configureOneloginMidleware = async ({
           httpOnly: true,
           secure: isProduction,
           signed: isProduction,
-          cookieShapeResolver: (userInfo) => enrichUserInfo(userInfo),
+          cookieShapeResolver: (userInfo: OpenIdUserInfo) => openIdUserInfoResolver(
+            { defaultRoles, oidcGroupFiltersRegex, oidcManagerGroups, oidcAdminGroups } as ProcessConfig, 
+            userInfo),
         },
       }),
       identityTokenSwapPlugin({
@@ -204,15 +151,24 @@ export const configureOneloginMidleware = async ({
       //   identityIdAndSecret,
       //   cache: true,
       // }),
-      // colleagueDataPlugin({
-      //   fields: [ "locationUUID" ],
-      //   optional: true,
-      // }),
+      colleagueDataPlugin({
+        fields: [ "locationUUID" ],
+        optional: true,
+        cookieConfig: {
+          cookieName: applicationColleagueCookieName(),
+          httpOnly: true,
+          secure: isProduction,
+          signed: isProduction,
+          cookieShapeResolver: (colleague: ColleagueV2) => colleagueInfoResolver(
+            { } as ProcessConfig, 
+            colleague),
+        },
+      }),
     ],
   });
 
   const openIdMiddleware = withReturnTo(await openidMiddleware, {
-    isViewPath: (path) => !path.match('^(/api|/auth|/sso)'),
+    isViewPath: (path: string) => !path.match('^(/api|/auth|/sso)'),
     appPath: oneLoginApplicationPath(),
   });
 
