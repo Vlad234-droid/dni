@@ -9,7 +9,7 @@ import Network from '../components/Network';
 import NetworkNews from '../components/NetworkNews';
 import NotFound from '../components/NotFound';
 import ServerError from '../components/ServerError';
-import Unauthorized from '../components/Unauthorized';
+// import Unauthorized from '../components/Unauthorized';
 import Forbidden from '../components/Forbidden';
 import Reports from '../components/Reports';
 import Profile from '../components/Profile';
@@ -27,7 +27,7 @@ const pages: Record<Page, PageElement> = {
   [Page.REPORTS]: Reports,
   [Page.PROFILE]: Profile,
   [Page.NOTIFICATION_SETTINGS]: Notifications,
-  //[Page.UNAUTHORIZED]: Unauthorized,
+  // [Page.UNAUTHORIZED]: Unauthorized,
   [Page.FORBIDDEN]: Forbidden,
   [Page.SERVER_ERROR]: ServerError,
   [Page.NOT_FOUND]: NotFound,
