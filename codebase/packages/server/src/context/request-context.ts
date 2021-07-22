@@ -1,42 +1,22 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 
 import { ConnectorContext } from '@energon-connectors/core';
 import { JSONValue } from '@energon/type-utils';
 
-export type ExtractedOpenIdData = {
-  sub: string;
-  sid: string;
-  fullName: string;
-  firstName: string;
-  email: string;
-  params: {
-    employeeNumber: string;
-  };
-  groups: string[];
-};
-
-export type ExtractedUSTData = {
-  uuid: string;
-  access_token: string;
-};
-
-export type BasicUserData = {
-  sessionId: string;
-  userName: string;
-  userFirstName: string;
-  userEmail: string;
-  colleagueUUID: string;
-  employeeNumber: string;
-};
-
 // prettier-ignore
 // eslint-disable-next-line @typescript-eslint/ban-types
-export type RequestCtx<TConfig = {}, TSessionData = BasicUserData> = 
+export type RequestCtx<TConfig = {}, TSessionData = {}> = 
+  & ExpressContext
   & ConnectorContext
   & ConfigContext<TConfig>
   & SessionDataContext<TSessionData>
-  & LoggerContext
+// & LoggerContext
 
+export type ExpressContext = {
+  req: Request;
+  res: Response;
+  next?: NextFunction;
+};
 export type ConfigContext<T> = {
   config: () => T;
 };
@@ -54,7 +34,8 @@ export type LoggerContext = {
 };
 
 // eslint-disable-next-line @typescript-eslint/ban-types
-export type ContextProvider<TConfig = {}, TSessionData = BasicUserData> = (
+export type ContextProvider<TConfig = {}, TSessionData = {}> = (
   req: Request,
   res: Response,
+  next?: NextFunction,
 ) => RequestCtx<TConfig, TSessionData>;

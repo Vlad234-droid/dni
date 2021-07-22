@@ -47,9 +47,9 @@ const initialState: T.State = {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const getReportsByTime = createAsyncThunk<any, any>(A.GET_REPORTS_BY_TIME, reportsByTimeMiddleware);
-const getReportsByRegion = createAsyncThunk<any, any>(A.GET_REPORTS_BY_REGION, reportsByRegionMiddleware);
-const getReportsByFormat = createAsyncThunk<any, any>(A.GET_REPORTS_BY_FORMAT, reportsByFormatMiddleware);
+const getReportsByTime = createAsyncThunk(A.GET_REPORTS_BY_TIME, reportsByTimeMiddleware);
+const getReportsByRegion = createAsyncThunk(A.GET_REPORTS_BY_REGION, reportsByRegionMiddleware);
+const getReportsByFormat = createAsyncThunk(A.GET_REPORTS_BY_FORMAT, reportsByFormatMiddleware);
 
 const slice = createSlice({
   name: A.ROOT,

@@ -1,18 +1,16 @@
-import { Response } from "express";
-import { ClientScopeToken } from "../api";
+import { Response } from 'express';
+import { ClientScopeToken } from '../api';
 
-export const getIdentityClientData = (
-  res: Response,
-): ClientScopeToken | undefined =>
-  (res as AugmentedResponse).identityCST as ClientScopeToken | undefined;
+export const getIdentityClientScopeToken = (res: Response): ClientScopeToken | undefined => res.identityCST;
 
-export const setIdentityClientData = (
-  res: Response,
-  clientAppTokenData: ClientScopeToken,
-) => {
-  (res as AugmentedResponse).identityCST = clientAppTokenData;
+export const setIdentityClientScopeToken = (res: Response, identityClientScopeToken: ClientScopeToken) => {
+  res.identityCST = identityClientScopeToken;
 };
 
-type AugmentedResponse = Response & {
-  identityCST?: unknown;
-};
+declare global {
+  namespace Express {
+    export interface Response {
+      identityCST?: ClientScopeToken;
+    }
+  }
+}

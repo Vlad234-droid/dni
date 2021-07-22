@@ -6,17 +6,14 @@ import {
   OpenIdUserInfo,
   withReturnTo,
   pinoLogger,
-} from '@dni-connectors/onelogin';
-import { ColleagueV2 } from '@dni-connectors/colleague-api';
-
-// import cookieParser from 'cookie-parser';
+ colleagueApiPlugin } from '@dni-connectors/onelogin';
 
 import { isPROD } from '../config/env';
 import { ProcessConfig } from '../config/config-accessor';
 import { colleagueInfoResolver, openIdUserInfoResolver } from '../config/auth-data';
 
-import { colleagueDataPlugin } from './plugins';
-
+import { Colleague } from '@dni-connectors/colleague-api';
+import { dniUserRefreshPlugin } from './onelogin-plugins';
 
 interface ErrorMessage {
   errorType: string;
@@ -99,17 +96,17 @@ export const configureOneloginMidleware = async ({
      * In case of error, calls containg that path framgents won't result in redirect.
      * Instead middleware will return an error with correct status. Could be used for AJAX calls.
      */
-    //noRedirectPathFragments: [],
+    noRedirectPathFragments: ['/api'],
 
     /** Scopes of the data that we want to be present in the id_token */
     scope: ['openid', 'profile', 'params', 'groups'],
 
     /** Optional, callback that will be called with Event type objects durring authentication process */
-    logger: pinoLogger({ 
+    logger: pinoLogger({
       name: 'server.express.middleware.onelogin',
-      prettyPrint: { 
-        colorize: true, 
-        translateTime: 'yyyy-mm-dd HH:MM:ss o', 
+      prettyPrint: {
+        colorize: true,
+        translateTime: 'yyyy-mm-dd HH:MM:ss o',
         ignore: 'pid,hostname',
       },
     }),
@@ -130,9 +127,11 @@ export const configureOneloginMidleware = async ({
           httpOnly: true,
           secure: isProduction,
           signed: isProduction,
-          cookieShapeResolver: (userInfo: OpenIdUserInfo) => openIdUserInfoResolver(
-            { defaultRoles, oidcGroupFiltersRegex, oidcManagerGroups, oidcAdminGroups } as ProcessConfig, 
-            userInfo),
+          cookieShapeResolver: (userInfo: OpenIdUserInfo) =>
+            openIdUserInfoResolver(
+              { defaultRoles, oidcGroupFiltersRegex, oidcManagerGroups, oidcAdminGroups } as ProcessConfig,
+              userInfo,
+            ),
         },
       }),
       identityTokenSwapPlugin({
@@ -146,23 +145,24 @@ export const configureOneloginMidleware = async ({
           signed: isProduction,
         },
       }),
-      identityClientScopedToken,
-      // identityClientScopedTokenPlugin({
-      //   identityIdAndSecret,
-      //   cache: true,
-      // }),
-      colleagueDataPlugin({
-        fields: [ "locationUUID" ],
+      // identityClientScopedToken,
+      identityClientScopedTokenPlugin({
+        identityIdAndSecret,
+        cache: true,
+      }),
+      colleagueApiPlugin({
         optional: true,
         cookieConfig: {
           cookieName: applicationColleagueCookieName(),
           httpOnly: true,
           secure: isProduction,
           signed: isProduction,
-          cookieShapeResolver: (colleague: ColleagueV2) => colleagueInfoResolver(
-            { } as ProcessConfig, 
-            colleague),
+          cookieShapeResolver: (colleague: Colleague) => colleagueInfoResolver({} as ProcessConfig, colleague),
         },
+      }),
+      dniUserRefreshPlugin({
+        optional: false,
+        cache: true,
       }),
     ],
   });

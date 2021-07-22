@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Handler, Request, Response } from 'express';
 import { getMembersReportBy, getRegionsReportBy, getDepartmentsReportBy, getPDFBuffer, PrintParams } from '../services';
 import { executeSafe } from '../utils';
 import { Readable } from 'stream';
@@ -11,37 +11,34 @@ interface ReportFilter {
   to: string;
 }
 
-const getMembersReportByFilters = (req: Request<{}, {}, {}, ReportFilter>, res: Response) => {
-  const { entityType, entityIds, groupBy, from, to } = req.query;
-
-  const entityIdsArray = entityIds && entityIds.length > 0 ? entityIds.split(',') : [];
-
-  return executeSafe(res, async () =>
-    res.status(200).json(await getMembersReportBy(entityType, entityIdsArray, groupBy, from, to)),
-  );
+const getMembersReportByFilters: Handler = async (req: Request, res: Response) => {
+  executeSafe(res, async () => {
+    const { entityType, entityIds, groupBy, from, to } = req.query as unknown as ReportFilter;
+    const entityIdsArray = entityIds && entityIds.length > 0 ? entityIds.split(',') : [];
+    const membersReport = await getMembersReportBy(entityType, entityIdsArray, groupBy, from, to);
+    res.status(200).json(membersReport);
+  });
 };
 
-const getRegionsReportByFilters = (req: Request<{}, {}, {}, ReportFilter>, res: Response) => {
-  const { entityType, entityIds, from, to } = req.query;
-
-  const entityIdsArray = entityIds && entityIds.length > 0 ? entityIds.split(',') : [];
-
-  return executeSafe(res, async () =>
-    res.status(200).json(await getRegionsReportBy(entityType, entityIdsArray, from, to)),
-  );
+const getRegionsReportByFilters: Handler = async (req: Request, res: Response) => {
+  executeSafe(res, async () => {
+    const { entityType, entityIds, from, to } = req.query as unknown as ReportFilter;
+    const entityIdsArray = entityIds && entityIds.length > 0 ? entityIds.split(',') : [];
+    const regionsReport = await getRegionsReportBy(entityType, entityIdsArray, from, to);
+    res.status(200).json(regionsReport);
+  });
 };
 
-const getDepartmentsReportByFilters = (req: Request<{}, {}, {}, ReportFilter>, res: Response) => {
-  const { entityType, entityIds, from, to } = req.query;
-
-  const entityIdsArray = entityIds && entityIds.length > 0 ? entityIds.split(',') : [];
-
-  return executeSafe(res, async () =>
-    res.status(200).json(await getDepartmentsReportBy(entityType, entityIdsArray, from, to)),
-  );
+const getDepartmentsReportByFilters: Handler = async (req: Request, res: Response) => {
+  executeSafe(res, async () => {
+    const { entityType, entityIds, from, to } = req.query as unknown as ReportFilter;
+    const entityIdsArray = entityIds && entityIds.length > 0 ? entityIds.split(',') : [];
+    const departmentsReport = await getDepartmentsReportBy(entityType, entityIdsArray, from, to);
+    res.status(200).json(departmentsReport);
+  });
 };
 
-const printPDF = async (req: Request<{}, {}, PrintParams>, res: Response) => {
+const printPDF: Handler = async (req: Request<{}, {}, PrintParams>, res: Response) => {
   const buffer = await getPDFBuffer(req.body);
   const stream = new Readable();
   stream.push(buffer);

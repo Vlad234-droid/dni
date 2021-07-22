@@ -28,21 +28,22 @@ export const cmsEventsApiConnector = (ctx: DniCmsApiContext) => {
   const fetchClient = buildFetchClient(ctx);
 
   return {
-    getEvent: async ({ params }: ApiInput<EventApiParams>) => apiConsumer.getEvent(buildParams(params)),
+    getEvent: async ({ params }: ApiInput<EventApiParams>) => await apiConsumer.getEvent(buildParams(params)),
 
-    getEvents: ({ params }: ApiInput<Omit<EventApiParams, 'id'>>) =>
-      fetchClient<Event[]>(cmsEventsApiDef.getEvents, params, buildFetchParams()),
+    getEvents: async ({ params }: ApiInput<Omit<EventApiParams, 'id'>>) =>
+      await fetchClient<Event[]>(cmsEventsApiDef.getEvents, params, buildFetchParams()),
 
-    getEventsCount: ({ params }: ApiInput<Omit<EventApiParams, 'id'>>) =>
-      fetchClient<number>(cmsEventsApiDef.getEventsCount, params, buildFetchParams()),
+    getEventsCount: async ({ params }: ApiInput<Omit<EventApiParams, 'id'>>) =>
+      await fetchClient<number>(cmsEventsApiDef.getEventsCount, params, buildFetchParams()),
 
     postEvent: async ({ params, body }: ApiInput<EventApiParams, EventBody>) =>
-      apiConsumer.postEvent(buildParams(params, body!)),
+      await apiConsumer.postEvent(buildParams(params, body!)),
 
     putEvent: async ({ params, body }: ApiInput<EventApiParams, EventBody>) =>
-      apiConsumer.putEvent(buildParams(params, body!)),
+      await apiConsumer.putEvent(buildParams(params, body!)),
 
-    deleteEvent: ({ params }: ApiInput<Pick<EventApiParams, 'id'>>) => apiConsumer.deleteEvent(buildParams(params)),
+    deleteEvent: async ({ params }: ApiInput<Pick<EventApiParams, 'id'>>) =>
+      await apiConsumer.deleteEvent(buildParams(params)),
   };
 };
 

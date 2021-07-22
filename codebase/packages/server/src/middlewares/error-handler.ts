@@ -1,5 +1,6 @@
 import { appErrorFromUnknown, toResponseStatus, toResponseMessage, toHTMLResponse } from '../utils/errors';
 import path from 'path';
+import { Request, Response, NextFunction } from 'express';
 
 const shouldApplyPageReload = (err: Error) => {
   if (!err) return false;
@@ -53,7 +54,12 @@ const shouldApplyPageReload = (err: Error) => {
   return false;
 };
 
-export const errorHandler: ErrorMiddleware = (error: unknown, req, res, _) => {
+export const errorHandler: ErrorMiddleware = (error: Error, req: Request, res: Response, next: NextFunction) => {
+  // preliminary check if headers already sent
+  if (res.headersSent) {
+    return next(error);
+  }
+
   // console.log(` ==> !!! IN ERROR HANDLER !!!`);
 
   console.log(error);
@@ -67,7 +73,7 @@ export const errorHandler: ErrorMiddleware = (error: unknown, req, res, _) => {
   //   return res.status(200).sendFile(path.resolve(path.join('public', 'reload.html')));
   // }
 
-  const appError = appErrorFromUnknown(error);
+  const appError = appErrorFromUnknown(error as unknown);
   const respStatus = toResponseStatus(appError);
 
   return isView

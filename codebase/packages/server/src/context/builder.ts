@@ -1,21 +1,23 @@
-import { getIdentityData, getUserData, getIdentityClientData } from '@energon/onelogin';
-import { ConfirmitConfig } from '@dni-connectors/confirmit-api';
-import { addCustomLog, markApiCall } from '@energon/splunk-logger';
+import { markApiCall } from '@energon/splunk-logger';
+
+import { getIdentityData, getIdentityClientScopeToken } from '@dni-connectors/onelogin';
 
 import { getAppEnv, isDEV } from '../config/env';
 import { ProcessConfig } from '../config/config-accessor';
-import { BasicUserData, ContextProvider, RequestCtx, ExtractedOpenIdData, ExtractedUSTData } from './request-context';
-import { ExtendedSessionData, getExtendedSessionData } from './session-data';
+import { ContextProvider } from './request-context';
 
-export type ColleagueContextConfig = ConfirmitConfig;
-export type ColleagueSessionData = BasicUserData & ExtendedSessionData & { groups: string[] };
+import { ContextSessionData } from './session-data';
+import { ContextConfigData } from './config-data';
+import { Request, Response, NextFunction } from 'express';
 
-export type ColleagueRequestCtx = RequestCtx<ColleagueContextConfig, ColleagueSessionData>;
+export const buildContext: (config: ProcessConfig) => ContextProvider<ContextConfigData, ContextSessionData> =
+  (config: ProcessConfig) => (req: Request, res: Response, next?: NextFunction) => ({
+    req: req,
+    res: res,
+    next: next,
 
-export const buildContext: (config: ProcessConfig) => ContextProvider<ColleagueContextConfig, ColleagueSessionData> =
-  (config: ProcessConfig) => (req, res) => ({
     identityUserToken: () => {
-      const token = getIdentityData<ExtractedUSTData>(res)?.access_token;
+      const token = getIdentityData(res)?.access_token;
       if (!token) {
         throw new Error('identity user scoped token not available!');
       }
@@ -23,7 +25,7 @@ export const buildContext: (config: ProcessConfig) => ContextProvider<ColleagueC
     },
 
     identityClientToken: () => {
-      const token = getIdentityClientData(res)?.access_token || '';
+      const token = getIdentityClientScopeToken(res)?.access_token || '';
       if (!token && !isDEV(config.environment())) {
         throw new Error('Identity client scoped token not available!');
       }
@@ -36,37 +38,7 @@ export const buildContext: (config: ProcessConfig) => ContextProvider<ColleagueC
 
     markApiCall: markApiCall(res),
 
-    sessionData() {
-      const openIdData = getUserData<ExtractedOpenIdData>(res);
-      const ustData = getIdentityData<ExtractedUSTData>(res);
-      if (!openIdData || !ustData) {
-        throw new Error('Session data not found!');
-      }
+    config: (): ContextConfigData => ({ runtimeEnvironment: config.environment() }),
 
-      const extendedData = getExtendedSessionData(res);
-
-      return {
-        sessionId: openIdData.sid,
-        userName: openIdData.fullName,
-        userFirstName: openIdData.firstName,
-        userEmail: openIdData.email,
-        employeeNumber: openIdData.params.employeeNumber,
-        colleagueUUID: ustData.uuid,
-        branchNumber: extendedData?.branchNumber,
-        countryCode: extendedData?.countryCode,
-        masteredInLegacy: extendedData?.masteredInLegacy,
-        dniGroups: extendedData?.dniGroups || [],
-        groups: openIdData.groups,
-      };
-    },
-
-    config: () => ({
-      confirmitPassword: config.confirmitPassword(),
-    }),
-
-    sendLog: (message) => addCustomLog(res, message),
-
-    hideRequestBodyLog: () => {
-      req.body = '[hidden due to sensitive information]';
-    },
+    sessionData: (): ContextSessionData => ({}),
   });

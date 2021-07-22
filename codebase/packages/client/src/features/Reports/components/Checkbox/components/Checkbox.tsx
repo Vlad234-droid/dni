@@ -1,16 +1,16 @@
-import React, { FC } from 'react';
+import React, { FC, ChangeEvent } from 'react';
 import styled from 'styled-components';
 
 interface Props {
-  entityId: string | undefined;
+  entityId: string | number;
   checked: boolean;
-  onChange: any;
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
 const Checkbox: FC<Props> = ({ entityId, checked, onChange }: Props) => {
   return (
     <CheckboxWrapper>
-      <CheckboxInput id={entityId} checked={checked} onChange={onChange} />
+      <CheckboxInput id={`${entityId}`} checked={checked} onChange={onChange} />
       <CheckboxMark />
     </CheckboxWrapper>
   );
@@ -21,9 +21,9 @@ export default Checkbox;
 const CheckboxInput = styled.input.attrs({
   type: 'checkbox',
 })<{
-  id: string | undefined;
+  id: string | number;
   checked: boolean;
-  onChange: any;
+  onChange: (e: ChangeEvent<HTMLInputElement>) => void;
 }>`
   position: absolute;
   opacity: 0;

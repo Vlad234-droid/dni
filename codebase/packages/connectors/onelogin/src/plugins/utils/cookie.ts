@@ -1,7 +1,8 @@
-import { Response, Request } from "express";
-import { pipe } from "@energon/function-utils";
-import { compress } from "./compression";
-import { encrypt } from "./encryption";
+import { Response, Request , CookieOptions } from 'express';
+import { pipe } from '@energon/function-utils';
+import { compress } from './compression';
+import { encrypt } from './encryption';
+
 
 export type PluginCookieConfig = {
   /**
@@ -46,46 +47,26 @@ export type PluginCookieConfig = {
  * @param data Data to be saved in the cookie
  */
 
-export const setDataToCookie = (
-  res: Response,
-  data: Record<any, any>,
-  cookieConfig: PluginCookieConfig,
-) => {
+export const setDataToCookie = (res: Response, data: Record<any, any>, cookieConfig: PluginCookieConfig) => {
   const {
     cookieName,
     secret,
     httpOnly = true,
     signed = true,
-    path = "/",
-    secure = process.env.NODE_ENV === "production",
+    path = '/',
+    secure = process.env.NODE_ENV === 'production',
     maxAge,
     compressed,
   } = cookieConfig;
 
-  const preparedData = pipe(
-    data,
-    compress(!!compressed),
-    encrypt(secret || ""),
-  );
+  const preparedData = pipe(data, compress(!!compressed), encrypt(secret || ''));
 
-  res.cookie(
-    cookieName,
-    preparedData,
-    maxAge
-      ? {
-          httpOnly,
-          signed,
-          secure,
-          path,
-          maxAge,
-        }
-      : {
-          httpOnly,
-          signed,
-          path,
-          secure,
-        },
-  );
+  const cookieOptions: CookieOptions = { httpOnly, signed, path, secure };
+  if (!!maxAge && !isNaN(Number(maxAge))) {
+    cookieOptions.maxAge = maxAge;
+  }
+
+  res.cookie(cookieName, preparedData, cookieOptions);
 
   return preparedData;
 };
@@ -97,16 +78,13 @@ export const setDataToCookie = (
  * @param cookieConfig Configuration object that will be used to create cookie
  * @param data Data to be saved in the cookie
  */
-export const clearCookie = (
-  res: Response,
-  cookieConfig: Omit<PluginCookieConfig, "secret" | "maxAge">,
-) => {
+export const clearCookie = (res: Response, cookieConfig: Omit<PluginCookieConfig, 'secret' | 'maxAge'>) => {
   const {
     cookieName,
     httpOnly = true,
     signed = true,
-    secure = process.env.NODE_ENV === "production",
-    path = "/",
+    secure = process.env.NODE_ENV === 'production',
+    path = '/',
   } = cookieConfig;
 
   res.clearCookie(cookieName, {
@@ -123,10 +101,7 @@ export const clearCookie = (
  * @param rew Express request object
  * @param cookieConfig Configuration object that will be used to remove cookie
  */
-export const clearRequestCookie = (
-  req: Request,
-  { cookieName }: Pick<PluginCookieConfig, "cookieName">,
-) => {
+export const clearRequestCookie = (req: Request, { cookieName }: Pick<PluginCookieConfig, 'cookieName'>) => {
   delete req.signedCookies[cookieName];
   delete req.cookies[cookieName];
 };

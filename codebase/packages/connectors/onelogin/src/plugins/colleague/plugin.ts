@@ -1,29 +1,26 @@
-import { Response, Request, NextFunction, Handler } from "express";
-import { markApiCall } from "@energon/splunk-logger";
-import { setColleagueData, getColleagueData } from "./colleague-data";
-import { getIdentityData } from "../identity-swap";
-import { getColleagueApi, ColleagueField, ColleagueResponse } from "../api";
-import {
-  getDataFromCookie,
-  setDataToCookie,
-  PluginCookieConfig,
-  clearPluginCookiesIfSessionExpired,
-} from "../utils";
-import { Optional } from "../plugin";
-import { getOpenIdUserInfo } from "../../user-info-extractor";
+import { Response, Request, NextFunction } from 'express';
+import NodeCache from 'node-cache';
 
-export type Strategy = "oidc" | "saml";
+import { Headers } from '@energon-connectors/core';
+import { markApiCall } from '@energon/splunk-logger';
+import { FetchError } from '@energon/fetch-client';
+import { colleagueApiConsumer, Colleague, ColleagueAPIHeaders } from '@dni-connectors/colleague-api';
+
+import { setColleagueData, getColleagueData } from './colleague-data';
+import { getIdentityData } from '../identity-swap';
+
+import { getDataFromCookie, setDataToCookie, PluginCookieConfig, clearPluginCookiesIfSessionExpired } from '../utils';
+
+import { Optional, Plugin } from '../plugin';
+import { getIdentityClientScopeToken } from '../identity-cst';
+import { getOpenIdUserInfo } from '../../user-info-extractor';
+
+export type Strategy = 'oidc' | 'saml';
 
 type Config<O> = {
-
-  /**
-   * array of colleague data fields that we are interested in
-   */
-  fields: ColleagueField[];
-
   /**
    * optional, if it returns false, code in the plugin won't be executed
-   * E.g. check if another cookie exists
+   * E.g. check if another cookie existss
    * defaults to ()=>true
    */
   shouldRun?: (request: Request, response: Response) => boolean;
@@ -35,10 +32,16 @@ type Config<O> = {
   baseUrl?: string;
 
   /**
-   * Endpoint path
-   * E.g. /colleague/colleagues
+   * optional, if true, token will be cashed on server and shared between sessions
+   * defaults to true
    */
-  path?: string;
+  cache?: boolean;
+
+  /**
+   * optional, cache Time-To-Live, in seconds
+   * defaults to 6hrs (6 * 60 * 60)
+   */
+  cacheTtl?: number;
 
   /**
    * optional, cookie configuration object
@@ -48,39 +51,39 @@ type Config<O> = {
     /**
      * optional, method that will determine the shape of the data saved in the cookie
      */
-    cookieShapeResolver?: (data: ColleagueResponse) => O;
+    cookieShapeResolver?: (data: Colleague) => O;
   };
 };
+
+/**
+ * Plugin cache instance
+ */
+const colleagueCache = new NodeCache();
 
 /**
  * A plugin middleware to be used in onelogin.
  * It gets the data from the colleauge API relies on identity data in response the object.
  */
-export const colleagueApiPlugin = <O>(
-  config: Config<O> & Optional,
-): Handler => {
-  const plugin = async (req: Request, res: Response, next: NextFunction) => {
+export const colleagueApiPlugin = <O>(config: Config<O> & Optional): Plugin => {
+  const plugin: Plugin = async (req: Request, res: Response, next: NextFunction) => {
     const {
-      fields,
       shouldRun = () => true,
-      baseUrl = process.env.NODE_CONFIG_ENV === "prod"
-        ? "https://api.tesco.com"
-        : "https://api-ppe.tesco.com",
-      path = "/colleague/colleagues",
+      baseUrl = process.env.NODE_CONFIG_ENV === 'prod' ? 'https://api.tesco.com' : 'https://api-ppe.tesco.com',
       cookieConfig,
+      cache = true,
+      cacheTtl = 6 * 60 * 60,
+      optional,
     } = config;
 
-    if (getColleagueData(res) || !shouldRun(req, res)) return next();
+    if (getColleagueData(res) || !shouldRun(req, res)) {
+      return next();
+    }
 
     if (cookieConfig) {
       clearPluginCookiesIfSessionExpired(req, res, cookieConfig);
 
       const { secret, cookieName, compressed } = cookieConfig;
-      const data = getDataFromCookie<ColleagueResponse>(req, {
-        cookieName,
-        secret,
-        compressed,
-      });
+      const data = getDataFromCookie(req, { cookieName, secret, compressed });
 
       if (data) {
         setColleagueData(res, data);
@@ -88,50 +91,95 @@ export const colleagueApiPlugin = <O>(
       }
     }
 
-    const identityData = getIdentityData(res);
-    if (!identityData) throw Error("No identity data found in response object");
-    const { access_token: accessToken, claims } = identityData;
-    const colleagueUUID = claims.sub;
+    const identityUserScopeTokenData = getIdentityData(res);
+    if (!identityUserScopeTokenData) {
+      throw Error('No identity user scope token data found in response object');
+    }
 
-    if (!accessToken) throw Error("No identity access token found");
-    if (!colleagueUUID) throw Error("No colleague UUID found");
+    // extract accessToken and colleagueUUID from identityUserScopeTokenData
+    const {
+      claims: { sub: colleagueUUID },
+    } = identityUserScopeTokenData;
 
-    const headerProvider = {
-      ["Content-Type"]: () => "application/json",
-      Authorization: () => `Bearer ${accessToken}`,
+    if (!colleagueUUID) {
+      throw Error('No colleagueUUID found');
+    }
+
+    if (cache) {
+      const cachedColleague = colleagueCache.get(colleagueUUID);
+      if (typeof cachedColleague === 'object') {
+        if (cookieConfig) {
+          setDataToCookie(res, cachedColleague!, { ...cookieConfig });
+        }
+
+        setColleagueData(res, cachedColleague);
+        return next();
+      } else if (typeof cachedColleague === 'string' && cachedColleague === 'NOT_FOUND') {
+        setColleagueData(res, undefined);
+        return next();
+      }
+    }
+
+    const identityClientScopeTokenData = getIdentityClientScopeToken(res);
+    if (!identityClientScopeTokenData) {
+      throw Error('No identity client scope token data found in response object');
+    }
+
+    // extract accessToken and colleagueUUID from identityUserScopeTokenData
+    const { access_token: accessToken } = identityClientScopeTokenData;
+
+    if (!accessToken) {
+      throw Error('No identity client scope access token found');
+    }
+
+    const baseHeaders: ColleagueAPIHeaders = {
+      ...Headers.identityClientScopedAuthorization({ identityClientToken: () => accessToken }),
     };
 
-    const colleagueApi = getColleagueApi(
-      headerProvider,
-      baseUrl,
-      path,
-      markApiCall(res),
-    );
-    const { data } = await colleagueApi({
-      body: {
-        operationName: "Query",
-        variables: { colleagueUUID },
-        query: `query Query($colleagueUUID: ID!, $date: String) { colleague(identifier: $colleagueUUID, effectiveDate: $date) { ${fields.join(
-          " ",
-        )} } }`,
-      },
+    const colleagueApi = colleagueApiConsumer({
+      baseUrl: baseUrl,
+      baseHeaders: baseHeaders,
+      markApiCall: markApiCall(res),
     });
 
-    if (cookieConfig) {
-      const { cookieShapeResolver = (data: any) => data } = cookieConfig;
-      const sid = getOpenIdUserInfo(res)?.sid;
-      const payload = { ...cookieShapeResolver(data), sid };
+    try {
+      // extract colleague from response
+      const { data: colleague } = await colleagueApi.getColleague({ params: { colleagueUUID } });
 
-      if (!res.writableEnded) {
+      if (cookieConfig) {
+        const { cookieShapeResolver = (data: any) => data } = cookieConfig;
+
+        // OneLogin unique identifier of session of end user
+        const sid = getOpenIdUserInfo(res)?.sid;
+        const payload = { ...cookieShapeResolver(colleague), sid };
+
+        if (cache) {
+          colleagueCache.set(colleagueUUID, payload, cacheTtl);
+        }
+
         setDataToCookie(res, payload, { ...cookieConfig });
+        setColleagueData(res, payload);
+      } else {
+        if (cache) {
+          colleagueCache.set(colleagueUUID, colleague, cacheTtl);
+        }
+
+        setColleagueData(res, colleague);
       }
-      setColleagueData(res, payload);
-    } else {
-      setColleagueData(res, data);
+    } catch (apiError) {
+      if (optional && FetchError.is(apiError) && apiError.status === 404) {
+        // colleague not found, store result to cache
+        colleagueCache.set(colleagueUUID, 'NOT_FOUND', cacheTtl);
+      } else {
+        typeof apiError;
+      }
     }
 
     return next();
   };
+
+  plugin.info = 'Colleague API plugin';
   plugin.optional = config.optional || false;
+
   return plugin;
 };

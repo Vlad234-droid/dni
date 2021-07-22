@@ -1,69 +1,33 @@
 import { fetchClient, resolveBaseUrl, Headers, TESCO_API_URLS } from '@energon-connectors/core';
+import { FetchClientConfig } from '@energon/fetch-client';
 import { createApiConsumer } from '@energon/rest-api-consumer';
-import { defineAPI } from '@energon/rest-api-definition';
+import { ApiClientConfig, ApiInput } from '@dni-common/connector-utils';
 
-import { colleagueQuery } from './query';
-import {
-  ColleagueApiContext,
-  Colleague,
-  GetColleagueInput,
-  ColleagueRequestBody,
-  ApiInput,
-  ApiParams,
-  ColleagueV2,
-  ColleagueList,
-  ColleagueAPIHeaders,
-} from './types';
+import { colleagueApiDef } from './api-def';
+import { ColleagueApiContext } from 'context';
 
-export type ElementType<T extends ReadonlyArray<unknown>> = T extends ReadonlyArray<infer ElementType>
-  ? ElementType
-  : never;
+import { Colleague, ColleagueAPIHeaders, ColleagueRequestParams, ColleagueListRequestParams } from './types';
 
-export const colleagueApiDef = defineAPI((endpoint) => ({
-  /**
-   * @see https://developers.tesco.com/explore/Colleague#/Colleague%20API/post_colleagues
-   */
-  getColleague: endpoint
-    .post('/colleague/colleagues')
-    .response<{
-      data: {
-        colleague: Colleague;
-      };
-    }>()
-    .body<ColleagueRequestBody>()
-    .build(),
-  getColleagueV2: endpoint
-    .get('/colleague/v2/colleagues/:colleagueUUID')
-    .params<ApiParams>()
-    .response<ColleagueV2>()
-    .build(),
-  getColleaguesV2: endpoint.get('/colleague/v2/colleagues').params<ApiParams>().response<ColleagueV2[]>().build(),
-}));
+export function colleagueApiConsumer(apiConfig: ApiClientConfig, overrides?: FetchClientConfig) {
+  const { baseUrl, baseHeaders, markApiCall } = apiConfig;
 
-export const colleagueApiConnector = (ctx: ColleagueApiContext) => {
+  return createApiConsumer(colleagueApiDef, fetchClient(baseUrl, baseHeaders, { markApiCall }, overrides));
+}
+
+export function colleagueApiConnector(ctx: ColleagueApiContext, overrides?: FetchClientConfig) {
+  const baseUrl = resolveBaseUrl(TESCO_API_URLS, ctx);
   const headers: ColleagueAPIHeaders = {
     ...Headers.identityClientScopedAuthorization(ctx),
   };
-  const baseUrl = resolveBaseUrl(TESCO_API_URLS, ctx);
-
-  const apiConsumer = createApiConsumer(colleagueApiDef, fetchClient(baseUrl, headers, ctx));
+  const apiConsumer = createApiConsumer(colleagueApiDef, fetchClient(baseUrl, headers, ctx, overrides));
 
   return {
-    v1: {
-      getColleague: <T extends keyof Colleague>({ colleagueUUID, fields, fetchOpts }: GetColleagueInput<T>) =>
-        apiConsumer.getColleague({
-          body: colleagueQuery({ colleagueUUID, fields }),
-          fetchOpts,
-        }),
-    },
-    v2: {
-      getColleague: (input: ApiInput<ApiParams>) => apiConsumer.getColleagueV2(input),
-      getColleagues: (input: ApiInput<ApiParams>) =>
-        apiConsumer
-          .getColleaguesV2(input)
-          .then((response) => ({ data: (response.data as unknown as ColleagueList).colleagues })),
-    },
-  };
-};
+    getColleague: (input: ApiInput<ColleagueRequestParams>): Promise<Colleague | undefined> =>
+      apiConsumer.getColleague(input).then((response) => response?.data),
 
-export type ColleagueApi = ReturnType<typeof colleagueApiConnector>;
+    getColleagues: (input: ApiInput<ColleagueListRequestParams>): Promise<Colleague[]> =>
+      apiConsumer.getColleagues(input).then((response) => response?.data?.colleagues || []),
+  };
+}
+
+export type ColleagueApi = ReturnType<typeof colleagueApiConsumer>;

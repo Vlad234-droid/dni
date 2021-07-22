@@ -1,5 +1,4 @@
 import { ConnectorContext } from '@energon-connectors/core';
-import { SimpleFetchOptions } from '@energon/rest-api-consumer';
 
 export type Title = 'DR.' | 'MR.' | 'MRS.' | 'MISS';
 
@@ -13,77 +12,71 @@ export type Status =
   | 'Active - No Payroll'
   | 'Paid in Legacy';
 
-export type Colleague = {
-  assignmentName?: string;
-  assignmentStatus?: string;
-  businessType?: BusinessType;
-  dateOfBirth?: string;
-  departmentName?: string;
-  employmentStatusType?: Status;
-  firstName?: string;
-  lastName?: string;
-  locationUUID?: string;
-  masteredInLegacy?: boolean;
-  middleName?: string;
-  personNumber?: string;
-  positionId?: string;
-  preferredName?: string;
-  source?: string;
-  title?: Title;
-  workerType?: string;
-  workLevel?: string;
-};
-
-export type ColleagueRequestBody = {
-  query: string;
-  variables: {
-    colleagueUUID: string;
-  };
-  operationName: string;
-};
-
-export type GetColleagueInput<T extends keyof Colleague> = {
+export type ColleagueRequestParams = {
   colleagueUUID: string;
-  fields: T[];
-  fetchOpts?: SimpleFetchOptions;
+  effectiveOn?: string;
 };
 
-export type ColleagueApiContext = Pick<ConnectorContext, 'identityClientToken' | 'apiEnv' | 'markApiCall'>;
+export type ColleagueListRequestParams = Partial<{
+  colleagueUUID: string;
+  employeeId: string;
+  'workRelationships.locationUUID': string;
+  'externalSystems.iam.id': string;
+  'externalSystems.hcm.id': string;
+  countryCode: string;
+  'externalSystems.sourceSystem': string;
+  'workRelationships.managerUUID': string;
+}>;
 
-export type ApiParams = {
-  colleagueUUID?: string;
-  'externalSystems.iam.id'?: string;
-};
-
-export type ApiInput<T, U = unknown> = {
-  params: T;
-  body?: U;
-};
-
-export type ColleagueList = {
-  colleagues: ColleagueV2[];
-};
-
-export interface ColleagueV2 {
+export interface Colleague {
   colleagueUUID: string;
   employeeId?: string;
   countryCode?: string;
-  effectivity?: Effectivity;
-  externalSystems: ExternalSystems;
-  profile: Profile;
-  contact?: Contact;
-  serviceDates?: ServiceDates;
+  effectivity?: {
+    from: Date;
+    to: Date;
+  };
+  externalSystems: {
+    sourceSystem?: string;
+    iam?: {
+      id: string;
+      name?: string;
+      source?: string;
+    };
+    hcm?: {
+      id: number;
+      name?: string;
+      type?: string;
+      migrationStatus?: string;
+    };
+  };
+  profile: {
+    title?: string;
+    firstName: string;
+    middleName?: string;
+    lastName: string;
+    preferredName?: string;
+    dateOfBirth: Date;
+    gender?: string;
+  };
+  contact?: {
+    email: string;
+    workPhoneNumber?: string;
+    addresses?: Address[];
+  };
+  serviceDates?: {
+    hireDate: Date;
+    leavingDate?: Date;
+  };
   workRelationships?: WorkRelationship[];
   nonTerms?: NonTerm[];
   visaPermits?: VisaPermit[];
   skills?: Skill[];
 }
 
-export interface Contact {
-  email: string;
-  workPhoneNumber?: string;
-  addresses?: Address[];
-}
+export type ColleagueList = {
+  colleagues: Colleague[];
+};
 
 export interface Address {
   lines?: string[];
@@ -97,43 +90,9 @@ export interface Effectivity {
   to: Date;
 }
 
-export interface ExternalSystems {
-  sourceSystem: string;
-  iam: Iam;
-  hcm: Hcm;
-}
-
-export interface Hcm {
-  id: number;
-  name: string;
-  type: string;
-  migrationStatus: string;
-}
-
-export interface Iam {
-  id: string;
-  name: string;
-  source: string;
-}
-
 export interface NonTerm {
   startDate: Date;
   endDate: Date;
-}
-
-export interface Profile {
-  title: string;
-  firstName: string;
-  middleName: string;
-  lastName: string;
-  preferredName: string;
-  dateOfBirth: Date;
-  gender: string;
-}
-
-export interface ServiceDates {
-  hireDate: Date;
-  leavingDate: Date;
 }
 
 export interface Skill {
@@ -150,63 +109,51 @@ export interface VisaPermit {
 
 export interface WorkRelationship {
   locationUUID: string;
-  contractType: ContractType;
-  colleagueType: string;
-  workingStatus: string;
-  type: string;
-  managerUUID: string;
-  actionCode: string;
-  actionReasonCode: null;
-  userStatus: string;
-  workSchedule: string;
-  employmentType: string;
-  salaryFrequency: string;
-  workingHours: string;
-  costCenter: string;
-  assignmentId: string;
-  primaryEntity: string;
-  workingInHiredCountry: boolean;
-  isManager: boolean;
-  legalEmployer: LegalEmployer;
-  department: Department;
-  job: Job;
-  grade: Grade;
-  position: Position;
-}
-
-export interface ContractType {
-  sourceCode: string;
-  sourceName: string;
-  endDate: Date;
-}
-
-export interface Department {
-  id: string;
-  name: string;
-  businessType: string;
-}
-
-export interface Grade {
-  id: string;
-  code: string;
-}
-
-export interface Job {
-  id: string;
-  code: string;
-  name: string;
-  costCategory: string;
-}
-
-export interface LegalEmployer {
-  id: number;
-  name: string;
-}
-
-export interface Position {
-  id: string;
-  name: string;
-  teamName: string;
+  contractType?: {
+    sourceCode: string;
+    sourceName: string;
+    endDate: Date;
+  };
+  colleagueType?: string;
+  workingStatus?: string;
+  type?: string;
+  managerUUID?: string;
+  actionCode?: string;
+  actionReasonCode?: null;
+  userStatus?: string;
+  workSchedule?: string;
+  employmentType?: string;
+  salaryFrequency?: string;
+  workingHours?: string;
+  costCenter?: string;
+  assignmentId?: string;
+  primaryEntity?: string;
+  workingInHiredCountry?: boolean;
+  isManager?: boolean;
+  legalEmployer?: {
+    id: number;
+    name: string;
+  };
+  department: {
+    id?: string;
+    name?: string;
+    businessType: string;
+  };
+  job?: {
+    id: string;
+    code: string;
+    name: string;
+    costCategory: string;
+  };
+  grade?: {
+    id: string;
+    code: string;
+  };
+  position?: {
+    id: string;
+    name: string;
+    teamName: string;
+  };
 }
 
 export type ColleagueAPIHeaders = {

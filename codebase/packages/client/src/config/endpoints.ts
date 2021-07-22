@@ -6,44 +6,52 @@ type Config = {
 
 export enum Endpoint {
   // auth
-  SIGN_IN = '/auth/login',
-  SIGN_OUT = '/auth/logout',
-  // user
-  USER_PROFILE = '/employees/profile',
-  USER_NETWORKS = '/employees/networks',
-  USER_EVENTS = '/employees/events',
-  // networks
-  NETWORKS = '/networks',
-  NETWORKS_COUNT = '/networks/count',
-  NETWORKS_PARTICIPANTS = '/networks/participants',
-  // events
-  EVENTS = '/events',
-  EVENTS_COUNT = '/events/count',
-  EVENTS_PARTICIPANTS = '/events/participants',
-  // posts
-  POSTS = '/posts',
-  POSTS_COUNT = '/posts/count',
-  // report
-  REPORT_MEMBERS = '/reports/members',
-  REPORT_REGIONS = '/reports/regions',
-  REPORT_DEPARTMENTS = '/reports/departments',
-  REPORT_PRINT_PDF = '/reports/print-pdf',
+  // SIGN_IN = '/auth/login',
+  // SIGN_OUT = '/auth/logout',
+
   // common
-  COMMON_UPLOAD = '/upload',
+  // COMMON_UPLOAD = '/upload',
+
+  // user
+  USER_PROFILE = '/dni/v1/employees/profile',
+  USER_NETWORKS = '/dni/v1/employees/networks',
+  USER_EVENTS = '/dni/v1/employees/events',
+
+  // networks
+  NETWORKS = '/tesco/cms/v1/networks',
+  NETWORKS_COUNT = '/tesco/cms/v1/networks/count',
+  NETWORKS_PARTICIPANTS = '/dni/v1/networks/participants',
+
+  // events
+  EVENTS = '/tesco/cms/v1/events',
+  EVENTS_COUNT = '/tesco/cms/v1/events/count',
+  EVENTS_PARTICIPANTS = '/dni/v1/events/participants',
+
+  // posts
+  POSTS = '/tesco/cms/v1/posts',
+  POSTS_COUNT = '/tesco/cms/v1/posts/count',
+
+  // reports
+  REPORT_MEMBERS = '/dni/v1/reports/members',
+  REPORT_REGIONS = '/dni/v1/reports/regions',
+  REPORT_DEPARTMENTS = '/dni/v1/reports/departments',
+  REPORT_PRINT_PDF = '/dni/v1/reports/print-pdf',
+
   // notifications
-  NOTIFICATIONS = '/notifications',
-  NOTIFICATIONS_NETWORKS = '/notifications/networks',
-  NOTIFICATIONS_ACKNOWLEDGE = '/notifications/acknowledge',
+  NOTIFICATIONS = '/dni/v1/notifications',
+  NOTIFICATIONS_NETWORKS = '/dni/v1/notifications/networks',
+  NOTIFICATIONS_ACKNOWLEDGE = '/dni/v1/notifications/acknowledge',
+
   // contact
-  CONTACT_PERSONAL_EMAIL = '/employees/personal-email',
-  CONTACT_EMAIL_NOTIFICATIONS_SETTINGS = '/employees/email-notifications-settings',
+  CONTACT_PERSONAL_EMAIL = '/dni/v1/employees/personal-email',
+  CONTACT_EMAIL_NOTIFICATIONS_SETTINGS = '/dni/v1/employees/email-notifications-settings',
 }
 
 export default (httpClient: AxiosInstance) => ({
-  auth: {
-    signIn: <T>(data?: Config) => httpClient.post<T>(Endpoint.SIGN_IN, data),
-    signOut: <T>() => httpClient.post<T>(Endpoint.SIGN_OUT),
-  },
+  // auth: {
+  //   signIn: <T>(data?: Config) => httpClient.post<T>(Endpoint.SIGN_IN, data),
+  //   signOut: <T>() => httpClient.post<T>(Endpoint.SIGN_OUT),
+  // },
   user: {
     profile: <T>() => httpClient.get<T>(Endpoint.USER_PROFILE),
     joinNetwork: <T>(data: Config) => httpClient.post<T>(Endpoint.USER_NETWORKS, data),
@@ -65,9 +73,9 @@ export default (httpClient: AxiosInstance) => ({
     count: <T>(data: Config = {}) => httpClient.get<T>(Endpoint.EVENTS_COUNT, { params: data }),
     participants: <T>() => httpClient.get<T>(Endpoint.EVENTS_PARTICIPANTS),
   },
-  common: {
-    upload: <T>(data: FormData) => httpClient.post<T>(Endpoint.COMMON_UPLOAD, data),
-  },
+  // common: {
+  //   upload: <T>(data: FormData) => httpClient.post<T>(Endpoint.COMMON_UPLOAD, data),
+  // },
   posts: {
     fetchAll: <T>(data: Config = {}) => httpClient.get<T>(Endpoint.POSTS, { params: data }),
     fetchOne: <T>(id: number) => httpClient.get<T>(`${Endpoint.POSTS}/${id}`),

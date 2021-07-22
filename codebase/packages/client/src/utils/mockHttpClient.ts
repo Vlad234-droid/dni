@@ -12,8 +12,8 @@ if (process.env.NODE_ENV === 'test') {
   mock = new MockAdapter(axios);
 
   // user
-  mock.onPost(Endpoint.SIGN_IN).reply(200, {});
-  mock.onPost(Endpoint.SIGN_OUT).reply(200, {});
+  // mock.onPost(Endpoint.SIGN_IN).reply(200, {});
+  // mock.onPost(Endpoint.SIGN_OUT).reply(200, {});
   mock.onGet(Endpoint.USER_PROFILE).reply(200, {
     networks: [],
     events: [],

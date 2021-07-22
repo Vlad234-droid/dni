@@ -5,22 +5,16 @@ import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import Button from '@beans/button';
 import { Row, Grid, Column } from '@beans/grid';
-import { unwrapResult } from '@reduxjs/toolkit';
 import { DateObjectUnits } from 'luxon';
 
 import { useMedia } from 'context/InterfaceContext';
-import {
-  TextArea,
-  TextInput,
-  FileInput,
-  DateTimePicker,
-} from 'features/Common';
+import { TextArea, TextInput, FileInput, DateTimePicker } from 'features/Common';
 import Media from 'styles/media';
 import { FieldWrapper } from 'features/Common/styled';
 import { ToastSkin, toasterActions } from 'features/Toaster';
 
 import formSchema from '../../config/formSchema';
-import { createOne, uploadImage, SetOnePayload } from '../../store';
+import { createOne, SetOnePayload } from '../../store';
 
 interface FormData {
   image?: File | null;
@@ -40,21 +34,20 @@ const CreateEventForm: FC = () => {
   });
 
   const onSubmit = async (data: FormData) => {
-    const image = data.image;
+    // const image = data.image;
     const result = await dispatch(
-      createOne(({
+      createOne({
         ...data,
         network: null,
         image: null,
-      } as unknown) as SetOnePayload),
+      } as unknown as SetOnePayload),
     );
     // @ts-ignore
     if (createOne.fulfilled.match(result)) {
-      const event = unwrapResult(result);
-
-      if (image) {
-        await dispatch(uploadImage({ image, id: event.id }));
-      }
+      // const event = unwrapResult(result);
+      // if (image) {
+      //   await dispatch(uploadImage({ image, id: event.id }));
+      // }
 
       dispatch(
         toasterActions.createToast({

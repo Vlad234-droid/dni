@@ -17,11 +17,21 @@ if (processEnv.NODE_ENV !== 'test' && !fs.existsSync(htmlFilePath)) {
   throw Error(`Couldn't find HTML file ${htmlFilePath}`);
 }
 
-const clientStaticFolder = express.static(clientDistFolder, { index: false });
-const publicStaticFolder = express.static(serverPublicFolder);
+const servePublicStatic = express.static(serverPublicFolder, { fallthrough: true });
+const serveClientStatic = express.static(clientDistFolder, { fallthrough: true, index: false });
 
-const clientStaticFile: Middleware = (_, res) => {
-  res.sendFile(htmlFilePath);
+export const publicStaticFolder: Middleware = (req, res, next) => {
+  if (!res.headersSent) {
+    servePublicStatic(req, res, next);
+  }
 };
 
-export { clientStaticFolder, publicStaticFolder, clientStaticFile };
+export const clientStaticFolder: Middleware = (req, res, next) => {
+  if (!res.headersSent) {
+    serveClientStatic(req, res, next);
+  }
+};
+
+export const clientStaticFile: Middleware = (_, res) => {
+  if (!res.headersSent) res.sendFile(htmlFilePath);
+};
