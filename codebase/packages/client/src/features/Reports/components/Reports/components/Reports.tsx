@@ -91,7 +91,7 @@ const Reports: FC = () => {
     }
 
     const input = ref.current as HTMLElement;
-
+    
     const paddingX = 130;
     const paddingY = 130;
     const k = window.devicePixelRatio > 1.5 ? 2 : 3;

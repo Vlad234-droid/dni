@@ -19,9 +19,7 @@ import {
   OpenIdRouter,
   IssuerMetadataLight,
   OneloginRouteInfo,
- OneloginError } from '../';
-
-
+  OneloginError } from '../';
 
 import { defaultLogger, Logger, LoggerEvent } from '../../logger';
 
