@@ -108,14 +108,6 @@ const startServer = async () => {
 
     app.use('/', healthCheck);
 
-    app.use(toMiddleware(
-      identityClientScopedTokenPlugin({
-        identityClientId: config.identityClientId(),
-        identityyClientSecret: config.identityClientSecret(),
-        cache: true,
-      })
-    ));
-
     if (isDEV(config.buildEnvironment()) || !config.useOneLogin()) {
       logger.warn(`WARNING! Authentication is turned off. Fake Login is being used.`);
 
@@ -125,8 +117,16 @@ const startServer = async () => {
       app.use(fakeLoginConfig(context, config));
       app.use(fakeUserExtractor);
     } else {
+      app.use(toMiddleware(
+        identityClientScopedTokenPlugin({
+          identityClientId: config.identityClientId(),
+          identityyClientSecret: config.identityClientSecret(),
+          cache: true,
+          optional: false,
+        })
+      ));
+  
       const openIdMiddleware = await configureOneloginMidleware(config);
-
       app.use(openIdMiddleware);
     }
 
