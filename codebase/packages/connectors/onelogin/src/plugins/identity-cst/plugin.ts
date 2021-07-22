@@ -7,11 +7,15 @@ import { Optional, Plugin } from '../plugin';
 
 type Config = {
   /**
-   * A concatenation of the identity client id and identity secret in the following shape:
-   * {identityClientId}:{identityClientSecret}
+   * identity client id
    */
-  identityIdAndSecret: string;
-
+  identityClientId: string;
+  
+  /**
+   * identity secret in
+   */
+  identityyClientSecret: string;
+ 
   /**
    * optional, if it returns false, code in the plugin won't be executed
    * E.g. check if another cookie exists
@@ -46,7 +50,8 @@ export const identityClientScopedTokenPlugin = (config: Config & Optional): Plug
   const plugin: Plugin = async (req: Request, res: Response, next: NextFunction) => {
     // init plugin config
     const {
-      identityIdAndSecret,
+      identityClientId,
+      identityyClientSecret,
       shouldRun = () => true,
       baseUrl = process.env.NODE_CONFIG_ENV === 'prod' ? 'https://api.tesco.com' : 'https://api-ppe.tesco.com',
       path = '/identity/v4/issue-token/token',
@@ -63,7 +68,7 @@ export const identityClientScopedTokenPlugin = (config: Config & Optional): Plug
       }
     }
 
-    const credentials = Buffer.from(identityIdAndSecret).toString('base64');
+    const credentials = Buffer.from(`${identityClientId}:${identityyClientSecret}`).toString('base64');
     const body: ClientTokenIssueBody = { grant_type: 'client_credentials' };
     const headerProvider = {
       Authorization: () => `Basic ${credentials}`,

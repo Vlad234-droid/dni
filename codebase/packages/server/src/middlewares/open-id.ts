@@ -50,15 +50,6 @@ export const configureOneloginMidleware = async ({
   const isProduction = isPROD(environment());
   const identityIdAndSecret = `${identityClientId()}:${identityClientSecret()}`;
 
-  const identityClientScopedToken = identityClientScopedTokenPlugin({
-    identityIdAndSecret,
-    cache: true,
-  });
-
-  const identityClientScopedTokenMiddleware = (): Middleware => {
-    return identityClientScopedToken;
-  };
-
   const openidMiddleware = getOpenidMiddleware({
     /** The OneLogin generated Client ID for your OpenID Connect app */
     clientId: oidcClientId(),
@@ -135,7 +126,8 @@ export const configureOneloginMidleware = async ({
         },
       }),
       identityTokenSwapPlugin({
-        identityIdAndSecret,
+        identityClientId: identityClientId(),
+        identityyClientSecret: identityClientSecret(),
         strategy: 'oidc',
         cookieConfig: {
           cookieName: identityUserScopedTokenCookieName(),
@@ -145,11 +137,11 @@ export const configureOneloginMidleware = async ({
           signed: isProduction,
         },
       }),
-      // identityClientScopedToken,
-      identityClientScopedTokenPlugin({
-        identityIdAndSecret,
-        cache: true,
-      }),
+      // identityClientScopedTokenPlugin({
+      //   identityClientId: identityClientId(),
+      //   identityClientSecret: identityClientSecret(),
+      //   cache: true,
+      // }),
       colleagueApiPlugin({
         optional: true,
         cookieConfig: {
@@ -172,8 +164,5 @@ export const configureOneloginMidleware = async ({
     appPath: oneLoginApplicationPath(),
   });
 
-  return {
-    openIdMiddleware,
-    identityClientScopedTokenMiddleware,
-  };
+  return openIdMiddleware;
 };

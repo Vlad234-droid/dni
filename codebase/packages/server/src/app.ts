@@ -23,10 +23,12 @@ import {
   tescoApiMiddleware,
   fakeLoginConfig,
   fakeUserExtractor,
+  toMiddleware,
 } from './middlewares';
 
 import { buildContext } from './context';
 import { initializeTypeOrm } from './config/db';
+import { identityClientScopedTokenPlugin } from '@dni-connectors/onelogin';
 
 const logger = pino({
   name: 'server',
@@ -59,6 +61,7 @@ const startServer = async () => {
     // initialize connection to DB
     await initializeTypeOrm();
 
+    // setup logger middlewares
     app.use(
       pinoHttp({
         name: 'server.express',
@@ -105,6 +108,14 @@ const startServer = async () => {
 
     app.use('/', healthCheck);
 
+    app.use(toMiddleware(
+      identityClientScopedTokenPlugin({
+        identityClientId: config.identityClientId(),
+        identityyClientSecret: config.identityClientSecret(),
+        cache: true,
+      })
+    ));
+
     if (isDEV(config.buildEnvironment()) || !config.useOneLogin()) {
       logger.warn(`WARNING! Authentication is turned off. Fake Login is being used.`);
 
@@ -114,7 +125,7 @@ const startServer = async () => {
       app.use(fakeLoginConfig(context, config));
       app.use(fakeUserExtractor);
     } else {
-      const { openIdMiddleware } = await configureOneloginMidleware(config);
+      const openIdMiddleware = await configureOneloginMidleware(config);
 
       app.use(openIdMiddleware);
     }

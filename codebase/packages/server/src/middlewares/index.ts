@@ -10,6 +10,7 @@ declare global {
   };
 }
 
+export * from './convert-niddleware';
 export * from './static-content';
 export * from './error-handler';
 export * from './open-id';

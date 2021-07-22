@@ -19,11 +19,15 @@ export type Strategy = 'oidc' | 'saml';
 
 type Config<O> = {
   /**
-   * A concatenation of the identity client id and identity secret in the following shape:
-   * {identityClientId}:{identityClientSecret}
+   * identity client id
    */
-  identityIdAndSecret: string;
-
+  identityClientId: string;
+  
+  /**
+   * identity secret in
+   */
+  identityyClientSecret: string;
+ 
   /**
    * onelogin strategy: oidc or saml
    */
@@ -71,7 +75,8 @@ export const identityTokenSwapPlugin = <O>(config: Config<O> & Optional): Plugin
   const plugin: Plugin = async (req: Request, res: Response, next: NextFunction) => {
     // init plugin config
     const {
-      identityIdAndSecret,
+      identityClientId,
+      identityyClientSecret,
       strategy,
       shouldRun = () => true,
       baseUrl = process.env.NODE_CONFIG_ENV === 'prod' ? 'https://api.tesco.com' : 'https://api-ppe.tesco.com',
@@ -114,7 +119,7 @@ export const identityTokenSwapPlugin = <O>(config: Config<O> & Optional): Plugin
           })?.refreshToken
         : undefined;
 
-      const credentials = Buffer.from(identityIdAndSecret).toString('base64');
+      const credentials = Buffer.from(`${identityClientId}:${identityyClientSecret}`).toString('base64');
 
       const headerProvider = {
         Authorization: () => `Basic ${credentials}`,

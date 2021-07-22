@@ -1,9 +1,9 @@
 import express from 'express';
 
-import { cep } from './cep';
+import { cmsEvents } from './cms-events';
 
-const adminApi = express.Router();
+const cep = express.Router();
 
-adminApi.use(cep);
+cep.use(cmsEvents);
 
 export { cep };
