@@ -1,8 +1,8 @@
-import express from "express";
-import { Plugin } from "@dni-connectors/onelogin";
+import express from 'express';
+import { Plugin } from '@dni-connectors/onelogin';
 import { asyncHandler } from '@energon/express-middlewares';
 
-export const toMiddleware = (plugin: Plugin): Middleware => {
+export const toMiddleware = (plugin: Plugin): express.Handler => {
   return asyncHandler(async (req, res, next) => {
     try {
       // logger(LoggerEvent.debug('login', `Running OpenId plugin: ${plugin.info}`, { req, res }));
@@ -16,4 +16,4 @@ export const toMiddleware = (plugin: Plugin): Middleware => {
       }
     }
   });
-}
+};

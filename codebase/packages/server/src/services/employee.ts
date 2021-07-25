@@ -4,7 +4,6 @@ import { Colleague } from '@dni-connectors/colleague-api';
 
 import { getRepository, DniEntityTypeEnum, DniUser, DniUserExtras, DniUserSubscription } from '@dni/database';
 
-import colleagueApiRawData from './data/colleague_api_data.json';
 import { DniProfile } from 'config/auth-data';
 
 type EmailNotificationSettings = {
@@ -21,7 +20,6 @@ const profileInfoExtractor = async (req: Request, res: Response) => {
 
   return {
     colleagueUUID,
-    //userInfo,
     roles: userInfo?.roles || [],
     networks,
     events,
@@ -178,8 +176,6 @@ export {
   removeEventRelation,
   findNetworksParticipants,
   findEventsParticipants,
-  // infoExtractor,
-  // colleagueUUIDExtractor,
   storeSettings,
   findSettings,
 };

@@ -1,12 +1,12 @@
 import {
   getOpenidMiddleware,
   identityTokenSwapPlugin,
-  identityClientScopedTokenPlugin,
   userDataPlugin,
   OpenIdUserInfo,
   withReturnTo,
   pinoLogger,
- colleagueApiPlugin } from '@dni-connectors/onelogin';
+  colleagueApiPlugin,
+} from '@dni-connectors/onelogin';
 
 import { isPROD } from '../config/env';
 import { ProcessConfig } from '../config/config-accessor';
@@ -14,16 +14,6 @@ import { colleagueInfoResolver, openIdUserInfoResolver } from '../config/auth-da
 
 import { Colleague } from '@dni-connectors/colleague-api';
 import { dniUserRefreshPlugin } from './onelogin-plugins';
-
-interface ErrorMessage {
-  errorType: string;
-  errorMessage: string;
-  stack: string;
-}
-
-interface LogMessage {
-  message: string;
-}
 
 export const configureOneloginMidleware = async ({
   environment,
@@ -48,7 +38,6 @@ export const configureOneloginMidleware = async ({
   defaultRoles,
 }: ProcessConfig) => {
   const isProduction = isPROD(environment());
-  const identityIdAndSecret = `${identityClientId()}:${identityClientSecret()}`;
 
   const openidMiddleware = getOpenidMiddleware({
     /** The OneLogin generated Client ID for your OpenID Connect app */
@@ -137,11 +126,6 @@ export const configureOneloginMidleware = async ({
           signed: isProduction,
         },
       }),
-      // identityClientScopedTokenPlugin({
-      //   identityClientId: identityClientId(),
-      //   identityClientSecret: identityClientSecret(),
-      //   cache: true,
-      // }),
       colleagueApiPlugin({
         optional: true,
         cookieConfig: {

@@ -8,11 +8,7 @@ import {
   cmsNetworksApiDef,
   cmsOrganizationsApiDef,
   cmsEmotionsApiDef,
-  // cmsUploadApiDef,
 } from '@dni-connectors/colleague-cms-api';
-
-// import { contactApiDef } from '@dni-connectors/contact-api';
-// import { colleagueApiDef } from '@dni-connectors/colleague-api';
 
 export const prefixApi = <T extends ApiDefinition>(prefix: string, apiDef: T): T => {
   const result: T = {} as T;
@@ -45,8 +41,4 @@ export const apiDefinition = defineAPI(() => ({
   ...prefixApi('/cms/v1', cmsNetworksApiDef),
   ...prefixApi('/cms/v1', cmsOrganizationsApiDef),
   ...prefixApi('/cms/v1', cmsEmotionsApiDef),
-  // ...prefixApi('/cms/v1', cmsUploadApiDef),
-  // ...contactApiDef,
-  // ...colleagueApiDef,
-  // TODO: define others API endpoints
 }));

@@ -1,9 +1,10 @@
+import express from 'express';
 import jwt from 'jsonwebtoken';
 import { AuthData, OpenIdUserInfo } from '@dni-connectors/onelogin';
 
 const USER_KEY = 'employeeNumber';
 
-export const fakeUserExtractor: Middleware = (req, res, next) => {
+export const fakeUserExtractor: express.Handler = (req, res, next) => {
   if (!req.query.employeeNumber) {
     const employeeNumber = req.cookies[USER_KEY] as string;
     const fakeUserInfo = buildFakeUserInfo(employeeNumber);

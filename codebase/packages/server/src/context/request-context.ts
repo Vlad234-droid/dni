@@ -10,27 +10,19 @@ export type RequestCtx<TConfig = {}, TSessionData = {}> =
   & ConnectorContext
   & ConfigContext<TConfig>
   & SessionDataContext<TSessionData>
-// & LoggerContext
 
 export type ExpressContext = {
   req: Request;
   res: Response;
   next?: NextFunction;
 };
+
 export type ConfigContext<T> = {
   config: () => T;
 };
 
 export type SessionDataContext<T> = {
   sessionData: () => T;
-};
-
-export type LoggerContext = {
-  /** add `message` to `customLogs` section of splunk log for current request */
-  sendLog: (message: JSONValue) => void;
-
-  /** prevent splunk logger from logging `req.body` */
-  hideRequestBodyLog: () => void;
 };
 
 // eslint-disable-next-line @typescript-eslint/ban-types

@@ -20,18 +20,18 @@ if (processEnv.NODE_ENV !== 'test' && !fs.existsSync(htmlFilePath)) {
 const servePublicStatic = express.static(serverPublicFolder, { fallthrough: true });
 const serveClientStatic = express.static(clientDistFolder, { fallthrough: true, index: false });
 
-export const publicStaticFolder: Middleware = (req, res, next) => {
+export const publicStaticFolder: express.Handler = (req, res, next) => {
   if (!res.headersSent) {
     servePublicStatic(req, res, next);
   }
 };
 
-export const clientStaticFolder: Middleware = (req, res, next) => {
+export const clientStaticFolder: express.Handler = (req, res, next) => {
   if (!res.headersSent) {
     serveClientStatic(req, res, next);
   }
 };
 
-export const clientStaticFile: Middleware = (_, res) => {
+export const clientStaticFile: express.Handler = (_, res) => {
   if (!res.headersSent) res.sendFile(htmlFilePath);
 };

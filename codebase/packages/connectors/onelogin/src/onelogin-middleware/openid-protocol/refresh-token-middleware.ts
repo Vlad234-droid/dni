@@ -18,14 +18,12 @@ const getKey =
   (client: JwksClient): GetPublicKeyOrSecret =>
   (header, callback): void => {
     client.getSigningKey(header.kid!, (err, key) => {
-      if (err) callback(err, undefined);
-      //const signingKey = "publicKey" in key ? key.getPublicKey() : key.rsaPublicKey;
-      // const signingKey = !!Object.getOwnPropertyDescriptor(key, 'getPublicKey')
-      //   ? key.getPublicKey()
-      //   : key.rsaPublicKey;
-
-      const signingKey = key.getPublicKey();
-      callback(null, signingKey);
+      if (err) {
+        callback(err, undefined);
+      } else {
+        const signingKey = key.getPublicKey();
+        callback(null, signingKey);
+      }
     });
   };
 

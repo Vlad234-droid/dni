@@ -50,7 +50,6 @@ const deleteNetworkFromEmployee: Handler = async (req: Request, res: Response) =
       return;
     }
 
-    //const networkId = Number(paramNetworkId);
     const colleagueUUID = getColleagueUuid(res);
 
     await removeNetworkRelation(colleagueUUID!, Number(networkId));
@@ -78,7 +77,6 @@ const addEventToEmployee: Handler = async (req: Request, res: Response) => {
 
 const deleteEventFromEmployee: Handler = async (req: Request, res: Response) => {
   executeSafe(res, async () => {
-    //const paramEventId = req.params.eventId;
     const { eventId } = req.params;
 
     if (isNaN(Number(eventId))) {
@@ -89,7 +87,6 @@ const deleteEventFromEmployee: Handler = async (req: Request, res: Response) => 
       return;
     }
 
-    //const eventId = Number(paramEventId);
     const colleagueUUID = getColleagueUuid(res);
     await removeEventRelation(colleagueUUID!, Number(eventId));
 

@@ -7,7 +7,6 @@ import {
   cmsNetworksApiConnector,
   cmsOrganizationsApiConnector,
   cmsEmotionsApiConnector,
-  // cmsUploadApiConnector,
 } from '@dni-connectors/colleague-cms-api';
 
 import { v4 as uuidv4 } from 'uuid';
@@ -25,40 +24,6 @@ const tescoApi = (requestCtx: ContextProvider<any>) =>
     apiDefinition,
     requestCtx,
   )({
-    // Colleague API (v1)
-    // getColleague: async (payload, ctx) => {
-    //   const res = await colleagueApiConnector(ctx).v1.getColleague(payload as any);
-    //   return unsafelyUnpackResponseData(res);
-    // },
-
-    // // Colleague API (v2)
-    // getColleagueV2: async ({ params }, ctx) => {
-    //   const res = await colleagueApiConnector(ctx).v2.getColleague({ params });
-    //   return unsafelyUnpackResponseData(res);
-    // },
-    // getColleaguesV2: async ({ params }, ctx) => {
-    //   const res = await colleagueApiConnector(ctx).v2.getColleagues({ params });
-    //   return unsafelyUnpackResponseData(res);
-    // },
-
-    // // Contact API
-    // sendMessages: async (payload, ctx) => {
-    //   const res = await contactApiConnector(ctx).sendMessages({ ...payload, traceId: uuidv4() });
-    //   return unsafelyUnpackResponseData(res);
-    // },
-    // getEmailAddresses: async ({ params }, ctx) => {
-    //   const res = await contactApiConnector(ctx).getEmailAddresses({ params, traceId: uuidv4() });
-    //   return unsafelyUnpackResponseData(res);
-    // },
-    // updateEmailAddress: async (payload, ctx) => {
-    //   const res = await contactApiConnector(ctx).updateEmailAddress({ ...payload, traceId: uuidv4() });
-    //   return unsafelyUnpackResponseData(res);
-    // },
-    // createEmailAddress: async (payload, ctx) => {
-    //   const res = await contactApiConnector(ctx).createEmailAddress({ ...payload, traceId: uuidv4() });
-    //   return unsafelyUnpackResponseData(res);
-    // },
-
     // Colleague CMS: Emojis
     getEmoji: async ({ params }, ctx) => {
       const res = await cmsEmojisApiConnector(ctx).getEmoji({ params });
@@ -188,24 +153,6 @@ const tescoApi = (requestCtx: ContextProvider<any>) =>
       const res = await cmsOrganizationsApiConnector(ctx).deleteOrganization({ params });
       return unsafelyUnpackResponseData(res);
     },
-
-    // // Colleague CMS: Upload
-    // getFile: async ({ params }, ctx) => {
-    //   const res = await cmsUploadApiConnector(ctx).getFile({ params });
-    //   return unsafelyUnpackResponseData(res);
-    // },
-    // getFiles: async ({ params }, ctx) => {
-    //   const res = await cmsUploadApiConnector(ctx).getFiles({ params });
-    //   return unsafelyUnpackResponseData(res);
-    // },
-    // postFiles: async ({ params, body }, ctx) => {
-    //   const res = await cmsUploadApiConnector(ctx).postFiles({ params, body });
-    //   return unsafelyUnpackResponseData(res);
-    // },
-    // deleteFile: async ({ params }, ctx) => {
-    //   const res = await cmsUploadApiConnector(ctx).deleteFile({ params });
-    //   return unsafelyUnpackResponseData(res);
-    // },
   });
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
