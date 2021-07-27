@@ -1,12 +1,18 @@
 import { NextFunction, Request, Response } from 'express';
 
 import { ConnectorContext } from '@energon-connectors/core';
-import { JSONValue } from '@energon/type-utils';
 
 // prettier-ignore
 // eslint-disable-next-line @typescript-eslint/ban-types
-export type RequestCtx<TConfig = {}, TSessionData = {}> = 
+export type ExpressRequestCtx<TConfig = {}, TSessionData = {}> = 
   & ExpressContext
+  & ConnectorContext
+  & ConfigContext<TConfig>
+  & SessionDataContext<TSessionData>
+
+// prettier-ignore
+// eslint-disable-next-line @typescript-eslint/ban-types
+export type ClientRequestCtx<TConfig = {}, TSessionData = {}> = 
   & ConnectorContext
   & ConfigContext<TConfig>
   & SessionDataContext<TSessionData>
@@ -26,8 +32,11 @@ export type SessionDataContext<T> = {
 };
 
 // eslint-disable-next-line @typescript-eslint/ban-types
-export type ContextProvider<TConfig = {}, TSessionData = {}> = (
+export type ExpressContextProvider<TConfig = {}, TSessionData = {}> = (
   req: Request,
   res: Response,
   next?: NextFunction,
-) => RequestCtx<TConfig, TSessionData>;
+) => ExpressRequestCtx<TConfig, TSessionData>;
+
+export type ClientContextProvider<TConfig = {}, TSessionData = {}> = (
+) => ClientRequestCtx<TConfig, TSessionData>;

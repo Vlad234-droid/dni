@@ -1,5 +1,4 @@
-import { initializeTypeOrm } from '../config/db';
-import { prepareContext, RequestCtx } from '../services/context';
+import { getManager, DniEntityTypeEnum, CcmsEntity, slugify } from '@dni/database';
 
 import {
   Post,
@@ -8,9 +7,13 @@ import {
   cmsPostsApiConnector,
   cmsEventsApiConnector,
   cmsNetworksApiConnector,
+  DniCmsApiContext,
 } from '@dni-connectors/colleague-cms-api';
 
-import { getManager, DniEntityTypeEnum, CcmsEntity, slugify } from '@dni/database';
+import { getConfig } from '../config/config-accessor';
+import { initializeTypeOrm } from '../config/db';
+import { clientContext, ClientRequestCtx } from '../context';
+
 
 interface CommonEntity {
   id: number;
@@ -30,7 +33,7 @@ const ccmsEntitiesInit = async () => {
   await initializeTypeOrm();
 
   // init context
-  const ctx: RequestCtx = await prepareContext();
+  const ctx: DniCmsApiContext = await clientContext(getConfig());
 
   for (const entityType of entityTypes) {
     console.log(`Try to handle entityType: ${entityType}`);
@@ -44,7 +47,7 @@ const ccmsEntitiesInit = async () => {
   }
 };
 
-const analyzeEntities = async (entityType: DniEntityTypeEnum, ctx: RequestCtx): Promise<CommonEntity[]> => {
+const analyzeEntities = async (entityType: DniEntityTypeEnum, ctx: DniCmsApiContext): Promise<CommonEntity[]> => {
   // prepare payload
   const reqPayload = {
     params: {

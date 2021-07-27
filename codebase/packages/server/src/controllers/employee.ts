@@ -114,7 +114,7 @@ const getNetworksParticipants: Handler = (_, res: Response) => {
 const getPersonalEmail: Handler = async (req: Request, res: Response) => {
   executeSafe(res, async () => {
     const colleagueUUID = getColleagueUuid(res);
-    const personalEmail = await fetchPersonalEmail(colleagueUUID!, req, res);
+    const personalEmail = await fetchPersonalEmail(colleagueUUID!);
     res.json(personalEmail);
   });
 };
@@ -122,7 +122,8 @@ const getPersonalEmail: Handler = async (req: Request, res: Response) => {
 const addPersonalEmail: Handler = async (req: Request, res: Response) => {
   executeSafe(res, async () => {
     const colleagueUUID = getColleagueUuid(res);
-    const personalEmail = await createPersonalEmail(colleagueUUID!, req, res);
+    const { emailAddress } = req.body;
+    const personalEmail = await createPersonalEmail(colleagueUUID!, emailAddress);
     res.json(personalEmail);
   });
 };
@@ -130,7 +131,8 @@ const addPersonalEmail: Handler = async (req: Request, res: Response) => {
 const refreshPersonalEmail: Handler = async (req: Request, res: Response) => {
   executeSafe(res, async () => {
     const colleagueUUID = getColleagueUuid(res);
-    const updatedPersonalEmail = await updatePersonalEmail(colleagueUUID!, req, res);
+    const { emailAddress, addressIdentifier } = req.body;
+    const updatedPersonalEmail = await updatePersonalEmail(colleagueUUID!, emailAddress, addressIdentifier);
     res.json(updatedPersonalEmail);
   });
 };

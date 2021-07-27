@@ -35,11 +35,6 @@ const prepareMailingData = async (
     const linkToUnsubscribePage = buildFrontURI(UNSUBSCRIBE_KEY);
 
     const payload = {
-      markdownTitle: markdownEntityTitle,
-      markdownMessage_content: markdownEntityContent,
-      Hyperlink_to_post: linkToEntityPage,
-      markdownColleague_network: markdownNetworkTitle,
-      UNSUBSCRIBE_URL: linkToUnsubscribePage,
       markdownEntityTitle,
       markdownEntityContent,
       linkToEntityPage,

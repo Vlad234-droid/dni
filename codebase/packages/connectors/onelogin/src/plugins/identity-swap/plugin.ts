@@ -26,7 +26,7 @@ type Config<O> = {
   /**
    * identity secret in
    */
-  identityyClientSecret: string;
+  identityClientSecret: string;
  
   /**
    * onelogin strategy: oidc or saml
@@ -76,7 +76,7 @@ export const identityTokenSwapPlugin = <O>(config: Config<O> & Optional): Plugin
     // init plugin config
     const {
       identityClientId,
-      identityyClientSecret,
+      identityClientSecret,
       strategy,
       shouldRun = () => true,
       baseUrl = process.env.NODE_CONFIG_ENV === 'prod' ? 'https://api.tesco.com' : 'https://api-ppe.tesco.com',
@@ -119,7 +119,7 @@ export const identityTokenSwapPlugin = <O>(config: Config<O> & Optional): Plugin
           })?.refreshToken
         : undefined;
 
-      const credentials = Buffer.from(`${identityClientId}:${identityyClientSecret}`).toString('base64');
+      const credentials = Buffer.from(`${identityClientId}:${identityClientSecret}`).toString('base64');
 
       const headerProvider = {
         Authorization: () => `Basic ${credentials}`,

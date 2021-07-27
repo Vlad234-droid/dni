@@ -7,12 +7,14 @@ import {
   cmsPostsApiConnector,
   cmsEventsApiConnector,
   cmsNetworksApiConnector,
+  DniCmsApiContext,
 } from '@dni-connectors/colleague-cms-api';
 
-import { prepareContext, RequestCtx } from './context';
+import { expressContext } from '../context';
 import { Request, Response } from 'express';
 import { CepPayload } from '../controllers';
 import { massMailing, prepareMailingData } from '../services/mailer';
+import { getConfig } from '../config/config-accessor';
 
 export const handleCepRequest = async (req: Request<{}, CepPayload>, res: Response) => {
   const payload = req.body;
@@ -29,7 +31,7 @@ export const handleCepRequest = async (req: Request<{}, CepPayload>, res: Respon
   // 2. try to get cms entity from Colleague CMS
   let cmsEntity: Post | Event | Network | undefined;
   if (CcmsTriggerEventEnum.DELETED != payload.trigger) {
-    const ctx = await prepareContext(req, res);
+    const ctx = expressContext(getConfig())(req, res);
     cmsEntity = (await analyzeEntity(payload, ctx))?.data;
   }
 
@@ -46,7 +48,7 @@ export const handleCepRequest = async (req: Request<{}, CepPayload>, res: Respon
   }
 };
 
-const analyzeEntity = async (payload: CepPayload, ctx: RequestCtx) => {
+const analyzeEntity = async (payload: CepPayload, ctx: DniCmsApiContext) => {
   const { id, model } = payload;
 
   // prepare payload

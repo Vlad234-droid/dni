@@ -26,9 +26,19 @@ import {
   toMiddleware,
 } from './middlewares';
 
-import { buildContext } from './context';
 import { initializeTypeOrm } from './config/db';
 import { identityClientScopedTokenPlugin } from '@dni-connectors/onelogin';
+import { expressContext } from './context';
+import colorize from 'json-colorizer';
+import chalk from 'chalk';
+
+const jsonColorize = (obj: string | object) => {
+  if (typeof obj === "object") {
+    return colorize(JSON.stringify(obj), { pretty: true })
+  } else {
+    return chalk.yellow(obj);
+  }
+};
 
 const logger = pino({
   name: 'server',
@@ -37,6 +47,12 @@ const logger = pino({
     colorize: true,
     translateTime: 'yyyy-mm-dd HH:MM:ss o',
     ignore: 'pid,hostname',
+    customPrettifiers: {
+      req: jsonColorize,
+      res: jsonColorize,
+      responseTime: (v) => chalk.green(`${v} ms`),
+      flow: (v) => chalk.blueBright(`${v}`.toUpperCase()),
+    }
   },
   prettifier: pinoPretty,
 });
@@ -51,7 +67,7 @@ const server = http.createServer(app);
 
 const PORT = config.port();
 
-const context = buildContext(config);
+const context = expressContext(config);
 
 const startServer = async () => {
   try {
@@ -60,13 +76,14 @@ const startServer = async () => {
 
     // initialize connection to DB
     await initializeTypeOrm();
+    logger.info('Connection to database has been established successfully.');
 
     // setup logger middlewares
     app.use(
       pinoHttp({
         name: 'server.express',
         logger: logger,
-        customLogLevel: (res, err) => {
+        customLogLevel: (res: any, err: any) => {
           if (res.statusCode >= 400 && res.statusCode < 500) {
             return 'warn';
           } else if (res.statusCode >= 500 || err) {
@@ -75,7 +92,7 @@ const startServer = async () => {
           return 'debug';
         },
         serializers: {
-          req: (req) => ({
+          req: (req: any) => ({
             id: req.id,
             method: req.method,
             url: req.url,
@@ -83,7 +100,7 @@ const startServer = async () => {
             remoteAddress: req.remoteAddress,
             remotePort: req.remotePort,
           }),
-          res: (res) => {
+          res: (res: any) => {
             return {
               statusCode: res.statusCode,
               location: res.statusCode === 302 ? res.headers?.location : undefined,
@@ -120,7 +137,7 @@ const startServer = async () => {
       app.use(toMiddleware(
         identityClientScopedTokenPlugin({
           identityClientId: config.identityClientId(),
-          identityyClientSecret: config.identityClientSecret(),
+          identityClientSecret: config.identityClientSecret(),
           cache: true,
           optional: false,
         })

@@ -1,16 +1,17 @@
 import { markApiCall } from '@energon/splunk-logger';
 
-import { getIdentityData, getIdentityClientScopeToken } from '@dni-connectors/onelogin';
+import { getIdentityData, getIdentityClientScopeToken as expressIdentityClientScopeToken} from '@dni-connectors/onelogin';
+import { getIdentityClientScopeToken as localIdentityClientScopeToken } from '../services';
 
 import { getAppEnv, isDEV } from '../config/env';
 import { ProcessConfig } from '../config/config-accessor';
-import { ContextProvider } from './request-context';
+import { ExpressContextProvider } from './request-context';
 
 import { ContextSessionData } from './session-data';
 import { ContextConfigData } from './config-data';
 import { Request, Response, NextFunction } from 'express';
 
-export const buildContext: (config: ProcessConfig) => ContextProvider<ContextConfigData, ContextSessionData> =
+export const expressContext: (config: ProcessConfig) => ExpressContextProvider<ContextConfigData, ContextSessionData> =
   (config: ProcessConfig) => (req: Request, res: Response, next?: NextFunction) => ({
     req: req,
     res: res,
@@ -25,7 +26,7 @@ export const buildContext: (config: ProcessConfig) => ContextProvider<ContextCon
     },
 
     identityClientToken: () => {
-      const token = getIdentityClientScopeToken(res)?.access_token || '';
+      const token = expressIdentityClientScopeToken(res)?.access_token || '';
       if (!token && !isDEV(config.environment())) {
         throw new Error('Identity client scoped token not available!');
       }
@@ -42,3 +43,28 @@ export const buildContext: (config: ProcessConfig) => ContextProvider<ContextCon
 
     sessionData: (): ContextSessionData => ({}),
   });
+
+export const clientContext = async (config: ProcessConfig) => {
+  const cstToken = await localIdentityClientScopeToken();
+  return {
+    identityUserToken: () => undefined,
+
+    identityClientToken: () => {
+      const token = cstToken?.access_token || '';
+      if (!token && !isDEV(config.environment())) {
+        throw new Error('Identity client scoped token not available!');
+      }
+
+      return token;
+    },
+
+    apiEnv: () =>
+      getAppEnv(config.environment(), isDEV(config.buildEnvironment()) ? config.mockServerUrl() : undefined),
+
+    markApiCall: undefined,
+
+    config: (): ContextConfigData => ({ runtimeEnvironment: config.environment() }),
+
+    sessionData: (): ContextSessionData => ({}),
+  };
+}

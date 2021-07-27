@@ -4,7 +4,7 @@ import os from 'os';
 
 import { partition } from '../utils/array';
 
-export const standardWorkersCount = () => os.cpus().length - 1;
+export const standardWorkersCount = () => Math.max(os.cpus().length - 1, 1);
 
 export const spawnWorkers = <T, P>(workerName: string, list: T[], payload: P, count: number) => {
   const partitions = partition(list, count);

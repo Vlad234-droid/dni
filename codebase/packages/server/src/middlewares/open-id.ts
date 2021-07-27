@@ -116,7 +116,7 @@ export const configureOneloginMidleware = async ({
       }),
       identityTokenSwapPlugin({
         identityClientId: identityClientId(),
-        identityyClientSecret: identityClientSecret(),
+        identityClientSecret: identityClientSecret(),
         strategy: 'oidc',
         cookieConfig: {
           cookieName: identityUserScopedTokenCookieName(),
