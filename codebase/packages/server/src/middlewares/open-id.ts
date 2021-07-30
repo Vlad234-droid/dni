@@ -19,7 +19,9 @@ export const configureOneloginMidleware = async ({
   runtimeEnvironment,
   applicationCookieParserSecret,
   applicationColleagueCookieName,
+  applicationColleagueCookieSecret,
   applicationUserDataCookieName,
+  applicationUserDataCookieSecret,
   oneLoginIssuerUrl,
   oneLoginApplicationPath,
   oneLoginCallbackUrlRoot,
@@ -132,6 +134,7 @@ export const configureOneloginMidleware = async ({
       userDataPlugin({
         cookieConfig: {
           cookieName: applicationUserDataCookieName(),
+          secret: applicationUserDataCookieSecret(),
           path: oneLoginApplicationPath() || '/',
           httpOnly: true,
           secure: isProduction,
@@ -149,8 +152,8 @@ export const configureOneloginMidleware = async ({
         strategy: 'oidc',
         cookieConfig: {
           cookieName: identityUserScopedTokenCookieName(),
-          path: oneLoginApplicationPath() || '/',
           secret: identityUserScopedTokenCookieSecret(),
+          path: oneLoginApplicationPath() || '/',
           httpOnly: true,
           secure: isProduction,
           signed: isProduction,
@@ -160,6 +163,7 @@ export const configureOneloginMidleware = async ({
         optional: true,
         cookieConfig: {
           cookieName: applicationColleagueCookieName(),
+          secret: applicationColleagueCookieSecret(),
           path: oneLoginApplicationPath() || '/',
           httpOnly: true,
           secure: isProduction,

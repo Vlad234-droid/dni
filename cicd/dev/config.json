@@ -69,9 +69,21 @@
         "type": "plain",
         "value": "/notification/settings?unsubscribe=true"
       },
+      "APPLICATION_COLLEAGUE_DATA_COOKIE_NAME": {
+        "type": "plain",
+        "value": "dni.colleague"
+      },
+      "APPLICATION_COLLEAGUE_DATA_COOKIE_SECRET": {
+        "type": "secret",
+        "value": "application_colleague_data_cookie_secret"
+      },
       "APPLICATION_USER_DATA_COOKIE_NAME": {
         "type": "plain",
         "value": "dni.user.data"
+      },
+      "APPLICATION_USER_DATA_COOKIE_SECRET": {
+        "type": "secret",
+        "value": "application_user_data_cookie_secret"
       },
       "APPLICATION_COOKIE_PARSER_SECRET": {
         "type": "secret",
@@ -121,13 +133,13 @@
         "type": "secret",
         "value": "identity_client_secret"
       },
-      "IDENTITY_USER_SCOPED_TOKEN_COOKIE_SECRET": {
-        "type": "secret",
-        "value": "identity_user_scoped_token_cookie_secret"
-      },
       "IDENTITY_USER_SCOPED_TOKEN_COOKIE_NAME": {
         "type": "plain",
         "value": "dni.identity.ust"
+      },
+      "IDENTITY_USER_SCOPED_TOKEN_COOKIE_SECRET": {
+        "type": "secret",
+        "value": "identity_user_scoped_token_cookie_secret"
       },
       "TYPEORM_TYPE": {
         "type": "plain",
