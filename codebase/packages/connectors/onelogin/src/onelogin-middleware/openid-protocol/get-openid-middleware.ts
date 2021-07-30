@@ -130,17 +130,17 @@ export const getOpenidMiddleware = async (configuration: OpenidConfig): Promise<
 
   const authDataCookie = {
     ...defaultCookieConfig(process.env.NODE_ENV),
-    ...configuration.authDataCookie,
     name: AUTH_DATA_COOKIE_NAME,
     path: applicationPath || '/',
+    ...configuration.authDataCookie,
   };
 
   const sessionCookie = {
     ...defaultCookieConfig(process.env.NODE_ENV),
     secure: false,
-    ...configuration.sessionCookie,
     name: SESSION_COOKIE_NAME,
     path: applicationPath || '/',
+    ...configuration.sessionCookie,
   };
 
   const allIgnoredPaths = [...ignoredPathsFragments, AUTHENTICATION_PATH, LOGOUT_PATH, registeredCallbackUrlPath];
@@ -231,7 +231,7 @@ export const getOpenidMiddleware = async (configuration: OpenidConfig): Promise<
       } else {
         logger(LoggerEvent.debug('login', 'nextWrapper in OpenId.authenticationHandler()', { req, res }));
       }
-      
+
       next(error);
     };
 

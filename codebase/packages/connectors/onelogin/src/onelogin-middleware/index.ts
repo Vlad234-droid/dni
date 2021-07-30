@@ -20,25 +20,34 @@ export class OneloginError extends Error {
 }
 
 export type OneloginCookieConfig = {
+
   /** Opional, corresponds to cookies secure flag
    * Secure cookies will only be send over HTTPS protocol
    * defaults to false
    * app.enable('trust proxy') needs to be present in the server for secure cookies to work
    */
   secure?: boolean;
+
   /** Optional, coresponds to cookie httpOnly flag
    * HttpOnly cookies cannot be accessed by JavaScript
    * defaults to false
    */
   httpOnly?: boolean;
+
   /**
    * optional, if set to true cookie will be saved as signed
    */
   signed?: boolean;
-  /* *
+
+  /**
    * optional, if set, cookie path will be set to specified value
    */
   path?: string;
+
+  /**
+   * cokkie name
+   */
+  name?: string;
 };
 
 export type Strategy = "saml" | "openid";
@@ -49,7 +58,7 @@ export const REFRESH_PATH = "/sso/refresh";
 
 export const USER_INFO_COOKIE_NAME = "tesco.userinfo";
 export const AUTH_DATA_COOKIE_NAME = "tesco.colleague.jwt";
-export const SESSION_COOKIE_NAME = "session.startup";
+export const SESSION_COOKIE_NAME = "tesco.session";
 
 export const defaultCookieConfig = (env?: string) => ({
   secure: env === "production",

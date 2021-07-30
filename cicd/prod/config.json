@@ -75,7 +75,7 @@
       },
       "APPLICATION_USER_DATA_COOKIE_NAME": {
         "type": "plain",
-        "value": "dni.userdata"
+        "value": "dni.user.data"
       },
       "APPLICATION_COOKIE_PARSER_SECRET": {
         "type": "secret",
@@ -131,7 +131,7 @@
       },
       "IDENTITY_USER_SCOPED_TOKEN_COOKIE_NAME": {
         "type": "plain",
-        "value": "identity-user-scoped-token"
+        "value": "dni.identity.ust"
       },
       "TYPEORM_TYPE": {
         "type": "plain",

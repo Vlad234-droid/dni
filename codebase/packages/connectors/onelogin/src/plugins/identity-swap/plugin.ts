@@ -14,10 +14,9 @@ import { setIdentityData, getIdentityData, setColleagueUuid } from './identity-d
 import { getOpenIdUserInfo } from '../../user-info-extractor';
 import { Optional, Plugin } from '../plugin';
 
-export const IDENTITY_COOKIE_NAME = 'tesco.identity';
 export type Strategy = 'oidc' | 'saml';
 
-type Config<O> = {
+export type Config<O> = {
   /**
    * identity client id
    */
