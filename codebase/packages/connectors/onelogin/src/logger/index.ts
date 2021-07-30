@@ -2,8 +2,6 @@ import { Request, Response } from "express";
 import { convertErrorToPlainObject } from "@energon/splunk-logger";
 import { JSON } from "@energon/type-utils";
 
-import pino from 'pino';
-
 
 export type ExpressContext = {
   req: Request;
@@ -107,36 +105,6 @@ export const consoleLogger: Logger = (event) => {
   console.log(severity, flow, payload);
 };
 
-export const pinoLogger = (optionsOrStream?: pino.LoggerOptions | pino.DestinationStream) => {
-  
-  const logger = pino(optionsOrStream);
-  return (event: LoggerEvent) => {
-    const { severity, payload, flow, error } = event;
-    switch (severity) {
-      case 'error': {
-        logger.error({ flow, error: payload?.error || undefined }, `Onelogin plugin error`);
-        break;
-      }
-      case 'warning': {
-        logger.warn({ flow, error: payload?.error || undefined }, payload?.message ? `${payload?.message}` : `Onelogin plugin warning`);
-        break;
-      }
-      case 'info': {
-        logger.info({ flow }, `${payload?.message}`);
-        break;
-      }
-      case 'debug': {
-        logger.debug({ flow }, `${payload?.message}`);
-        break;
-      }
-      case 'trace': {
-        logger.trace({ flow }, `${payload?.message}`);
-        break;
-      }
-    }
-  }
-}
-
-export const defaultPinoLogger = pinoLogger({ name: 'express.middleware.onelogin'});
-
 export const defaultLogger = consoleLogger;
+
+export { pinoLogger } from './pino-logger';

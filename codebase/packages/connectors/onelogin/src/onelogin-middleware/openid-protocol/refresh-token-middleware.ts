@@ -94,7 +94,6 @@ export const getRefreshTokenMiddleware = <TClient extends Client>({
 
       const refreshTokenSet = async () => {
         const refreshToken = cryptoJS.AES.decrypt(encRefreshToken, refreshTokenSecret).toString(cryptoJS.enc.Utf8);
-
         const refreshedTokenSet = await client.refresh(refreshToken);
 
         logger(LoggerEvent.debug('verification', 'IdToken token refreshed successfully', { req, res }));

@@ -82,14 +82,7 @@ export const configureOneloginMidleware = async ({
     scope: ['openid', 'profile', 'params', 'groups'],
 
     /** Optional, callback that will be called with Event type objects durring authentication process */
-    logger: pinoLogger({
-      name: 'server.express.middleware.onelogin',
-      prettyPrint: {
-        colorize: true,
-        translateTime: 'yyyy-mm-dd HH:MM:ss o',
-        ignore: 'pid,hostname',
-      },
-    }),
+    logger: pinoLogger({ name: 'middleware.onelogin' }),
 
     /** If true sets idToken and encRefreshToken in 'authData' cookie. */
     requireIdToken: true,
@@ -104,6 +97,7 @@ export const configureOneloginMidleware = async ({
       userDataPlugin({
         cookieConfig: {
           cookieName: applicationUserDataCookieName(),
+          path: oneLoginApplicationPath() || '/',
           httpOnly: true,
           secure: isProduction,
           signed: isProduction,
@@ -120,6 +114,7 @@ export const configureOneloginMidleware = async ({
         strategy: 'oidc',
         cookieConfig: {
           cookieName: identityUserScopedTokenCookieName(),
+          path: oneLoginApplicationPath() || '/',
           secret: identityUserScopedTokenCookieSecret(),
           httpOnly: true,
           secure: isProduction,
@@ -130,6 +125,7 @@ export const configureOneloginMidleware = async ({
         optional: true,
         cookieConfig: {
           cookieName: applicationColleagueCookieName(),
+          path: oneLoginApplicationPath() || '/',
           httpOnly: true,
           secure: isProduction,
           signed: isProduction,

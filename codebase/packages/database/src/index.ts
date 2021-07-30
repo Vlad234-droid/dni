@@ -8,7 +8,7 @@ createTypeOrmConnection()
     // TODO: load seeds
     // you can experiment with entities here
   })
-  .catch((error) => console.log(error));
+  .catch((error) => { throw new Error(error); }); 
 
 export * from './entities';
 export * from './subscribers';

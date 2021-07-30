@@ -132,6 +132,7 @@ export const getOpenidMiddleware = async (configuration: OpenidConfig): Promise<
     ...defaultCookieConfig(process.env.NODE_ENV),
     ...configuration.authDataCookie,
     name: AUTH_DATA_COOKIE_NAME,
+    path: applicationPath || '/',
   };
 
   const sessionCookie = {
@@ -139,6 +140,7 @@ export const getOpenidMiddleware = async (configuration: OpenidConfig): Promise<
     secure: false,
     ...configuration.sessionCookie,
     name: SESSION_COOKIE_NAME,
+    path: applicationPath || '/',
   };
 
   const allIgnoredPaths = [...ignoredPathsFragments, AUTHENTICATION_PATH, LOGOUT_PATH, registeredCallbackUrlPath];
@@ -205,7 +207,11 @@ export const getOpenidMiddleware = async (configuration: OpenidConfig): Promise<
   router.use(openIdAuthDataMiddleware(authDataCookie.name));
 
   const clearCookies = (res: express.Response) => {
-    res.clearCookie(authDataCookie.name).clearCookie(sessionCookie.name).clearCookie(`${sessionCookie.name}.sig`);
+    const path = applicationPath || '/';
+    res
+      .clearCookie(authDataCookie.name, { path })
+      .clearCookie(sessionCookie.name, { path })
+      .clearCookie(`${sessionCookie.name}.sig`, { path });
   };
 
   router.get(AUTHENTICATION_PATH, (req, res, next) => {
@@ -218,6 +224,7 @@ export const getOpenidMiddleware = async (configuration: OpenidConfig): Promise<
 
     clearCookies(res);
 
+    // eslint-disable-next-line  @typescript-eslint/no-explicit-any
     const nextWrapper: NextFunction = (payload: any | 'router' | 'route') => {
       console.log(`nextWrapper in OpenId.authenticationHandler()`);
       if (!res.headersSent) next(payload);
@@ -324,8 +331,6 @@ export const getOpenidMiddleware = async (configuration: OpenidConfig): Promise<
     );
 
     res.redirect(afterLoginRedirect);
-    //res.location(afterLoginRedirect).status(302);
-    //return next();
   });
 
   const wrappedPlugins = plugins.map((plugin: Plugin) => {
