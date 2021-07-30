@@ -45,7 +45,7 @@ const context = expressContext(config);
 const startServer = async () => {
   try {
     logger.info(`Current build environment: ${config.buildEnvironment()}`);
-    logger.info(`Current infrastructure environment: ${config.environment()}`);
+    logger.info(`Current infrastructure environment: ${config.runtimeEnvironment()}`);
 
     // initialize connection to DB
     await initializeTypeOrm();

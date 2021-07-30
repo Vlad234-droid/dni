@@ -41,6 +41,10 @@
         "type": "plain",
         "value": "ppe"
       },
+      "RUNTIME_ENV": {
+        "type": "plain",
+        "value": "ppe"
+      },
       "NODE_PORT": {
         "type": "plain",
         "value": "9000"

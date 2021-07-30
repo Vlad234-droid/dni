@@ -27,7 +27,7 @@ export const expressContext: (config: ProcessConfig) => ExpressContextProvider<C
 
     identityClientToken: () => {
       const token = expressIdentityClientScopeToken(res)?.access_token || '';
-      if (!token && !isDEV(config.environment())) {
+      if (!token && !isDEV(config.buildEnvironment())) {
         throw new Error('Identity client scoped token not available!');
       }
 
@@ -35,11 +35,11 @@ export const expressContext: (config: ProcessConfig) => ExpressContextProvider<C
     },
 
     apiEnv: () =>
-      getAppEnv(config.environment(), isDEV(config.buildEnvironment()) ? config.mockServerUrl() : undefined),
+      getAppEnv(config.runtimeEnvironment(), isDEV(config.buildEnvironment()) ? config.mockServerUrl() : undefined),
 
     markApiCall: markApiCall(res),
 
-    config: (): ContextConfigData => ({ runtimeEnvironment: config.environment() }),
+    config: (): ContextConfigData => ({ runtimeEnvironment: config.runtimeEnvironment() }),
 
     sessionData: (): ContextSessionData => ({}),
   });
@@ -51,7 +51,7 @@ export const clientContext = async (config: ProcessConfig) => {
 
     identityClientToken: () => {
       const token = cstToken?.access_token || '';
-      if (!token && !isDEV(config.environment())) {
+      if (!token && !isDEV(config.runtimeEnvironment())) {
         throw new Error('Identity client scoped token not available!');
       }
 
@@ -59,11 +59,11 @@ export const clientContext = async (config: ProcessConfig) => {
     },
 
     apiEnv: () =>
-      getAppEnv(config.environment(), isDEV(config.buildEnvironment()) ? config.mockServerUrl() : undefined),
+      getAppEnv(config.runtimeEnvironment(), isDEV(config.buildEnvironment()) ? config.mockServerUrl() : undefined),
 
     markApiCall: undefined,
 
-    config: (): ContextConfigData => ({ runtimeEnvironment: config.environment() }),
+    config: (): ContextConfigData => ({ runtimeEnvironment: config.runtimeEnvironment() }),
 
     sessionData: (): ContextSessionData => ({}),
   };

@@ -6,6 +6,7 @@ import { defineAPI } from '@energon/rest-api-definition';
 import { ClientTokenIssueBody, ClientScopeToken } from '@dni-connectors/onelogin';
 
 import { getConfig } from '../config/config-accessor';
+import { isPROD } from '../config/env';
 
 
 const config = getConfig();
@@ -21,7 +22,9 @@ const identityApiDef = defineAPI((endpoint) => ({
 const issueIdentityClientScopeToken = async () => {
   const identityClientId = config.identityClientId;
   const identityClientSecret = config.identityClientSecret;
-  const baseUrl = config.environment() === 'prod' ? 'https://api.tesco.com' : 'https://api-ppe.tesco.com';
+
+  const isProduction = isPROD(config.runtimeEnvironment());
+  const baseUrl = isProduction ? 'https://api.tesco.com' : 'https://api-ppe.tesco.com';
 
   const credentials = Buffer.from(`${identityClientId()}:${identityClientSecret()}`).toString('base64');
   const body: ClientTokenIssueBody = { grant_type: 'client_credentials' };

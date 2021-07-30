@@ -7,6 +7,7 @@ import { defaultConfig } from './default';
 export type ProcessConfig = {
   // general
   buildEnvironment: () => string;
+  runtimeEnvironment: () => string;
   environment: () => string;
   port: () => number;
   // D&I application specific settings
@@ -59,6 +60,7 @@ export class ConfigAccessor {
     this.config = {
       // general
       buildEnvironment: () => processEnv.BUILD_ENV,
+      runtimeEnvironment: () => processEnv.RUNTIME_ENV,
       environment: () => processEnv.NODE_ENV,
       port: () => (isNaN(Number(processEnv.NODE_PORT)) ? defaultConfig.port : Number(processEnv.NODE_PORT)),
       // D&I application specific settings

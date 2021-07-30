@@ -76,7 +76,7 @@ export const openIdUserInfoResolver = (
  * @param src
  * @returns
  */
-export const colleagueInfoResolver = (config: Pick<ProcessConfig, 'environment'>, src: Colleague) => {
+export const colleagueInfoResolver = (config: Pick<ProcessConfig, 'environment' | 'runtimeEnvironment'>, src: Colleague) => {
   console.log(` --> OpenID <colleagueInfoResolver>: [src]: ${JSON.stringify(src)}`);
 
   const colleagueInfo = {

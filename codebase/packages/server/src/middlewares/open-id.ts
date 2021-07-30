@@ -16,7 +16,7 @@ import { Colleague } from '@dni-connectors/colleague-api';
 import { dniUserRefreshPlugin } from './onelogin-plugins';
 
 export const configureOneloginMidleware = async ({
-  environment,
+  runtimeEnvironment,
   applicationCookieParserSecret,
   applicationColleagueCookieName,
   applicationUserDataCookieName,
@@ -37,7 +37,7 @@ export const configureOneloginMidleware = async ({
   identityUserScopedTokenCookieName,
   defaultRoles,
 }: ProcessConfig) => {
-  const isProduction = isPROD(environment());
+  const isProduction = isPROD(runtimeEnvironment());
 
   const openidMiddleware = getOpenidMiddleware({
     /** The OneLogin generated Client ID for your OpenID Connect app */

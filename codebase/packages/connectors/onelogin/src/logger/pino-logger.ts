@@ -3,7 +3,7 @@ import { createLogger } from '@dni-common/logger';
 
 import { LoggerEvent } from './';
 
-
+// eslint-disable-next-line  @typescript-eslint/no-explicit-any
 const requestSerializer = (req: any) => {
    const result = {
       id: req.id,
@@ -28,7 +28,8 @@ const requestSerializer = (req: any) => {
       return result;
    }
 }
- 
+
+// eslint-disable-next-line  @typescript-eslint/no-explicit-any
 const responseSerializer = (res: any) => {
    return {
       statusCode: res.statusCode,

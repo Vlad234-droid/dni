@@ -14,6 +14,7 @@ const optionalEnvironmentParameters = [
 export type ProcessEnv = {
   // general
   BUILD_ENV: string;
+  RUNTIME_ENV: string;
   NODE_ENV: string;
   NODE_PORT: string;
   // D&I application specific URLs
@@ -89,6 +90,7 @@ export class EnvAccessor {
     const {
       // general
       BUILD_ENV,
+      RUNTIME_ENV,
       NODE_ENV,
       NODE_PORT,
       // D&I application specific URLs
@@ -130,6 +132,7 @@ export class EnvAccessor {
     this.variables = {
       // general
       BUILD_ENV,
+      RUNTIME_ENV,
       NODE_ENV,
       NODE_PORT,
       // D&I application specific URLs

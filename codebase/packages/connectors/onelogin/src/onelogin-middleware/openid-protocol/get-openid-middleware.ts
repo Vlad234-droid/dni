@@ -225,9 +225,14 @@ export const getOpenidMiddleware = async (configuration: OpenidConfig): Promise<
     clearCookies(res);
 
     // eslint-disable-next-line  @typescript-eslint/no-explicit-any
-    const nextWrapper: NextFunction = (payload: any | 'router' | 'route') => {
-      console.log(`nextWrapper in OpenId.authenticationHandler()`);
-      if (!res.headersSent) next(payload);
+    const nextWrapper: NextFunction = (error?: any | 'router' | 'route') => {
+      if (error && typeof error === 'object') {
+        logger(LoggerEvent.error('login', error, { req, res }));
+      } else {
+        logger(LoggerEvent.debug('login', 'nextWrapper in OpenId.authenticationHandler()', { req, res }));
+      }
+      
+      next(error);
     };
 
     OpenId.authenticationHandler(req, res, nextWrapper);
