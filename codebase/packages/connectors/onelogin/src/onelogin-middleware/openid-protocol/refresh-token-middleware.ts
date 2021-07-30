@@ -73,8 +73,8 @@ export const getRefreshTokenMiddleware = <TClient extends Client>({
 
     if (!requireIdToken) {
       logger(LoggerEvent.debug('verification', 'IdToken not required', { req, res }));
-
-      return next();
+      next();
+      return;
     }
 
     const { idToken, encRefreshToken } = authData;
@@ -85,8 +85,6 @@ export const getRefreshTokenMiddleware = <TClient extends Client>({
 
     const handleTokenValid = () => {
       logger(LoggerEvent.debug('verification', 'IdToken is valid', { req, res }));
-
-      return next();
     };
 
     const handleTokenExpired = async () => {
@@ -95,9 +93,7 @@ export const getRefreshTokenMiddleware = <TClient extends Client>({
       const refreshTokenSet = async () => {
         const refreshToken = cryptoJS.AES.decrypt(encRefreshToken, refreshTokenSecret).toString(cryptoJS.enc.Utf8);
         const refreshedTokenSet = await client.refresh(refreshToken);
-
         logger(LoggerEvent.debug('verification', 'IdToken token refreshed successfully', { req, res }));
-
         return refreshedTokenSet;
       };
 
@@ -137,15 +133,16 @@ export const getRefreshTokenMiddleware = <TClient extends Client>({
         }),
       );
 
-      return next();
     };
 
     const verifyResult = await verifyJwt<OpenIdUserInfo>(idToken, getKey(jwksClientInstance));
 
     if (verifyResult.ok) {
-      return handleTokenValid();
+      handleTokenValid();
+      next();
     } else if (verifyResult.error.name === 'TokenExpiredError') {
-      return await handleTokenExpired();
+      await handleTokenExpired();
+      next();
     } else {
       throw new OneloginError('verification', verifyResult.error.message, 401);
     }

@@ -1,5 +1,8 @@
 import { Response, Request, NextFunction, Handler } from 'express';
+
 import { markApiCall } from '@energon/splunk-logger';
+import { ApiEnv, Headers, resolveBaseUrl, TESCO_API_URLS } from '@energon-connectors/core';
+
 import { ClientScopeToken, ClientTokenIssueBody, getIdentityApi } from '../api';
 import { getIdentityClientScopeToken, setIdentityClientScopeToken } from './identity-cst-data';
 import { getMaxAge } from '../utils';
@@ -24,10 +27,9 @@ type Config = {
   shouldRun?: (request: Request, response: Response) => boolean;
 
   /**
-   * API base url
-   * E.g.https://api-ppe.tesco.com
+   * Tesco API environment descriptor
    */
-  baseUrl?: string;
+  apiEnv: () => ApiEnv;
 
   /**
    * Endpoint path
@@ -47,26 +49,30 @@ type Config = {
  * It issues identity Client Scoped Token.
  */
 export const identityClientScopedTokenPlugin = (config: Config & Optional): Plugin => {
-  const plugin: Plugin = async (req: Request, res: Response, next: NextFunction) => {
+  const plugin: Plugin = async (req: Request, res: Response) => {
     // init plugin config
     const {
       identityClientId,
       identityClientSecret,
       shouldRun = () => true,
-      baseUrl = process.env.NODE_CONFIG_ENV === 'prod' ? 'https://api.tesco.com' : 'https://api-ppe.tesco.com',
+      apiEnv,
       path = '/identity/v4/issue-token/token',
       cache = true,
     } = config;
 
-    if (!!getIdentityClientScopeToken(res) || !shouldRun(req, res)) return next();
+    if (!!getIdentityClientScopeToken(res) || !shouldRun(req, res)) {
+      return;
+    }
 
     if (cache) {
       const cachedToken = getCachedClientScopeToken();
       if (cachedToken !== null) {
         setIdentityClientScopeToken(res, cachedToken);
-        return next();
+        return;
       }
     }
+
+    const baseUrl = resolveBaseUrl(TESCO_API_URLS, { apiEnv });
 
     const credentials = Buffer.from(`${identityClientId}:${identityClientSecret}`).toString('base64');
     const body: ClientTokenIssueBody = { grant_type: 'client_credentials' };
@@ -83,8 +89,6 @@ export const identityClientScopedTokenPlugin = (config: Config & Optional): Plug
     if (cache) {
       setCachedClientScopeToken(data, getMaxAge(data.claims));
     }
-
-    return next();
   };
 
   plugin.info = 'Identity Client Scoped Token plugin';

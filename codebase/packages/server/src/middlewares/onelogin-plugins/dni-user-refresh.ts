@@ -34,20 +34,22 @@ const dniUserRefreshCache = new NodeCache();
  * It gets the data from the colleauge API relies on identity data in response the object.
  */
 export const dniUserRefreshPlugin = <O>(config: Config<O> & Optional): Plugin => {
-  const plugin: Plugin = async (req: Request, res: Response, next: NextFunction) => {
+  const plugin: Plugin = async (req: Request, res: Response) => {
     const { shouldRun = () => true, cache = true, cacheTtl = 1 * 60 * 60 } = config;
 
     if (!shouldRun(req, res)) {
-      return next();
+      return;
     }
 
     const colleagueUUID = getColleagueUuid(res);
-    if (!colleagueUUID) throw Error('No colleague UUID found');
+    if (!colleagueUUID) {
+      throw Error('No colleague UUID found');
+    }
 
     if (cache) {
       const dniUserRefresh = dniUserRefreshCache.get(colleagueUUID);
       if (typeof dniUserRefresh === 'string' && dniUserRefresh === 'REFRESHED') {
-        return next();
+        return;
       }
     }
 
@@ -58,7 +60,9 @@ export const dniUserRefreshPlugin = <O>(config: Config<O> & Optional): Plugin =>
 
       const openIdUserInfo = getOpenIdUserInfo(res);
       const employeeNumber = openIdUserInfo?.params?.employeeNumber || openIdUserInfo?.params?.EmployeeNumber;
-      if (!employeeNumber) throw Error('No Employee Number (TPX) found');
+      if (!employeeNumber) {
+        throw Error('No Employee Number (TPX) found');
+      }
 
       colleague = {
         colleagueUUID,
@@ -71,8 +75,6 @@ export const dniUserRefreshPlugin = <O>(config: Config<O> & Optional): Plugin =>
     if (cache) {
       dniUserRefreshCache.set(colleagueUUID, 'REFRESHED', cacheTtl);
     }
-
-    return next();
   };
 
   plugin.info = 'DNI User Refresh plugin';

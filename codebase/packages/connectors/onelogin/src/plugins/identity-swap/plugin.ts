@@ -1,5 +1,7 @@
 import { Response, Request, NextFunction, Handler } from 'express';
 import { markApiCall } from '@energon/splunk-logger';
+import { ApiEnv, resolveBaseUrl, TESCO_API_URLS } from '@energon-connectors/core';
+
 import {
   setDataToCookie,
   getDataFromCookie,
@@ -9,6 +11,7 @@ import {
   getMaxAge,
   clearPluginCookiesIfSessionExpired,
 } from '../utils';
+
 import { getIdentityApi, UserScopeToken } from '../api';
 import { setIdentityData, getIdentityData, setColleagueUuid } from './identity-data';
 import { getOpenIdUserInfo } from '../../user-info-extractor';
@@ -40,10 +43,9 @@ export type Config<O> = {
   shouldRun?: (request: Request, response: Response) => boolean;
 
   /**
-   * API base url
-   * E.g.https://api-ppe.tesco.com
+   * Tesco API environment descriptor
    */
-  baseUrl?: string;
+  apiEnv: () => ApiEnv;
 
   /**
    * Endpoint path
@@ -71,30 +73,29 @@ const refreshCookieName = (cookieName: string) => `${cookieName}-refresh`;
  * It swaps the oidc or saml token for the identity access token.
  */
 export const identityTokenSwapPlugin = <O>(config: Config<O> & Optional): Plugin => {
-  const plugin: Plugin = async (req: Request, res: Response, next: NextFunction) => {
+  const plugin: Plugin = async (req: Request, res: Response) => {
     // init plugin config
     const {
       identityClientId,
       identityClientSecret,
       strategy,
       shouldRun = () => true,
-      baseUrl = process.env.NODE_CONFIG_ENV === 'prod' ? 'https://api.tesco.com' : 'https://api-ppe.tesco.com',
+      apiEnv,
       path = '/identity/v4/issue-token/token',
       cookieConfig,
     } = config;
 
+    const baseUrl = resolveBaseUrl(TESCO_API_URLS, { apiEnv });
+    
     try {
-      if (!!getIdentityData(res) || !shouldRun(req, res)) return next();
+      if (!!getIdentityData(res) || !shouldRun(req, res)) {
+         return;
+      }
 
       if (cookieConfig) {
         clearPluginCookiesIfSessionExpired(
-          req,
-          res,
-          {
-            ...cookieConfig,
-            cookieName: refreshCookieName(cookieConfig.cookieName),
-          },
-          [cookieConfig],
+          req, res, cookieConfig,
+          [{ ...cookieConfig, cookieName: refreshCookieName(cookieConfig.cookieName) }],
         );
 
         const { secret, cookieName, compressed } = cookieConfig;
@@ -104,9 +105,10 @@ export const identityTokenSwapPlugin = <O>(config: Config<O> & Optional): Plugin
           compressed,
         });
 
-        if (data) {
+        if (data && data.claims.sub) {
           setIdentityData(res, data);
-          return next();
+          setColleagueUuid(res, data.claims.sub);
+          return;
         }
       }
 
@@ -185,8 +187,6 @@ export const identityTokenSwapPlugin = <O>(config: Config<O> & Optional): Plugin
       }
       throw e;
     }
-
-    return next();
   };
 
   plugin.info = 'Identity Swap User Token plugin';

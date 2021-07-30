@@ -10,9 +10,9 @@ export const unless = (paths: string[], middleware: Handler): Handler => (
   next,
 ) => {
   if (paths.some((pathFragment) => req.originalUrl.includes(pathFragment))) {
-    return next();
+    next();
   } else {
-    return middleware(req, res, next);
+    middleware(req, res, next);
   }
 };
 

@@ -5,11 +5,12 @@ import { AUTH_DATA_COOKIE_NAME } from "../onelogin-middleware";
 export type ViewPathPredicate = (path: string) => boolean;
 
 export const saveReturnToUrl = (
+  authDataCookieName: string,
   cookieName: string,
   isViewPath: ViewPathPredicate,
 ): RequestHandler => {
   return (req, res, next) => {
-    const isUserLogged = isCookiePresent(req, AUTH_DATA_COOKIE_NAME);
+    const isUserLogged = isCookiePresent(req, authDataCookieName);
     const isReturnToUrlSet = isCookiePresent(req, cookieName);
     const isView = isViewPath(req.path);
 
@@ -18,7 +19,7 @@ export const saveReturnToUrl = (
       const twoMinutes = 2 * 60 * 1000;
       res.cookie(cookieName, url, {
         maxAge: twoMinutes,
-        httpOnly: true,
+        httpOnly: false,
       });
     }
 
@@ -54,6 +55,7 @@ export const redirectAfterLogin = (
 
 type ReturnToConfig = {
   isViewPath: ViewPathPredicate;
+  authDataCookieName?: string;
   cookieName?: string;
   mainPage?: string;
   appPath?: string;
@@ -61,12 +63,13 @@ type ReturnToConfig = {
 
 export const getReturnToMiddlewares = ({
   isViewPath,
+  authDataCookieName = AUTH_DATA_COOKIE_NAME,
   cookieName = "returnTo",
   mainPage = "/",
   appPath = "",
 }: ReturnToConfig) => {
   return {
-    saveReturnToUrl: saveReturnToUrl(cookieName, isViewPath),
+    saveReturnToUrl: saveReturnToUrl(authDataCookieName, cookieName, isViewPath),
     redirectAfterLogin: redirectAfterLogin(
       cookieName,
       mainPage,
@@ -80,9 +83,7 @@ export const withReturnTo = (
   oneLoginMiddleware: RequestHandler,
   config: ReturnToConfig,
 ) => {
-  const { saveReturnToUrl, redirectAfterLogin } = getReturnToMiddlewares(
-    config,
-  );
+  const { saveReturnToUrl, redirectAfterLogin } = getReturnToMiddlewares(config);
   const router = Router();
 
   router.use(saveReturnToUrl);

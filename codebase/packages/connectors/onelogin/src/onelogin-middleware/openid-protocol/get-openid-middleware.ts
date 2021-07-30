@@ -291,7 +291,7 @@ export const getOpenidMiddleware = async (configuration: OpenidConfig): Promise<
       }),
     );
 
-    return next();
+    next();
   });
 
   const createCookie = asyncHandler(async (req, res, next) => {
@@ -342,13 +342,14 @@ export const getOpenidMiddleware = async (configuration: OpenidConfig): Promise<
     return asyncHandler(async (req, res, next) => {
       try {
         logger(LoggerEvent.debug('login', `Running OpenId plugin: ${plugin.info}`, { req, res }));
-        return await plugin(req, res, next);
+        await plugin(req, res);
+        next();
       } catch (error) {
         if (plugin.optional) {
-          logger(LoggerEvent.warn('plugin', 'error while executing plugin', { req, res }, error));
-          return next();
+          logger(LoggerEvent.warn('plugin', `Error while executing plugin ${plugin.info}`, { req, res }, error));
+          next();
         } else {
-          return next(new OneloginError('plugin', error.message, error.status));
+          next(new OneloginError('plugin', error.message, error.status));
         }
       }
     });

@@ -11,4 +11,4 @@ if [ "$CCRM_RUN_SYNC" = "true" ]; then
     yarn ws:server cli:cms-entities-init:prod
 fi
 
-yarn run:prod
+yarn ws:server run:prod

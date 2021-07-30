@@ -13,7 +13,8 @@ export const fakeUserExtractor: express.Handler = (req, res, next) => {
     res.oneLoginAuthData = fakeAuth;
     res.oneLoginUserInfo = fakeUserInfo;
 
-    return next();
+    next();
+    return;
   }
 
   res.cookie(USER_KEY, req.query[USER_KEY], {

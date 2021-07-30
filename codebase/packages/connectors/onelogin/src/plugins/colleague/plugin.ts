@@ -1,7 +1,7 @@
 import { Response, Request, NextFunction } from 'express';
 import NodeCache from 'node-cache';
 
-import { Headers } from '@energon-connectors/core';
+import { ApiEnv, Headers, resolveBaseUrl, TESCO_API_URLS } from '@energon-connectors/core';
 import { markApiCall } from '@energon/splunk-logger';
 import { FetchError } from '@energon/fetch-client';
 import { colleagueApiConsumer, Colleague, ColleagueAPIHeaders } from '@dni-connectors/colleague-api';
@@ -26,10 +26,9 @@ type Config<O> = {
   shouldRun?: (request: Request, response: Response) => boolean;
 
   /**
-   * API base url
-   * E.g.https://api-ppe.tesco.com
+   * Tesco API environment descriptor
    */
-  baseUrl?: string;
+  apiEnv: () => ApiEnv;
 
   /**
    * optional, if true, token will be cashed on server and shared between sessions
@@ -65,10 +64,10 @@ const colleagueCache = new NodeCache();
  * It gets the data from the colleauge API relies on identity data in response the object.
  */
 export const colleagueApiPlugin = <O>(config: Config<O> & Optional): Plugin => {
-  const plugin: Plugin = async (req: Request, res: Response, next: NextFunction) => {
+  const plugin: Plugin = async (req: Request, res: Response) => {
     const {
       shouldRun = () => true,
-      baseUrl = process.env.NODE_CONFIG_ENV === 'prod' ? 'https://api.tesco.com' : 'https://api-ppe.tesco.com',
+      apiEnv,
       cookieConfig,
       cache = true,
       cacheTtl = 6 * 60 * 60,
@@ -76,8 +75,10 @@ export const colleagueApiPlugin = <O>(config: Config<O> & Optional): Plugin => {
     } = config;
 
     if (getColleagueData(res) || !shouldRun(req, res)) {
-      return next();
+      return;
     }
+
+    const baseUrl = resolveBaseUrl(TESCO_API_URLS, { apiEnv });
 
     if (cookieConfig) {
       clearPluginCookiesIfSessionExpired(req, res, cookieConfig);
@@ -87,7 +88,7 @@ export const colleagueApiPlugin = <O>(config: Config<O> & Optional): Plugin => {
 
       if (data) {
         setColleagueData(res, data);
-        return next();
+        return;
       }
     }
 
@@ -107,16 +108,18 @@ export const colleagueApiPlugin = <O>(config: Config<O> & Optional): Plugin => {
 
     if (cache) {
       const cachedColleague = colleagueCache.get(colleagueUUID);
-      if (typeof cachedColleague === 'object') {
-        if (cookieConfig) {
-          setDataToCookie(res, cachedColleague!, { ...cookieConfig });
+      if (!!cachedColleague) {
+        if (typeof cachedColleague === 'object') {
+          if (cookieConfig) {
+            setDataToCookie(res, cachedColleague!, { ...cookieConfig });
+          }
+  
+          setColleagueData(res, cachedColleague);
+        } else if (typeof cachedColleague === 'string' && cachedColleague === 'NOT_FOUND') {
+          setColleagueData(res, undefined);
         }
 
-        setColleagueData(res, cachedColleague);
-        return next();
-      } else if (typeof cachedColleague === 'string' && cachedColleague === 'NOT_FOUND') {
-        setColleagueData(res, undefined);
-        return next();
+        return;
       }
     }
 
@@ -174,8 +177,6 @@ export const colleagueApiPlugin = <O>(config: Config<O> & Optional): Plugin => {
         typeof apiError;
       }
     }
-
-    return next();
   };
 
   plugin.info = 'Colleague API plugin';

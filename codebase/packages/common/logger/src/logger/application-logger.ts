@@ -19,25 +19,33 @@ class ApplicationLogger {
    // see: https://highlightjs.org/static/demo/
    // private readonly themeName: string = 'Night Owl';
 
-   private constructor(rootLoggerName: string) {
-      // this.rootLoggerName = rootLoggerName;
-      this.rootLogger = pino({
-         name: rootLoggerName,
-         level: 'trace',
-         prettyPrint: {
-            suppressFlushSyncWarning: true,
-         },
-         prettifier: prettifierFactory({
-            colorize: true,
-            translateTime: 'yyyy-mm-dd HH:MM:ss o',
-            ignore: 'pid,hostname',
-            customPrettifiers: {
-               '*': jsonHighlight,
-            },
-            theme: AndroidStudioTheme,
-         }),
-      });
+   private constructor(rootLoggerName: string, logLevel: string, pretity: boolean) {
 
+      let pinoConfig: pino.LoggerOptions = {
+         name: rootLoggerName,
+         level: logLevel,
+      };
+
+      if (pretity) {
+         const pretityConfig = {
+            prettyPrint: {
+               suppressFlushSyncWarning: true,
+            },
+            prettifier: prettifierFactory({
+               colorize: true,
+               translateTime: 'yyyy-mm-dd HH:MM:ss o',
+               ignore: 'pid,hostname',
+               customPrettifiers: {
+                  '*': jsonHighlight,
+               },
+               theme: AndroidStudioTheme,
+            }),
+         };
+   
+         pinoConfig = { ...pinoConfig, ...pretityConfig };
+      }
+
+      this.rootLogger = pino(pinoConfig);
       (this.rootLogger as any).name = rootLoggerName;
    }   
    
@@ -88,16 +96,20 @@ class ApplicationLogger {
       return this.instance;
    }
 
-   static initialize(rootLoggerName: string): pino.Logger {
+   static initialize(rootLoggerName: string, logLevel: string, pretity: boolean): pino.Logger {
       if (this.instance) {
          throw new Error(`Pino logger is already initialized.`);
       }
-      this.instance = new this(rootLoggerName);
+      this.instance = new this(rootLoggerName, logLevel, pretity);
       return this.instance.rootLogger;
    }
 }
 
-export const initialize = (rootLoggerName: string) => ApplicationLogger.initialize(rootLoggerName);
+export const initialize = (
+   rootLoggerName: string, 
+   logLevel: string = 'info', 
+   pretity: boolean = true
+   ) => ApplicationLogger.initialize(rootLoggerName, logLevel, pretity);
 
 export const createLogger = (bindings?: pino.Bindings) => ApplicationLogger.getInstance().createLogger(bindings);
 

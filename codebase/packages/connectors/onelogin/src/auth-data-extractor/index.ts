@@ -27,7 +27,7 @@ export const openIdAuthDataMiddleware = (authDataCookieName = AUTH_DATA_COOKIE_N
       setOpenIdAuthData(res, authData);
     }
 
-    return next();
+    next();
   };
 };
 

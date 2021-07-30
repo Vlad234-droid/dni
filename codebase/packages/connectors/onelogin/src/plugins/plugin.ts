@@ -12,7 +12,7 @@ export type Optional = {
 
 interface PluginHandler {
   // tslint:disable-next-line callable-types (This is extended from and can't extend from a type alias in ts<2.2)
-  (req: express.Request, res: express.Response, next: express.NextFunction): Promise<void | express.Response>;
+  (req: express.Request, res: express.Response): Promise<void | express.Response>;
 }
 
 export type Plugin = PluginHandler & Optional & { info: string };

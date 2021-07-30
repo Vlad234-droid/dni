@@ -26,15 +26,13 @@ type Config<O> = {
   };
 };
 
-const handleNoData = (next: NextFunction, optional?: boolean) => {
-  if (optional) {
-    return next();
-  } else {
+const handleNoData = (optional?: boolean) => {
+  if (!optional) {
     throw new OneloginError('plugin', 'No user info found in response object', 401);
   }
 };
 
-const userDataCookieHandler = <O>(req: Request, res: Response, next: NextFunction, config: Config<O> & Optional) => {
+const userDataCookieHandler = <O>(req: Request, res: Response, config: Config<O> & Optional) => {
   const { cookieConfig, optional } = config;
   clearPluginCookiesIfSessionExpired(req, res, cookieConfig!);
 
@@ -48,7 +46,6 @@ const userDataCookieHandler = <O>(req: Request, res: Response, next: NextFunctio
 
   if (dataFromCookie) {
     setUserData(res, dataFromCookie);
-    return next();
   } else {
     const userInfo = getOpenIdUserInfo(res);
     if (userInfo) {
@@ -60,21 +57,19 @@ const userDataCookieHandler = <O>(req: Request, res: Response, next: NextFunctio
       });
 
       setUserData(res, payload);
-      return next();
     } else {
-      return handleNoData(next, optional);
+      handleNoData(optional);
     }
   }
 };
 
-const userDataNoCookieHandler = <O>(res: Response, next: NextFunction, config: Config<O> & Optional) => {
+const userDataNoCookieHandler = <O>(res: Response, config: Config<O> & Optional) => {
   const { optional } = config;
   const userInfo = getOpenIdUserInfo(res);
   if (userInfo) {
     setUserData(res, userInfo);
-    return next();
   } else {
-    return handleNoData(next, optional);
+    handleNoData(optional);
   }
 };
 
@@ -85,13 +80,15 @@ const userDataNoCookieHandler = <O>(res: Response, next: NextFunction, config: C
 export const userDataPlugin = <O>(config: Config<O> & Optional): Plugin => {
   const { shouldRun = () => true, cookieConfig, optional } = config;
 
-  const plugin: Plugin = async (req: Request, res: Response, next: NextFunction) => {
-    if (getUserData(res) || !shouldRun(req, res)) return next();
+  const plugin: Plugin = async (req: Request, res: Response) => {
+    if (getUserData(res) || !shouldRun(req, res)) {
+      return;
+     }
 
     if (cookieConfig) {
-      return userDataCookieHandler(req, res, next, config);
+      userDataCookieHandler(req, res, config);
     } else {
-      return userDataNoCookieHandler(res, next, config);
+      userDataNoCookieHandler(res, config);
     }
   };
 

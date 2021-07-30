@@ -271,11 +271,12 @@ export function prettifyLevel ({ log, theme = defaultTheme, levelKey = LEVEL_KEY
    if (levelKey in log === false) {
       return undefined;
    }
-   return typeof log[levelKey] === 'string' || typeof log[levelKey] === 'number'
-      ? theme.colorizeLevel
-      ? theme.colorizeLevel(log[levelKey] as string | number)
-      : defaultColorizeLevel(log[levelKey] as string | number, theme)
-      : undefined;
+   if (typeof log[levelKey] === 'string' || typeof log[levelKey] === 'number') {
+      return theme.colorizeLevel
+         ? theme.colorizeLevel(log[levelKey] as string | number)
+         : defaultColorizeLevel(log[levelKey] as string | number, theme);
+   }
+   return undefined;
 }
 
 

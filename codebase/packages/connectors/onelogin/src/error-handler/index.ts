@@ -14,7 +14,8 @@ export const errorHandler =
   (error: OneloginError | Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
     // preliminary check if headers already sent
     if (res.headersSent) {
-      return next(error);
+      next(error);
+      return;
     }
 
     clearCookies(res);
@@ -34,15 +35,15 @@ export const errorHandler =
       if (status === 401) {
         logger(LoggerEvent.info(flow, message, { req, res }));
         res.redirect(redirectAuthenticationPath);
-        return next();
+        next();
       } else {
         logger(LoggerEvent.error(flow, Error(message), { req, res }));
-        return next(error);
+        next(error);
       }
     } else {
       const message = `${status}, ${error.message}`;
       logger(LoggerEvent.error(flow, Error(message), { req, res }));
       res.status(status).json(error.message);
-      return next(error);
+      next(error);
     }
   };

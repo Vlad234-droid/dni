@@ -3,7 +3,7 @@ import http from 'http';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import os from 'os';
-import { isDEV } from './config/env';
+import { isDEV, isPPE, isPROD } from './config/env';
 
 import { initialize as initializeLogger, getHttpLoggerMiddleware } from '@dni-common/logger';
 
@@ -28,11 +28,21 @@ import { initializeTypeOrm } from './config/db';
 import { identityClientScopedTokenPlugin } from '@dni-connectors/onelogin';
 import { expressContext } from './context';
 
-const logger = initializeLogger('server');
+const config = getConfig();
+
+const logPretify = !!config.buildEnvironment() && config.buildEnvironment() === 'local';
+const logLevel = isPROD(config.runtimeEnvironment()) || isPPE(config.runtimeEnvironment()) 
+  ? 'info' 
+  : logPretify 
+    ? 'trace' 
+    : 'debug';
+
+const logger = initializeLogger('server', logLevel, logPretify);
+
+logger.info(`Current build environment: ${config.buildEnvironment()}`);
+logger.info(`Current infrastructure environment: ${config.runtimeEnvironment()}`);
 
 getEnv().validate();
-
-const config = getConfig();
 
 const app = express();
 
@@ -44,9 +54,6 @@ const context = expressContext(config);
 
 const startServer = async () => {
   try {
-    logger.info(`Current build environment: ${config.buildEnvironment()}`);
-    logger.info(`Current infrastructure environment: ${config.runtimeEnvironment()}`);
-
     // initialize connection to DB
     await initializeTypeOrm();
     logger.info('Connection to database has been established successfully.');
@@ -75,6 +82,7 @@ const startServer = async () => {
     } else {
       app.use(toMiddleware(
         identityClientScopedTokenPlugin({
+          apiEnv: config.apiEnv,
           identityClientId: config.identityClientId(),
           identityClientSecret: config.identityClientSecret(),
           cache: true,

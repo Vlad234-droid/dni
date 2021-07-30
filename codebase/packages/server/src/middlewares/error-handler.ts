@@ -5,7 +5,8 @@ import express from 'express';
 export const errorHandler: express.ErrorRequestHandler = (error, req, res, next) => {
   // preliminary check if headers already sent
   if (res.headersSent) {
-    return next(error);
+    next(error);
+    return;
   }
 
   console.log(error);
