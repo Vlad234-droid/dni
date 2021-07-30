@@ -103,7 +103,7 @@
       },
       "STICK_COOKIES_TO_APPLICATION_PATH": {
         "type": "plain",
-        "value": "false"
+        "value": "true"
       },
       "MAILING_TEMPLATE_ID": {
         "type": "plain",
