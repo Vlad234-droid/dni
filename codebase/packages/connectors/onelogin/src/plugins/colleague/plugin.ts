@@ -70,7 +70,7 @@ export const colleagueApiPlugin = <O>(config: Config<O> & Optional): Plugin => {
       apiEnv,
       cookieConfig,
       cache = true,
-      cacheTtl = 6 * 60 * 60,
+      cacheTtl = 6 * 60 * 60, // 6 hrs
       optional,
     } = config;
 

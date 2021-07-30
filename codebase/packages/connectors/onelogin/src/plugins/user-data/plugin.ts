@@ -33,44 +33,7 @@ const handleNoData = (optional?: boolean) => {
 };
 
 const userDataCookieHandler = <O>(req: Request, res: Response, config: Config<O> & Optional) => {
-  const { cookieConfig, optional } = config;
-  clearPluginCookiesIfSessionExpired(req, res, cookieConfig!);
 
-  const { secret, cookieName, compressed, cookieShapeResolver = (data: any) => data } = cookieConfig!;
-
-  const dataFromCookie = getDataFromCookie<O>(req, {
-    cookieName,
-    secret,
-    compressed,
-  });
-
-  if (dataFromCookie) {
-    setUserData(res, dataFromCookie);
-  } else {
-    const userInfo = getOpenIdUserInfo(res);
-    if (userInfo) {
-      const sid = userInfo?.sid;
-      const payload = { ...cookieShapeResolver(userInfo, res), sid };
-
-      setDataToCookie(res, payload, {
-        ...cookieConfig!,
-      });
-
-      setUserData(res, payload);
-    } else {
-      handleNoData(optional);
-    }
-  }
-};
-
-const userDataNoCookieHandler = <O>(res: Response, config: Config<O> & Optional) => {
-  const { optional } = config;
-  const userInfo = getOpenIdUserInfo(res);
-  if (userInfo) {
-    setUserData(res, userInfo);
-  } else {
-    handleNoData(optional);
-  }
 };
 
 /**
@@ -78,22 +41,48 @@ const userDataNoCookieHandler = <O>(res: Response, config: Config<O> & Optional)
  * It swaps the oidc or saml token for the identity access token.
  */
 export const userDataPlugin = <O>(config: Config<O> & Optional): Plugin => {
-  const { shouldRun = () => true, cookieConfig, optional } = config;
-
   const plugin: Plugin = async (req: Request, res: Response) => {
+    const { 
+      shouldRun = () => true, 
+      cookieConfig, 
+      optional,
+    } = config;
+  
     if (getUserData(res) || !shouldRun(req, res)) {
       return;
-     }
+    }
 
     if (cookieConfig) {
-      userDataCookieHandler(req, res, config);
+      clearPluginCookiesIfSessionExpired(req, res, cookieConfig!);
+  
+      const {  secret, cookieName, compressed } = cookieConfig;
+      const dataFromCookie = getDataFromCookie<O>(req, { cookieName, secret, compressed });
+  
+      if (dataFromCookie) {
+        setUserData(res, dataFromCookie);
+        return;
+      }
+    }
+  
+    const userInfo = getOpenIdUserInfo(res);
+    if (userInfo) {
+      if (cookieConfig) {
+        const { cookieShapeResolver = (data: any) => data } = cookieConfig;
+        const sid = userInfo?.sid;
+        const payload = { ...cookieShapeResolver(userInfo, res), sid };
+        setDataToCookie(res, payload, { ...cookieConfig });
+        setUserData(res, payload);
+      } else {
+        setUserData(res, userInfo);
+        
+      }
     } else {
-      userDataNoCookieHandler(res, config);
+      handleNoData(optional);
     }
   };
 
   plugin.info = 'User Data plugin';
-  plugin.optional = optional || false;
+  plugin.optional = config.optional || false;
 
   return plugin;
 };

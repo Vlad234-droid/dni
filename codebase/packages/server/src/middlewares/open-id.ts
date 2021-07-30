@@ -19,10 +19,10 @@ export const configureOneloginMidleware = async ({
   runtimeEnvironment,
   apiEnv,
   applicationCookieParserSecret,
-  applicationColleagueCookieName,
-  applicationColleagueCookieSecret,
-  applicationUserDataCookieName,
-  applicationUserDataCookieSecret,
+  // applicationColleagueCookieName,
+  // applicationColleagueCookieSecret,
+  // applicationUserDataCookieName,
+  // applicationUserDataCookieSecret,
   oneLoginIssuerUrl,
   oneLoginApplicationPath,
   oneLoginCallbackUrlRoot,
@@ -31,14 +31,14 @@ export const configureOneloginMidleware = async ({
   oidcClientId,
   oidcClientSecret,
   oidcRefreshTokenSecret,
-  oidcGroupFiltersRegex,
-  oidcAdminGroups,
-  oidcManagerGroups,
+  // oidcGroupFiltersRegex,
+  // oidcAdminGroups,
+  // oidcManagerGroups,
   identityClientId,
   identityClientSecret,
   identityUserScopedTokenCookieSecret,
   identityUserScopedTokenCookieName,
-  defaultRoles,
+  // defaultRoles,
 }: ProcessConfig) => {
   const isProduction = isPROD(runtimeEnvironment());
 
@@ -132,21 +132,23 @@ export const configureOneloginMidleware = async ({
     redirectAfterLogoutUrl: oneLoginRedirectAfterLogoutUrl(),
 
     plugins: [
-      userDataPlugin({
-        cookieConfig: {
-          cookieName: applicationUserDataCookieName(),
-          secret: applicationUserDataCookieSecret(),
-          path: oneLoginApplicationPath() || '/',
-          httpOnly: false,
-          secure: isProduction,
-          signed: isProduction,
-          cookieShapeResolver: (userInfo: OpenIdUserInfo) =>
-            openIdUserInfoResolver(
-              { defaultRoles, oidcGroupFiltersRegex, oidcManagerGroups, oidcAdminGroups } as ProcessConfig,
-              userInfo,
-            ),
-        },
-      }),
+      // userDataPlugin({
+      //   // ====================================================
+      //   // Omit cookie config to do not store data into cookies
+      //   // cookieConfig: {
+      //   //   cookieName: applicationUserDataCookieName(),
+      //   //   secret: applicationUserDataCookieSecret(),
+      //   //   path: oneLoginApplicationPath() || '/',
+      //   //   httpOnly: false,
+      //   //   secure: isProduction,
+      //   //   signed: isProduction,
+      //   //   cookieShapeResolver: (userInfo: OpenIdUserInfo) =>
+      //   //     openIdUserInfoResolver(
+      //   //       { defaultRoles, oidcGroupFiltersRegex, oidcManagerGroups, oidcAdminGroups } as ProcessConfig,
+      //   //       userInfo,
+      //   //     ),
+      //   // },
+      // }),
       identityTokenSwapPlugin({
         identityClientId: identityClientId(),
         identityClientSecret: identityClientSecret(),
@@ -164,15 +166,17 @@ export const configureOneloginMidleware = async ({
       colleagueApiPlugin({
         optional: true,
         apiEnv: apiEnv,
-        cookieConfig: {
-          cookieName: applicationColleagueCookieName(),
-          secret: applicationColleagueCookieSecret(),
-          path: oneLoginApplicationPath() || '/',
-          httpOnly: true,
-          secure: isProduction,
-          signed: isProduction,
-          cookieShapeResolver: (colleague: Colleague) => colleagueInfoResolver({} as ProcessConfig, colleague),
-        },
+        // ====================================================
+        // Omit cookie config to do not store data into cookies
+        // cookieConfig: {
+        //   cookieName: applicationColleagueCookieName(),
+        //   secret: applicationColleagueCookieSecret(),
+        //   path: oneLoginApplicationPath() || '/',
+        //   httpOnly: true,
+        //   secure: isProduction,
+        //   signed: isProduction,
+        //   cookieShapeResolver: (colleague: Colleague) => colleagueInfoResolver({} as ProcessConfig, colleague),
+        // },
       }),
       dniUserRefreshPlugin({
         optional: false,

@@ -16,15 +16,3 @@ export const getOpenIdUserInfo = <T = OpenIdUserInfo>(
   const openIdUserInfo = jwt.decode(res.oneLoginAuthData.idToken) as T;
   return openIdUserInfo;
 };
-
-export const setOpenIdUserInfo = <T>(res: Response, userInfo: T) => {
-  res.oneLoginUserInfo = userInfo;
-};
-
-declare global {
-  namespace Express {
-    export interface Response {
-      oneLoginUserInfo?: unknown;
-    }
-  }
-}

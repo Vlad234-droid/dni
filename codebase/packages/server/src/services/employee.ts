@@ -1,10 +1,10 @@
 import { Request, Response } from 'express';
-import { getUserData, getColleagueUuid } from '@dni-connectors/onelogin';
+import { getColleagueUuid, getOpenIdUserInfo, OpenIdUserInfo } from '@dni-connectors/onelogin';
 import { Colleague } from '@dni-connectors/colleague-api';
 
 import { getRepository, DniEntityTypeEnum, DniUser, DniUserExtras, DniUserSubscription } from '@dni/database';
 
-import { DniProfile } from 'config/auth-data';
+import { getConfig } from '../config/config-accessor';
 
 type EmailNotificationSettings = {
   receivePostsEmailNotifications: boolean;
@@ -12,15 +12,32 @@ type EmailNotificationSettings = {
 };
 
 const profileInfoExtractor = async (req: Request, res: Response) => {
-  const userInfo = getUserData<DniProfile>(res);
+  const openIdUserInfo = getOpenIdUserInfo<OpenIdUserInfo>(res);
   const colleagueUUID = getColleagueUuid(res);
+
+  const { defaultRoles, oidcGroupFiltersRegex, oidcManagerGroups, oidcAdminGroups } = getConfig();
+  const userRoles: Set<string> = new Set(defaultRoles());
+
+  if (openIdUserInfo) {
+    const userGroups = 
+      (Array.isArray(openIdUserInfo.groups) ? openIdUserInfo.groups : ((openIdUserInfo.groups as unknown as string) || '').split(',') || [])
+        .filter(Boolean)
+        .filter((group: string) => oidcGroupFiltersRegex().some((rr) => rr.test(group)));
+  
+    if (oidcManagerGroups().some((g) => userGroups.includes(g))) {
+      userRoles.add('Manager');
+    }
+    if (oidcAdminGroups().some((g) => userGroups.includes(g))) {
+      userRoles.add('Admin');
+    }
+  }
 
   const networks: number[] = await findSubscriptionEntityIdsBy(colleagueUUID!, DniEntityTypeEnum.NETWORK);
   const events: number[] = await findSubscriptionEntityIdsBy(colleagueUUID!, DniEntityTypeEnum.EVENT);
 
   return {
     colleagueUUID,
-    roles: userInfo?.roles || [],
+    roles: Array.from(userRoles.values()),
     networks,
     events,
   };
