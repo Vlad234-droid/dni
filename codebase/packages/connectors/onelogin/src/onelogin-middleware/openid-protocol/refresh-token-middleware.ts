@@ -36,7 +36,7 @@ export const getRefreshTokenMiddleware = <TClient extends Client>({
   tescoIssuer,
 }: {
   client: TClient;
-  authDataCookie: Required<OneloginCookieConfig> & { name: string };
+  authDataCookie: Required<OneloginCookieConfig>;
   refreshTokenSecret: string;
   logger: Logger;
   requireIdToken: boolean;

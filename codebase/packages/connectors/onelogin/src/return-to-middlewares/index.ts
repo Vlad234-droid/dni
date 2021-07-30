@@ -7,6 +7,8 @@ export type ViewPathPredicate = (path: string) => boolean;
 export const saveReturnToUrl = (
   authDataCookieName: string,
   cookieName: string,
+  cookieStickToAppPath: boolean,
+  appPath: string,
   isViewPath: ViewPathPredicate,
 ): RequestHandler => {
   return (req, res, next) => {
@@ -20,6 +22,7 @@ export const saveReturnToUrl = (
       res.cookie(cookieName, url, {
         maxAge: twoMinutes,
         httpOnly: false,
+        path: cookieStickToAppPath ? appPath || '/' : '/',
       });
     }
 
@@ -57,6 +60,7 @@ type ReturnToConfig = {
   isViewPath: ViewPathPredicate;
   authDataCookieName?: string;
   cookieName?: string;
+  cookieStickToAppPath?: boolean;
   mainPage?: string;
   appPath?: string;
 };
@@ -65,11 +69,12 @@ export const getReturnToMiddlewares = ({
   isViewPath,
   authDataCookieName = AUTH_DATA_COOKIE_NAME,
   cookieName = "returnTo",
+  cookieStickToAppPath = false,
   mainPage = "/",
   appPath = "",
 }: ReturnToConfig) => {
   return {
-    saveReturnToUrl: saveReturnToUrl(authDataCookieName, cookieName, isViewPath),
+    saveReturnToUrl: saveReturnToUrl(authDataCookieName, cookieName, cookieStickToAppPath, appPath, isViewPath),
     redirectAfterLogin: redirectAfterLogin(
       cookieName,
       mainPage,

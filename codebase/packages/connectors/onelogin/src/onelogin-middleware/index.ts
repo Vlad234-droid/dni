@@ -45,7 +45,7 @@ export type OneloginCookieConfig = {
   path?: string;
 
   /**
-   * cokkie name
+   * cookie name
    */
   name?: string;
 };

@@ -23,11 +23,15 @@ export type ProcessConfig = {
   applicationUrlUnsubscribe: () => string;
   applicationUploadSize: () => number;
   // cookies settings
-  applicationCookieParserSecret: () => string;
+  authDataCookieName: () => string | undefined;
+  sessionCookieName: () => string | undefined;
+  applicationReturnToCookieName: () => string | undefined;
+  applicationCookieParserSecret: () => string | undefined;
   applicationColleagueCookieName: () => string;
-  applicationColleagueCookieSecret: () => string;
+  applicationColleagueCookieSecret: () => string | undefined;
   applicationUserDataCookieName: () => string;
-  applicationUserDataCookieSecret: () => string;
+  applicationUserDataCookieSecret: () => string | undefined;
+  stickCookiesToApplicationPath: () => boolean;
   // cache related props
   cacheIdentityTokenKey: () => string;
   cacheIdentityTokenTtl: () => number;
@@ -81,6 +85,9 @@ export class ConfigAccessor {
       applicationUrlUnsubscribe: () => processEnv.APPLICATION_URL_UNSUBSCRIBE,
       applicationUploadSize: () => defaultConfig.applicationUploadSize,
       // cookies settings
+      authDataCookieName: () => processEnv.AUTH_DATA_COOKIE_NAME || undefined,
+      sessionCookieName: () => processEnv.SESSION_COOKIE_NAME || undefined,
+      applicationReturnToCookieName: () => processEnv.APPLICATION_RETURN_TO_COOKIE_NAME || undefined,
       applicationCookieParserSecret: () =>
         processEnv.APPLICATION_COOKIE_PARSER_SECRET || defaultConfig.applicationCookieParserSecret,
       applicationColleagueCookieName: () =>
@@ -89,6 +96,7 @@ export class ConfigAccessor {
       applicationUserDataCookieName: () =>
         processEnv.APPLICATION_USER_DATA_COOKIE_NAME || defaultConfig.applicationUserDataCookieName,
       applicationUserDataCookieSecret: () => processEnv.APPLICATION_USER_DATA_COOKIE_SECRET,
+      stickCookiesToApplicationPath: () => yn(processEnv.STICK_COOKIES_TO_APPLICATION_PATH, { default: false }),
       // cache related props
       cacheIdentityTokenKey: () => processEnv.CACHE_IDENTITY_TOKEN_KEY || defaultConfig.cacheIdentityTokenKey,
       cacheIdentityTokenTtl: () =>

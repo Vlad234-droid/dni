@@ -127,21 +127,40 @@ export const getOpenidMiddleware = async (configuration: OpenidConfig): Promise<
   } = configuration;
 
   //process.env.NODE_ENV === "development" ? false : true;
+  const omitUndefined = (obj: any) => {
+    const cloned = { ...obj };
+    Object.keys(cloned).forEach(key => cloned[key] === undefined && delete cloned[key]);
+    return cloned;
+  };
 
-  const authDataCookie = {
+  const authDataCookie: Required<OneloginCookieConfig> = {
     ...defaultCookieConfig(process.env.NODE_ENV),
+    path: '/',
     name: AUTH_DATA_COOKIE_NAME,
-    path: applicationPath || '/',
-    ...configuration.authDataCookie,
+    ...omitUndefined(configuration.authDataCookie),
   };
 
-  const sessionCookie = {
+  // if (authDataCookie.name === undefined || authDataCookie.name === null) {
+  //   authDataCookie.name = AUTH_DATA_COOKIE_NAME;
+  // }
+  // if (authDataCookie.path === undefined) {
+  //   authDataCookie.path = '/';
+  // }
+
+  const sessionCookie: Required<OneloginCookieConfig> = {
     ...defaultCookieConfig(process.env.NODE_ENV),
-    secure: false,
+    path: '/',
     name: SESSION_COOKIE_NAME,
-    path: applicationPath || '/',
-    ...configuration.sessionCookie,
+    secure: false,
+    ...omitUndefined(configuration.sessionCookie),
   };
+
+  // if (sessionCookie.name === undefined || sessionCookie.name === null) {
+  //   sessionCookie.name = SESSION_COOKIE_NAME;
+  // }
+  // if (sessionCookie.path === undefined) {
+  //   sessionCookie.path = '/';
+  // }
 
   const allIgnoredPaths = [...ignoredPathsFragments, AUTHENTICATION_PATH, LOGOUT_PATH, registeredCallbackUrlPath];
 
@@ -207,11 +226,10 @@ export const getOpenidMiddleware = async (configuration: OpenidConfig): Promise<
   router.use(openIdAuthDataMiddleware(authDataCookie.name));
 
   const clearCookies = (res: express.Response) => {
-    const path = applicationPath || '/';
     res
-      .clearCookie(authDataCookie.name, { path })
-      .clearCookie(sessionCookie.name, { path })
-      .clearCookie(`${sessionCookie.name}.sig`, { path });
+      .clearCookie(authDataCookie.name, { path: authDataCookie.path })
+      .clearCookie(sessionCookie.name, { path: sessionCookie.path })
+      .clearCookie(`${sessionCookie.name}.sig`, { path: sessionCookie.path });
   };
 
   router.get(AUTHENTICATION_PATH, (req, res, next) => {
@@ -229,7 +247,7 @@ export const getOpenidMiddleware = async (configuration: OpenidConfig): Promise<
       if (error && typeof error === 'object') {
         logger(LoggerEvent.error('login', error, { req, res }));
       } else {
-        logger(LoggerEvent.debug('login', 'nextWrapper in OpenId.authenticationHandler()', { req, res }));
+        logger(LoggerEvent.debug('login', 'OpenId authentication complete. Invoking next handler.', { req, res }));
       }
 
       next(error);

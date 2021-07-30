@@ -1,8 +1,8 @@
 import {
   getOpenidMiddleware,
   identityTokenSwapPlugin,
-  userDataPlugin,
-  OpenIdUserInfo,
+  // userDataPlugin,
+  // OpenIdUserInfo,
   withReturnTo,
   pinoLogger,
   colleagueApiPlugin,
@@ -10,19 +10,23 @@ import {
 
 import { isPROD } from '../config/env';
 import { ProcessConfig } from '../config/config-accessor';
-import { colleagueInfoResolver, openIdUserInfoResolver } from '../config/auth-data';
+// import { colleagueInfoResolver, openIdUserInfoResolver } from '../config/auth-data';
 
-import { Colleague } from '@dni-connectors/colleague-api';
+// import { Colleague } from '@dni-connectors/colleague-api';
 import { dniUserRefreshPlugin } from './onelogin-plugins';
 
 export const configureOneloginMidleware = async ({
   runtimeEnvironment,
   apiEnv,
+  authDataCookieName,
+  sessionCookieName,
+  applicationReturnToCookieName,
   applicationCookieParserSecret,
   // applicationColleagueCookieName,
   // applicationColleagueCookieSecret,
   // applicationUserDataCookieName,
   // applicationUserDataCookieSecret,
+  stickCookiesToApplicationPath,
   oneLoginIssuerUrl,
   oneLoginApplicationPath,
   oneLoginCallbackUrlRoot,
@@ -100,14 +104,16 @@ export const configureOneloginMidleware = async ({
      * Optional, auth data cookie configuration 
      */
     authDataCookie: {
-      name: 'dni.colleague.jwt',
+      name: authDataCookieName(),
+      path: stickCookiesToApplicationPath() ? oneLoginApplicationPath() || '/' : '/',
     },
 
     /** 
      * Optional, session cookie configuration 
      */
     sessionCookie: {
-      name: 'dni.session',
+      name: sessionCookieName(),
+      path: stickCookiesToApplicationPath() ? oneLoginApplicationPath() || '/' : '/',
     },
 
     /** 
@@ -138,7 +144,7 @@ export const configureOneloginMidleware = async ({
       //   // cookieConfig: {
       //   //   cookieName: applicationUserDataCookieName(),
       //   //   secret: applicationUserDataCookieSecret(),
-      //   //   path: oneLoginApplicationPath() || '/',
+      //   //   path: stickCookiesToApplicationPath() ? oneLoginApplicationPath() || undefined : undefined,
       //   //   httpOnly: false,
       //   //   secure: isProduction,
       //   //   signed: isProduction,
@@ -157,7 +163,7 @@ export const configureOneloginMidleware = async ({
         cookieConfig: {
           cookieName: identityUserScopedTokenCookieName(),
           secret: identityUserScopedTokenCookieSecret(),
-          path: oneLoginApplicationPath() || '/',
+          path: stickCookiesToApplicationPath() ? oneLoginApplicationPath() || '/' : '/',
           httpOnly: true,
           secure: isProduction,
           signed: isProduction,
@@ -171,7 +177,7 @@ export const configureOneloginMidleware = async ({
         // cookieConfig: {
         //   cookieName: applicationColleagueCookieName(),
         //   secret: applicationColleagueCookieSecret(),
-        //   path: oneLoginApplicationPath() || '/',
+        //   path: stickCookiesToApplicationPath() ? oneLoginApplicationPath() || '/' : '/',
         //   httpOnly: true,
         //   secure: isProduction,
         //   signed: isProduction,
@@ -187,9 +193,10 @@ export const configureOneloginMidleware = async ({
 
   const openIdMiddleware = withReturnTo(await openidMiddleware, {
     isViewPath: (path: string) => !path.match('^(/api|/auth|/sso|/static|/favicon.ico)'),
-    authDataCookieName: 'dni.colleague.jwt',
+    authDataCookieName: authDataCookieName(),
     appPath: oneLoginApplicationPath(),
-    cookieName: 'dni.returnTo',
+    cookieName: applicationReturnToCookieName(),
+    cookieStickToAppPath: stickCookiesToApplicationPath(),
   });
 
   return openIdMiddleware;
