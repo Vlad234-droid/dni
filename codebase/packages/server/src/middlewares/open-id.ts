@@ -42,44 +42,45 @@ export const configureOneloginMidleware = async ({
   identityClientSecret,
   identityUserScopedTokenCookieSecret,
   identityUserScopedTokenCookieName,
-  // defaultRoles,
-}: ProcessConfig) => {
+}: // defaultRoles,
+ProcessConfig) => {
   const isProduction = isPROD(runtimeEnvironment());
 
   const openidMiddleware = getOpenidMiddleware({
+    runtimeEnvironment: runtimeEnvironment(),
 
-    /** 
-     * The OneLogin generated Client ID for your OpenID Connect app 
+    /**
+     * The OneLogin generated Client ID for your OpenID Connect app
      */
     clientId: oidcClientId(),
 
-    /** 
-     * The OneLogin generated Client Secret for your OpenID Connect app 
+    /**
+     * The OneLogin generated Client Secret for your OpenID Connect app
      */
     clientSecret: oidcClientSecret(),
 
-    /** 
-     * A key used to sign & verify cookie values 
+    /**
+     * A key used to sign & verify cookie values
      */
     cookieKey: applicationCookieParserSecret(),
 
-    /** 
-     * issuer url e.g. https://login.ourtesco.com/oidc/2 
+    /**
+     * issuer url e.g. https://login.ourtesco.com/oidc/2
      */
     issuerUrl: oneLoginIssuerUrl(),
 
-    /** 
-     * Client secret used to encrypt refresh token 
+    /**
+     * Client secret used to encrypt refresh token
      */
     refreshTokenSecret: oidcRefreshTokenSecret(),
 
-    /** 
-     * A callback root that was registered for the application e.g. https://ourtesco.com (without the applicationPath) 
+    /**
+     * A callback root that was registered for the application e.g. https://ourtesco.com (without the applicationPath)
      */
     registeredCallbackUrlRoot: oneLoginCallbackUrlRoot(),
 
-    /** 
-     * A callback path that was registered for the application e.g. /auth/openid/callback 
+    /**
+     * A callback path that was registered for the application e.g. /auth/openid/callback
      */
     registeredCallbackUrlPath: oneLoginCallbackPath(),
 
@@ -100,34 +101,34 @@ export const configureOneloginMidleware = async ({
      */
     noRedirectPathFragments: ['/api'],
 
-    /** 
-     * Optional, auth data cookie configuration 
+    /**
+     * Optional, auth data cookie configuration
      */
     authDataCookie: {
       name: authDataCookieName(),
       path: stickCookiesToApplicationPath() ? oneLoginApplicationPath() || '/' : '/',
     },
 
-    /** 
-     * Optional, session cookie configuration 
+    /**
+     * Optional, session cookie configuration
      */
     sessionCookie: {
       name: sessionCookieName(),
       path: stickCookiesToApplicationPath() ? oneLoginApplicationPath() || '/' : '/',
     },
 
-    /** 
-     * Scopes of the data that we want to be present in the id_token 
+    /**
+     * Scopes of the data that we want to be present in the id_token
      */
     scope: ['openid', 'profile', 'params', 'groups'],
 
-    /** 
-     * Optional, callback that will be called with Event type objects durring authentication process 
+    /**
+     * Optional, callback that will be called with Event type objects durring authentication process
      */
     logger: pinoLogger({ name: 'middleware.onelogin' }),
 
-    /** 
-     * If true sets idToken and encRefreshToken in 'authData' cookie. 
+    /**
+     * If true sets idToken and encRefreshToken in 'authData' cookie.
      */
     requireIdToken: true,
 

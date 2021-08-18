@@ -6,7 +6,8 @@
     "dockerFileDirectory": "./dockerfiles/dni-frontend_docker_build.Dockerfile",
     "args": {
       "NEXUS_ACCESS_TOKEN": {
-        "type": "secret"
+        "type": "secret", 
+        "value": "nexus_access_token"
       },
       "NODE_ENV": {
         "type": "plain",
@@ -73,20 +74,24 @@
         "value": "tesco.colleague"
       },
       "APPLICATION_COLLEAGUE_DATA_COOKIE_SECRET": {
-        "type": "secret"
+        "type": "secret", 
+        "value": "application_colleague_data_cookie_secret"
       },
       "APPLICATION_USER_DATA_COOKIE_NAME": {
         "type": "plain",
         "value": "dni.user.data"
       },
       "APPLICATION_USER_DATA_COOKIE_SECRET": {
-        "type": "secret"
+        "type": "secret", 
+        "value": "application_user_data_cookie_secret"
       },
       "APPLICATION_COOKIE_PARSER_SECRET": {
-        "type": "secret"
+        "type": "secret", 
+        "value": "application_cookie_parser_secret"
       },
       "APPLICATION_WEB_HOOKS_SECRET": {
-        "type": "secret"
+        "type": "secret", 
+        "value": "application_web_hooks_secret"
       },
       "AUTH_DATA_COOKIE_NAME": {
         "type": "plain",
@@ -117,10 +122,16 @@
         "value": "true"
       },
       "OIDC_CLIENT_ID": {
-        "type": "secret"
+        "type": "secret", 
+        "value": "oidc_client_id"
       },
       "OIDC_CLIENT_SECRET": {
-        "type": "secret"
+        "type": "secret", 
+        "value": "oidc_client_secret"
+      },
+      "OIDC_REFRESH_TOKEN_SECRET": {
+        "type": "secret", 
+        "value": "oidc_refresh_token_secret"
       },
       "ONELOGIN_ISSUER_URL": {
         "type": "plain",
@@ -134,21 +145,21 @@
         "type": "plain",
         "value": "https://loginppe.ourtesco.com/oidc/2/logout"
       },
-      "OIDC_REFRESH_TOKEN_SECRET": {
-        "type": "secret"
-      },
       "IDENTITY_CLIENT_ID": {
-        "type": "secret"
+        "type": "secret", 
+        "value": "identity_client_id"
       },
       "IDENTITY_CLIENT_SECRET": {
-        "type": "secret"
+        "type": "secret", 
+        "value": "identity_client_secret"
       },
       "IDENTITY_USER_SCOPED_TOKEN_COOKIE_NAME": {
         "type": "plain",
         "value": "identity-user-scoped-token"
       },
       "IDENTITY_USER_SCOPED_TOKEN_COOKIE_SECRET": {
-        "type": "secret"
+        "type": "secret", 
+        "value": "identity_user_scoped_token_cookie_secret"
       },
       "TYPEORM_TYPE": {
         "type": "plain",
@@ -171,10 +182,12 @@
         "value": "dni"
       },
       "TYPEORM_USERNAME": {
-        "type": "secret"
+        "type": "secret", 
+        "value": "typeorm_username"
       },
       "TYPEORM_PASSWORD": {
-        "type": "secret"
+        "type": "secret", 
+        "value": "typeorm_password"
       },
       "TYPEORM_SSL": {
         "type": "plain",

@@ -19,96 +19,23 @@ import {
   OpenIdRouter,
   IssuerMetadataLight,
   OneloginRouteInfo,
-  OneloginError } from '../';
+  OneloginError,
+} from '../';
 
-import { defaultLogger, Logger, LoggerEvent } from '../../logger';
+import { defaultLogger, LoggerEvent } from '../../logger';
+import { Plugin } from '../../plugins';
+import { openIdAuthDataMiddleware, AuthData, setOpenIdAuthData, getOpenIdAuthData } from '../../auth-data-extractor';
+import { persistentTracingMiddleware, requestTracingMiddleware } from '../../tracing';
+import { errorHandler } from '../../error-handler';
+import * as OpenId from '../../passport-wrappers/openid';
+import { computeCookieKey, unless, printCookieInfo } from '../../utils';
 
 import { getRefreshTokenMiddleware } from './refresh-token-middleware';
-
-import { openIdAuthDataMiddleware, AuthData, setOpenIdAuthData, getOpenIdAuthData } from '../../auth-data-extractor';
-
-import { persistentTracingMiddleware, requestTracingMiddleware } from '../../tracing';
-
-import { errorHandler } from '../../error-handler';
-import { computeCookieKey, unless, printCookieInfo } from '../../utils';
-import * as OpenId from '../../passport-wrappers/openid';
-
-import { Plugin } from '../../plugins';
-
-
-type SupportedScopes = 'openid' | 'profile' | 'email' | 'address' | 'phone' | 'offline_access' | 'params' | 'groups';
-
-export type OpenidConfig = {
-  /** The OneLogin generated Client ID for your OpenID Connect app */
-  clientId: string;
-
-  /** The OneLogin generated Client Secret for your OpenID Connect app */
-  clientSecret: string;
-
-  /** Client secret used to encrypt refresh token */
-  refreshTokenSecret: string;
-
-  /** A key used to sign & verify cookie values */
-  cookieKey?: string;
-
-  /** issuer url e.g. https://login.ourtesco.com/oidc/2 */
-  issuerUrl: string;
-
-  /** A callback root that was registered for the application e.g. https://ourtesco.com (without the applicationPath) */
-  registeredCallbackUrlRoot: string;
-
-  /** A callback path that was registered for the application e.g. /auth/openid/callback */
-  registeredCallbackUrlPath: string;
-
-  /** Scopes of the data that we want to be present in the id_token */
-  scope: readonly ['openid', ...SupportedScopes[]];
-
-  /**
-   * A path the app is mounted on e.g. for https://ourtesco.com/my-shift the path is /my-shift.
-   * If the app is mounted on root path do not provide this option.
-   */
-  applicationPath?: string;
-
-  /**
-   * Paths that won't be part of token validation and refreshing
-   */
-  ignoredPathsFragments?: string[];
-
-  /**
-   * In case of error, calls containg that path framgents won't result in redirect.
-   * Instead middleware will return an error with correct status. Could be used for AJAX calls.
-   */
-  noRedirectPathFragments?: string[];
-
-  /** Optional, auth data cookie configuration */
-  authDataCookie?: OneloginCookieConfig;
-
-  /** Optional, session cookie configuration */
-  sessionCookie?: OneloginCookieConfig;
-
-  /**
-   * Middleware functions called inside onelogin middleware.
-   * They have access to user info and auth data from thier respective getters (getOpenIdUserInfo, getOpenIdAuthData, getSamlUserInfo).
-   * Throwing error will be logged, but won't cause the signing in to crash.
-   * Will be called while authenticating and with every non ignored requests.
-   */
-  plugins?: Plugin[];
-
-  /** Optional, callback that will be called with Event type objects durring authentication process */
-  logger?: Logger;
-
-  /** If true sets idToken and encRefreshToken in 'authData' cookie. */
-  requireIdToken?: boolean;
-
-  /**
-   * Absolute url that we will redirect to after logout, that can lead to onelogin session termination ednpoint .
-   * Default: `${applicationPath}/sso/auth`
-   */
-  redirectAfterLogoutUrl?: string;
-};
+import { OpenidConfig } from './openid-config';
 
 export const getOpenidMiddleware = async (configuration: OpenidConfig): Promise<OpenIdRouter> => {
   const {
+    runtimeEnvironment = 'production',
     clientId,
     clientSecret,
     cookieKey = computeCookieKey(clientId),
@@ -127,17 +54,17 @@ export const getOpenidMiddleware = async (configuration: OpenidConfig): Promise<
   } = configuration;
 
   //process.env.NODE_ENV === "development" ? false : true;
-  const omitUndefined = (obj: any) => {
+  const omitUndefinedPeoperties = (obj: any) => {
     const cloned = { ...obj };
-    Object.keys(cloned).forEach(key => cloned[key] === undefined && delete cloned[key]);
+    Object.keys(cloned).forEach((key) => cloned[key] === undefined && delete cloned[key]);
     return cloned;
   };
 
   const authDataCookie: Required<OneloginCookieConfig> = {
-    ...defaultCookieConfig(process.env.NODE_ENV),
+    ...defaultCookieConfig(runtimeEnvironment),
     path: '/',
     name: AUTH_DATA_COOKIE_NAME,
-    ...omitUndefined(configuration.authDataCookie),
+    ...omitUndefinedPeoperties(configuration.authDataCookie),
   };
 
   // if (authDataCookie.name === undefined || authDataCookie.name === null) {
@@ -148,11 +75,11 @@ export const getOpenidMiddleware = async (configuration: OpenidConfig): Promise<
   // }
 
   const sessionCookie: Required<OneloginCookieConfig> = {
-    ...defaultCookieConfig(process.env.NODE_ENV),
+    ...defaultCookieConfig(runtimeEnvironment),
     path: '/',
     name: SESSION_COOKIE_NAME,
     secure: false,
-    ...omitUndefined(configuration.sessionCookie),
+    ...omitUndefinedPeoperties(configuration.sessionCookie),
   };
 
   // if (sessionCookie.name === undefined || sessionCookie.name === null) {
