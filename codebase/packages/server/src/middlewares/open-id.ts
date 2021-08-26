@@ -6,6 +6,7 @@ import {
   withReturnTo,
   pinoLogger,
   colleagueApiPlugin,
+  userDataPlugin,
 } from '@dni-connectors/onelogin';
 
 import { isPROD } from '../config/env';
@@ -13,7 +14,7 @@ import { ProcessConfig } from '../config/config-accessor';
 // import { colleagueInfoResolver, openIdUserInfoResolver } from '../config/auth-data';
 
 // import { Colleague } from '@dni-connectors/colleague-api';
-import { dniUserRefreshPlugin } from './onelogin-plugins';
+import { dniRolesPlugin, dniUserRefreshPlugin } from './onelogin-plugins';
 
 export const configureOneloginMidleware = async ({
   runtimeEnvironment,
@@ -35,15 +36,15 @@ export const configureOneloginMidleware = async ({
   oidcClientId,
   oidcClientSecret,
   oidcRefreshTokenSecret,
-  // oidcGroupFiltersRegex,
-  // oidcAdminGroups,
-  // oidcManagerGroups,
+  oidcGroupFiltersRegex,
+  oidcAdminGroups,
+  oidcManagerGroups,
   identityClientId,
   identityClientSecret,
   identityUserScopedTokenCookieSecret,
   identityUserScopedTokenCookieName,
-}: // defaultRoles,
-ProcessConfig) => {
+  defaultRoles,
+}: ProcessConfig) => {
   const isProduction = isPROD(runtimeEnvironment());
 
   const openidMiddleware = getOpenidMiddleware({
@@ -139,23 +140,24 @@ ProcessConfig) => {
     redirectAfterLogoutUrl: oneLoginRedirectAfterLogoutUrl(),
 
     plugins: [
-      // userDataPlugin({
-      //   // ====================================================
-      //   // Omit cookie config to do not store data into cookies
-      //   // cookieConfig: {
-      //   //   cookieName: applicationUserDataCookieName(),
-      //   //   secret: applicationUserDataCookieSecret(),
-      //   //   path: stickCookiesToApplicationPath() ? oneLoginApplicationPath() || undefined : undefined,
-      //   //   httpOnly: false,
-      //   //   secure: isProduction,
-      //   //   signed: isProduction,
-      //   //   cookieShapeResolver: (userInfo: OpenIdUserInfo) =>
-      //   //     openIdUserInfoResolver(
-      //   //       { defaultRoles, oidcGroupFiltersRegex, oidcManagerGroups, oidcAdminGroups } as ProcessConfig,
-      //   //       userInfo,
-      //   //     ),
-      //   // },
-      // }),
+      userDataPlugin({
+        optional: false,
+        // ====================================================
+        // Omit cookie config to do not store data into cookies
+        // cookieConfig: {
+        //   cookieName: applicationUserDataCookieName(),
+        //   secret: applicationUserDataCookieSecret(),
+        //   path: stickCookiesToApplicationPath() ? oneLoginApplicationPath() || undefined : undefined,
+        //   httpOnly: false,
+        //   secure: isProduction,
+        //   signed: isProduction,
+        //   cookieShapeResolver: (userInfo: OpenIdUserInfo) =>
+        //     openIdUserInfoResolver(
+        //       { defaultRoles, oidcGroupFiltersRegex, oidcManagerGroups, oidcAdminGroups } as ProcessConfig,
+        //       userInfo,
+        //     ),
+        // },
+      }),
       identityTokenSwapPlugin({
         identityClientId: identityClientId(),
         identityClientSecret: identityClientSecret(),
@@ -184,6 +186,12 @@ ProcessConfig) => {
         //   signed: isProduction,
         //   cookieShapeResolver: (colleague: Colleague) => colleagueInfoResolver({} as ProcessConfig, colleague),
         // },
+      }),
+      dniRolesPlugin({
+        defaultRoles: defaultRoles(),
+        oidcGroupFiltersRegex: oidcGroupFiltersRegex(), 
+        oidcManagerGroups: oidcManagerGroups(), 
+        oidcAdminGroups: oidcAdminGroups(), 
       }),
       dniUserRefreshPlugin({
         optional: false,

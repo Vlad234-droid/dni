@@ -1,5 +1,7 @@
 import express, { Request, Response } from 'express';
 
+import { roleAuth } from '../../../middlewares/role-auth-handler';
+
 import {
   // employee
   getProfile,
@@ -15,8 +17,6 @@ import {
   getPersonalEmail,
   addPersonalEmail,
   refreshPersonalEmail,
-  // ccrm-events
-  consumeCepEvent,
   // notification
   getNotifications,
   getNetworkNotifications,
@@ -33,6 +33,9 @@ import {
 } from '../../../controllers';
 
 const dniApi = express.Router();
+
+const ROLE_ADMIN = 'Admin';
+const ROLE_MANAGER = 'Manager';
 
 dniApi.get('/employees/profile', getProfile);
 
@@ -52,13 +55,14 @@ dniApi.put('/employees/personal-email/:addressId', refreshPersonalEmail);
 dniApi.get('/events/participants', getEventsParticipants);
 dniApi.get('/networks/participants', getNetworksParticipants);
 
-dniApi.get('/reports/members', getMembersReportByFilters);
-dniApi.get('/reports/regions', getRegionsReportByFilters);
-dniApi.get('/reports/departments', getDepartmentsReportByFilters);
-dniApi.post('/reports/print-pdf', printPDF);
-
 dniApi.get('/notifications', getNotifications);
 dniApi.get('/notifications/networks', getNetworkNotifications);
 dniApi.post('/notifications/acknowledge', acknowledgeNotification);
+
+// pls. note: roleAuth middleware is applied
+dniApi.get('/reports/members', roleAuth([ ROLE_ADMIN, ROLE_MANAGER ]), getMembersReportByFilters);
+dniApi.get('/reports/regions', roleAuth([ ROLE_ADMIN, ROLE_MANAGER ]), getRegionsReportByFilters);
+dniApi.get('/reports/departments', roleAuth([ ROLE_ADMIN, ROLE_MANAGER ]), getDepartmentsReportByFilters);
+dniApi.post('/reports/print-pdf', roleAuth([ ROLE_ADMIN, ROLE_MANAGER ]), printPDF);
 
 export { dniApi };

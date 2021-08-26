@@ -3,6 +3,8 @@ import path from 'path';
 import express from 'express';
 
 export const errorHandler: express.ErrorRequestHandler = (error, req, res, next) => {
+  console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
+
   // preliminary check if headers already sent
   if (res.headersSent) {
     next(error);

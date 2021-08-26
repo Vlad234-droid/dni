@@ -2,9 +2,10 @@ import { Request, Response } from 'express';
 import { getColleagueUuid, getOpenIdUserInfo, OpenIdUserInfo } from '@dni-connectors/onelogin';
 import { Colleague } from '@dni-connectors/colleague-api';
 
-import { getRepository, DniEntityTypeEnum, DniUser, DniUserExtras, DniUserSubscription } from '@dni/database';
+import { getRepository, DniEntityTypeEnum, DniUser, DniUserExtras, DniUserSubscription, CcmsEntity } from '@dni/database';
 
 import { getConfig } from '../config/config-accessor';
+import { ApiError } from '../utils/api-error';
 
 type EmailNotificationSettings = {
   receivePostsEmailNotifications: boolean;
@@ -112,6 +113,11 @@ const removeSubscriptionEntity = async (
 };
 
 const createNetworkRelation = async (colleagueUUID: string, networkId: number) => {
+  const network = await getRepository(CcmsEntity).findOne({ entityId: networkId, entityType: DniEntityTypeEnum.NETWORK});
+  if (network === undefined) {
+    throw new ApiError(400, `network:${networkId} is invalid`);
+  }
+
   await createSubscriptionEntity(colleagueUUID, networkId, DniEntityTypeEnum.NETWORK);
 };
 
@@ -120,6 +126,21 @@ const removeNetworkRelation = async (colleagueUUID: string, networkId: number) =
 };
 
 const createEventRelation = async (colleagueUUID: string, eventId: number) => {
+  const event = await getRepository(CcmsEntity).findOne({ entityId: eventId, entityType: DniEntityTypeEnum.EVENT});
+  if (event === undefined) {
+    throw new ApiError(400, `eventId:${eventId} is invalid`);
+  }
+
+  const { maxParticipants } = event!.entityInstance! as { maxParticipants?: number };
+
+  const currentParticipants = await getRepository(DniUserSubscription)
+    .createQueryBuilder()
+    .where({ subscriptionEntityId: eventId, subscriptionEntityType: DniEntityTypeEnum.EVENT })
+    .getCount();
+
+  if (maxParticipants !== undefined && !Number.isNaN(maxParticipants) && currentParticipants >= maxParticipants) {
+    throw new ApiError(400, `participants limit exceeded for eventId:${eventId}.`);
+  }
   await createSubscriptionEntity(colleagueUUID, eventId, DniEntityTypeEnum.EVENT);
 };
 
@@ -149,18 +170,18 @@ const storeSettings = async (colleagueUUID: string, settings: EmailNotificationS
   const repository = getRepository(DniUser);
   const dniUser = await repository.findOneOrFail({ colleagueUUID });
 
-  console.log(JSON.stringify(dniUser));
-  console.log(JSON.stringify(dniUser?.extras));
+  // console.log(JSON.stringify(dniUser));
+  // console.log(JSON.stringify(dniUser?.extras));
 
   if (!dniUser.extras) {
     dniUser.initExtras();
   }
 
-  console.log(JSON.stringify(settings));
+  // console.log(JSON.stringify(settings));
 
   dniUser.extras!.settings = { ...dniUser.extras!.settings, ...settings };
 
-  console.log(JSON.stringify(dniUser));
+  // console.log(JSON.stringify(dniUser));
 
   repository.save(dniUser);
 
@@ -171,11 +192,11 @@ const findSettings = async (colleagueUUID: string) => {
   const repository = getRepository(DniUserExtras);
   const dniUserExtras = await repository.findOne({ colleagueUUID });
 
-  console.log(JSON.stringify(dniUserExtras));
-  console.log(JSON.stringify(dniUserExtras?.settings));
+  // console.log(JSON.stringify(dniUserExtras));
+  // console.log(JSON.stringify(dniUserExtras?.settings));
 
   const settings = dniUserExtras?.settings || {};
-  console.log(JSON.stringify(settings));
+  // console.log(JSON.stringify(settings));
 
   return dniUserExtras || { colleagueUUID };
 };
