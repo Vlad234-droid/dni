@@ -71,7 +71,7 @@
       },
       "APPLICATION_COLLEAGUE_DATA_COOKIE_NAME": {
         "type": "plain",
-        "value": "tesco.colleague"
+        "value": "dni.colleague"
       },
       "APPLICATION_COLLEAGUE_DATA_COOKIE_SECRET": {
         "type": "secret",
@@ -95,19 +95,19 @@
       },
       "AUTH_DATA_COOKIE_NAME": {
         "type": "plain",
-        "value": "tesco.colleague.jwt"
+        "value": "dni.colleague.jwt"
       },
       "SESSION_COOKIE_NAME": {
         "type": "plain",
-        "value": "session.startup"
+        "value": "dni.session.startup"
       },
       "APPLICATION_RETURN_TO_COOKIE_NAME": {
         "type": "plain",
-        "value": "return-to"
+        "value": "dni.return-to"
       },
       "STICK_COOKIES_TO_APPLICATION_PATH": {
         "type": "plain",
-        "value": "false"
+        "value": "true"
       },
       "MAILING_TEMPLATE_ID": {
         "type": "plain",
