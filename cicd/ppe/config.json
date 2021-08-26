@@ -155,7 +155,7 @@
       },
       "IDENTITY_USER_SCOPED_TOKEN_COOKIE_NAME": {
         "type": "plain",
-        "value": "identity-user-scoped-token"
+        "value": "dni.identity.ust"
       },
       "IDENTITY_USER_SCOPED_TOKEN_COOKIE_SECRET": {
         "type": "secret",
