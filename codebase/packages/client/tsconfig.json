@@ -3,27 +3,13 @@
   "compilerOptions": {
     "target": "es5",
     "module": "esnext",
+    "noImplicitAny": false,
     "moduleResolution": "node",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
-    "typeRoots": [
-      "./src/types",
-      "./node_modules/@types",
-      "../../node_modules/@types"
-    ],
-    // "rootDir": "./src",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "typeRoots": ["./src/types", "./node_modules/@types", "../../node_modules/@types"],
     "baseUrl": "./src",
     "jsx": "react-jsx"
   },
-  "include": [
-    "./src/**/*"
-  ],
-  "exclude": [
-    "node_modules",
-    "**/*.spec.ts",
-    "./src/setupProxy.js"
-  ]
+  "include": ["./src/**/*"],
+  "exclude": ["node_modules", "**/*.spec.ts", "./src/setupProxy.js"]
 }

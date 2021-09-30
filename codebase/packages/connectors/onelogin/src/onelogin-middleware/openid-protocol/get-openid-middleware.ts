@@ -289,7 +289,7 @@ export const getOpenidMiddleware = async (configuration: OpenidConfig): Promise<
         logger(LoggerEvent.debug('login', `Running OpenId plugin: ${plugin.info}`, { req, res }));
         await plugin(req, res);
         next();
-      } catch (error) {
+      } catch (error: any) {
         if (plugin.optional) {
           logger(LoggerEvent.warn('plugin', `Error while executing plugin ${plugin.info}`, { req, res }, error));
           next();

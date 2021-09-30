@@ -1,7 +1,5 @@
-import { Response, Request, NextFunction } from 'express';
-import { getColleagueData, getColleagueUuid, getOpenIdUserInfo, getUserData, Optional, Plugin } from '@dni-connectors/onelogin';
-import { ColleagueType, createOrUpdateDniUser } from '../../services';
-import NodeCache from 'node-cache';
+import { Response, Request } from 'express';
+import { getUserData, Optional, Plugin } from '@dni-connectors/onelogin';
 
 type Config<O> = {
   /**
@@ -18,7 +16,7 @@ type Config<O> = {
   oidcManagerGroups: string[];
 
   oidcAdminGroups: string[];
-}
+};
 
 /**
  * A plugin middleware to be used in onelogin.
@@ -37,14 +35,14 @@ export const dniRolesPlugin = <O>(config: Config<O> & Optional): Plugin => {
       throw Error('No userData found');
     }
 
-    const userGroups = (
-      Array.isArray(userData.groups) ? userData.groups : ((userData.groups) || '').split(',') || []
-    )
+    const userGroups = (Array.isArray(userData.groups) ? userData.groups : (userData.groups || '').split(',') || [])
       .filter(Boolean)
-      .filter((group: string) => Array.isArray(oidcGroupFiltersRegex) && oidcGroupFiltersRegex.length > 0 
-        ? oidcGroupFiltersRegex.some((rr) => rr.test(group)) 
-        : true);
-    
+      .filter((group: string) =>
+        Array.isArray(oidcGroupFiltersRegex) && oidcGroupFiltersRegex.length > 0
+          ? oidcGroupFiltersRegex.some((rr) => rr.test(group))
+          : true,
+      );
+
     const userRoles: Set<string> = new Set(defaultRoles);
 
     if (oidcManagerGroups.some((g) => userGroups.includes(g))) {
@@ -56,7 +54,7 @@ export const dniRolesPlugin = <O>(config: Config<O> & Optional): Plugin => {
 
     setDniRoles(res, Array.from(userRoles.values()));
   };
-  
+
   plugin.info = 'DNI User Roles plugin';
   plugin.optional = config.optional || false;
 

@@ -31,11 +31,8 @@ import { expressContext } from './context';
 const config = getConfig();
 
 const logPretify = !!config.buildEnvironment() && config.buildEnvironment() === 'local';
-const logLevel = isPROD(config.runtimeEnvironment()) || isPPE(config.runtimeEnvironment()) 
-  ? 'info' 
-  : logPretify 
-    ? 'trace' 
-    : 'debug';
+const logLevel =
+  isPROD(config.runtimeEnvironment()) || isPPE(config.runtimeEnvironment()) ? 'info' : logPretify ? 'trace' : 'debug';
 
 const logger = initializeLogger('server', logLevel, logPretify);
 
@@ -80,16 +77,18 @@ const startServer = async () => {
       app.use(fakeLoginConfig(context, config));
       app.use(fakeUserExtractor);
     } else {
-      app.use(toMiddleware(
-        identityClientScopedTokenPlugin({
-          apiEnv: config.apiEnv,
-          identityClientId: config.identityClientId(),
-          identityClientSecret: config.identityClientSecret(),
-          cache: true,
-          optional: false,
-        })
-      ));
-  
+      app.use(
+        toMiddleware(
+          identityClientScopedTokenPlugin({
+            apiEnv: config.apiEnv,
+            identityClientId: config.identityClientId(),
+            identityClientSecret: config.identityClientSecret(),
+            cache: true,
+            optional: false,
+          }),
+        ),
+      );
+
       const openIdMiddleware = await configureOneloginMidleware(config);
       app.use(openIdMiddleware);
     }
@@ -113,7 +112,7 @@ const startServer = async () => {
       //console.log(`⚡️ Server is running at http://localhost:${PORT}`);
       logger.info(`Server is running at http://${os.hostname().toLowerCase()}:${PORT}`);
     });
-  } catch (error) {
+  } catch (error: any) {
     logger.fatal(error);
     process.exit(1);
   }

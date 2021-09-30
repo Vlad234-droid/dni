@@ -16,13 +16,9 @@ import {
 } from '../config/dateTime';
 import { Time, TimePart, ValidTime, Date } from '../config/types';
 
-export const getAvailableTimeOptions = (
-  startTime = START_TIME_OPTION,
-  endTime = END_TIME_OPTION,
-  minutes = 0,
-) => {
+export const getAvailableTimeOptions = (startTime = START_TIME_OPTION, endTime = END_TIME_OPTION, minutes = 0) => {
   let start = startTime;
-  const options = [];
+  const options: Array<{ hh: string; mm: string }> = [];
 
   while (start <= endTime) {
     options.push({
@@ -62,14 +58,11 @@ export const getTimeWithLeadingZero = (time: Time) => ({
   mm: getStringWithLeadingZero(time.mm),
 });
 
-export const getTimeFragments = (
-  timeFormat = TIME_FORMAT,
-  timeSeparator = TIME_SEPARATOR,
-) => timeFormat.split(timeSeparator) as TimePart[];
+export const getTimeFragments = (timeFormat = TIME_FORMAT, timeSeparator = TIME_SEPARATOR) =>
+  timeFormat.split(timeSeparator) as TimePart[];
 
 export const isTimeOptionActive = (selected: Time, option: Time) =>
-  selected[HOUR_KEY] === option[HOUR_KEY] &&
-  selected[MINUTE_KEY] === option[MINUTE_KEY];
+  selected[HOUR_KEY] === option[HOUR_KEY] && selected[MINUTE_KEY] === option[MINUTE_KEY];
 
 export const getTimeValue = (time: Time) => {
   // isAnyDateFragmentEmpty internally uses separator '-'
@@ -77,10 +70,7 @@ export const getTimeValue = (time: Time) => {
 
   const { hh, mm } = time;
 
-  return TIME_FORMAT.replace(HOUR_KEY, hh).replace(
-    MINUTE_KEY,
-    padStart(mm, 2, '0'),
-  );
+  return TIME_FORMAT.replace(HOUR_KEY, hh).replace(MINUTE_KEY, padStart(mm, 2, '0'));
 };
 
 export const getKey = (event: KeyboardEvent) => {
@@ -89,13 +79,9 @@ export const getKey = (event: KeyboardEvent) => {
   return !charCode ? which : charCode;
 };
 
-export const isLastTimeFragment = (
-  index: number,
-  timeFragments: Array<string>,
-) => index === timeFragments.length - 1;
+export const isLastTimeFragment = (index: number, timeFragments: Array<string>) => index === timeFragments.length - 1;
 
-export const getAriaLabel = (time: Time) =>
-  `${TIME_ARIA_LABEL}: ${getTimeValue(time)}`;
+export const getAriaLabel = (time: Time) => `${TIME_ARIA_LABEL}: ${getTimeValue(time)}`;
 
 export const isFragmentFilled = (value: Time, fragmentType: TimePart) =>
   value[fragmentType].length === fragmentType.length;
@@ -116,16 +102,12 @@ export const isTimeFragmentValid = (type: TimePart, value: string | number) =>
   isTypedValueValid(value) && !(value > TIME_INPUT_MAX_LIMITS[type]);
 
 export const getTimeValidationObject = (time: Time) =>
-  (Object.keys(time) as TimePart[]).reduce(
-    (obj: ValidTime, timeFragment: TimePart) => {
-      obj[timeFragment] = isTimeFragmentValid(timeFragment, time[timeFragment]);
-      return obj;
-    },
-    {} as ValidTime,
-  );
+  (Object.keys(time) as TimePart[]).reduce((obj: ValidTime, timeFragment: TimePart) => {
+    obj[timeFragment] = isTimeFragmentValid(timeFragment, time[timeFragment]);
+    return obj;
+  }, {} as ValidTime);
 
-export const getAriaDescribedBy = (id: string, error: boolean) =>
-  (error && `${id}-error`) || undefined;
+export const getAriaDescribedBy = (id: string, error: boolean) => (error && `${id}-error`) || undefined;
 
 export const getDateTimeFromObject = (date: Date, time: Time) =>
   DateTime.fromObject({

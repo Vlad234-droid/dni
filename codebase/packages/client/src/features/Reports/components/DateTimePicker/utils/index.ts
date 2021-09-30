@@ -18,7 +18,7 @@ import { Time, TimePart, ValidTime, Date } from '../config/types';
 
 export const getAvailableTimeOptions = (startTime = START_TIME_OPTION, endTime = END_TIME_OPTION, minutes = 0) => {
   let start = startTime;
-  const options = [];
+  const options: Array<{ hh: string; mm: string }> = [];
 
   while (start <= endTime) {
     options.push({
