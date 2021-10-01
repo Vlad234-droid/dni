@@ -21,7 +21,7 @@ export const configureOneloginMidleware = async ({
   apiEnv,
   authDataCookieName,
   sessionCookieName,
-  applicationReturnToCookieName,
+  // applicationReturnToCookieName,
   applicationCookieParserSecret,
   // applicationColleagueCookieName,
   // applicationColleagueCookieSecret,
@@ -189,9 +189,9 @@ export const configureOneloginMidleware = async ({
       }),
       dniRolesPlugin({
         defaultRoles: defaultRoles(),
-        oidcGroupFiltersRegex: oidcGroupFiltersRegex(), 
-        oidcManagerGroups: oidcManagerGroups(), 
-        oidcAdminGroups: oidcAdminGroups(), 
+        oidcGroupFiltersRegex: oidcGroupFiltersRegex(),
+        oidcManagerGroups: oidcManagerGroups(),
+        oidcAdminGroups: oidcAdminGroups(),
       }),
       dniUserRefreshPlugin({
         optional: false,
@@ -200,13 +200,14 @@ export const configureOneloginMidleware = async ({
     ],
   });
 
-  const openIdMiddleware = withReturnTo(await openidMiddleware, {
-    isViewPath: (path: string) => !path.match('^(/api|/auth|/sso|/static|/favicon.ico)'),
-    authDataCookieName: authDataCookieName(),
-    appPath: oneLoginApplicationPath(),
-    cookieName: applicationReturnToCookieName(),
-    cookieStickToAppPath: stickCookiesToApplicationPath(),
-  });
+  // const openIdMiddleware = withReturnTo(await openidMiddleware, {
+  //   isViewPath: (path: string) => !path.match('^(/api|/auth|/sso|/static|/favicon.ico)'),
+  //   authDataCookieName: authDataCookieName(),
+  //   appPath: oneLoginApplicationPath(),
+  //   cookieName: applicationReturnToCookieName(),
+  //   cookieStickToAppPath: stickCookiesToApplicationPath(),
+  // });
 
-  return openIdMiddleware;
+  // return openIdMiddleware;
+  return await openidMiddleware;
 };

@@ -2,17 +2,16 @@ import yn from 'yn';
 
 import { ApiEnv } from '@energon-connectors/core';
 
-import { getAppEnv, isDEV } from './env';
+import { getAppEnv, isLocal, isDEV } from './env';
 import { ProcessEnv, getEnv } from './env-accessor';
 import { defaultConfig } from './default';
-
 
 export type ProcessConfig = {
   // general
   buildEnvironment: () => string;
   runtimeEnvironment: () => string;
   environment: () => string;
-  apiEnv: () => ApiEnv,
+  apiEnv: () => ApiEnv;
   port: () => number;
   // D&I application specific settings
   applicationName: () => string;
@@ -73,9 +72,11 @@ export class ConfigAccessor {
       runtimeEnvironment: () => processEnv.RUNTIME_ENV,
       environment: () => processEnv.NODE_ENV,
       port: () => (isNaN(Number(processEnv.NODE_PORT)) ? defaultConfig.port : Number(processEnv.NODE_PORT)),
-      apiEnv: () => getAppEnv(
-        this.config.runtimeEnvironment(), 
-        isDEV(this.config.buildEnvironment()) ? this.config.mockServerUrl() : undefined),
+      apiEnv: () =>
+        getAppEnv(
+          this.config.runtimeEnvironment(),
+          isLocal(this.config.runtimeEnvironment()) ? this.config.mockServerUrl() : undefined,
+        ),
       // D&I application specific settings
       applicationName: () => defaultConfig.applicationName,
       applicationPublicUrl: () => processEnv.APPLICATION_PUBLIC_URL,

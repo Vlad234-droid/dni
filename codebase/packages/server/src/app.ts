@@ -3,7 +3,7 @@ import http from 'http';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import os from 'os';
-import { isDEV, isPPE, isPROD } from './config/env';
+import { isLocal, isDEV, isPPE, isPROD } from './config/env';
 
 import { initialize as initializeLogger, getHttpLoggerMiddleware } from '@dni-common/logger';
 
@@ -30,7 +30,7 @@ import { expressContext } from './context';
 
 const config = getConfig();
 
-const logPretify = !!config.buildEnvironment() && config.buildEnvironment() === 'local';
+const logPretify = !!config.buildEnvironment() && isLocal(config.buildEnvironment());
 const logLevel =
   isPROD(config.runtimeEnvironment()) || isPPE(config.runtimeEnvironment()) ? 'info' : logPretify ? 'trace' : 'debug';
 
@@ -68,15 +68,7 @@ const startServer = async () => {
 
     app.use('/', healthCheck);
 
-    if (isDEV(config.buildEnvironment()) || !config.useOneLogin()) {
-      logger.warn(`WARNING! Authentication is turned off. Fake Login is being used.`);
-
-      app.use(cookieParser());
-
-      // fake login behavior
-      app.use(fakeLoginConfig(context, config));
-      app.use(fakeUserExtractor);
-    } else {
+    if (config.useOneLogin()) {
       app.use(
         toMiddleware(
           identityClientScopedTokenPlugin({
@@ -91,6 +83,14 @@ const startServer = async () => {
 
       const openIdMiddleware = await configureOneloginMidleware(config);
       app.use(openIdMiddleware);
+    } else {
+      logger.warn(`WARNING! Authentication is turned off. Fake Login is being used.`);
+
+      app.use(cookieParser());
+
+      // fake login behavior
+      app.use(fakeLoginConfig(context, config));
+      app.use(fakeUserExtractor);
     }
 
     app.use(express.json());

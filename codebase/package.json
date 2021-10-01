@@ -43,8 +43,6 @@
     "server": "lerna run --scope @dni/server",
     "run:dev:server": "yarn server run:dev --stream",
     "run:dev:client": "yarn client run:dev --stream",
-    "docker:build:prod": "sh ./scripts/build-docker.sh dni-prod production",
-    "docker:run:prod": "docker run --publish 9000:9000 dni-prod",
     "test": "lerna run test --stream --scope @dni/client",
     "test:coverage": "lerna run test:coverage --stream --scope @dni/client"
   },

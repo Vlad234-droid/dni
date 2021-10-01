@@ -1,16 +1,12 @@
-import express from "express";
-import { OneloginFlow } from "../logger";
+import express from 'express';
+import { OneloginFlow } from '../logger';
 
-const ONELOGIN_ERROR_NAME = "OneloginError";
+const ONELOGIN_ERROR_NAME = 'OneloginError';
 
 export class OneloginError extends Error {
   public readonly name = ONELOGIN_ERROR_NAME;
 
-  constructor(
-    public readonly flow: OneloginFlow,
-    readonly message: string,
-    public readonly status = 500,
-  ) {
+  constructor(public readonly flow: OneloginFlow, readonly message: string, public readonly status = 500) {
     super(message);
   }
 
@@ -20,7 +16,6 @@ export class OneloginError extends Error {
 }
 
 export type OneloginCookieConfig = {
-
   /** Opional, corresponds to cookies secure flag
    * Secure cookies will only be send over HTTPS protocol
    * defaults to false
@@ -50,28 +45,27 @@ export type OneloginCookieConfig = {
   name?: string;
 };
 
-export type Strategy = "saml" | "openid";
+export type Strategy = 'saml' | 'openid';
 
-export const AUTHENTICATION_PATH = "/sso/auth";
-export const LOGOUT_PATH = "/sso/logout";
-export const REFRESH_PATH = "/sso/refresh";
+export const AUTHENTICATION_PATH = '/sso/auth';
+export const LOGOUT_PATH = '/sso/logout';
+export const REFRESH_PATH = '/sso/refresh';
 
-export const USER_INFO_COOKIE_NAME = "tesco.userinfo";
-export const AUTH_DATA_COOKIE_NAME = "tesco.colleague.jwt";
-export const SESSION_COOKIE_NAME = "tesco.session";
+export const USER_INFO_COOKIE_NAME = 'tesco.userinfo';
+export const AUTH_DATA_COOKIE_NAME = 'tesco.colleague.jwt';
+export const SESSION_COOKIE_NAME = 'tesco.session';
+
+export const ONELOGIN_RETURN_URI_COOKIE_NAME = 'onelogin.return.uri';
+export const ONELOGIN_RETURN_URI_PARAM = 'onelogin_return_uri';
 
 export const defaultCookieConfig = (env?: string) => ({
-  secure: env === "production",
-  httpOnly: env === "production",
+  secure: env === 'production',
+  httpOnly: env === 'production',
   signed: true,
-  path: "/",
+  path: '/',
 });
 
-export type UserInfoResolver<I, O> = (
-  rawUserInfo: I,
-  req: express.Request,
-  res: express.Response,
-) => O | Promise<O>;
+export type UserInfoResolver<I, O> = (rawUserInfo: I, req: express.Request, res: express.Response) => O | Promise<O>;
 
 export type OneloginRouteInfo = {
   authenticationPath: string;
@@ -108,8 +102,5 @@ export type SamlRouter = express.Router & SamlStartupLog;
 
 export type OpenIdRouter = express.Router & OpenIdStartupLog;
 
-export { getOpenidMiddleware } from "./openid-protocol";
-export type { OpenidConfig } from "./openid-protocol";
-
-//export { getSamlMiddleware } from "./saml-protocol";
-//export type { SamlConfig } from "./saml-protocol";
+export { getOpenidMiddleware } from './openid-protocol';
+export type { OpenidConfig } from './openid-protocol';

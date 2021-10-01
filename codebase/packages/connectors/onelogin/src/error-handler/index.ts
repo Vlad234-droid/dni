@@ -1,5 +1,5 @@
 import express from 'express';
-import { OneloginError , LoggerEvent, Logger, AUTHENTICATION_PATH } from '..';
+import { ONELOGIN_RETURN_URI_PARAM , OneloginError, LoggerEvent, Logger, AUTHENTICATION_PATH } from '..';
 
 
 type ErrorHandlerConfig = {
@@ -29,12 +29,12 @@ export const errorHandler =
     if (canRedirect) {
       const message =
         status === 401
-          ? `${error.message} - User will be redirected to the ${redirectAuthenticationPath}`
+          ? `${error.message} - User will be redirected to the ${redirectAuthenticationPath}, return path after login: ${req.path}`
           : `${error.message} - Error will be forwarded to application error handler`;
 
       if (status === 401) {
         logger(LoggerEvent.info(flow, message, { req, res }));
-        res.redirect(redirectAuthenticationPath);
+        res.redirect(`redirectAuthenticationPath?${ONELOGIN_RETURN_URI_PARAM}=${encodeURI(req.path)}`);
         next();
       } else {
         logger(LoggerEvent.error(flow, Error(message), { req, res }));

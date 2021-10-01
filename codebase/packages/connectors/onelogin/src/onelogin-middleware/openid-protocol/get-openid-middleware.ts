@@ -14,6 +14,8 @@ import {
   LOGOUT_PATH,
   AUTH_DATA_COOKIE_NAME,
   SESSION_COOKIE_NAME,
+  ONELOGIN_RETURN_URI_COOKIE_NAME,
+  ONELOGIN_RETURN_URI_PARAM,
   OneloginCookieConfig,
   defaultCookieConfig,
   OpenIdRouter,
@@ -160,16 +162,31 @@ export const getOpenidMiddleware = async (configuration: OpenidConfig): Promise<
   };
 
   router.get(AUTHENTICATION_PATH, (req, res, next) => {
+    const returnUri = req.query[ONELOGIN_RETURN_URI_PARAM] || '/';
+
     logger(
-      LoggerEvent.info('login', 'Authentication path handler was called - clearing cookies and authenticating', {
-        req,
-        res,
-      }),
+      LoggerEvent.info(
+        'login',
+        `Authentication path handler was called with return URI: ${returnUri} - clearing cookies and authenticating`,
+        {
+          req,
+          res,
+        },
+      ),
     );
 
     clearCookies(res);
 
-    // eslint-disable-next-line  @typescript-eslint/no-explicit-any
+    if (!req.cookies[ONELOGIN_RETURN_URI_COOKIE_NAME]) {
+      const twoMinutes = 2 * 60 * 1000;
+      res.cookie(ONELOGIN_RETURN_URI_COOKIE_NAME, returnUri, {
+        maxAge: twoMinutes,
+        httpOnly: false,
+        path: sessionCookie.path,
+      });
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const nextWrapper: NextFunction = (error?: any | 'router' | 'route') => {
       if (error && typeof error === 'object') {
         logger(LoggerEvent.error('login', error, { req, res }));
@@ -267,7 +284,11 @@ export const getOpenidMiddleware = async (configuration: OpenidConfig): Promise<
       logger(LoggerEvent.warn('login', `Cookie validation reponse: ${validationStatus.message}`, { req, res }));
     }
 
-    const afterLoginRedirect = applicationPath || '/';
+    const returnUriCookie = req.cookies[ONELOGIN_RETURN_URI_COOKIE_NAME];
+
+    res.clearCookie(ONELOGIN_RETURN_URI_COOKIE_NAME, { path: sessionCookie.path });
+
+    const afterLoginRedirect = returnUriCookie || applicationPath || '/';
 
     logger(
       LoggerEvent.debug(
