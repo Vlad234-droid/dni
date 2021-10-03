@@ -7,7 +7,7 @@ import { isLocal, isDEV, isPPE, isPROD } from './config/env';
 
 import { initialize as initializeLogger, getHttpLoggerMiddleware } from '@dni-common/logger';
 
-import { getConfig } from './config/config-accessor';
+import { getConfig, prettify } from './config/config-accessor';
 import { getEnv } from './config/env-accessor';
 
 import { api, healthCheck } from './routes';
@@ -107,6 +107,10 @@ const startServer = async () => {
     app.use(clientStaticFile);
 
     app.use(errorHandler);
+
+    if (isPPE(config.runtimeEnvironment()) || isDEV(config.runtimeEnvironment())) {
+      prettify(config);
+    }
 
     server.listen(PORT, () => {
       //console.log(`⚡️ Server is running at http://localhost:${PORT}`);

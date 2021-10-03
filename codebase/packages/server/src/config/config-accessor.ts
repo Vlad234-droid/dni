@@ -160,6 +160,21 @@ export class ConfigAccessor {
   }
 }
 
+export const prettify = (config: ProcessConfig): void => {
+  console.table(
+    Object.keys(config).reduce((acc, key) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      let value: any;
+      try {
+        value = config[key as keyof ProcessConfig]();
+      } catch (error) {
+        value = error;
+      }
+      return { ...acc, [key]: Array.isArray(value) ? value.join(', ') : value };
+    }, {} as Record<keyof ProcessConfig, string>),
+  );
+};
+
 export const getConfig = () => {
   // validate if all required process env variables exist
   getEnv().validate();

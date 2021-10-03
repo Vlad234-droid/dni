@@ -10,10 +10,9 @@ import {
   DniCmsApiContext,
 } from '@dni-connectors/colleague-cms-api';
 
-import { getConfig } from '../config/config-accessor';
+import { getConfig, prettify } from '../config/config-accessor';
 import { initializeTypeOrm } from '../config/db';
-import { clientContext, ClientRequestCtx } from '../context';
-
+import { clientContext } from '../context';
 
 interface CommonEntity {
   id: number;
@@ -32,8 +31,11 @@ const entityTypes = [DniEntityTypeEnum.NETWORK, DniEntityTypeEnum.EVENT, DniEnti
 const ccmsEntitiesInit = async () => {
   await initializeTypeOrm();
 
+  const config = getConfig();
+  // show variables
+  prettify(config);
   // init context
-  const ctx: DniCmsApiContext = await clientContext(getConfig());
+  const ctx: DniCmsApiContext = await clientContext(config);
 
   for (const entityType of entityTypes) {
     console.log(`Try to handle entityType: ${entityType}`);
