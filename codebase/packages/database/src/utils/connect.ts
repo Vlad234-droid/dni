@@ -1,9 +1,4 @@
-import {
-  createConnection,
-  Connection,
-  ConnectionOptionsReader,
-  ConnectionOptions,
-} from 'typeorm';
+import { createConnection, Connection, ConnectionOptionsReader, ConnectionOptions } from 'typeorm';
 import { getPackageDistFolder } from './package';
 
 const packageDistFolder = getPackageDistFolder('@dni/database', ['src', '']);
@@ -17,13 +12,15 @@ export function getTypeOrmConnectionOptions(): ConnectionOptions {
   return connectionOptions;
 }
 
-export async function createTypeOrmConnection(): Promise<Connection> {
+export async function createTypeOrmConnection(overrideOptions?: Partial<ConnectionOptions>): Promise<Connection> {
   if (!connectionOptions) {
     connectionOptions = {
-      ...(await connectionOptionsReader.get(
-        process.env.TYPEORM_CONNECTION || 'default',
-      )),
+      ...(await connectionOptionsReader.get(process.env.TYPEORM_CONNECTION || 'default')),
     };
+  }
+
+  if (overrideOptions) {
+    connectionOptions = Object.assign({}, connectionOptions, overrideOptions);
   }
 
   if (!connection) {

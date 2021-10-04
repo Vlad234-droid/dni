@@ -8,6 +8,10 @@ import {
   cmsEventsApiConnector,
   cmsNetworksApiConnector,
   DniCmsApiContext,
+  ApiInput,
+  PostApiParams,
+  EventApiParams,
+  NetworkApiParams,
 } from '@dni-connectors/colleague-cms-api';
 
 import { expressContext } from '../context';
@@ -52,7 +56,7 @@ const analyzeEntity = async (payload: CepPayload, ctx: DniCmsApiContext) => {
   const { id, model } = payload;
 
   // prepare payload
-  const reqPayload = {
+  const reqPayload: ApiInput<PostApiParams | EventApiParams | NetworkApiParams> = {
     params: {
       id,
       _publicationState: 'preview',

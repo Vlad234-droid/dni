@@ -2,7 +2,7 @@ export const reloadPage = () => {
   const refresh = window.localStorage.getItem('refresh');
 
   if (refresh === null) {
-    window.localStorage.setItem('refresh', Date());
+    window.localStorage.setItem('refresh', new Date().toISOString());
 
     setTimeout(() => {
       window.localStorage.removeItem('refresh');

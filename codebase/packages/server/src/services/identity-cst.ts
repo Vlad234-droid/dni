@@ -8,7 +8,6 @@ import { ClientTokenIssueBody, ClientScopeToken } from '@dni-connectors/onelogin
 import { getConfig } from '../config/config-accessor';
 import { isPROD } from '../config/env';
 
-
 const config = getConfig();
 
 const identityApiDef = defineAPI((endpoint) => ({
@@ -43,14 +42,12 @@ const issueIdentityClientScopeToken = async () => {
   const { data } = await api.issueToken({ body });
 
   return data;
-}
+};
 
-const [
-  getCachedClientScopeToken, 
-  setCachedClientScopeToken,
-] = ((): [
+const [getCachedClientScopeToken, setCachedClientScopeToken, disposeCache] = ((): [
   () => ClientScopeToken | undefined,
   (newToken: ClientScopeToken, age: number) => void,
+  () => void,
 ] => {
   let cashedClientScopeToken: ClientScopeToken | undefined = undefined;
   let timeoutHandle: NodeJS.Timeout | undefined = undefined;
@@ -60,15 +57,15 @@ const [
     (newCST, maxAge) => {
       cashedClientScopeToken = newCST;
       if (timeoutHandle) {
-        clearTimeout(timeoutHandle); 
+        clearTimeout(timeoutHandle);
         timeoutHandle = undefined;
       }
 
-      timeoutHandle = setTimeout(
-        () => { cashedClientScopeToken = undefined; }, 
-        maxAge
-      );
+      timeoutHandle = setTimeout(() => {
+        cashedClientScopeToken = undefined;
+      }, maxAge);
     },
+    () => timeoutHandle && clearTimeout(timeoutHandle),
   ];
 })();
 
@@ -91,8 +88,9 @@ export const getIdentityClientScopeToken = async () => {
     const { exp } = identityClientScopeToken.claims;
     if (exp && !isNaN(Number(exp))) {
       const expiresIn = Math.abs(new Date().getTime() - exp * 1000);
-      if (expiresIn < 2 * 60 * 1000) {  // < 2 mins
-        issueIdentityClientScopeToken().then(token => {
+      if (expiresIn < 2 * 60 * 1000) {
+        // < 2 mins
+        issueIdentityClientScopeToken().then((token) => {
           setCachedClientScopeToken(token, getMaxAge(token.claims));
         });
       }
@@ -104,4 +102,8 @@ export const getIdentityClientScopeToken = async () => {
   identityClientScopeToken = await issueIdentityClientScopeToken();
   setCachedClientScopeToken(identityClientScopeToken, getMaxAge(identityClientScopeToken.claims));
   return identityClientScopeToken;
-}
+};
+
+export const disposeIdentityClientScopeToken = () => {
+  disposeCache();
+};

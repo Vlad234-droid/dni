@@ -4,7 +4,7 @@ export const redirectToAuth = (returnUri?: string) => {
   const redirectToAuth = window.localStorage.getItem('redirectToAuth');
 
   if (redirectToAuth === null) {
-    window.localStorage.setItem('redirectToAuth', Date());
+    window.localStorage.setItem('redirectToAuth', new Date().toISOString());
 
     setTimeout(() => {
       window.localStorage.removeItem('redirectToAuth');

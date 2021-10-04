@@ -22,9 +22,11 @@ export type BaseApiParams = {
   _limit?: string;
 
   // sorting
-  _sort?: 'created_at:desc' | 'created_at:asc';
+  _sort?: string; // 'created_at:desc' | 'created_at:asc'
 
   published_at_null?: string;
+
+  _publicationState?: 'live' | 'preview';
 };
 
 export type BaseType = {
