@@ -23,21 +23,22 @@ export const cmsPostsApiConnector = (ctx: DniCmsApiContext) => {
   const fetchClient = buildFetchClient(ctx);
 
   return {
-    getPost: async ({ params }: ApiInput<PostApiParams>) => apiConsumer.getPost(buildParams(params)),
+    getPost: async ({ params }: ApiInput<PostApiParams>) => await apiConsumer.getPost(buildParams(params)),
 
-    getPosts: ({ params }: ApiInput<Omit<PostApiParams, 'id'>>) =>
-      fetchClient<Post[]>(cmsPostsApiDef.getPosts, params, buildFetchParams()),
+    getPosts: async ({ params }: ApiInput<Omit<PostApiParams, 'id'>>) =>
+      await fetchClient<Post[]>(cmsPostsApiDef.getPosts, params, buildFetchParams()),
 
-    getPostsCount: ({ params }: ApiInput<Omit<PostApiParams, 'id'>>) =>
-      fetchClient<number>(cmsPostsApiDef.getPostsCount, params, buildFetchParams()),
+    getPostsCount: async ({ params }: ApiInput<Omit<PostApiParams, 'id'>>) =>
+      await fetchClient<number>(cmsPostsApiDef.getPostsCount, params, buildFetchParams()),
 
     postPost: async ({ params, body }: ApiInput<PostApiParams, PostBody>) =>
-      apiConsumer.postPost(buildParams(params, body!)),
+      await apiConsumer.postPost(buildParams(params, body!)),
 
     putPost: async ({ params, body }: ApiInput<PostApiParams, PostBody>) =>
-      apiConsumer.putPost(buildParams(params, body!)),
+      await apiConsumer.putPost(buildParams(params, body!)),
 
-    deletePost: ({ params }: ApiInput<Pick<PostApiParams, 'id'>>) => apiConsumer.deletePost(buildParams(params)),
+    deletePost: async ({ params }: ApiInput<Pick<PostApiParams, 'id'>>) =>
+      await apiConsumer.deletePost(buildParams(params)),
   };
 };
 

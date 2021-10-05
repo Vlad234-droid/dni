@@ -33,23 +33,23 @@ const createOne = createAsyncThunk<T.OneResponse, T.SetOnePayload>(
   async (data) => await API.events.create<T.OneResponse>(data),
 );
 
-const uploadImage = createAsyncThunk<Pick<T.OneResponse, 'id' | 'image'>, T.UploadImgPayload>(
-  A.UPLOAD_IMG_ACTION,
-  async ({ id, image }) => {
-    const data = new FormData();
-    data.append('refId', String(id));
-    data.append('ref', 'Event');
-    data.append('field', 'image');
-    data.append('files', image);
+// const uploadImage = createAsyncThunk<Pick<T.OneResponse, 'id' | 'image'>, T.UploadImgPayload>(
+//   A.UPLOAD_IMG_ACTION,
+//   async ({ id, image }) => {
+//     const data = new FormData();
+//     data.append('refId', String(id));
+//     data.append('ref', 'Event');
+//     data.append('field', 'image');
+//     data.append('files', image);
 
-    const uploadedImage = await API.common.upload<T.OneImageResponse>(data);
+//     const uploadedImage = await API.common.upload<T.OneImageResponse>(data);
 
-    return {
-      id,
-      image: uploadedImage,
-    };
-  },
-);
+//     return {
+//       id,
+//       image: uploadedImage,
+//     };
+//   },
+// );
 
 const getCount = createAsyncThunk<number, FilterPayload>(A.GET_COUNT_ACTION, (data) => API.events.count<number>(data));
 
@@ -144,15 +144,15 @@ const slice = createSlice({
         setSucceeded(state);
       })
       .addCase(createOne.rejected, setFailed)
-      .addCase(uploadImage.pending, setPending)
-      .addCase(uploadImage.fulfilled, (state: T.State, { payload }) => {
-        eventsAdapter.updateOne(state, {
-          ...payload,
-          changes: { image: payload.image },
-        });
-        setSucceeded(state);
-      })
-      .addCase(uploadImage.rejected, setFailed)
+      // .addCase(uploadImage.pending, setPending)
+      // .addCase(uploadImage.fulfilled, (state: T.State, { payload }) => {
+      //   eventsAdapter.updateOne(state, {
+      //     ...payload,
+      //     changes: { image: payload.image },
+      //   });
+      //   setSucceeded(state);
+      // })
+      // .addCase(uploadImage.rejected, setFailed)
       .addCase(getParticipants.pending, (state: T.State) => {
         state.participants.loading = Loading.PENDING;
         state.participants.error = undefined;
@@ -176,7 +176,7 @@ export {
   getList,
   getOne,
   createOne,
-  uploadImage,
+  // uploadImage,
   getCount,
   clear,
   getParticipants,

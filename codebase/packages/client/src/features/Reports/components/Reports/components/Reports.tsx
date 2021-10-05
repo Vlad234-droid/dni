@@ -1,4 +1,4 @@
-import React, { FC, useState, useEffect, RefObject } from 'react';
+import React, { FC, ChangeEvent, useState, useEffect, RefObject } from 'react';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import Button from '@beans/button';
@@ -65,9 +65,7 @@ const Reports: FC = () => {
 
   const { ids } = useSelector(() => store.getState().reports[entityType]);
 
-  const { chart, statistics, dateInterval } = useSelector(
-    () => store.getState().reports.groups[reportType],
-  );
+  const { chart, statistics, dateInterval } = useSelector(() => store.getState().reports.groups[reportType]);
 
   const handleUpdateStatistics = (id: string, checked: boolean) => {
     dispatch(
@@ -101,21 +99,11 @@ const Reports: FC = () => {
     Html2Canvas(input).then((canvas) => {
       const imgData = canvas.toDataURL('image/jpeg');
       const pdf = new jsPDF({
-        format: [
-          input.clientWidth + paddingX * k,
-          input.clientHeight + paddingY * k,
-        ],
+        format: [input.clientWidth + paddingX * k, input.clientHeight + paddingY * k],
         unit: 'px',
-      }) as any;
+      });
 
-      pdf.addImage(
-        imgData,
-        'JPEG',
-        paddingX,
-        paddingY,
-        input.clientWidth,
-        input.clientHeight,
-      );
+      pdf.addImage(imgData, 'JPEG', paddingX, paddingY, input.clientWidth, input.clientHeight);
 
       pdf.save('network-members-report.pdf');
 
@@ -135,10 +123,7 @@ const Reports: FC = () => {
       return;
     }
 
-    if (
-      reportType === T.ReportType.PERIOD &&
-      periodType !== T.PeriodType.PICK_PERIOD
-    ) {
+    if (reportType === T.ReportType.PERIOD && periodType !== T.PeriodType.PICK_PERIOD) {
       dispatch(
         getReportsByTime({
           entityType,
@@ -192,7 +177,9 @@ const Reports: FC = () => {
         <ButtonFilter
           value={reportType}
           initialFilters={reportButtons}
-          onChange={(event: any) => dispatch(actions.setReportType({ key: event.target.value }))}
+          onChange={(event: ChangeEvent<HTMLInputElement>) =>
+            dispatch(actions.setReportType({ key: event.target.value }))
+          }
           name='filters'
         />
         <ButtonLoader>
@@ -215,7 +202,9 @@ const Reports: FC = () => {
           <ButtonFilter
             value={entityType}
             initialFilters={entityButtons}
-            onChange={(event: any) => dispatch(actions.setEntityType({ key: event.target.value }))}
+            onChange={(event: ChangeEvent<HTMLInputElement>) =>
+              dispatch(actions.setEntityType({ key: event.target.value }))
+            }
             name='entities'
           />
         </div>

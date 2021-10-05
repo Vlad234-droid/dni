@@ -1,21 +1,24 @@
-import { getIdentityData, getUserData, getIdentityClientData } from '@energon/onelogin';
-import { ConfirmitConfig } from '@dni-connectors/confirmit-api';
-import { addCustomLog, markApiCall } from '@energon/splunk-logger';
+import { markApiCall } from '@energon/splunk-logger';
+
+import { getIdentityData, getIdentityClientScopeToken as expressIdentityClientScopeToken} from '@dni-connectors/onelogin';
+import { getIdentityClientScopeToken as localIdentityClientScopeToken } from '../services';
 
 import { getAppEnv, isDEV } from '../config/env';
 import { ProcessConfig } from '../config/config-accessor';
-import { BasicUserData, ContextProvider, RequestCtx, ExtractedOpenIdData, ExtractedUSTData } from './request-context';
-import { ExtendedSessionData, getExtendedSessionData } from './session-data';
+import { ExpressContextProvider } from './request-context';
 
-export type ColleagueContextConfig = ConfirmitConfig;
-export type ColleagueSessionData = BasicUserData & ExtendedSessionData & { groups: string[] };
+import { ContextSessionData } from './session-data';
+import { ContextConfigData } from './config-data';
+import { Request, Response, NextFunction } from 'express';
 
-export type ColleagueRequestCtx = RequestCtx<ColleagueContextConfig, ColleagueSessionData>;
+export const expressContext: (config: ProcessConfig) => ExpressContextProvider<ContextConfigData, ContextSessionData> =
+  (config: ProcessConfig) => (req: Request, res: Response, next?: NextFunction) => ({
+    req: req,
+    res: res,
+    next: next,
 
-export const buildContext: (config: ProcessConfig) => ContextProvider<ColleagueContextConfig, ColleagueSessionData> =
-  (config: ProcessConfig) => (req, res) => ({
     identityUserToken: () => {
-      const token = getIdentityData<ExtractedUSTData>(res)?.access_token;
+      const token = getIdentityData(res)?.access_token;
       if (!token) {
         throw new Error('identity user scoped token not available!');
       }
@@ -23,8 +26,8 @@ export const buildContext: (config: ProcessConfig) => ContextProvider<ColleagueC
     },
 
     identityClientToken: () => {
-      const token = getIdentityClientData(res)?.access_token || '';
-      if (!token && !isDEV(config.environment())) {
+      const token = expressIdentityClientScopeToken(res)?.access_token || '';
+      if (!token && !isDEV(config.buildEnvironment())) {
         throw new Error('Identity client scoped token not available!');
       }
 
@@ -32,41 +35,36 @@ export const buildContext: (config: ProcessConfig) => ContextProvider<ColleagueC
     },
 
     apiEnv: () =>
-      getAppEnv(config.environment(), isDEV(config.buildEnvironment()) ? config.mockServerUrl() : undefined),
+      getAppEnv(config.runtimeEnvironment(), isDEV(config.buildEnvironment()) ? config.mockServerUrl() : undefined),
 
     markApiCall: markApiCall(res),
 
-    sessionData() {
-      const openIdData = getUserData<ExtractedOpenIdData>(res);
-      const ustData = getIdentityData<ExtractedUSTData>(res);
-      if (!openIdData || !ustData) {
-        throw new Error('Session data not found!');
+    config: (): ContextConfigData => ({ runtimeEnvironment: config.runtimeEnvironment() }),
+
+    sessionData: (): ContextSessionData => ({}),
+  });
+
+export const clientContext = async (config: ProcessConfig) => {
+  const cstToken = await localIdentityClientScopeToken();
+  return {
+    identityUserToken: () => undefined,
+
+    identityClientToken: () => {
+      const token = cstToken?.access_token || '';
+      if (!token && !isDEV(config.runtimeEnvironment())) {
+        throw new Error('Identity client scoped token not available!');
       }
 
-      const extendedData = getExtendedSessionData(res);
-
-      return {
-        sessionId: openIdData.sid,
-        userName: openIdData.fullName,
-        userFirstName: openIdData.firstName,
-        userEmail: openIdData.email,
-        employeeNumber: openIdData.params.employeeNumber,
-        colleagueUUID: ustData.uuid,
-        branchNumber: extendedData?.branchNumber,
-        countryCode: extendedData?.countryCode,
-        masteredInLegacy: extendedData?.masteredInLegacy,
-        dniGroups: extendedData?.dniGroups || [],
-        groups: openIdData.groups,
-      };
+      return token;
     },
 
-    config: () => ({
-      confirmitPassword: config.confirmitPassword(),
-    }),
+    apiEnv: () =>
+      getAppEnv(config.runtimeEnvironment(), isDEV(config.buildEnvironment()) ? config.mockServerUrl() : undefined),
 
-    sendLog: (message) => addCustomLog(res, message),
+    markApiCall: undefined,
 
-    hideRequestBodyLog: () => {
-      req.body = '[hidden due to sensitive information]';
-    },
-  });
+    config: (): ContextConfigData => ({ runtimeEnvironment: config.runtimeEnvironment() }),
+
+    sessionData: (): ContextSessionData => ({}),
+  };
+}

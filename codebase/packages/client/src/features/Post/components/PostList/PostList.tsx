@@ -45,7 +45,7 @@ type Filters = FilterPayload & {
   network_eq?: number;
   event_eq?: number;
   network_in?: number[];
-  _publicationState?: string;
+  _publicationState?: 'live' | 'preview';
   archived?: boolean;
 };
 type ByEntityFilter = typeof ALL | typeof ARCHIVED;

@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { IdentityClaims } from '@energon/onelogin';
+import { IdentityClaims } from '@dni-connectors/onelogin';
 
 import {
   accessTokenJtiExtractor,

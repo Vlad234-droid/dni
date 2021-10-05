@@ -31,7 +31,7 @@ docker build ^
 rem Login to TescoAzure tenant
 rem az login --tenant f55b1f7d-7a7f-49e4-9b90-55218aad89f8
 
-rem Login to ACR (dev)
+rem (!!!) Login to ACR (dev)
 rem az acr login --name euwdev213daicontainerregistry
 
 rem List image tags
@@ -40,7 +40,7 @@ rem az acr repository show-tags --name euwdev213daicontainerregistry --repositor
 rem docker tag dni_local:latest euwdev213daicontainerregistry.azurecr.io/dev/diversity-and-inclusion:latest
 rem docker push euwdev213daicontainerregistry.azurecr.io/dev/diversity-and-inclusion:latest
 
-rem Login to ACR (ppe)
+rem (!!!) Login to ACR (ppe)
 rem az acr login --name eunppe213daicontainerregistry
 
 rem List image tags
@@ -48,6 +48,15 @@ rem az acr repository show-tags --name eunppe213daicontainerregistry --repositor
 
 rem docker tag dni_local:latest eunppe213daicontainerregistry.azurecr.io/ppe/diversity-and-inclusion:latest
 rem docker push eunppe213daicontainerregistry.azurecr.io/ppe/diversity-and-inclusion:latest
+
+rem (!!!) Login to ACR (prod)
+rem az acr login --name eunprod213daicontainerregistry
+
+rem List image tags
+rem az acr repository show-tags --name eunprod213daicontainerregistry --repository prod/diversity-and-inclusion --orderby time_desc
+
+rem docker tag dni_local:latest eunprod213daicontainerregistry.azurecr.io/prod/diversity-and-inclusion:latest
+rem docker push eunprod213daicontainerregistry.azurecr.io/prod/diversity-and-inclusion:latest
 
 :completed
 

@@ -1,3 +1,7 @@
-export { colleagueApiConnector, colleagueApiDef } from './connector';
+export { colleagueApiConnector, colleagueApiConsumer } from './connector';
+export { buildColleagueApiContext } from './context';
+export { colleagueApiDef } from './api-def';
+
 export type { ColleagueApi } from './connector';
-export type { BusinessType, Colleague, ColleagueV2, ColleagueList, Status } from './types';
+export type { ColleagueApiContext } from './context';
+export type { BusinessType, Colleague, ColleagueList, ColleagueAPIHeaders } from './types';

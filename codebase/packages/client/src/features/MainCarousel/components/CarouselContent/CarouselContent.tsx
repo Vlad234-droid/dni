@@ -18,7 +18,7 @@ type Props = {
 };
 
 const CarouselContent: FC<Props> = ({ index, title, description, image: { src }, onButtonClick, isOpen }) => {
-  const { isMobile, isLargeMobile, isTablet, isDesktop } = useMedia();
+  const { isMobile, isLargeMobile, isTablet } = useMedia();
   const showReadMore = isMobile || isLargeMobile || isTablet;
   const adjustedIsOpen = showReadMore ? isOpen : true;
 

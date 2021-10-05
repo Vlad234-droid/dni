@@ -35,7 +35,7 @@ const getGroupState = () => ({
     ...color,
   },
   counter: 0,
-})
+});
 
 const getGroupByPeriodState = () =>
   ({
@@ -71,7 +71,7 @@ const buildTimePeriodQuery = ({ entityType, groupBy, from, to, ids }: T.Params) 
     groupBy,
     from,
     to,
-    entityIds: ids.join(','),
+    entityIds: ids?.join(','),
   };
 
   return requestQuery;
@@ -82,7 +82,7 @@ const buildRegionOrFormatQuery = ({ entityType, from, to, ids }: T.Params) => {
     entityType,
     from,
     to,
-    entityIds: ids.join(','),
+    entityIds: ids?.join(','),
   };
 
   return requestQuery;
@@ -96,11 +96,11 @@ const reportsByTimeMiddleware = async ({
   ids,
 }: {
   entityType: T.EntityType;
-  periodType: T.PeriodType;
-  from: string;
-  to: string;
-  ids: (number | string)[];
-}) => {
+  periodType?: T.PeriodType;
+  from?: string;
+  to?: string;
+  ids?: (number | string)[];
+}): Promise<{ entityType: T.EntityType; data: T.GroupByPeriod }> => {
   const date = new Date(new Date().getTime() + 1000 * 60 * 60 * 24);
 
   date.setUTCHours(0, 0, 0, 0);
@@ -147,7 +147,7 @@ const reportsByTimeMiddleware = async ({
     ids,
   });
 
-  const { data, metadata } = await API.report.members<any>(query);
+  const { data, metadata } = await API.report.members<T.MembersResponse<T.MembersEntityData>>(query);
 
   const { entities } = store.getState().reports[entityType];
   const groupState = store.getState().reports.groups[T.ReportType.PERIOD];
@@ -157,14 +157,13 @@ const reportsByTimeMiddleware = async ({
   group.dateInterval = groupState.dateInterval;
   group.counter = groupState.counter || 0;
 
-  group.chart.entities = data.map((element: { period: string; entities: T.PeriodEntityData[] }) => {
+  group.chart.entities = data.map((element) => {
     const point = {
       name: isoDateToFormat(element.period, FULL_DAY_FORMAT),
     } as T.Point;
 
-    element.entities.forEach(({ entityId, subscribers }: any) => {
+    element.entities.forEach(({ entityId, subscribers }) => {
       const entityName = entities[entityId]?.title as string;
-
       point[entityName] = subscribers;
     });
 
@@ -176,10 +175,10 @@ const reportsByTimeMiddleware = async ({
       const row = {
         entityId,
         entityType,
-        startMembers: startSubscribers,
-        endMembers: endSubscribers,
-        subscribe: joined,
-        leave: leaved,
+        startSubscribers,
+        endSubscribers,
+        joined,
+        leaved,
       } as T.StatisticsItemByPeriod;
 
       row.percentages = calculateDifference({
@@ -187,7 +186,9 @@ const reportsByTimeMiddleware = async ({
         end: endSubscribers!,
       });
 
-      const rowState = groupState.statistics.find((element: T.StatisticsItemByPeriod) => element.entityId == row.entityId);
+      const rowState = groupState.statistics.find(
+        (element: T.StatisticsItemByPeriod) => element.entityId == row.entityId,
+      );
 
       row.name = entities[entityId]?.title || 'Default entity name';
       row.checked = typeof rowState?.['checked'] === 'boolean' ? rowState.checked : false;
@@ -212,10 +213,10 @@ const reportsByRegionMiddleware = async ({
   ids,
 }: {
   entityType: T.EntityType;
-  from: string;
-  to: string;
-  ids: (number | string)[];
-}) => {
+  from?: string;
+  to?: string;
+  ids?: (number | string)[];
+}): Promise<{ entityType: T.EntityType; data: T.GroupByRegion }> => {
   const dateTo = to || now().toISOString();
   const dateFrom = from || dateMinusDuration(dateTo, { week: 1 }).toISOString();
 
@@ -231,7 +232,7 @@ const reportsByRegionMiddleware = async ({
   });
 
   const { data, metadata } = await API.report.regions<T.Response<T.RegionEntityData>>(query);
-  
+
   const { entities } = store.getState().reports[entityType];
   const groupState = store.getState().reports.groups[T.ReportType.REGION];
   const group = getGroupState() as T.GroupByRegion;
@@ -289,10 +290,10 @@ const reportsByFormatMiddleware = async ({
   ids,
 }: {
   entityType: T.EntityType;
-  from: string;
-  to: string;
-  ids: (number | string)[];
-}) => {
+  from?: string;
+  to?: string;
+  ids?: (number | string)[];
+}): Promise<{ entityType: T.EntityType; data: T.GroupByFormat }> => {
   const dateTo = to || now().toISOString();
   const dateFrom = from || dateMinusDuration(dateTo, { week: 1 }).toISOString();
 
@@ -308,7 +309,7 @@ const reportsByFormatMiddleware = async ({
   });
 
   const { data, metadata } = await API.report.departments<T.Response<T.FormatEntityData>>(query);
-  
+
   const { entities } = store.getState().reports[entityType];
   const groupState = store.getState().reports.groups[T.ReportType.FORMAT];
   const group = getGroupState() as T.GroupByFormat;

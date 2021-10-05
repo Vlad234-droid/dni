@@ -4,8 +4,9 @@ export const defaultConfig = {
   defaultRole: 'Employee',
   port: 9000,
   oidcGroupFiltersRegex: [/GG-UK-TescoGlobal-DiversityAndInclusion(-[\w\d]+)+/],
-  applicationCookieParserSecret: 'tesco.dni.session',
-  applicationUserDataCookieName: 'tesco.dni.userinfo',
+  applicationColleagueCookieName: 'tesco.colleague',
+  applicationUserDataCookieName: 'tesco.userdata',
+  applicationCookieParserSecret: '',
   cacheIdentityTokenKey: 'application.scope.identity.token',
   cacheIdentityTokenTtl: 1800, // 30 min
   cacheColleagueTtl: 18000, // 5hrs

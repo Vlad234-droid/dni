@@ -1,14 +1,6 @@
-export { 
-  COLLEAGUE_CMS_API_URLS, 
-  COLLEAGUE_CMS_TENANT_KEY 
-} from './config';
+export { COLLEAGUE_CMS_API_URLS, COLLEAGUE_CMS_TENANT_KEY } from './config';
 
-export type {
-  DniCmsApiContext,
-  DniCmsApiHeaders,
-  BaseType,
-  BaseApiParams,
-} from './types';
+export type { ApiInput, DniCmsApiContext, DniCmsApiHeaders, BaseType, BaseApiParams } from './types';
 
 export * from './built-in';
 export * from './emoji';

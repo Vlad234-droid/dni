@@ -1,48 +1,62 @@
 import express from 'express';
 import http from 'http';
-import multer from 'multer';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
-import { isDEV } from './config/env';
+import os from 'os';
+import { isLocal, isDEV, isPPE, isPROD } from './config/env';
 
-import { getConfig } from './config/config-accessor';
+import { initialize as initializeLogger, getHttpLoggerMiddleware } from '@dni-common/logger';
+
+import { getConfig, prettify } from './config/config-accessor';
 import { getEnv } from './config/env-accessor';
-import { healthCheck, api } from './routes';
+
+import { api, healthCheck } from './routes';
+
 import {
-  clientStaticFolder,
   publicStaticFolder,
+  clientStaticFolder,
   clientStaticFile,
   errorHandler,
   configureOneloginMidleware,
-  apiMiddleware,
-  formData,
+  tescoApiMiddleware,
   fakeLoginConfig,
   fakeUserExtractor,
-  colleagueUUIDExtractor,
+  toMiddleware,
 } from './middlewares';
 
-import { buildContext } from './context';
 import { initializeTypeOrm } from './config/db';
-
-getEnv().validate();
+import { identityClientScopedTokenPlugin } from '@dni-connectors/onelogin';
+import { expressContext } from './context';
 
 const config = getConfig();
 
-const upload = multer({ limits: { fieldSize: config.applicationUploadSize() } });
+const logPretify = !!config.buildEnvironment() && isLocal(config.buildEnvironment());
+const logLevel =
+  isPROD(config.runtimeEnvironment()) || isPPE(config.runtimeEnvironment()) ? 'info' : logPretify ? 'trace' : 'debug';
+
+const logger = initializeLogger('server', logLevel, logPretify);
+
+logger.info(`Current build environment: ${config.buildEnvironment()}`);
+logger.info(`Current infrastructure environment: ${config.runtimeEnvironment()}`);
+
+getEnv().validate();
 
 const app = express();
+
 const server = http.createServer(app);
+
 const PORT = config.port();
 
-const context = buildContext(config);
+const context = expressContext(config);
 
 const startServer = async () => {
   try {
-    console.log(`Current build environment: ${config.buildEnvironment()}`);
-    console.log(`Current infrastructure environment: ${config.environment()}`);
-
     // initialize connection to DB
     await initializeTypeOrm();
+    logger.info('Connection to database has been established successfully.');
+
+    // setup logger middlewares
+    app.use(getHttpLoggerMiddleware('http'));
 
     // setup middlewares
     app.use(
@@ -53,29 +67,40 @@ const startServer = async () => {
     );
 
     app.use('/', healthCheck);
-    //app.use(cookieParser());
 
-    if (isDEV(config.buildEnvironment()) || !config.useOneLogin()) {
-      console.log(`WARNING! Authentication is turned off. Fake Login is used.`);
+    if (config.useOneLogin()) {
+      app.use(
+        toMiddleware(
+          identityClientScopedTokenPlugin({
+            apiEnv: config.apiEnv,
+            identityClientId: config.identityClientId(),
+            identityClientSecret: config.identityClientSecret(),
+            cache: true,
+            optional: false,
+          }),
+        ),
+      );
+
+      const openIdMiddleware = await configureOneloginMidleware(config);
+      app.use(openIdMiddleware);
+    } else {
+      logger.warn(`WARNING! Authentication is turned off. Fake Login is being used.`);
+
+      app.use(cookieParser());
+
       // fake login behavior
       app.use(fakeLoginConfig(context, config));
       app.use(fakeUserExtractor);
-    } else {
-      const { openIdMiddleware, identityClientScopedTokenMiddleware } = await configureOneloginMidleware(config);
-      // app.use(preAuth(config));
-      app.use(cookieParser(config.applicationCookieParserSecret()));
-      app.use(identityClientScopedTokenMiddleware());
-      app.use(openIdMiddleware);
     }
-
-    app.use(colleagueUUIDExtractor({ excludePath: ['/api/cms-events'] }));
 
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
 
-    app.use('/api/upload', upload.any(), formData);
-    app.use('/api', api, apiMiddleware(context));
-    app.use('/api/*', (_, res) => res.sendStatus(404));
+    app.use('/api', api);
+    app.use('/api/tesco', tescoApiMiddleware(context));
+    app.use('/api/*', (_, res) => {
+      if (!res.headersSent) res.sendStatus(404);
+    });
 
     app.use(publicStaticFolder);
     app.use(clientStaticFolder);
@@ -83,11 +108,16 @@ const startServer = async () => {
 
     app.use(errorHandler);
 
+    if (isPPE(config.runtimeEnvironment()) || isDEV(config.runtimeEnvironment())) {
+      prettify(config);
+    }
+
     server.listen(PORT, () => {
-      console.log(`⚡️[server]: Server is running at http://localhost:${PORT}`);
+      //console.log(`⚡️ Server is running at http://localhost:${PORT}`);
+      logger.info(`Server is running at http://${os.hostname().toLowerCase()}:${PORT}`);
     });
-  } catch (error) {
-    console.log(error);
+  } catch (error: any) {
+    logger.fatal(error);
     process.exit(1);
   }
 };

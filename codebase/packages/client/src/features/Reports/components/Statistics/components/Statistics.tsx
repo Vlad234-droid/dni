@@ -18,8 +18,10 @@ const Entity = {
   },
 };
 
+type DataType = T.StatisticsItemByPeriod | T.StatisticsItemByFormat | T.StatisticsItemByRegion;
+
 interface Props {
-  data: Array<any>;
+  data: DataType[];
   onChange: (id: string, checked: boolean) => void;
   reportType: T.ReportType;
   entityType: T.EntityType;
@@ -42,9 +44,7 @@ const Statistics = ({ data, onChange, entityType, reportType }: Props) => {
               <Cell>{'left during the period'}</Cell>
             </>
           )}
-          {(reportType === T.ReportType.REGION || reportType === T.ReportType.FORMAT) && (
-            <Cell>{'Participants'}</Cell>
-          )}
+          {(reportType === T.ReportType.REGION || reportType === T.ReportType.FORMAT) && <Cell>{'Participants'}</Cell>}
         </Row>
         {data.map((item) => (
           <Row key={item.entityId}>
@@ -54,11 +54,11 @@ const Statistics = ({ data, onChange, entityType, reportType }: Props) => {
             </CellName>
             {reportType === T.ReportType.PERIOD && (
               <>
-                <Cell>{item.startMembers}</Cell>
-                <Cell>{item.endMembers}</Cell>
-                <Cell>{item.percentages}</Cell>
-                <Cell>{item.subscribe}</Cell>
-                <Cell>{item.leave}</Cell>
+                <Cell>{(item as T.StatisticsItemByPeriod).startSubscribers}</Cell>
+                <Cell>{(item as T.StatisticsItemByPeriod).endSubscribers}</Cell>
+                <Cell>{(item as T.StatisticsItemByPeriod).endSubscribers}</Cell>
+                <Cell>{(item as T.StatisticsItemByPeriod).joined}</Cell>
+                <Cell>{(item as T.StatisticsItemByPeriod).leaved}</Cell>
               </>
             )}
             {(reportType === T.ReportType.REGION || reportType === T.ReportType.FORMAT) && (

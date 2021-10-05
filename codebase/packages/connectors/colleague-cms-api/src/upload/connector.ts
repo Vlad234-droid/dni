@@ -20,12 +20,12 @@ export const cmsUploadApiConnector = (ctx: DniCmsApiContext) => {
   const fetchClient = buildFetchClient(ctx);
 
   return {
-    getFile: async ({ params }: ApiInput<UploadApiParams>) => apiConsumer.getFile(buildParams(params)),
+    getFile: async ({ params }: ApiInput<UploadApiParams>) => await apiConsumer.getFile(buildParams(params)),
 
-    getFiles: ({ params }: ApiInput<UploadApiParams>) => apiConsumer.getFiles(buildParams(params)),
+    getFiles: async ({ params }: ApiInput<UploadApiParams>) => await apiConsumer.getFiles(buildParams(params)),
 
-    postFiles: ({ body }: ApiInput<UploadApiParams, UploadBody>) =>
-      fetchClient<UploadFile[]>(
+    postFiles: async ({ body }: ApiInput<UploadApiParams, UploadBody>) =>
+      await fetchClient<UploadFile[]>(
         cmsUploadApiDef.postFiles,
         {},
         buildFetchParams(body, {
@@ -36,7 +36,8 @@ export const cmsUploadApiConnector = (ctx: DniCmsApiContext) => {
         }),
       ),
 
-    deleteFile: ({ params }: ApiInput<Pick<UploadApiParams, 'id'>>) => apiConsumer.deleteFile(buildParams(params)),
+    deleteFile: async ({ params }: ApiInput<Pick<UploadApiParams, 'id'>>) =>
+      await apiConsumer.deleteFile(buildParams(params)),
   };
 };
 

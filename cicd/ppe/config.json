@@ -41,6 +41,10 @@
         "type": "plain",
         "value": "ppe"
       },
+      "RUNTIME_ENV": {
+        "type": "plain",
+        "value": "ppe"
+      },
       "NODE_PORT": {
         "type": "plain",
         "value": "9000"
@@ -65,13 +69,45 @@
         "type": "plain",
         "value": "/notification/settings?unsubscribe=true"
       },
+      "APPLICATION_COLLEAGUE_DATA_COOKIE_NAME": {
+        "type": "plain",
+        "value": "dni.colleague"
+      },
+      "APPLICATION_COLLEAGUE_DATA_COOKIE_SECRET": {
+        "type": "secret",
+        "name": "application_colleague_data_cookie_secret"
+      },
       "APPLICATION_USER_DATA_COOKIE_NAME": {
         "type": "plain",
-        "value": "dni.userdata"
+        "value": "dni.user.data"
+      },
+      "APPLICATION_USER_DATA_COOKIE_SECRET": {
+        "type": "secret",
+        "name": "application_user_data_cookie_secret"
       },
       "APPLICATION_COOKIE_PARSER_SECRET": {
         "type": "secret",
-        "value": "cookie_parser_secret"
+        "name": "application_cookie_parser_secret"
+      },
+      "APPLICATION_WEB_HOOKS_SECRET": {
+        "type": "secret",
+        "name": "application_web_hooks_secret"
+      },
+      "AUTH_DATA_COOKIE_NAME": {
+        "type": "plain",
+        "value": "dni.colleague.jwt"
+      },
+      "SESSION_COOKIE_NAME": {
+        "type": "plain",
+        "value": "dni.session.startup"
+      },
+      "APPLICATION_RETURN_TO_COOKIE_NAME": {
+        "type": "plain",
+        "value": "dni.return-to"
+      },
+      "STICK_COOKIES_TO_APPLICATION_PATH": {
+        "type": "plain",
+        "value": "true"
       },
       "MAILING_TEMPLATE_ID": {
         "type": "plain",
@@ -93,6 +129,10 @@
         "type": "secret",
         "name": "oidc_client_secret"
       },
+      "OIDC_REFRESH_TOKEN_SECRET": {
+        "type": "secret",
+        "name": "oidc_refresh_token_secret"
+      },
       "ONELOGIN_ISSUER_URL": {
         "type": "plain",
         "value": "https://loginppe.ourtesco.com/oidc/2"
@@ -105,25 +145,21 @@
         "type": "plain",
         "value": "https://loginppe.ourtesco.com/oidc/2/logout"
       },
-      "OIDC_REFRESH_TOKEN_SECRET": {
-        "type": "secret",
-        "value": "refresh_token_secret"
-      },
       "IDENTITY_CLIENT_ID": {
         "type": "secret",
-        "value": "identity_client_id"
+        "name": "identity_client_id"
       },
       "IDENTITY_CLIENT_SECRET": {
         "type": "secret",
-        "value": "identity_client_secret"
-      },
-      "IDENTITY_USER_SCOPED_TOKEN_COOKIE_SECRET": {
-        "type": "secret",
-        "value": "identity_user_scoped_token_cookie_secret"
+        "name": "identity_client_secret"
       },
       "IDENTITY_USER_SCOPED_TOKEN_COOKIE_NAME": {
         "type": "plain",
-        "value": "identity-user-scoped-token"
+        "value": "dni.identity.ust"
+      },
+      "IDENTITY_USER_SCOPED_TOKEN_COOKIE_SECRET": {
+        "type": "secret",
+        "name": "identity_user_scoped_token_cookie_secret"
       },
       "TYPEORM_TYPE": {
         "type": "plain",

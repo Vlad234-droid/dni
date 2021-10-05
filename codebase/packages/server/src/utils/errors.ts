@@ -1,10 +1,11 @@
 import { unionize, ofType, UnionOf, RecordOf, TagsOf } from 'unionize';
 
 import { FetchError } from '@energon/fetch-client';
-import type { OneloginError } from '@energon/onelogin';
+import type { OneloginError } from '@dni-connectors/onelogin';
 import { DeepPartial } from '@energon/type-utils';
 
 export type ApplicationError = UnionOf<typeof ApplicationError>;
+
 const ApplicationError = unionize({
   FetchError: ofType<FetchError>(),
   InvalidRequest: ofType<{ msg: string }>(),

@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "baseUrl": "./src",
@@ -7,15 +9,13 @@
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
     "noFallthroughCasesInSwitch": true,
-    "lib": ["dom", "dom.iterable", "esnext"],
-    "module": "esnext",
     "moduleResolution": "node",
     "removeComments": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
-    "sourceMap": true,
+    "inlineSourceMap": true,
+    "inlineSources": true,
     "strict": true,
-    "target": "esnext",
     "jsx": "react-jsx",
     "isolatedModules": true
   },

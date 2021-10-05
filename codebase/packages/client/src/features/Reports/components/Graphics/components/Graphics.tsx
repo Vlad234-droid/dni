@@ -1,4 +1,4 @@
-import React, { FC, useMemo } from 'react';
+import React, { FC, ChangeEvent, useMemo } from 'react';
 import { useDispatch } from 'react-redux';
 import DropdownGroup from '@beans/dropdown-group';
 import styled from 'styled-components';
@@ -66,13 +66,13 @@ type Props = {
   entityType: T.EntityType;
   periodType: T.PeriodType;
   dateInterval: T.Interval;
-  data: any;
+  data: T.ChartItem;
 };
 
 const Graphics: FC<Props> = ({ reportType, entityType, periodType, dateInterval, data }) => {
   const dispatch = useDispatch();
 
-  const handlePeriodPick = (event: any) => {
+  const handlePeriodPick = (event: ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
 
     dispatch(actions.setPeriodType({ key: event.target.value }));
@@ -159,7 +159,7 @@ const Graphics: FC<Props> = ({ reportType, entityType, periodType, dateInterval,
 
     dispatch(
       getReportsByTime({
-        reportType,
+        //reportType,
         entityType,
         periodType,
         from: dateFrom.toISOString(),

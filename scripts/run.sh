@@ -8,7 +8,7 @@ if [ "$TYPEORM_RUN_MIGRATION" = "true" ]; then
 fi
 
 if [ "$CCRM_RUN_SYNC" = "true" ]; then
-    yarn ws:server cli:cms-entities-init:prod
+    yarn ws:server cli:ccms-sync
 fi
 
-yarn run:prod
+yarn ws:server run:prod

@@ -5,7 +5,6 @@ import Icon from '@beans/icon';
 import Button from '@beans/button';
 
 import { ButtonGroup } from 'features/Common';
-import CreatePartner from '../CreatePartner';
 import { Partner as PartnerType } from '../../config/formFields';
 import PartnerList from '../PartnerList';
 
@@ -51,9 +50,7 @@ const PartnersEditor = ({ partners, onClose }: Props) => {
             activeIndex={mode === Mode.ADD ? 0 : 1}
           />
         </ModeContainer>
-        {mode === Mode.ADD ? (
-          <CreatePartner />
-        ) : (
+        {mode !== Mode.ADD && (
           <PartnerList partners={partners} />
         )}
       </Content>

@@ -1,41 +1,27 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 
 import { ConnectorContext } from '@energon-connectors/core';
-import { JSONValue } from '@energon/type-utils';
-
-export type ExtractedOpenIdData = {
-  sub: string;
-  sid: string;
-  fullName: string;
-  firstName: string;
-  email: string;
-  params: {
-    employeeNumber: string;
-  };
-  groups: string[];
-};
-
-export type ExtractedUSTData = {
-  uuid: string;
-  access_token: string;
-};
-
-export type BasicUserData = {
-  sessionId: string;
-  userName: string;
-  userFirstName: string;
-  userEmail: string;
-  colleagueUUID: string;
-  employeeNumber: string;
-};
 
 // prettier-ignore
 // eslint-disable-next-line @typescript-eslint/ban-types
-export type RequestCtx<TConfig = {}, TSessionData = BasicUserData> = 
+export type ExpressRequestCtx<TConfig = {}, TSessionData = {}> = 
+  & ExpressContext
   & ConnectorContext
   & ConfigContext<TConfig>
   & SessionDataContext<TSessionData>
-  & LoggerContext
+
+// prettier-ignore
+// eslint-disable-next-line @typescript-eslint/ban-types
+export type ClientRequestCtx<TConfig = {}, TSessionData = {}> = 
+  & ConnectorContext
+  & ConfigContext<TConfig>
+  & SessionDataContext<TSessionData>
+
+export type ExpressContext = {
+  req: Request;
+  res: Response;
+  next?: NextFunction;
+};
 
 export type ConfigContext<T> = {
   config: () => T;
@@ -45,16 +31,12 @@ export type SessionDataContext<T> = {
   sessionData: () => T;
 };
 
-export type LoggerContext = {
-  /** add `message` to `customLogs` section of splunk log for current request */
-  sendLog: (message: JSONValue) => void;
-
-  /** prevent splunk logger from logging `req.body` */
-  hideRequestBodyLog: () => void;
-};
-
 // eslint-disable-next-line @typescript-eslint/ban-types
-export type ContextProvider<TConfig = {}, TSessionData = BasicUserData> = (
+export type ExpressContextProvider<TConfig = {}, TSessionData = {}> = (
   req: Request,
   res: Response,
-) => RequestCtx<TConfig, TSessionData>;
+  next?: NextFunction,
+) => ExpressRequestCtx<TConfig, TSessionData>;
+
+export type ClientContextProvider<TConfig = {}, TSessionData = {}> = (
+) => ClientRequestCtx<TConfig, TSessionData>;

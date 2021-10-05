@@ -17,13 +17,13 @@ export const cmsEmotionsApiConnector = (ctx: DniCmsApiContext) => {
 
   return {
     postEmotion: async ({ params, body }: ApiInput<EmotionApiParams, EmotionBody>) =>
-      apiConsumer.postEmotion(buildParams(params, body!)),
+      await apiConsumer.postEmotion(buildParams(params, body!)),
 
     putEmotion: async ({ params, body }: ApiInput<EmotionApiParams, EmotionBody>) =>
-      apiConsumer.putEmotion(buildParams(params, body!)),
+      await apiConsumer.putEmotion(buildParams(params, body!)),
 
-    deleteEmotion: ({ params }: ApiInput<Pick<EmotionApiParams, 'id'>>) =>
-      apiConsumer.deleteEmotion(buildParams(params)),
+    deleteEmotion: async ({ params }: ApiInput<Pick<EmotionApiParams, 'id'>>) =>
+      await apiConsumer.deleteEmotion(buildParams(params)),
   };
 };
 

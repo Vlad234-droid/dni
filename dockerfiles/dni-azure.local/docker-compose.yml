@@ -23,7 +23,7 @@ services:
             - APPLICATION_URL_TEMPLATE_POST=/network-news/%ID%
             - APPLICATION_URL_TEMPLATE_EVENT=/events/%ID%
             - APPLICATION_URL_UNSUBSCRIBE=/notification/settings?unsubscribe=true
-            - APPLICATION_USER_DATA_COOKIE_NAME=dni.userdata
+            - APPLICATION_USER_DATA_COOKIE_NAME=dni.user.data
             - APPLICATION_COOKIE_PARSER_SECRET=f4fada1a-9aff-4fae-9940-4ec6cede101a
             - MAILING_TEMPLATE_ID=dfge2b6d-qfaa-47c6-bfw9-b4214y0a2e88
             - MAILING_CHUNK_SIZE=30
@@ -40,7 +40,7 @@ services:
             - OIDC_GROUPS_MANAGER_ROLE=GG-UK-TescoGlobal-DiversityAndInclusion-PPE-Manager
             - IDENTITY_CLIENT_ID=181739bc-937d-438f-a15a-aa63095f8205
             - IDENTITY_CLIENT_SECRET=801787eb-f6b4-4801-93c5-a7bd696111a6
-            - IDENTITY_USER_SCOPED_TOKEN_COOKIE_NAME=identity-user-scoped-token
+            - IDENTITY_USER_SCOPED_TOKEN_COOKIE_NAME=dni.identity.ust
             - IDENTITY_USER_SCOPED_TOKEN_COOKIE_SECRET=cd33de5f-edc5-43a5-b478-3898478df87b
             - TYPEORM_TYPE=postgres
             - TYPEORM_HOST=postgres

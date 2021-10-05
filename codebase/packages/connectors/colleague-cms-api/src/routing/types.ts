@@ -14,7 +14,7 @@ type PageConfig = {
   templateName: string;
   path: string;
   slug: string;
-  parent: PageId | null;
+  parent?: PageId;
   menuAttached: boolean;
   related: Related;
 };

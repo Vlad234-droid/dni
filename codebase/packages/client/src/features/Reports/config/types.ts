@@ -47,9 +47,9 @@ type Interval = {
 type Params = {
   entityType: EntityType;
   groupBy?: string;
-  from: string;
-  to: string;
-  ids: EntityId[];
+  from?: string;
+  to?: string;
+  ids?: EntityId[];
 };
 
 type ChartItem = {
@@ -68,11 +68,11 @@ type StatisticsItem = {
 };
 
 type StatisticsItemByPeriod = {
-  startMembers: number;
-  endMembers: number;
+  startSubscribers: number;
+  endSubscribers: number;
   percentages: number;
-  subscribe: number;
-  leave: number;
+  joined: number;
+  leaved: number;
 } & StatisticsItem;
 
 type StatisticsItemByRegion = {
@@ -141,7 +141,7 @@ type EntryId = {
 type Entry = {
   joined: number;
   leaved: number;
-  regionName: string;
+  // regionName: string;
   endSubscribers?: number;
   startSubscribers?: number;
 };
@@ -153,15 +153,15 @@ type Range = {
   to: string;
 };
 
-type PeriodEntityData = {
-  period: string;
-  entities: Array<
-    Entry &
-      EntryId & {
-        subscribers: number;
-      }
-  >;
-};
+// type PeriodEntityData = {
+//   period: string;
+//   entities: Array<
+//     Entry &
+//       EntryId & {
+//         subscribers: number;
+//       }
+//   >;
+// };
 
 type RegionEntityData = {
   entities: Array<
@@ -189,6 +189,26 @@ type Response<T> = {
   metadata: EntityMetadata;
 };
 
+type MembersEntry = {
+  joined: number;
+  leaved: number;
+  subscribers: number;
+};
+
+type MembersEntityData = {
+  period: string;
+  entities: Array<MembersEntry & EntryId>;
+} & EntryId;
+
+type MembersEntityMetadata = {
+  granularity: string;
+} & EntityMetadata;
+
+type MembersResponse<T> = {
+  data: T[];
+  metadata: MembersEntityMetadata;
+};
+
 type EntityDataByFormat = {
   entityId: number | string;
   entityName: string;
@@ -208,12 +228,16 @@ export type {
   Interval,
   Params,
   Response,
-  PeriodEntityData,
+  // PeriodEntityData,
   RegionEntityData,
   FormatEntityData,
   EntityMetadata,
   EntityDataByFormat,
   EntryWithId,
+  MembersEntry,
+  MembersEntityData,
+  MembersEntityMetadata,
+  MembersResponse,
   ChartItem,
   StatisticsItem,
   StatisticsItemByPeriod,

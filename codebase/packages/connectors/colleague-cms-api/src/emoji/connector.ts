@@ -14,9 +14,9 @@ export const cmsEmojisApiConnector = (ctx: DniCmsApiContext) => {
   const apiConsumer = buildApiConsumer(ctx, cmsEmojisApiDef);
 
   return {
-    getEmoji: async ({ params }: ApiInput<EmojiApiParams>) => apiConsumer.getEmoji(buildParams(params)),
+    getEmoji: async ({ params }: ApiInput<EmojiApiParams>) => await apiConsumer.getEmoji(buildParams(params)),
 
-    getEmojis: ({ params }: ApiInput<EmojiApiParams>) => apiConsumer.getEmojis(buildParams(params)),
+    getEmojis: async ({ params }: ApiInput<EmojiApiParams>) => await apiConsumer.getEmojis(buildParams(params)),
   };
 };
 

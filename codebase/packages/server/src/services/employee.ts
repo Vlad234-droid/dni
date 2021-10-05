@@ -1,118 +1,44 @@
 import { Request, Response } from 'express';
-import { getOpenIdUserInfo } from '@energon/onelogin';
-import { getRepository, DniUserSubscription, DniEntityTypeEnum, DniUser, DniUserExtras } from '@dni/database';
-import { colleagueApiConnector, ColleagueV2 } from '@dni-connectors/colleague-api';
+import { getColleagueUuid, getOpenIdUserInfo, OpenIdUserInfo } from '@dni-connectors/onelogin';
+import { Colleague } from '@dni-connectors/colleague-api';
 
-import { isPROD } from '../config/env';
+import { getRepository, DniEntityTypeEnum, DniUser, DniUserExtras, DniUserSubscription, CcmsEntity } from '@dni/database';
+
 import { getConfig } from '../config/config-accessor';
-
-import { getInstance as getCacheInstance } from './cache';
-import { prepareContext } from './context';
-
-import colleagueApiRawData from './data/colleague_api_data.json';
-
-const colleagueApiData = colleagueApiRawData as unknown as ColleagueV2[];
+import { ApiError } from '../utils/api-error';
 
 type EmailNotificationSettings = {
   receivePostsEmailNotifications: boolean;
   receiveEventsEmailNotifications: boolean;
 };
 
-type ColleagueRequest = {
-  colleagueUUID?: string | null;
-} & Request;
+const profileInfoExtractor = async (req: Request, res: Response) => {
+  const openIdUserInfo = getOpenIdUserInfo<OpenIdUserInfo>(res);
+  const colleagueUUID = getColleagueUuid(res);
 
-const infoExtractor = (req: Request, res: Response) => {
-  const userInfo = getOpenIdUserInfo(res) || req.cookies[getConfig().applicationUserDataCookieName()] || {};
+  const { defaultRoles, oidcGroupFiltersRegex, oidcManagerGroups, oidcAdminGroups } = getConfig();
+  const userRoles: Set<string> = new Set(defaultRoles());
 
-  if (!userInfo) {
-    return res.status(403).send(JSON.stringify({ error: 'Cannot extract userInfo' }));
-  }
-
-  return userInfo;
-};
-
-const colleagueUUIDExtractor = async (req: ColleagueRequest, res: Response): Promise<string | null> => {
-  if (req.colleagueUUID) {
-    return req.colleagueUUID!;
-  }
-
-  const userInfo = infoExtractor(req, res);
-  const employeeNumber = userInfo?.params?.employeeNumber;
-  if (!employeeNumber) {
-    res.status(403).json({
-      error: 'Unauthorized. employeeNumber is missing.',
-    });
-
-    return null;
-  }
-
-  const cache = getCacheInstance();
-  const cacheEmployeeNumber = `EMPLOYEE_${employeeNumber}`;
-
-  if (cache.has(cacheEmployeeNumber)) {
-    return cache.get(cacheEmployeeNumber)!;
-  }
-
-  // // 1. try to get colleagueUUID from DB
-  // const dniUser = await findDniUser(employeeNumber);
-  // if (dniUser) {
-  //   cache.set(cacheEmployeeNumber, dniUser.colleagueUUID, getConfig().cacheColleagueTtl());
-  //   return dniUser.colleagueUUID;
-  // }
-
-  // 2. try to get colleagueUUID from Colleague API
-  const ctx = await prepareContext(req, res);
-  const connector = colleagueApiConnector(ctx);
-  const colleagues = await connector.v2.getColleagues({ params: { 'externalSystems.iam.id': employeeNumber } });
-  if (colleagues.data.length > 0) {
-    const colleague = colleagues.data[0];
-    await createOrUpdateDniUser(colleague!);
-
-    cache.set(cacheEmployeeNumber, colleague.colleagueUUID, getConfig().cacheColleagueTtl());
-    return colleague.colleagueUUID;
-  }
-
-  if (!isPROD(getConfig().environment())) {
-    // 3. and finally fallback to local file with predefine users
-    const colleague = colleagueApiData.find((c) => c.externalSystems.iam.id === employeeNumber);
-    console.log(JSON.stringify(colleague));
-    if (colleague) {
-      console.log(
-        `WARNING! Please be advised colleague data for employee ${employeeNumber} acquired from local cache file`,
-      );
-      await createOrUpdateDniUser(colleague);
-
-      cache.set(cacheEmployeeNumber, colleague.colleagueUUID, getConfig().cacheColleagueTtl());
-      return colleague.colleagueUUID;
+  if (openIdUserInfo) {
+    const userGroups = 
+      (Array.isArray(openIdUserInfo.groups) ? openIdUserInfo.groups : ((openIdUserInfo.groups as unknown as string) || '').split(',') || [])
+        .filter(Boolean)
+        .filter((group: string) => oidcGroupFiltersRegex().some((rr) => rr.test(group)));
+  
+    if (oidcManagerGroups().some((g) => userGroups.includes(g))) {
+      userRoles.add('Manager');
+    }
+    if (oidcAdminGroups().some((g) => userGroups.includes(g))) {
+      userRoles.add('Admin');
     }
   }
 
-  res.status(403).json({
-    error: `Unauthorized. colleagueUUID is missing for the employee: ${employeeNumber}`,
-  });
-
-  return null;
-};
-
-const profileInfoExtractor = async (req: Request, res: Response) => {
-  const userInfo = infoExtractor(req, res);
-
-  const colleagueUUID = await colleagueUUIDExtractor(req, res);
-  if (!colleagueUUID) {
-    const employeeNumber = userInfo?.params?.employeeNumber;
-    console.log(`Colleague data for employee ${employeeNumber} is not found.`);
-    res.status(403).send(JSON.stringify({ error: `Colleague data for employee ${employeeNumber} is not found.` }));
-    return;
-  }
-
-  const networks: number[] = await findSubscriptionEntityIdsBy(colleagueUUID, DniEntityTypeEnum.NETWORK);
-  const events: number[] = await findSubscriptionEntityIdsBy(colleagueUUID, DniEntityTypeEnum.EVENT);
+  const networks: number[] = await findSubscriptionEntityIdsBy(colleagueUUID!, DniEntityTypeEnum.NETWORK);
+  const events: number[] = await findSubscriptionEntityIdsBy(colleagueUUID!, DniEntityTypeEnum.EVENT);
 
   return {
     colleagueUUID,
-    userInfo,
-    roles: [...(userInfo.roles || []), ...getConfig().defaultRoles()],
+    roles: Array.from(userRoles.values()),
     networks,
     events,
   };
@@ -131,18 +57,19 @@ const findSubscriptionEntityIdsBy = async (colleagueUUID: string, subscriptionEn
   );
 };
 
-// const findDniUser = async (employeeNumber: string) => {
-//   return await getRepository(DniUser).findOne({ where: { employeeNumber } });
-// };
+const findDniUser = async (colleagueUUID: string) => {
+  return await getRepository(DniUser).findOne({ where: { colleagueUUID } });
+};
 
-const createOrUpdateDniUser = async (colleague: ColleagueV2) => {
+export type ColleagueType = Pick<Colleague, 'colleagueUUID' | 'externalSystems'> &
+  Partial<Pick<Colleague, 'contact' | 'serviceDates' | 'workRelationships'>>;
+
+const createOrUpdateDniUser = async (colleague: ColleagueType) => {
   const repository = getRepository(DniUser);
   const dniUser = (await repository.preload({ colleagueUUID: colleague.colleagueUUID })) || new DniUser();
 
-  console.log(JSON.stringify(dniUser));
-
   dniUser.colleagueUUID = colleague.colleagueUUID;
-  dniUser.employeeNumber = colleague.externalSystems.iam.id;
+  dniUser.employeeNumber = colleague.externalSystems?.iam!.id;
 
   await repository.save(dniUser);
 
@@ -186,6 +113,11 @@ const removeSubscriptionEntity = async (
 };
 
 const createNetworkRelation = async (colleagueUUID: string, networkId: number) => {
+  const network = await getRepository(CcmsEntity).findOne({ entityId: networkId, entityType: DniEntityTypeEnum.NETWORK});
+  if (network === undefined) {
+    throw new ApiError(400, `network:${networkId} is invalid`);
+  }
+
   await createSubscriptionEntity(colleagueUUID, networkId, DniEntityTypeEnum.NETWORK);
 };
 
@@ -194,6 +126,21 @@ const removeNetworkRelation = async (colleagueUUID: string, networkId: number) =
 };
 
 const createEventRelation = async (colleagueUUID: string, eventId: number) => {
+  const event = await getRepository(CcmsEntity).findOne({ entityId: eventId, entityType: DniEntityTypeEnum.EVENT});
+  if (event === undefined) {
+    throw new ApiError(400, `eventId:${eventId} is invalid`);
+  }
+
+  const { maxParticipants } = event!.entityInstance! as { maxParticipants?: number };
+
+  const currentParticipants = await getRepository(DniUserSubscription)
+    .createQueryBuilder()
+    .where({ subscriptionEntityId: eventId, subscriptionEntityType: DniEntityTypeEnum.EVENT })
+    .getCount();
+
+  if (maxParticipants !== undefined && !Number.isNaN(maxParticipants) && currentParticipants >= maxParticipants) {
+    throw new ApiError(400, `participants limit exceeded for eventId:${eventId}.`);
+  }
   await createSubscriptionEntity(colleagueUUID, eventId, DniEntityTypeEnum.EVENT);
 };
 
@@ -223,18 +170,18 @@ const storeSettings = async (colleagueUUID: string, settings: EmailNotificationS
   const repository = getRepository(DniUser);
   const dniUser = await repository.findOneOrFail({ colleagueUUID });
 
-  console.log(JSON.stringify(dniUser));
-  console.log(JSON.stringify(dniUser?.extras));
+  // console.log(JSON.stringify(dniUser));
+  // console.log(JSON.stringify(dniUser?.extras));
 
   if (!dniUser.extras) {
     dniUser.initExtras();
   }
 
-  console.log(JSON.stringify(settings));
+  // console.log(JSON.stringify(settings));
 
   dniUser.extras!.settings = { ...dniUser.extras!.settings, ...settings };
 
-  console.log(JSON.stringify(dniUser));
+  // console.log(JSON.stringify(dniUser));
 
   repository.save(dniUser);
 
@@ -245,11 +192,11 @@ const findSettings = async (colleagueUUID: string) => {
   const repository = getRepository(DniUserExtras);
   const dniUserExtras = await repository.findOne({ colleagueUUID });
 
-  console.log(JSON.stringify(dniUserExtras));
-  console.log(JSON.stringify(dniUserExtras?.settings));
+  // console.log(JSON.stringify(dniUserExtras));
+  // console.log(JSON.stringify(dniUserExtras?.settings));
 
   const settings = dniUserExtras?.settings || {};
-  console.log(JSON.stringify(settings));
+  // console.log(JSON.stringify(settings));
 
   return dniUserExtras || { colleagueUUID };
 };
@@ -257,6 +204,7 @@ const findSettings = async (colleagueUUID: string) => {
 export type { EmailNotificationSettings };
 
 export {
+  findDniUser,
   createOrUpdateDniUser,
   profileInfoExtractor,
   findSubscriptionEntityIdsBy,
@@ -266,8 +214,6 @@ export {
   removeEventRelation,
   findNetworksParticipants,
   findEventsParticipants,
-  infoExtractor,
-  colleagueUUIDExtractor,
   storeSettings,
   findSettings,
 };

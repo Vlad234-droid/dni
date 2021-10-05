@@ -1,10 +1,8 @@
 import { createApiRouter } from '@energon/rest-api-provider';
-import { colleagueApiDef, ColleagueV2 } from '@dni-connectors/colleague-api';
-
-import { colleague } from 'generators/colleague';
+import { colleagueApiDef, Colleague } from '@dni-connectors/colleague-api';
 
 export const colleagueApiRouter = createApiRouter(colleagueApiDef)({
-  getColleague: async () => ({ data: { colleague } }),
-  getColleagueV2: async () => ({} as ColleagueV2),
-  getColleaguesV2: async () => [] as ColleagueV2[],
+  // getColleague: async () => ({ data: { colleague } }),
+  getColleague: async () => ({} as Colleague),
+  getColleagues: async () => ({ colleagues: [] as Colleague[] }),
 });

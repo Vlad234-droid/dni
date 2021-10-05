@@ -7,7 +7,7 @@ const generateArray = (length: number) =>
 
 const randomArray = <T>(min: number, max: number, generator: () => T) => {
   const len = faker.datatype.number({ min, max });
-  const array = [];
+  const array: Array<T> = [];
 
   for (let i = 0; i < len; ++i) {
     array[i] = generator();

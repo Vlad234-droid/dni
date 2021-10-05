@@ -1,13 +1,17 @@
 import yn from 'yn';
 
-import { isDEV } from './env';
+import { ApiEnv } from '@energon-connectors/core';
+
+import { getAppEnv, isLocal, isDEV } from './env';
 import { ProcessEnv, getEnv } from './env-accessor';
 import { defaultConfig } from './default';
 
 export type ProcessConfig = {
   // general
   buildEnvironment: () => string;
+  runtimeEnvironment: () => string;
   environment: () => string;
+  apiEnv: () => ApiEnv;
   port: () => number;
   // D&I application specific settings
   applicationName: () => string;
@@ -18,8 +22,15 @@ export type ProcessConfig = {
   applicationUrlUnsubscribe: () => string;
   applicationUploadSize: () => number;
   // cookies settings
-  applicationCookieParserSecret: () => string;
+  authDataCookieName: () => string | undefined;
+  sessionCookieName: () => string | undefined;
+  applicationReturnToCookieName: () => string | undefined;
+  applicationCookieParserSecret: () => string | undefined;
+  applicationColleagueCookieName: () => string;
+  applicationColleagueCookieSecret: () => string | undefined;
   applicationUserDataCookieName: () => string;
+  applicationUserDataCookieSecret: () => string | undefined;
+  stickCookiesToApplicationPath: () => boolean;
   // cache related props
   cacheIdentityTokenKey: () => string;
   cacheIdentityTokenTtl: () => number;
@@ -58,8 +69,14 @@ export class ConfigAccessor {
     this.config = {
       // general
       buildEnvironment: () => processEnv.BUILD_ENV,
+      runtimeEnvironment: () => processEnv.RUNTIME_ENV,
       environment: () => processEnv.NODE_ENV,
       port: () => (isNaN(Number(processEnv.NODE_PORT)) ? defaultConfig.port : Number(processEnv.NODE_PORT)),
+      apiEnv: () =>
+        getAppEnv(
+          this.config.runtimeEnvironment(),
+          isLocal(this.config.runtimeEnvironment()) ? this.config.mockServerUrl() : undefined,
+        ),
       // D&I application specific settings
       applicationName: () => defaultConfig.applicationName,
       applicationPublicUrl: () => processEnv.APPLICATION_PUBLIC_URL,
@@ -69,10 +86,18 @@ export class ConfigAccessor {
       applicationUrlUnsubscribe: () => processEnv.APPLICATION_URL_UNSUBSCRIBE,
       applicationUploadSize: () => defaultConfig.applicationUploadSize,
       // cookies settings
+      authDataCookieName: () => processEnv.AUTH_DATA_COOKIE_NAME || undefined,
+      sessionCookieName: () => processEnv.SESSION_COOKIE_NAME || undefined,
+      applicationReturnToCookieName: () => processEnv.APPLICATION_RETURN_TO_COOKIE_NAME || undefined,
       applicationCookieParserSecret: () =>
         processEnv.APPLICATION_COOKIE_PARSER_SECRET || defaultConfig.applicationCookieParserSecret,
+      applicationColleagueCookieName: () =>
+        processEnv.APPLICATION_COLLEAGUE_DATA_COOKIE_NAME || defaultConfig.applicationColleagueCookieName,
+      applicationColleagueCookieSecret: () => processEnv.APPLICATION_COLLEAGUE_DATA_COOKIE_SECRET,
       applicationUserDataCookieName: () =>
         processEnv.APPLICATION_USER_DATA_COOKIE_NAME || defaultConfig.applicationUserDataCookieName,
+      applicationUserDataCookieSecret: () => processEnv.APPLICATION_USER_DATA_COOKIE_SECRET,
+      stickCookiesToApplicationPath: () => yn(processEnv.STICK_COOKIES_TO_APPLICATION_PATH, { default: false }),
       // cache related props
       cacheIdentityTokenKey: () => processEnv.CACHE_IDENTITY_TOKEN_KEY || defaultConfig.cacheIdentityTokenKey,
       cacheIdentityTokenTtl: () =>
@@ -134,6 +159,21 @@ export class ConfigAccessor {
     return this.config;
   }
 }
+
+export const prettify = (config: ProcessConfig): void => {
+  console.table(
+    Object.keys(config).reduce((acc, key) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      let value: any;
+      try {
+        value = config[key as keyof ProcessConfig]();
+      } catch (error) {
+        value = error;
+      }
+      return { ...acc, [key]: Array.isArray(value) ? value.join(', ') : value };
+    }, {} as Record<keyof ProcessConfig, string>),
+  );
+};
 
 export const getConfig = () => {
   // validate if all required process env variables exist

@@ -1,17 +1,10 @@
 import faker from 'faker';
+
 import { Colleague } from '@dni-connectors/colleague-api';
 
-import { dateToFormat, DATE_FORMAT } from 'utils/date';
+const BusinessType = ['Office', 'Store', 'BankOffice', 'BankCS', 'Distribution'] as const;
 
-const BusinessType = [
-  'Office',
-  'Store',
-  'BankOffice',
-  'BankCS',
-  'Distribution',
-] as const;
-
-const Status = [
+export const Status = [
   'Active - Payroll Eligible',
   'Inactive - Payroll Eligible',
   'Suspended - Payroll Eligible',
@@ -20,29 +13,41 @@ const Status = [
   'Paid in Legacy',
 ] as const;
 
-const Title = ['DR.', 'MR.', 'MRS.', 'MISS'] as const;
+export const Title = ['DR.', 'MR.', 'MRS.', 'MISS'] as const;
 
 export const colleague: Colleague = {
-  assignmentName: faker.name.findName(),
-  assignmentStatus: 'ACTIVE',
-  businessType: faker.random.arrayElement(
-    BusinessType,
-  ) as Colleague['businessType'],
-  dateOfBirth: dateToFormat(faker.date.past(1990), DATE_FORMAT),
-  departmentName: faker.commerce.department(),
-  employmentStatusType: faker.random.arrayElement(
-    Status,
-  ) as Colleague['employmentStatusType'],
-  firstName: faker.name.firstName(),
-  lastName: faker.name.lastName(),
-  locationUUID: faker.datatype.uuid(),
-  masteredInLegacy: faker.datatype.boolean(),
-  middleName: faker.name.middleName(),
-  personNumber: faker.datatype.number().toString(),
-  positionId: faker.datatype.number().toString(),
-  preferredName: faker.name.firstName(),
-  source: 'HCM',
-  title: faker.random.arrayElement(Title) as Colleague['title'],
-  workLevel: 'T',
-  workerType: 'E',
+  colleagueUUID: faker.datatype.uuid(),
+  externalSystems: {
+    iam: {
+      id: `UK${faker.datatype.number({ min: 10000000, max: 99999999 })}`,
+      name: 'IAM',
+    },
+  },
+  profile: {
+    firstName: faker.name.firstName(),
+    lastName: faker.name.lastName(),
+    dateOfBirth: faker.date.past(30),
+    gender: faker.random.arrayElement(['M', 'F']),
+  },
+  contact: {
+    email: faker.internet.email(),
+    addresses: [
+      {
+        city: faker.address.city(),
+        countryCode: faker.address.countryCode(),
+        postcode: faker.address.zipCode(),
+      },
+    ],
+  },
+  serviceDates: {
+    hireDate: faker.date.past(10),
+  },
+  workRelationships: [
+    {
+      locationUUID: faker.datatype.uuid(),
+      department: {
+        businessType: faker.random.arrayElement(BusinessType),
+      },
+    },
+  ],
 };

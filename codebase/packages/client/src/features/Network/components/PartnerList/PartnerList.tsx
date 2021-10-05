@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Accordion, AccordionGroup } from '@beans/accordion';
 import { Partner as PartnerType } from '../../config/formFields';
 import Partner from '../Partner';
-import CreatePartner from '../CreatePartner';
+// import CreatePartner from '../CreatePartner';
 
 type Props = {
   partners: Array<PartnerType>;
@@ -22,6 +22,7 @@ const PartnerList = ({ partners }: Props) => {
   useEffect(() => {
     return () => console.log('unmount');
   });
+  
   return (
     <Wrapper>
       <AccordionGroup accordion={accordion} onChange={handleChange}>
@@ -32,10 +33,10 @@ const PartnerList = ({ partners }: Props) => {
             id={p.id}
             label={<Partner partner={p} />}
           >
-            <CreatePartner
+            {/* <CreatePartner
               partner={p}
               onCancel={() => setAccordion(undefined)}
-            />
+            /> */}
           </Accordion>
         ))}
       </AccordionGroup>
