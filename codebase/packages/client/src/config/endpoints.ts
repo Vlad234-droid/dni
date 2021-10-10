@@ -16,6 +16,7 @@ export enum Endpoint {
   USER_PROFILE = '/dni/v1/employees/profile',
   USER_NETWORKS = '/dni/v1/employees/networks',
   USER_EVENTS = '/dni/v1/employees/events',
+  USER_REACTIONS = '/dni/v1/employees/reactions',
 
   // networks
   NETWORKS = '/tesco/cms/v1/networks',
@@ -45,6 +46,9 @@ export enum Endpoint {
   // contact
   CONTACT_PERSONAL_EMAIL = '/dni/v1/employees/personal-email',
   CONTACT_EMAIL_NOTIFICATIONS_SETTINGS = '/dni/v1/employees/email-notifications-settings',
+
+  // emojis
+  EMOJIS = '/dni/v1/emojis',
 }
 
 export default (httpClient: AxiosInstance) => ({
@@ -58,6 +62,8 @@ export default (httpClient: AxiosInstance) => ({
     leaveNetwork: <T>(data: Config) => httpClient.delete<T>(`${Endpoint.USER_NETWORKS}/${data.networkId}`),
     joinEvent: <T>(data: Config) => httpClient.post<T>(Endpoint.USER_EVENTS, data),
     leaveEvent: <T>(data: Config) => httpClient.delete<T>(`${Endpoint.USER_EVENTS}/${data.eventId}`),
+    reactions: <T>(data: Config) => httpClient.get<T>(Endpoint.USER_REACTIONS, data),
+    changeReactions: <T>(data: Config) => httpClient.post<T>(Endpoint.USER_REACTIONS, data),
   },
   networks: {
     fetchAll: <T>(data: Config = {}) => httpClient.get<T>(Endpoint.NETWORKS, { params: data }),
@@ -104,5 +110,8 @@ export default (httpClient: AxiosInstance) => ({
     getNotificationsSettings: <T>() => httpClient.get<T>(Endpoint.CONTACT_EMAIL_NOTIFICATIONS_SETTINGS),
     updateNotificationsSettings: <T>(data: Config = {}) =>
       httpClient.post<T>(Endpoint.CONTACT_EMAIL_NOTIFICATIONS_SETTINGS, data),
+  },
+  emojis: {
+    getEmojis: <T>() => httpClient.get<T>(Endpoint.EMOJIS),
   },
 });

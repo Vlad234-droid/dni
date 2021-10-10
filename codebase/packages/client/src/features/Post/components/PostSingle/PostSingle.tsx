@@ -14,16 +14,18 @@ type Props = {
   networks?: number[];
   events?: number[];
   loadPost: (id: number) => void;
+  loadReactions: (id: number) => void;
   post?: Post;
   error?: string;
 };
 
-const PostSingle: FC<Props> = ({ postId, loadPost, loading, post, error }) => {
+const PostSingle: FC<Props> = ({ postId, loadPost, loadReactions, loading, post, error }) => {
   const isLoading = useMemo(() => loading !== Loading.SUCCEEDED && loading !== Loading.FAILED, [loading]);
 
   useEffect(() => {
     if (postId) {
       loadPost(postId);
+      loadReactions(postId);
     }
   }, [postId]);
 

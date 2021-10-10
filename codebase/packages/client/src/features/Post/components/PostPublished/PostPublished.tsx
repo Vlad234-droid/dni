@@ -1,12 +1,14 @@
 import React, { FC } from 'react';
 
 import { useMedia } from 'context/InterfaceContext';
+import { EntityType } from 'types/entity';
 
 import { RichTextRenderer, CopyLink } from 'features/Common';
 import { Page } from 'features/Page';
+import Reactions from 'features/Reactions';
 
 import { Post } from '../../config/types';
-import { PostPublishedAttachments } from '../PostAttachments';
+import PostPublishedAttachments from '../PostPublishedAttachments';
 import {
   PostPublisherAvatarBox,
   PostPublisherName,
@@ -47,7 +49,7 @@ const PostPublished: FC<PostPublishedProps> = ({ item }) => {
           <RichTextRenderer source={content} />
         </PostDescription>
         <CopyLink to={`${Page.NETWORK_NEWS}/${id}`} />
-        {/*<PostControls id={id} emotions={emotions} /> */}
+        <Reactions entityId={id} entityType={EntityType.POST} />
       </PostContent>
     </PostPublishedWrapper>
   );

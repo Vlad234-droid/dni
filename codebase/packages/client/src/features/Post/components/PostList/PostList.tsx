@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroller';
 import isEmpty from 'lodash.isempty';
 import Omit from 'lodash.omit';
+import map from 'lodash.map';
 
 import { CanPerform } from 'features/Auth';
 import { Action, buildAction, Component } from 'features/Action';
@@ -10,11 +11,13 @@ import useDispatch from 'hooks/useDispatch';
 import useStore from 'hooks/useStore';
 import { FilterPayload } from 'types/payload';
 import { EmptyContainer, Error, Spinner } from 'features/Common';
-import { useNotification, EntityType } from 'features/Notification';
+import { useNotification } from 'features/Notification';
+import { EntityType } from 'types/entity';
 import { DEFAULT_PAGINATION } from 'config/constants';
 import { useScrollContainer } from 'context/ScrollContainerContext';
 import Loading from 'types/loading';
 import ButtonFilter from 'features/ButtonFilter';
+import { getReactionsList } from 'features/Reactions';
 
 import { Filter } from '../../config/types';
 import { ALL, ARCHIVED } from '../../config/constants';
@@ -63,6 +66,7 @@ const PostList: FC<Props> = ({ entityId, filter = ALL }) => {
   const hasMore = useMemo(() => posts.length < total, [posts, total]);
   const isLoading = useMemo(() => loading !== Loading.SUCCEEDED && loading !== Loading.FAILED, [loading]);
   const error = useMemo(() => listError || countError, [listError, countError]);
+  const [page, setPage] = useState(1);
   const [byEntityFilter, setByEntityFilter] = useState<ByEntityFilter>(ALL);
   const [filters, setFilters] = useState<Filters>(
     filter == ALL ? getAllFilterPayload(networks, events) : getFilterPayload(filter, entityId),
@@ -73,6 +77,15 @@ const PostList: FC<Props> = ({ entityId, filter = ALL }) => {
   useEffect(() => {
     posts.forEach((post) => acknowledge({ entityId: post.id, entityType: EntityType.POST }));
   }, [posts]);
+
+  // TODO: check this logic on more then 10 posts
+  useEffect(() => {
+    const next = page * DEFAULT_PAGINATION._limit;
+    const newPostsLoaded = page === 1 ? posts : posts.slice(next, DEFAULT_PAGINATION._limit);
+    const ids = map(newPostsLoaded, 'id');
+
+    dispatch(getReactionsList({ id_in: ids }));
+  }, [posts, page]);
 
   const loadPosts = useCallback(
     (filters: Filters) => {
@@ -93,6 +106,7 @@ const PostList: FC<Props> = ({ entityId, filter = ALL }) => {
       const next = page * DEFAULT_PAGINATION._limit;
 
       if (!(loading === Loading.PENDING) && hasMore && next <= total) {
+        setPage(page + 1);
         dispatch(
           getList({
             _sort: 'created_at:desc',
@@ -103,7 +117,7 @@ const PostList: FC<Props> = ({ entityId, filter = ALL }) => {
         );
       }
     },
-    [filters, hasMore, loading, total],
+    [filters, hasMore, loading, total, page],
   );
 
   const handleByEventFilterChange = useCallback(
