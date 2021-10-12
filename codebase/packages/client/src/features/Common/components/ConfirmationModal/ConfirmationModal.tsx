@@ -9,14 +9,14 @@ type Props = {
   renderContent: () => JSX.Element;
   isOpen: boolean;
   onClose: () => void;
-  onConfirm: () => void;
+  onConfirm?: () => void;
 };
 
 const ConfirmationModal: FC<Props> = ({ renderContent, isOpen, onClose, onConfirm }) => (
   <BeansModal open={isOpen} onChange={onClose} id='join-network'>
     <Content>{renderContent()}</Content>
     <Actions>
-      <Button onClick={onConfirm}>Confirm</Button>
+      {onConfirm && <Button onClick={onConfirm}>Confirm</Button>}
       <Button onClick={onClose}>Cancel</Button>
     </Actions>
   </BeansModal>

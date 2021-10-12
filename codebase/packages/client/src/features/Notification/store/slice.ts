@@ -1,7 +1,8 @@
 import store from 'store';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import Loading from 'types/loading';
+import omit from 'lodash.omit';
 
+import Loading from 'types/loading';
 import API from 'utils/api';
 
 import * as T from '../config/types';
@@ -18,6 +19,12 @@ const initialState: T.State = {
     metadata: { loading: Loading.IDLE },
   },
   isSidebarOpened: false,
+  notificationSettings: {
+    settings: {
+      receivePostsEmailNotifications: false,
+      receiveEventsEmailNotifications: false,
+    }
+  }
 };
 
 const getList = createAsyncThunk<T.Notification[]>(A.GET_LIST_ACTION, async () => {
@@ -26,6 +33,30 @@ const getList = createAsyncThunk<T.Notification[]>(A.GET_LIST_ACTION, async () =
 
 const getListGroupByNetwork = createAsyncThunk<T.NetworkNotification[]>(A.GET_LIST_NETWORKS_ACTION, async () => {
   return await API.notifications.fetchAllGroupByNetwork<T.NetworkNotification[]>();
+});
+
+const getPersonalEmail = createAsyncThunk<T.EmailAddress>(A.GET_PERSONAL_EMAIL, async () => {
+  return await API.contact.getPersonalEmail<T.EmailAddress>();
+});
+
+const updatePersonalEmail = createAsyncThunk<T.EmailAddress, any>(A.UPDATE_PERSONAL_EMAIL, async (emailAddress: T.EmailAddress) => {
+  await API.contact.updatePersonalEmail<T.EmailAddress>(emailAddress?.addressIdentifier, emailAddress);
+
+  return emailAddress;
+});
+
+const createPersonalEmail = createAsyncThunk<{ emailAddress: string }, any>(A.CREATE_PERSONAL_EMAIL, async (emailAddress: { emailAddress: string }) => {
+  await API.contact.createPersonalEmail<T.EmailAddress>(emailAddress);
+
+  return emailAddress;
+});
+
+const getNotificationSettings = createAsyncThunk<T.EmailNotificationSettings>(A.GET_NOTIFICATION_SETTINGS, async () => {
+  return await API.contact.getNotificationsSettings<T.EmailNotificationSettings>();
+});
+
+const updateNotificationSettings = createAsyncThunk(A.UPDATE_NOTIFICATION_SETTINGS, async (settings: any) => {
+  return await API.contact.updateNotificationsSettings(settings);
 });
 
 const acknowledge = createAsyncThunk<T.Acknowledge | undefined, T.AcknowledgePayload>(
@@ -110,12 +141,36 @@ const slice = createSlice({
             !(n.entityId == acknowledge?.acknowledgeEntityId && n.entityType == acknowledge?.acknowledgeEntityType),
         );
       })
+      .addCase(getPersonalEmail.fulfilled, (state: T.State, action) => {
+        state.personalEmail = action.payload;
+      })
+      .addCase(updatePersonalEmail.fulfilled, (state: T.State, action) => {
+        state.personalEmail = action.payload;
+      })
+      .addCase(getNotificationSettings.fulfilled, (state: T.State, action) => {
+        state.notificationSettings = action.payload;
+      })
+      .addCase(updateNotificationSettings.fulfilled, (state: T.State, action) => {
+        state.notificationSettings = {...state.notificationSettings, ...action.payload};
+      })
       .addDefaultCase((state) => state);
   },
 });
 
 const { clear, toggleSidebar, hideSidebar } = slice.actions;
 
-export { getList, getListGroupByNetwork, acknowledge, clear, toggleSidebar, hideSidebar };
+export {
+  getList,
+  getListGroupByNetwork,
+  acknowledge,
+  clear,
+  toggleSidebar,
+  hideSidebar,
+  getPersonalEmail,
+  getNotificationSettings,
+  updatePersonalEmail,
+  createPersonalEmail,
+  updateNotificationSettings,
+};
 
 export default slice.reducer;
