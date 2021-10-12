@@ -1,12 +1,10 @@
-import React, {FC, useEffect, useState} from 'react';
+import React, { FC, useState } from 'react';
 import Button from '@beans/button';
 
 import useStore from 'hooks/useStore';
 import useDispatch from 'hooks/useDispatch';
 import { joinNetwork, leaveNetwork, leaveEvent } from 'features/Auth';
-import { useNotification } from 'features/Notification';
-import Event from 'features/Event';
-import { useSettingsModal } from 'features/Notification';
+import { useNotification, useSettingsModal } from 'features/Notification';
 
 import { ModalJoin, ModalLeave, ModalSettings } from '../Modal';
 import { joinParticipant, leaveParticipant } from '../../store';

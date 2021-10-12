@@ -3,7 +3,7 @@ import BeansModal from '@beans/modal';
 import Link from '@beans/link';
 
 import { ConfirmationModal } from 'features/Common';
-import {Page} from "../../../Page";
+import { Page } from 'features/Page';
 
 type Props = {
   isOpen: boolean;
