@@ -1,10 +1,9 @@
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 
 import { redDotStyles, headingXS } from 'styles';
 import Media from 'styles/media';
 
 export const Wrapper = styled.div`
-  position: relative;
   padding: 24px 16px;
   
   ${Media.tablet`

@@ -34,14 +34,6 @@ const NetworkHeader: FC<Props> = ({ id, title, email, onLeave, onJoin, events })
 
   const handleCloseModal = () => setIsOpen(false);
 
-  // aboveDesktop: string,
-  //   aboveDesktopLarge: string,
-  //   aboveMobile: string,
-  //   aboveMobileLarge: string,
-  //   aboveTablet: string,
-  //   aboveTabletLarge: string,
-  //   global: string
-
   return (
     <Wrapper id='network-header'>
       {isOpen && (
@@ -49,7 +41,6 @@ const NetworkHeader: FC<Props> = ({ id, title, email, onLeave, onJoin, events })
           open={isOpen}
           onChange={handleCloseModal}
           id='share-story'
-          // variant='flyout'
           dynamicHeight
           maxHeight={{ global: '100vh' }}
           modalRootID={'network-header'}
