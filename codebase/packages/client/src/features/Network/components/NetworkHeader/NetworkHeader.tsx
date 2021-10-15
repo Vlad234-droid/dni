@@ -1,13 +1,16 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import Link from '@beans/link';
+import Button from '@beans/button';
 
 import { useMedia } from 'context/InterfaceContext';
 import { CopyLink, TextWithEllipsis } from 'features/Common';
 import Event from 'features/Event';
 import useStore from 'hooks/useStore';
+import { PostCreate } from 'features/Post';
 
 import NetworkAction from '../NetworkAction';
-import { Wrapper, TitleWrapper, ActionWrapper, Actions, ButtonWrapper } from './styled';
+import { Wrapper, TitleWrapper, ActionWrapper, Actions, LeaveButtonWrapper, ModalContent, ModalTitle, CopyLinkWrapper } from './styled';
+import Modal from '@beans/modal';
 
 type Props = {
   id: number;
@@ -23,9 +26,40 @@ const NetworkHeader: FC<Props> = ({ id, title, email, onLeave, onJoin, events })
   const isJoined = networks.includes(+id);
   const { isMobile, isLargeMobile } = useMedia();
   const isMobileView = isMobile || isLargeMobile;
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleShareStory = () => {
+    setIsOpen(true);
+  }
+
+  const handleCloseModal = () => setIsOpen(false);
+
+  // aboveDesktop: string,
+  //   aboveDesktopLarge: string,
+  //   aboveMobile: string,
+  //   aboveMobileLarge: string,
+  //   aboveTablet: string,
+  //   aboveTabletLarge: string,
+  //   global: string
 
   return (
-    <Wrapper>
+    <Wrapper id='network-header'>
+      {isOpen && (
+        <Modal
+          open={isOpen}
+          onChange={handleCloseModal}
+          id='share-story'
+          // variant='flyout'
+          dynamicHeight
+          maxHeight={{ global: '100vh' }}
+          modalRootID={'network-header'}
+        >
+          <ModalContent>
+            <ModalTitle>Please, input your story below</ModalTitle>
+            <PostCreate entityId={id} onClose={handleCloseModal}/>
+          </ModalContent>
+        </Modal>
+      )}
       <TitleWrapper>
         <TextWithEllipsis tooltipPosition={{ left: '24px', top: '86px' }}>{title}</TextWithEllipsis>
         {isMobileView && <CopyLink />}
@@ -33,10 +67,13 @@ const NetworkHeader: FC<Props> = ({ id, title, email, onLeave, onJoin, events })
       <ActionWrapper>
         {isMobileView && <Link href={`mailto: ${email}`}>{email}</Link>}
         <Actions>
-          {!isMobileView && <CopyLink />}
-          <ButtonWrapper isJoined={isJoined}>
-            <NetworkAction {...{ id, onLeave, onJoin, events }} />
-          </ButtonWrapper>
+          {!isMobileView && <CopyLinkWrapper><CopyLink /></CopyLinkWrapper>}
+          <div>
+            <Button onClick={handleShareStory}>Share story</Button>
+            <LeaveButtonWrapper isJoined={isJoined}>
+              <NetworkAction {...{ id, onLeave, onJoin, events }} />
+            </LeaveButtonWrapper>
+          </div>
         </Actions>
       </ActionWrapper>
     </Wrapper>

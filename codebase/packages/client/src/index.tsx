@@ -19,6 +19,8 @@ const globalThemeStyles = {
   normalize: true,
 };
 
+console.log('theme', theme);
+
 ReactDOM.render(
   <ThemeProvider theme={theme} globalStyles={globalThemeStyles}>
     <Provider store={store}>

@@ -1,24 +1,30 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
-import { redDotStyles } from 'styles';
+import { redDotStyles, headingXS } from 'styles';
 import Media from 'styles/media';
 
 export const Wrapper = styled.div`
+  position: relative;
   padding: 24px 16px;
-
+  
   ${Media.tablet`
     display: flex;
     justify-content: space-between;
     padding: 24px;
   `}
+  
+  .beans-modal__modal-container {
+    max-width: 100vw;
+  }
 `;
 
-export const ButtonWrapper = styled.div<{ isJoined: boolean }>`
+export const LeaveButtonWrapper = styled.div<{ isJoined: boolean }>`
   position: ${({ isJoined }) => (isJoined ? 'static' : 'fixed')};
   bottom: 76px;
   left: 16px;
   right: 16px;
   z-index: 100;
+  margin-top: 16px;
 
   & > button {
     width: 100%;
@@ -26,6 +32,7 @@ export const ButtonWrapper = styled.div<{ isJoined: boolean }>`
 
   ${Media.tablet`
      position: static;
+     margin-top: 24px;
   `}
 `;
 
@@ -62,14 +69,47 @@ export const ActionWrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-direction: column;
+
+  ${Media.tablet`
+     flex-direction: row;
+  `}
+  
+  a {
+    margin-bottom: 16px;
+  }
 `;
 
 export const Actions = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+`;
 
-  & button:not(:last-child) {
-    margin-right: 16px;
-  }
+export const CopyLinkWrapper = styled.div`
+  margin-right: 16px;
+`;
+
+export const ModalContent = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  ${Media.tablet`
+    padding: 16px;
+  `}
+`;
+
+export const ModalTitle = styled.h3`
+  width: 100%;
+  text-align: left;
+  margin-bottom: 16px;
+  ${headingXS};
+
+  ${Media.tablet`
+    margin-bottom: 24px;
+    font-size: 24px;
+    line-height: 28px;
+  `}
 `;
