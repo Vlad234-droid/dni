@@ -5,3 +5,4 @@ export { default as NotificationSettings } from './components/NotificationSettin
 export { default as notificationReducer } from './store/slice';
 export { EntityType } from './config/types';
 export { default as NotificationContext, NotificationProvider, useNotification } from './context/NotificationContext';
+export { default as useSettingsModal } from './hooks/useSettingsModal';
