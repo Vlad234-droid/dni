@@ -5,6 +5,7 @@ import useStore from 'hooks/useStore';
 import useDispatch from 'hooks/useDispatch';
 import { joinNetwork, leaveNetwork, leaveEvent } from 'features/Auth';
 import { useNotification, useSettingsModal } from 'features/Notification';
+import Event from 'features/Event';
 
 import { ModalJoin, ModalLeave, ModalSettings } from '../Modal';
 import { joinParticipant, leaveParticipant } from '../../store';
