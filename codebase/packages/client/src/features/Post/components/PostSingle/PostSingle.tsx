@@ -11,8 +11,6 @@ import { BackLinkWrapper } from './styled';
 type Props = {
   postId: number;
   loading: Loading;
-  networks?: number[];
-  events?: number[];
   loadPost: (id: number) => void;
   loadReactions: (id: number) => void;
   post?: Post;

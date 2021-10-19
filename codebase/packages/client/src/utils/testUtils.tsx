@@ -14,8 +14,9 @@ import thunkMiddleware from 'redux-thunk';
 import { InterfaceProvider } from 'context/InterfaceContext';
 import theme from 'theme';
 import store from 'store';
-import Auth from 'features/Auth';
+import Auth, { AuthProvider } from 'features/Auth';
 import rootReducer from 'store/rootReducer';
+import { UserRole } from 'features/User';
 
 const WithThemeProvider: FC = ({ children }) => (
   <ThemeProvider theme={theme}>
@@ -58,6 +59,9 @@ const render = (
       initialState,
       applyMiddleware(thunkMiddleware),
     ),
+    roles,
+    events,
+    networks,
     ...renderOptions
   }: // eslint-disable-next-line @typescript-eslint/no-explicit-any
   any = {},
@@ -67,11 +71,23 @@ const render = (
   const Wrapper: FC = ({ children }) => (
     <ThemeProvider theme={theme}>
       <Provider store={store}>
-        <Auth>
+        <AuthProvider value={{
+          authenticated: true,
+          user: {
+            id: 111,
+            name: 'mocked-user-name',
+            preferred_username: 'mocked-user-name',
+            events,
+            networks,
+            roles,
+            colleagueUUID: '111',
+          },
+          fetchUser: jest.fn(),
+        }}>
           <InterfaceProvider>
             <Router history={history}>{children}</Router>
           </InterfaceProvider>
-        </Auth>
+        </AuthProvider>
       </Provider>
     </ThemeProvider>
   );
@@ -79,8 +95,19 @@ const render = (
   return rtlRender(ui, { wrapper: Wrapper, ...renderOptions });
 };
 
-const renderWithProviders = (ui: ReactElement, options?: RenderOptions) =>
-  rtlRender(ui, { ...options, wrapper: WithAllProviders });
+type AuthOptions = {
+  authenticated: boolean;
+  user: {
+    events: number[],
+    networks: number[],
+    roles: string[],
+  }
+}
+
+const renderWithProviders = (ui: ReactElement, options?: RenderOptions, authOptions?: AuthOptions) => {
+  console.log('authOptions', authOptions);
+  return rtlRender(ui, { ...options, ...authOptions, wrapper: WithAllProviders });
+};
 
 const renderWithTheme = (ui: ReactElement, options?: RenderOptions) =>
   rtlRender(ui, { ...options, wrapper: WithThemeProvider });

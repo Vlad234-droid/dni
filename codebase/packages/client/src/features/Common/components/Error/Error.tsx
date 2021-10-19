@@ -24,7 +24,7 @@ const Error: FC<Props> = ({ errorData, showButton = false, fullWidth = false }) 
   const handleReloadBtnClick = () => window.location.reload();
 
   return (
-    <Wrapper fullWidth={fullWidth} data-testid='not-found'>
+    <Wrapper fullWidth={fullWidth} data-testid='error'>
       <Container>
         <IconWrapper>
           <Icon graphic='error' size='sm' background={theme.colors.error} inverse />
