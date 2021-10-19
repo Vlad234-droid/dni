@@ -68,6 +68,8 @@ type State = {
     metadata: MetaData;
   };
   isSidebarOpened: boolean;
+  personalEmail?: EmailAddress;
+  notificationSettings : EmailNotificationSettings;
 };
 
 type FormData = {
