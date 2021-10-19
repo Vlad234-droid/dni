@@ -9,7 +9,16 @@ import useStore from 'hooks/useStore';
 import { PostCreate } from 'features/Post';
 
 import NetworkAction from '../NetworkAction';
-import { Wrapper, TitleWrapper, ActionWrapper, Actions, LeaveButtonWrapper, ModalContent, ModalTitle, CopyLinkWrapper } from './styled';
+import {
+  Wrapper,
+  TitleWrapper,
+  ActionWrapper,
+  Actions,
+  JoinButtonWrapper,
+  ModalContent,
+  ModalTitle,
+  CopyLinkWrapper,
+} from './styled';
 import Modal from '@beans/modal';
 
 type Props = {
@@ -30,7 +39,7 @@ const NetworkHeader: FC<Props> = ({ id, title, email, onLeave, onJoin, events })
 
   const handleShareStory = () => {
     setIsOpen(true);
-  }
+  };
 
   const handleCloseModal = () => setIsOpen(false);
 
@@ -47,7 +56,7 @@ const NetworkHeader: FC<Props> = ({ id, title, email, onLeave, onJoin, events })
         >
           <ModalContent>
             <ModalTitle>Please, input your story below</ModalTitle>
-            <PostCreate entityId={id} onClose={handleCloseModal}/>
+            <PostCreate entityId={id} onClose={handleCloseModal} />
           </ModalContent>
         </Modal>
       )}
@@ -58,12 +67,18 @@ const NetworkHeader: FC<Props> = ({ id, title, email, onLeave, onJoin, events })
       <ActionWrapper>
         {isMobileView && <Link href={`mailto: ${email}`}>{email}</Link>}
         <Actions>
-          {!isMobileView && <CopyLinkWrapper><CopyLink /></CopyLinkWrapper>}
+          {!isMobileView && (
+            <CopyLinkWrapper>
+              <CopyLink />
+            </CopyLinkWrapper>
+          )}
           <div>
             <Button onClick={handleShareStory}>Share story</Button>
-            <LeaveButtonWrapper isJoined={isJoined}>
-              <NetworkAction {...{ id, onLeave, onJoin, events }} />
-            </LeaveButtonWrapper>
+            {!isJoined && (
+              <JoinButtonWrapper>
+                <NetworkAction {...{ id, onLeave, onJoin, events }} />
+              </JoinButtonWrapper>
+            )}
           </div>
         </Actions>
       </ActionWrapper>

@@ -5,20 +5,20 @@ import Media from 'styles/media';
 
 export const Wrapper = styled.div`
   padding: 24px 16px;
-  
+
   ${Media.tablet`
     display: flex;
     justify-content: space-between;
     padding: 24px;
   `}
-  
+
   .beans-modal__modal-container {
     max-width: 100vw;
   }
 `;
 
-export const LeaveButtonWrapper = styled.div<{ isJoined: boolean }>`
-  position: ${({ isJoined }) => (isJoined ? 'static' : 'fixed')};
+export const JoinButtonWrapper = styled.div`
+  position: fixed;
   bottom: 76px;
   left: 16px;
   right: 16px;
@@ -73,7 +73,7 @@ export const ActionWrapper = styled.div`
   ${Media.tablet`
      flex-direction: row;
   `}
-  
+
   a {
     margin-bottom: 16px;
   }

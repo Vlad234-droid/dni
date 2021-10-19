@@ -135,7 +135,14 @@ const Network: FC<Props> = ({ id }) => {
             <PostList entityId={id} filter={BY_NETWORK} />
           </LeftContent>
           <RightContent>
-            <NetworkPartners partners={network!.partners} email={network!.contact} />
+            <NetworkPartners
+              id={id}
+              partners={network!.partners}
+              email={network!.contact}
+              onLeave={handleLeave}
+              onJoin={handleJoin}
+              events={network!.events}
+            />
           </RightContent>
         </Content>
       </>
