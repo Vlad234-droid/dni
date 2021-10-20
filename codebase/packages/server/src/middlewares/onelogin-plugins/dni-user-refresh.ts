@@ -35,7 +35,11 @@ const dniUserRefreshCache = new NodeCache();
  */
 export const dniUserRefreshPlugin = <O>(config: Config<O> & Optional): Plugin => {
   const plugin: Plugin = async (req: Request, res: Response) => {
-    const { shouldRun = () => true, cache = true, cacheTtl = 1 * 60 * 60 } = config;
+    const { 
+      shouldRun = () => true, 
+      cache = true, 
+      cacheTtl = 1 * 60 * 60, // 1 minute
+    } = config;
 
     if (!shouldRun(req, res)) {
       return;
@@ -61,7 +65,7 @@ export const dniUserRefreshPlugin = <O>(config: Config<O> & Optional): Plugin =>
       const openIdUserInfo = getOpenIdUserInfo(res);
       const employeeNumber = openIdUserInfo?.params?.employeeNumber || openIdUserInfo?.params?.EmployeeNumber;
       if (!employeeNumber) {
-        throw Error('No Employee Number (TPX) found');
+        throw Error('No Employee Number (IAM ID) found');
       }
 
       colleague = {

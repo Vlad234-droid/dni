@@ -32,10 +32,6 @@ const handleNoData = (optional?: boolean) => {
   }
 };
 
-const userDataCookieHandler = <O>(req: Request, res: Response, config: Config<O> & Optional) => {
-
-};
-
 /**
  * A plugin middleware to be used in onelogin.
  * It swaps the oidc or saml token for the identity access token.
@@ -74,7 +70,6 @@ export const userDataPlugin = <O>(config: Config<O> & Optional): Plugin => {
         setUserData(res, payload);
       } else {
         setUserData(res, userInfo);
-        
       }
     } else {
       handleNoData(optional);
