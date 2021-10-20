@@ -1,7 +1,7 @@
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import { Endpoint } from 'config/endpoints';
-import { buildEventCRUD, buildNetworkCRUD, buildPostCRUD } from '@dni/mock-server/src/crud';
+import { buildEventCRUD, buildNetworkCRUD, buildPostCRUD, buildEmojiCRUD, buildEmotionCRUD } from '@dni/mock-server/src/crud';
 
 import { getMathId } from 'utils/testUtils';
 
@@ -17,7 +17,7 @@ if (process.env.NODE_ENV === 'test') {
   mock.onGet(Endpoint.USER_PROFILE).reply(200, {
     networks: [],
     events: [],
-    role: 'user',
+    roles: ['Employee'],
   });
   mock.onGet(Endpoint.USER_NETWORKS).reply(200, []);
   mock.onPost(Endpoint.USER_NETWORKS).reply(200, {
@@ -33,6 +33,17 @@ if (process.env.NODE_ENV === 'test') {
   mock.onDelete(Endpoint.USER_EVENTS).reply(200, {
     body: {},
   });
+
+  // reactions
+  const reactionCRUD = buildEmotionCRUD(COLLECTION_SIZE);
+  mock.onGet(Endpoint.USER_REACTIONS).reply(200, reactionCRUD.findAll());
+  mock.onPost(Endpoint.USER_REACTIONS).reply(200, {
+    body: {},
+  });
+
+  const emojiCRUD = buildEmojiCRUD(5);
+  mock.onGet(Endpoint.EMOJIS).reply(200, emojiCRUD.findAll());
+
   // networks
   const networkCRUD = buildNetworkCRUD(COLLECTION_SIZE);
   const oneNetwork = new RegExp(`${Endpoint.NETWORKS}/(\\d+)`);

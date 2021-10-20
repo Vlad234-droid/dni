@@ -24,6 +24,7 @@ describe('<PostSingle />', () => {
       postId: 22,
       loading: Loading.IDLE,
       loadPost: jest.fn(),
+      loadReactions: jest.fn(),
       networks: [1, 2, 3],
       events: [8, 9, 10],
     };
@@ -96,18 +97,21 @@ describe('<PostSingle />', () => {
 
   describe('#useEffect', () => {
     it('should call loadPost with postId, if provided', () => {
+      const postsCRUD = buildPostCRUD(1);
+      const post = postsCRUD.findAll()[0];
+
       const props = {
-        postId: 22,
+        postId: post.id,
         loading: Loading.PENDING,
         loadPost: jest.fn(),
-        networks: [1, 2, 3],
-        events: [8, 9, 10],
+        loadReactions: jest.fn(),
+        post,
       };
-
 
       render(<PostSingle {...props} />, renderOptions);
 
-      expect(props.loadPost).toHaveBeenCalled();
+      expect(props.loadPost).toHaveBeenCalledTimes(1);
+      expect(props.loadReactions).toHaveBeenCalledTimes(1);
     });
   });
 });

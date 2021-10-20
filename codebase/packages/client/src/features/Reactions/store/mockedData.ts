@@ -48,6 +48,102 @@ export const reactions = [
       [Variant.SURPRISE]: 38,
     },
   },
+  {
+    id: 158,
+    entityType: 'post',
+    reactions: [Variant.LAUGH],
+    reactionsCount: {
+      [Variant.SMILE]: 35,
+      [Variant.HEART]: 0,
+      [Variant.LAUGH]: 135,
+      [Variant.LIKE]: 20,
+      [Variant.SURPRISE]: 138,
+    },
+  },
+  {
+    id: 157,
+    entityType: 'post',
+    reactions: [Variant.LAUGH],
+    reactionsCount: {
+      [Variant.SMILE]: 35,
+      [Variant.HEART]: 0,
+      [Variant.LAUGH]: 135,
+      [Variant.LIKE]: 20,
+      [Variant.SURPRISE]: 138,
+    },
+  },
+  {
+    id: 156,
+    entityType: 'post',
+    reactions: [Variant.LAUGH],
+    reactionsCount: {
+      [Variant.SMILE]: 35,
+      [Variant.HEART]: 0,
+      [Variant.LAUGH]: 135,
+      [Variant.LIKE]: 20,
+      [Variant.SURPRISE]: 138,
+    },
+  },
+  {
+    id: 154,
+    entityType: 'post',
+    reactions: [Variant.LAUGH],
+    reactionsCount: {
+      [Variant.SMILE]: 35,
+      [Variant.HEART]: 0,
+      [Variant.LAUGH]: 135,
+      [Variant.LIKE]: 20,
+      [Variant.SURPRISE]: 138,
+    },
+  },
+  {
+    id: 143,
+    entityType: 'post',
+    reactions: [Variant.LAUGH],
+    reactionsCount: {
+      [Variant.SMILE]: 35,
+      [Variant.HEART]: 0,
+      [Variant.LAUGH]: 135,
+      [Variant.LIKE]: 20,
+      [Variant.SURPRISE]: 138,
+    },
+  },
+  {
+    id: 141,
+    entityType: 'post',
+    reactions: [Variant.LAUGH],
+    reactionsCount: {
+      [Variant.SMILE]: 35,
+      [Variant.HEART]: 0,
+      [Variant.LAUGH]: 135,
+      [Variant.LIKE]: 20,
+      [Variant.SURPRISE]: 138,
+    },
+  },
+  {
+    id: 79,
+    entityType: 'post',
+    reactions: [Variant.LAUGH],
+    reactionsCount: {
+      [Variant.SMILE]: 35,
+      [Variant.HEART]: 0,
+      [Variant.LAUGH]: 135,
+      [Variant.LIKE]: 20,
+      [Variant.SURPRISE]: 138,
+    },
+  },
+  {
+    id: 77,
+    entityType: 'post',
+    reactions: [Variant.LAUGH],
+    reactionsCount: {
+      [Variant.SMILE]: 35,
+      [Variant.HEART]: 0,
+      [Variant.LAUGH]: 135,
+      [Variant.LIKE]: 20,
+      [Variant.SURPRISE]: 138,
+    },
+  },
 ];
 
 export const emojis = [
