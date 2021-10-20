@@ -1,38 +1,28 @@
 import {
-  getOpenidMiddleware,
+  initializeOpenidMiddleware,
   identityTokenSwapPlugin,
-  // userDataPlugin,
-  // OpenIdUserInfo,
-  withReturnTo,
   pinoLogger,
   colleagueApiPlugin,
   userDataPlugin,
+  OpenIdRouter,
 } from '@dni-connectors/onelogin';
 
 import { isPROD } from '../config/env';
 import { ProcessConfig } from '../config/config-accessor';
-// import { colleagueInfoResolver, openIdUserInfoResolver } from '../config/auth-data';
-
-// import { Colleague } from '@dni-connectors/colleague-api';
 import { dniRolesPlugin, dniUserRefreshPlugin } from './onelogin-plugins';
 
-export const configureOneloginMidleware = async ({
+export const initializeOpenid = async ({
   runtimeEnvironment,
   apiEnv,
   authDataCookieName,
   sessionCookieName,
-  // applicationReturnToCookieName,
   applicationCookieParserSecret,
-  // applicationColleagueCookieName,
-  // applicationColleagueCookieSecret,
-  // applicationUserDataCookieName,
-  // applicationUserDataCookieSecret,
   stickCookiesToApplicationPath,
-  oneLoginIssuerUrl,
-  oneLoginApplicationPath,
-  oneLoginCallbackUrlRoot,
-  oneLoginCallbackPath,
-  oneLoginRedirectAfterLogoutUrl,
+  oidcIssuerUrl,
+  applicationServerUrlRoot,
+  applicationPublicUrl,
+  oidcAuthCallbackPath,
+  oidcRedirectAfterLogoutPath,
   oidcClientId,
   oidcClientSecret,
   oidcRefreshTokenSecret,
@@ -44,10 +34,10 @@ export const configureOneloginMidleware = async ({
   identityUserScopedTokenCookieSecret,
   identityUserScopedTokenCookieName,
   defaultRoles,
-}: ProcessConfig) => {
+}: ProcessConfig): Promise<OpenIdRouter> => {
   const isProduction = isPROD(runtimeEnvironment());
 
-  const openidMiddleware = getOpenidMiddleware({
+  const openidMiddleware = initializeOpenidMiddleware({
     runtimeEnvironment: runtimeEnvironment(),
 
     /**
@@ -68,7 +58,7 @@ export const configureOneloginMidleware = async ({
     /**
      * issuer url e.g. https://login.ourtesco.com/oidc/2
      */
-    issuerUrl: oneLoginIssuerUrl(),
+    issuerUrl: oidcIssuerUrl(),
 
     /**
      * Client secret used to encrypt refresh token
@@ -78,18 +68,31 @@ export const configureOneloginMidleware = async ({
     /**
      * A callback root that was registered for the application e.g. https://ourtesco.com (without the applicationPath)
      */
-    registeredCallbackUrlRoot: oneLoginCallbackUrlRoot(),
-
-    /**
-     * A callback path that was registered for the application e.g. /auth/openid/callback
-     */
-    registeredCallbackUrlPath: oneLoginCallbackPath(),
+    applicationServerUrlRoot: applicationServerUrlRoot(),
 
     /**
      * A path the app is mounted on e.g. for https://ourtesco.com/my-shift the path is /my-shift.
      * If the app is mounted on root path do not provide this option.
      */
-    applicationPath: oneLoginApplicationPath(),
+    applicationPath: applicationPublicUrl(),
+
+     /**
+     * A callback path that was registered for the application e.g. /sso/auth/callback
+     */
+    registeredAuthCallbackUrlPath: oidcAuthCallbackPath(),
+
+    /**
+     * Absolute url that we will redirect to after logout.
+     * Default: `${applicationPath}/sso/logout/callback`
+     */
+    registeredRedirectAfterLogoutPath: oidcRedirectAfterLogoutPath(),
+
+    /**
+     * 
+     * @param path 
+     * @returns 
+     */
+    isViewPath: (path: string) => !path.match('^(/api|/auth|/sso|/static|/favicon.ico)'),
 
     /**
      * Paths that won't be part of token validation and refreshing
@@ -107,7 +110,7 @@ export const configureOneloginMidleware = async ({
      */
     authDataCookie: {
       name: authDataCookieName(),
-      path: stickCookiesToApplicationPath() ? oneLoginApplicationPath() || '/' : '/',
+      path: stickCookiesToApplicationPath() ? applicationPublicUrl() : '/',
     },
 
     /**
@@ -115,7 +118,7 @@ export const configureOneloginMidleware = async ({
      */
     sessionCookie: {
       name: sessionCookieName(),
-      path: stickCookiesToApplicationPath() ? oneLoginApplicationPath() || '/' : '/',
+      path: stickCookiesToApplicationPath() ? applicationPublicUrl() : '/',
     },
 
     /**
@@ -133,12 +136,6 @@ export const configureOneloginMidleware = async ({
      */
     requireIdToken: true,
 
-    /**
-     * Absolute url that we will redirect to after logout, that can lead to onelogin session termination ednpoint .
-     * Default: `${applicationPath}/sso/auth`
-     */
-    redirectAfterLogoutUrl: oneLoginRedirectAfterLogoutUrl(),
-
     plugins: [
       userDataPlugin({
         optional: false,
@@ -147,7 +144,7 @@ export const configureOneloginMidleware = async ({
         // cookieConfig: {
         //   cookieName: applicationUserDataCookieName(),
         //   secret: applicationUserDataCookieSecret(),
-        //   path: stickCookiesToApplicationPath() ? oneLoginApplicationPath() || undefined : undefined,
+        //   path: stickCookiesToApplicationPath() ? applicationPublicUrl() : undefined,
         //   httpOnly: false,
         //   secure: isProduction,
         //   signed: isProduction,
@@ -166,7 +163,7 @@ export const configureOneloginMidleware = async ({
         cookieConfig: {
           cookieName: identityUserScopedTokenCookieName(),
           secret: identityUserScopedTokenCookieSecret(),
-          path: stickCookiesToApplicationPath() ? oneLoginApplicationPath() || '/' : '/',
+          path: stickCookiesToApplicationPath() ? applicationPublicUrl() : '/',
           httpOnly: true,
           secure: isProduction,
           signed: isProduction,
@@ -180,7 +177,7 @@ export const configureOneloginMidleware = async ({
         // cookieConfig: {
         //   cookieName: applicationColleagueCookieName(),
         //   secret: applicationColleagueCookieSecret(),
-        //   path: stickCookiesToApplicationPath() ? oneLoginApplicationPath() || '/' : '/',
+        //   path: stickCookiesToApplicationPath() ? applicationPublicUrl() : '/',
         //   httpOnly: true,
         //   secure: isProduction,
         //   signed: isProduction,
@@ -200,14 +197,5 @@ export const configureOneloginMidleware = async ({
     ],
   });
 
-  // const openIdMiddleware = withReturnTo(await openidMiddleware, {
-  //   isViewPath: (path: string) => !path.match('^(/api|/auth|/sso|/static|/favicon.ico)'),
-  //   authDataCookieName: authDataCookieName(),
-  //   appPath: oneLoginApplicationPath(),
-  //   cookieName: applicationReturnToCookieName(),
-  //   cookieStickToAppPath: stickCookiesToApplicationPath(),
-  // });
-
-  // return openIdMiddleware;
-  return await openidMiddleware;
+  return openidMiddleware;
 };

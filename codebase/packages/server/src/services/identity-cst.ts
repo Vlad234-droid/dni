@@ -44,7 +44,11 @@ const issueIdentityClientScopeToken = async () => {
   return data;
 };
 
-const [getCachedClientScopeToken, setCachedClientScopeToken, disposeCache] = ((): [
+const [
+  getCachedClientScopeToken, 
+  setCachedClientScopeToken, 
+  disposeCache
+] = ((): [
   () => ClientScopeToken | undefined,
   (newToken: ClientScopeToken, age: number) => void,
   () => void,
@@ -65,7 +69,10 @@ const [getCachedClientScopeToken, setCachedClientScopeToken, disposeCache] = (()
         cashedClientScopeToken = undefined;
       }, maxAge);
     },
-    () => timeoutHandle && clearTimeout(timeoutHandle),
+    () => {
+      cashedClientScopeToken = undefined;
+      timeoutHandle && clearTimeout(timeoutHandle)
+    },
   ];
 })();
 
@@ -88,8 +95,8 @@ export const getIdentityClientScopeToken = async () => {
     const { exp } = identityClientScopeToken.claims;
     if (exp && !isNaN(Number(exp))) {
       const expiresIn = Math.abs(new Date().getTime() - exp * 1000);
-      if (expiresIn < 2 * 60 * 1000) {
-        // < 2 mins
+      const twoMins = 2 * 60 * 1000; // 2 mins
+      if (expiresIn < twoMins) {
         issueIdentityClientScopeToken().then((token) => {
           setCachedClientScopeToken(token, getMaxAge(token.claims));
         });

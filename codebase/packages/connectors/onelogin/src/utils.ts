@@ -35,3 +35,11 @@ export const printCookieInfo = (
   `${description} - { name: ${name}, path: ${path}, maxAge: ${
     maxAge ? maxAge + "ms" : "session"
   }, secure: ${secure}, httpOnly: ${httpOnly} }`;
+
+export const addTrailngSlash = (u: string): string => {
+  return u.endsWith('/') ? u : `${u}/`;
+}
+
+export const emptyIfRoot = (u: string): string => {
+  return u === '/' ? '' : u;
+}

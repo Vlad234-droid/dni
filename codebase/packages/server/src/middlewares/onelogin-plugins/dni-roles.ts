@@ -24,7 +24,13 @@ type Config<O> = {
  */
 export const dniRolesPlugin = <O>(config: Config<O> & Optional): Plugin => {
   const plugin: Plugin = async (req: Request, res: Response) => {
-    const { shouldRun = () => true, defaultRoles, oidcGroupFiltersRegex, oidcManagerGroups, oidcAdminGroups } = config;
+    const { 
+      shouldRun = () => true, 
+      defaultRoles, 
+      oidcGroupFiltersRegex, 
+      oidcManagerGroups, 
+      oidcAdminGroups 
+    } = config;
 
     if (!shouldRun(req, res)) {
       return;

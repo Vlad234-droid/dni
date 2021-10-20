@@ -50,14 +50,14 @@ const prepareMailingData = async (
 
 const buildFrontURI = (type: DniEntityTypeEnum | typeof UNSUBSCRIBE_KEY, entityId?: string) => {
   const {
-    applicationUrlRoot,
+    applicationServerUrlRoot,
     applicationPublicUrl,
     applicationUrlTemplatePost,
     applicationUrlTemplateEvent,
     applicationUrlUnsubscribe,
   } = getConfig();
 
-  const baseUrl = `${applicationUrlRoot()}${applicationPublicUrl() === '/' ? '' : applicationPublicUrl()}`;
+  const baseUrl = `${applicationServerUrlRoot()}${applicationPublicUrl() === '/' ? '' : applicationPublicUrl()}`;
   switch (type) {
     case DniEntityTypeEnum.POST: {
       return `${baseUrl}${applicationUrlTemplatePost()}`.replace(/%\w+%/, entityId!);

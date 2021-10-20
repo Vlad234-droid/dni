@@ -12,6 +12,7 @@
     "clean:all": "yarn clean && rimraf node_modules",
     "build:prod": "tsc -p .",
     "build:server": "tsc -p .",
+    "webpack": "webpack",
     "run:dev": "cross-env NODE_ENV=development NODE_PORT=4000 env-cmd --silent --no-override --fallback -f .env.development node -r source-map-support/register --inspect build/app.js",
     "run:prod": "cross-env NODE_ENV=production env-cmd --silent --no-override --fallback -f .env.production node build/app.js",
     "run:server": "cross-env NODE_ENV=production env-cmd --silent --no-override --fallback -f .env.production node -r source-map-support/register build/app.js",
@@ -79,7 +80,8 @@
     "source-map-support": "^0.5.19",
     "ts-node": "^9.1.1",
     "typescript": "^4.1.3",
-    "webpack": "^5.45.1",
-    "webpack-cli": "^4.7.2"
+    "webpack": "4.29.6",
+    "webpack-cli": "3.3.0",
+    "webpack-node-externals": "^3.0.0"
   }
 }
