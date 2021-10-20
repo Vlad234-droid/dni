@@ -7,12 +7,8 @@ import {
   cmsNetworksApiConnector,
   cmsOrganizationsApiConnector,
   cmsEmotionsApiConnector,
+  cmsReactionsApiConnector,
 } from '@dni-connectors/colleague-cms-api';
-
-import { v4 as uuidv4 } from 'uuid';
-
-import { contactApiConnector } from '@dni-connectors/contact-api';
-import { colleagueApiConnector } from '@dni-connectors/colleague-api';
 
 import { apiDefinition } from '../api-definition';
 
@@ -45,6 +41,24 @@ const tescoApi = (requestCtx: ContextProvider<any>) =>
     },
     deleteEmotion: async ({ params }, ctx) => {
       const res = await cmsEmotionsApiConnector(ctx).deleteEmotion({ params });
+      return unsafelyUnpackResponseData(res);
+    },
+
+    // Colleague CMS: Reactions
+    getReactionsCount: async ({ params }, ctx) => {
+      const res = await cmsReactionsApiConnector(ctx).getReactionsCount({ params });
+      return unsafelyUnpackResponseData(res);
+    },
+    getReactions: async ({ params }, ctx) => {
+      const res = await cmsReactionsApiConnector(ctx).getReactions({ params });
+      return unsafelyUnpackResponseData(res);
+    },
+    postReaction: async ({ body }, ctx) => {
+      const res = await cmsReactionsApiConnector(ctx).postReaction({ body });
+      return unsafelyUnpackResponseData(res);
+    },
+    deleteReaction: async ({ params }, ctx) => {
+      const res = await cmsReactionsApiConnector(ctx).deleteReaction({ params });
       return unsafelyUnpackResponseData(res);
     },
 
