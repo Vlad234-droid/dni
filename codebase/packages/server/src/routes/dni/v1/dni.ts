@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express';
+import express from 'express';
 
 import { roleAuth } from '../../../middlewares/role-auth-handler';
 
@@ -60,9 +60,9 @@ dniApi.get('/notifications/networks', getNetworkNotifications);
 dniApi.post('/notifications/acknowledge', acknowledgeNotification);
 
 // pls. note: roleAuth middleware is applied
-dniApi.get('/reports/members', roleAuth([ ROLE_ADMIN, ROLE_MANAGER ]), getMembersReportByFilters);
-dniApi.get('/reports/regions', roleAuth([ ROLE_ADMIN, ROLE_MANAGER ]), getRegionsReportByFilters);
-dniApi.get('/reports/departments', roleAuth([ ROLE_ADMIN, ROLE_MANAGER ]), getDepartmentsReportByFilters);
-dniApi.post('/reports/print-pdf', roleAuth([ ROLE_ADMIN, ROLE_MANAGER ]), printPDF);
+dniApi.get('/reports/members', roleAuth([ROLE_ADMIN, ROLE_MANAGER]), getMembersReportByFilters);
+dniApi.get('/reports/regions', roleAuth([ROLE_ADMIN, ROLE_MANAGER]), getRegionsReportByFilters);
+dniApi.get('/reports/departments', roleAuth([ROLE_ADMIN, ROLE_MANAGER]), getDepartmentsReportByFilters);
+dniApi.post('/reports/print-pdf', roleAuth([ROLE_ADMIN, ROLE_MANAGER]), printPDF);
 
 export { dniApi };

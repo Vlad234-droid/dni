@@ -57,7 +57,7 @@
         "type": "plain",
         "value": "/diversity-and-inclusion"
       },
-      "APPLICATION_URL_ROOT": {
+      "APPLICATION_SERVER_URL_ROOT": {
         "type": "plain",
         "value": "https://www.ourtesco.com"
       },
@@ -137,15 +137,15 @@
         "type": "secret",
         "name": "oidc_refresh_token_secret"
       },
-      "ONELOGIN_ISSUER_URL": {
+      "OIDC_ISSUER_URL": {
         "type": "plain",
         "value": "https://login.ourtesco.com/oidc/2"
       },
-      "ONELOGIN_CALLBACK_PATH": {
+      "OIDC_AUTH_CALLBACK_PATH": {
         "type": "plain",
-        "value": "/auth/openid/callback"
+        "value": "/sso/auth/callback"
       },
-      "ONELOGIN_REDIRECT_AFTER_LOGOUT_URL": {
+      "OIDC_REDIRECT_AFTER_LOGOUT_CALLBACK_PATH": {
         "type": "plain",
         "value": "https://login.ourtesco.com/oidc/2/logout"
       },
