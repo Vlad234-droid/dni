@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import filter from 'lodash.filter';
 
 import { defaultUserState } from 'features/User';
 import API from 'utils/api';
@@ -40,6 +41,25 @@ const leaveEvent = createAsyncThunk<T.EventResponse, T.EventPayload>(
   T.LEAVE_EVENT_ACTION,
   async (data) => await API.user.leaveEvent<T.EventResponse>(data),
 );
+
+const getReactions = createAsyncThunk<any, any>(
+  T.GET_REACTIONS_ACTION,
+  // @ts-ignore
+  async (filters) => await API.user.getReactions<any>(filters),
+);
+
+const addReaction = createAsyncThunk<any, any>(
+  T.ADD_REACTION,
+  // @ts-ignore
+  async (filters) => await API.user.addReaction<any>(filters),
+);
+
+const deleteReaction = createAsyncThunk<any, any>(
+  T.DELETE_REACTION,
+  // @ts-ignore
+  async (filters) => await API.user.deleteReaction<any>(filters),
+);
+
 
 const slice = createSlice({
   name: T.ROOT,
@@ -145,12 +165,37 @@ const slice = createSlice({
       .addCase(leaveEvent.rejected, (state: T.State, payload) => {
         state.eventLoading = Loading.FAILED;
         state.eventError = payload.error.message;
-      });
+      })
+      .addCase(getReactions.fulfilled, (state: T.State, { payload }) => {
+        state.reactions = payload;
+        setSucceeded(state);
+      })
+      .addCase(getReactions.rejected, setFailed)
+      .addCase(addReaction.fulfilled, (state: T.State, { payload }) => {
+        const reactions = state.reactions;
+        reactions![payload.type].push(payload);
+
+        state.reactions = reactions;
+        setSucceeded(state);
+      })
+      .addCase(addReaction.rejected, setFailed)
+      .addCase(deleteReaction.fulfilled, (state: T.State, { meta: { arg: { id, type }} }) => {
+        const updatedReactions = filter(state.reactions![type], (reaction: any) => {
+          return reaction.id !== id;
+        });
+        // @ts-ignore
+        state.reactions = {
+          ...state.reactions,
+          [type]: updatedReactions,
+        };
+        setSucceeded(state);
+      })
+      .addCase(deleteReaction.rejected, setFailed);
   },
 });
 
 const { clear } = slice.actions;
 
-export { clear, profile, joinNetwork, leaveNetwork, joinEvent, leaveEvent };
+export { clear, profile, joinNetwork, leaveNetwork, joinEvent, leaveEvent, getReactions, addReaction, deleteReaction };
 
 export default slice.reducer;

@@ -28,7 +28,7 @@ interface PostPublishedProps {
 const TEST_ID = 'post-published';
 
 const PostPublished: FC<PostPublishedProps> = ({ item }) => {
-  const { title, content, authorName, attachments, id, published_at, network, event } = item;
+  const { title, content, authorName, attachments, id, published_at, network, event, reactions } = item;
   const media = useMedia();
 
   return (
@@ -49,7 +49,7 @@ const PostPublished: FC<PostPublishedProps> = ({ item }) => {
           <RichTextRenderer source={content} />
         </PostDescription>
         <CopyLink to={`${Page.NETWORK_NEWS}/${id}`} />
-        <Reactions entityId={id} entityType={EntityType.POST} />
+        <Reactions entityId={id} entityType={EntityType.POST} reactions={reactions}/>
       </PostContent>
     </PostPublishedWrapper>
   );

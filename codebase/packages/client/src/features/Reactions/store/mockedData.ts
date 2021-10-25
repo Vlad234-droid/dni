@@ -9,11 +9,11 @@ import iconSmileDefault from '../assets/icon-smile-default.svg';
 import iconSurpriseActive from '../assets/icon-surprise-active.svg';
 import iconSurpriseDefault from '../assets/icon-surprise-default.svg';
 
-import { Variant } from '../config/types';
+import { ReactionType as Variant } from '../config/types';
 
 export const reactions = [
   {
-    id: 159,
+    id: 1,
     entityType: 'post',
     reactions: [Variant.SMILE, Variant.SURPRISE],
     reactionsCount: {
@@ -25,7 +25,7 @@ export const reactions = [
     },
   },
   {
-    id: 82,
+    id: 2,
     entityType: 'post',
     reactions: [Variant.LAUGH],
     reactionsCount: {
@@ -37,7 +37,7 @@ export const reactions = [
     },
   },
   {
-    id: 76,
+    id: 3,
     entityType: 'post',
     reactions: [Variant.HEART, Variant.LIKE],
     reactionsCount: {
@@ -49,7 +49,7 @@ export const reactions = [
     },
   },
   {
-    id: 158,
+    id: 4,
     entityType: 'post',
     reactions: [Variant.LAUGH],
     reactionsCount: {
@@ -142,44 +142,6 @@ export const reactions = [
       [Variant.LAUGH]: 135,
       [Variant.LIKE]: 20,
       [Variant.SURPRISE]: 138,
-    },
-  },
-];
-
-export const emojis = [
-  {
-    type: Variant.LIKE,
-    icon: {
-      active: iconLikeActive,
-      default: iconLikeDefault,
-    },
-  },
-  {
-    type: Variant.HEART,
-    icon: {
-      active: iconHeartActive,
-      default: iconHeartDefault,
-    },
-  },
-  {
-    type: Variant.SMILE,
-    icon: {
-      active: iconSmileActive,
-      default: iconSmileDefault,
-    },
-  },
-  {
-    type: Variant.LAUGH,
-    icon: {
-      active: iconLaughActive,
-      default: iconLaughDefault,
-    },
-  },
-  {
-    type: Variant.SURPRISE,
-    icon: {
-      active: iconSurpriseActive,
-      default: iconSurpriseDefault,
     },
   },
 ];

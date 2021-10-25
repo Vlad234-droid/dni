@@ -1,3 +1,5 @@
+import { ReactionsCount, ReactionType } from '@dni-connectors/colleague-cms-api';
+
 enum Variant {
   HEART = 'heart',
   LAUGH = 'laugh',
@@ -17,5 +19,5 @@ type Reaction = {
   reactions: Variant[];
 };
 
-export { Variant };
-export type { Emoji, ReactionsList, Reaction };
+export { ReactionType };
+export type { Emoji, ReactionsList, Reaction, ReactionsCount };

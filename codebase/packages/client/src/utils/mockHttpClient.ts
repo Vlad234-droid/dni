@@ -34,16 +34,6 @@ if (process.env.NODE_ENV === 'test') {
     body: {},
   });
 
-  // reactions
-  const reactionCRUD = buildEmotionCRUD(COLLECTION_SIZE);
-  mock.onGet(Endpoint.USER_REACTIONS).reply(200, reactionCRUD.findAll());
-  mock.onPost(Endpoint.USER_REACTIONS).reply(200, {
-    body: {},
-  });
-
-  const emojiCRUD = buildEmojiCRUD(5);
-  mock.onGet(Endpoint.EMOJIS).reply(200, emojiCRUD.findAll());
-
   // networks
   const networkCRUD = buildNetworkCRUD(COLLECTION_SIZE);
   const oneNetwork = new RegExp(`${Endpoint.NETWORKS}/(\\d+)`);

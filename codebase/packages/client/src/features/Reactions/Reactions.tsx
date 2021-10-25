@@ -1,15 +1,14 @@
-import React, { FC, useCallback, useEffect, useMemo, useState } from 'react';
+import React, { FC, useCallback, useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
-import isEmpty from 'lodash.isempty';
-import remove from 'lodash.remove';
-import debounce from 'lodash.debounce';
 
 import useStore from 'hooks/useStore';
 import { EntityType } from 'types/entity';
 import useDispatch from 'hooks/useDispatch';
+import { addReaction, deleteReaction, selectReactionPerEntity } from 'features/Auth';
 
-import { Variant } from './config/types';
-import { byIdSelector, changeReactions, getEmojis } from './store';
+import { ReactionType, ReactionsCount } from './config/types';
+import emojis from './config/emojis';
+import { getAddReactionFilters } from './utils';
 import {
   Wrapper,
   ReactionsList,
@@ -25,59 +24,54 @@ import {
 interface Props {
   entityId: number;
   entityType: EntityType;
+  reactions: ReactionsCount;
 }
 
-const Reactions: FC<Props> = ({ entityId, entityType }) => {
+const Reactions: FC<Props> = ({ entityId, entityType, reactions }) => {
   const dispatch = useDispatch();
-  const userReactions = useSelector(byIdSelector(entityId));
-  const [reactionsCount, setReactionsCount] = useState<Record<Variant, number>>(userReactions!.reactionsCount);
-  const [activeReactions, setActiveReactions] = useState<Variant[]>(userReactions!.reactions);
-  const { emojis } = useStore((state) => state.reactions);
+  const { user } = useStore((state) => state.auth);
+  const userReaction = useSelector(selectReactionPerEntity(entityId));
+  const [reactionsCount, setReactionsCount] = useState(reactions);
   const totalCount = useMemo(
     () => Object.values(reactionsCount).reduce((sum, count) => sum + count, 0),
     [reactionsCount],
   );
-  const debouncedChangeHandler = useMemo(
-    () => debounce((reactions) => dispatch(changeReactions({ id: entityId, entityType, reactions })), 1000),
-    [],
-  );
-
-  useEffect(
-    () => () => {
-      debouncedChangeHandler.cancel();
-    },
-    [],
-  );
-
-  useEffect(() => {
-    if (isEmpty(emojis)) {
-      dispatch(getEmojis());
-    }
-  }, [emojis]);
 
   const handleReactionClick = useCallback(
-    (variant: Variant) => {
-      let reactions = activeReactions;
-      if (activeReactions.includes(variant)) {
-        // remove reaction
-        reactions = remove(reactions.slice(), (reaction) => reaction !== variant);
-        setReactionsCount({
+    async (type: ReactionType) => {
+      // no reaction --> add
+      if (!userReaction) {
+        const filters = getAddReactionFilters({ type, entityId, uuid: user.colleagueUUID, entityType });
+        dispatch(addReaction(filters));
+        setReactionsCount((reactionsCount) => ({
           ...reactionsCount,
-          [variant]: reactionsCount[variant] - 1,
-        });
+          [type]: reactionsCount[type] + 1,
+        }));
       } else {
-        // add reaction
-        reactions = [...reactions, variant];
-        setReactionsCount({
-          ...reactionsCount,
-          [variant]: reactionsCount[variant] + 1,
-        });
-      }
+        // reaction exists --> delete or update
+        await dispatch(deleteReaction({
+          uuid: user.colleagueUUID,
+          id: userReaction.id,
+          type: userReaction.type,
+        }));
 
-      setActiveReactions(reactions);
-      debouncedChangeHandler(reactions);
+        setReactionsCount((reactionsCount) => ({
+          ...reactionsCount,
+          [userReaction.type]: reactionsCount[userReaction.type] - 1,
+        }));
+
+        // another reaction exists --> update
+        if (userReaction.type !== type) {
+          const filters = getAddReactionFilters({ type, entityId, uuid: user.colleagueUUID, entityType });
+          dispatch(addReaction(filters));
+          setReactionsCount((reactionsCount) => ({
+            ...reactionsCount,
+            [type]: reactionsCount[type] + 1,
+          }));
+        }
+      }
     },
-    [activeReactions],
+    [userReaction, reactions, reactionsCount],
   );
 
   return (
@@ -93,9 +87,11 @@ const Reactions: FC<Props> = ({ entityId, entityType }) => {
             <PostEmotionIconBig
               activeIconSrc={icon.active}
               defaultIconSrc={icon.default}
-              isActive={activeReactions.includes(type)}
+              isActive={userReaction?.type === type}
             />
-            <ReactionCount>{reactionsCount[type]}</ReactionCount>
+            <ReactionCount>
+              {reactionsCount[type]}
+            </ReactionCount>
           </ReactionsItem>
         ))}
         <TotalCount>

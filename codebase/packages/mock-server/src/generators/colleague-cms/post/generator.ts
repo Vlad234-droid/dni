@@ -1,5 +1,5 @@
 import faker from 'faker';
-import { Post } from '@dni-connectors/colleague-cms-api';
+import { Post, ReactionType } from '@dni-connectors/colleague-cms-api';
 
 import { generateArray, randomArray } from '../../../utils';
 import { generateFile } from '../built-in';
@@ -20,6 +20,13 @@ const generatePost = () => {
     archived: faker.datatype.boolean(),
     event: faker.random.arrayElement([generateEvent(), undefined]),
     network: faker.random.arrayElement([generateNetwork(), undefined]),
+    reactions: {
+      [ReactionType.HEART]: 0,
+      [ReactionType.LIKE]: 0,
+      [ReactionType.LAUGH]: 0,
+      [ReactionType.SMILE]: 0,
+      [ReactionType.SURPRISE]: 0,
+    },
   };
 
   return post;

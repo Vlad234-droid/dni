@@ -72,8 +72,8 @@ export const ReactionCount = styled(Details)`
 `;
 
 export const PostEmotionIcon = styled.div<{
-  activeIconSrc: any;
-  defaultIconSrc?: any;
+  activeIconSrc: string;
+  defaultIconSrc?: string;
   isActive?: boolean;
 }>`
   overflow: hidden;
@@ -95,4 +95,5 @@ export const PostEmotionIconSmall = styled(PostEmotionIcon)`
   width: 24px;
   height: 24px;
   background-image: url(${({ activeIconSrc }) => activeIconSrc});
+  margin-right: 8px;
 `;

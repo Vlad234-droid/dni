@@ -6,7 +6,7 @@ import { Spinner, Error } from 'features/Common';
 import Loading from 'types/loading';
 
 import { FetchUserAction } from '../../config/types';
-import { profile, State as AuthState } from '../../store';
+import { profile, State as AuthState, getReactions } from '../../store';
 import { AuthProvider } from '../../context/authContext';
 
 const Auth: FC = ({ children }) => {
@@ -14,8 +14,15 @@ const Auth: FC = ({ children }) => {
   const dispatch = useDispatch();
   const isLoading = useMemo(() => loading !== Loading.SUCCEEDED && loading !== Loading.FAILED, [loading]);
   const isAuthenticated = useMemo(() => Boolean(user?.id), [user]);
+  const uuid = user.colleagueUUID;
 
   const fetchUserAction: FetchUserAction = useCallback(() => dispatch(profile()), []);
+
+  useEffect(() => {
+    if (uuid) {
+      dispatch(getReactions({ authorField: 'external_id', uuid }));
+    }
+  }, [uuid]);
 
   useEffect(() => {
     fetchUserAction();

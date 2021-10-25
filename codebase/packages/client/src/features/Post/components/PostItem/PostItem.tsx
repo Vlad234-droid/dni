@@ -5,7 +5,6 @@ import { CanPerform } from 'features/Auth';
 import { Action, buildAction, Component } from 'features/Action';
 import { useNotification } from 'features/Notification';
 import { EntityType } from 'types/entity';
-import { ReactionVariant } from 'features/Reactions';
 
 import { Post } from '../../config/types';
 import PostPublished from '../PostPublished';

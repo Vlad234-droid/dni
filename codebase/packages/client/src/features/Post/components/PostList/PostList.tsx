@@ -17,7 +17,6 @@ import { DEFAULT_PAGINATION } from 'config/constants';
 import { useScrollContainer } from 'context/ScrollContainerContext';
 import Loading from 'types/loading';
 import ButtonFilter from 'features/ButtonFilter';
-import { getReactionsList } from 'features/Reactions';
 
 import { Filter } from '../../config/types';
 import { ALL, ARCHIVED } from '../../config/constants';
@@ -77,15 +76,6 @@ const PostList: FC<Props> = ({ entityId, filter = ALL }) => {
   useEffect(() => {
     posts.forEach((post) => acknowledge({ entityId: post.id, entityType: EntityType.POST }));
   }, [posts]);
-
-  // TODO: check this logic on more then 10 posts
-  useEffect(() => {
-    const next = page * DEFAULT_PAGINATION._limit;
-    const newPostsLoaded = page === 1 ? posts : posts.slice(next, DEFAULT_PAGINATION._limit);
-    const ids = map(newPostsLoaded, 'id');
-
-    dispatch(getReactionsList({ id_in: ids }));
-  }, [posts, page]);
 
   const loadPosts = useCallback(
     (filters: Filters) => {

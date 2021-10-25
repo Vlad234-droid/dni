@@ -3,7 +3,6 @@ import { useSelector } from 'react-redux';
 
 import useDispatch from 'hooks/useDispatch';
 import useStore from 'hooks/useStore';
-import { getReactionsList } from 'features/Reactions';
 
 import { getOne, byIdSelector } from '../../store';
 import PostSingle from './PostSingle';
@@ -19,13 +18,10 @@ const PostSingleContainer: FC<Props> = ({ postId }) => {
 
   const loadPost = (id: number) => dispatch(getOne({ id }));
 
-  const loadReactions = (id: number) => dispatch(getReactionsList({ id_in: [id] }));
-
   return (
     <PostSingle
       loading={loading}
       loadPost={loadPost}
-      loadReactions={loadReactions}
       post={post}
       postId={postId}
       error={error}

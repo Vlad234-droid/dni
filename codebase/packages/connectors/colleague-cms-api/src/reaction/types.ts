@@ -56,8 +56,6 @@ export type ReactionBody = {
   };
 };
 
-export type ReactionsCount = {
-  [key in keyof ReactionType]: number;
-};
+export type ReactionsCount = Record<ReactionType, number>;
 
 export default Reaction;

@@ -4,7 +4,7 @@ import API from 'utils/api';
 import Loading from 'types/loading';
 import { FilterPayload } from 'types/payload';
 
-import { reactions, emojis } from './mockedData';
+import { reactions } from './mockedData';
 import * as T from './types';
 
 const initialState: T.State = T.EntityAdapter.getInitialState({
@@ -23,13 +23,10 @@ const initialState: T.State = T.EntityAdapter.getInitialState({
 //   async (filters) => await API.user.reactions<T.ListResponse>(filters),
 // );
 
-const changeReactions = createAsyncThunk<T.OneResponse, T.OnePayload>(
-  T.CHANGE_ACTION,
-  async (data) => await API.user.changeReactions<T.OneResponse>(data),
-);
-
-// mocked data start
-const getEmojisList = () => Promise.resolve(emojis);
+// const changeReactions = createAsyncThunk<T.OneResponse, T.OnePayload>(
+//   T.CHANGE_ACTION,
+//   async (data) => await API.user.changeReactions<T.OneResponse>(data),
+// );
 
 const getReactions = (filters: FilterPayload) => Promise.resolve(reactions);
 
@@ -38,9 +35,6 @@ const getList = createAsyncThunk<T.ListResponse, FilterPayload>(
   // @ts-ignore
   async (filters) => await getReactions(filters),
 );
-
-const getEmojis = createAsyncThunk<T.EmojiResponse>(T.EMOJIS_ACTION, async () => await getEmojisList());
-// mocked data end
 
 const slice = createSlice({
   name: T.ROOT,
@@ -67,29 +61,18 @@ const slice = createSlice({
     };
 
     builder
-      .addCase(getEmojis.pending, setPending)
-      .addCase(getEmojis.fulfilled, (state: T.State, { payload }) => {
-        state.emojis = payload;
-        setSucceeded(state);
-      })
-      .addCase(getEmojis.rejected, setFailed)
       .addCase(getList.pending, setPending)
       .addCase(getList.fulfilled, (state: T.State, { payload }) => {
         T.EntityAdapter.upsertMany(state, payload);
         setSucceeded(state);
       })
       .addCase(getList.rejected, setFailed)
-      .addCase(changeReactions.pending, setPending)
-      .addCase(changeReactions.fulfilled, (state: T.State, action) => {
-        setSucceeded(state);
-      })
-      .addCase(changeReactions.rejected, setFailed)
       .addDefaultCase((state) => state);
   },
 });
 
 const { clear } = slice.actions;
 
-export { getEmojis, getList, changeReactions, clear };
+export { getList, clear };
 
 export default slice.reducer;

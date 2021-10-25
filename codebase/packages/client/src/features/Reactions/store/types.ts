@@ -3,7 +3,7 @@ import { EntityState, createEntityAdapter } from '@reduxjs/toolkit';
 import Loading from 'types/loading';
 import { EntityType } from 'types/entity';
 
-import { Reaction, Variant } from '../config/types';
+import { Reaction, ReactionType as Variant } from '../config/types';
 
 const EMOJIS_ACTION = 'emojis/list';
 const ROOT = 'auth';

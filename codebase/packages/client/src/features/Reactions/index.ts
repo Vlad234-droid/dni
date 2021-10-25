@@ -1,5 +1,5 @@
 export { default } from './Reactions';
-export { Variant as ReactionVariant } from './config/types';
+export { ReactionType } from './config/types';
 export {
   default as reactionsReducer,
   getList as getReactionsList,
