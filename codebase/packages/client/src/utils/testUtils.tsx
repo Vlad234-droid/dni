@@ -16,7 +16,6 @@ import theme from 'theme';
 import store from 'store';
 import Auth, { AuthProvider } from 'features/Auth';
 import rootReducer from 'store/rootReducer';
-import { UserRole } from 'features/User';
 
 const WithThemeProvider: FC = ({ children }) => (
   <ThemeProvider theme={theme}>
@@ -104,10 +103,8 @@ type AuthOptions = {
   }
 }
 
-const renderWithProviders = (ui: ReactElement, options?: RenderOptions, authOptions?: AuthOptions) => {
-  console.log('authOptions', authOptions);
-  return rtlRender(ui, { ...options, ...authOptions, wrapper: WithAllProviders });
-};
+const renderWithProviders = (ui: ReactElement, options?: RenderOptions, authOptions?: AuthOptions) =>
+  rtlRender(ui, { ...options, ...authOptions, wrapper: WithAllProviders });codebase/packages/connectors/colleague-cms-api/src/config.ts
 
 const renderWithTheme = (ui: ReactElement, options?: RenderOptions) =>
   rtlRender(ui, { ...options, wrapper: WithThemeProvider });

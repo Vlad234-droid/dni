@@ -1,11 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-// import filter from 'lodash.filter';
-// import omit from 'lodash.omit';
 
 import { defaultUserState } from 'features/User';
 import API from 'utils/api';
 import Loading from 'types/loading';
-// import { ReactionType } from 'features/Reactions';
 
 import * as T from './types';
 
@@ -17,7 +14,6 @@ const initialState: T.State = {
   networkError: undefined,
   eventLoading: Loading.IDLE,
   eventError: undefined,
-  // reactions: undefined,
 };
 
 const profile = createAsyncThunk<T.UserResponse>(
@@ -44,22 +40,6 @@ const leaveEvent = createAsyncThunk<T.EventResponse, T.EventPayload>(
   T.LEAVE_EVENT_ACTION,
   async (data) => await API.user.leaveEvent<T.EventResponse>(data),
 );
-//
-// const getReactions = createAsyncThunk<T.ReactionsResponse, T.ReactionsPayload>(
-//   T.GET_REACTIONS_ACTION,
-//   async (filters) => await API.user.getReactions<T.ReactionsResponse>(filters),
-// );
-//
-// const addReaction = createAsyncThunk<T.AddReactionResponse, T.AddReactionPayload>(
-//   T.ADD_REACTION,
-//   async (filters) => await API.user.addReaction<T.AddReactionResponse>(filters),
-// );
-//
-// const deleteReaction = createAsyncThunk<T.DeleteReactionResponse, T.DeleteReactionPayload>(
-//   T.DELETE_REACTION,
-//   async (filters) => await API.user.deleteReaction<T.DeleteReactionResponse>(filters),
-// );
-
 
 const slice = createSlice({
   name: T.ROOT,
@@ -166,30 +146,6 @@ const slice = createSlice({
         state.eventLoading = Loading.FAILED;
         state.eventError = payload.error.message;
       })
-      // .addCase(getReactions.fulfilled, (state: T.State, { payload }) => {
-      //   console.log('payload', payload);
-      //   state.reactions = payload;
-      //   setSucceeded(state);
-      // })
-      // .addCase(getReactions.rejected, setFailed)
-      // .addCase(addReaction.fulfilled, (state: T.State, { payload }) => {
-      //   const reactions = state.reactions;
-      //   // TODO; replace to concat or destructure
-      //   reactions![payload.type].push(payload);
-      //
-      //   state.reactions = reactions;
-      //   setSucceeded(state);
-      // })
-      // .addCase(addReaction.rejected, setFailed)
-      // .addCase(deleteReaction.fulfilled, (state: T.State, { meta: { arg: { reactionId, reactionType }} }) => {
-      //   state.reactions = {
-      //     ...omit(state.reactions, reactionType),
-      //     [reactionType as ReactionType]: filter(state.reactions![reactionType], (reaction) => reaction.id !== reactionId),
-      //   };
-      //
-      //   setSucceeded(state);
-      // })
-      // .addCase(deleteReaction.rejected, setFailed);
   },
 });
 
@@ -202,9 +158,6 @@ export {
   leaveNetwork,
   joinEvent,
   leaveEvent,
-  // getReactions,
-  // addReaction,
-  // deleteReaction,
 };
 
 export default slice.reducer;
