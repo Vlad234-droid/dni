@@ -5,9 +5,9 @@ import { buildPostCRUD } from '@dni/mock-server/src/crud';
 
 import { cleanup, render } from 'utils/testUtils';
 import Loading from 'types/loading';
+import { UserRole } from 'features/User';
 
 import PostSingle from './PostSingle';
-import {UserRole} from "../../../User";
 
 describe('<PostSingle />', () => {
   const mock = new MockAdapter(axios);
@@ -24,7 +24,6 @@ describe('<PostSingle />', () => {
       postId: 22,
       loading: Loading.IDLE,
       loadPost: jest.fn(),
-      loadReactions: jest.fn(),
       networks: [1, 2, 3],
       events: [8, 9, 10],
     };
@@ -111,7 +110,6 @@ describe('<PostSingle />', () => {
       render(<PostSingle {...props} />, renderOptions);
 
       expect(props.loadPost).toHaveBeenCalledTimes(1);
-      expect(props.loadReactions).toHaveBeenCalledTimes(1);
     });
   });
 });

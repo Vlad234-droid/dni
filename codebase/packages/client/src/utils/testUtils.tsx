@@ -104,7 +104,7 @@ type AuthOptions = {
 }
 
 const renderWithProviders = (ui: ReactElement, options?: RenderOptions, authOptions?: AuthOptions) =>
-  rtlRender(ui, { ...options, ...authOptions, wrapper: WithAllProviders });codebase/packages/connectors/colleague-cms-api/src/config.ts
+  rtlRender(ui, { ...options, ...authOptions, wrapper: WithAllProviders });
 
 const renderWithTheme = (ui: ReactElement, options?: RenderOptions) =>
   rtlRender(ui, { ...options, wrapper: WithThemeProvider });
