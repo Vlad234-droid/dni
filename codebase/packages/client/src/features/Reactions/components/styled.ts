@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { defaultUserState } from '../User';
 
 export const Wrapper = styled.div`
   display: flex;

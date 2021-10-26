@@ -1,78 +1,73 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import flatten from 'lodash.flatten';
 
 import API from 'utils/api';
-import Loading from 'types/loading';
-import { FilterPayload } from 'types/payload';
 
-import { reactions } from './mockedData';
+import { Reaction } from '../config/types';
 import * as T from './types';
 
 const initialState: T.State = T.EntityAdapter.getInitialState({
-  loading: Loading.IDLE,
   error: undefined,
-  emojis: [],
 });
 
-// const getEmojis = createAsyncThunk<T.EmojiResponse>(
-//   T.EMOJIS_ACTION,
-//   async () => await API.emojis.getEmojis<T.EmojiResponse>(),
-// );
-
-// const getList = createAsyncThunk<T.ListResponse, FilterPayload>(
-//   T.LIST_ACTION,
-//   async (filters) => await API.user.reactions<T.ListResponse>(filters),
-// );
-
-// const changeReactions = createAsyncThunk<T.OneResponse, T.OnePayload>(
-//   T.CHANGE_ACTION,
-//   async (data) => await API.user.changeReactions<T.OneResponse>(data),
-// );
-
-const getReactions = (filters: FilterPayload) => Promise.resolve(reactions);
-
-const getList = createAsyncThunk<T.ListResponse, FilterPayload>(
-  T.LIST_ACTION,
-  // @ts-ignore
-  async (filters) => await getReactions(filters),
+const getReactions = createAsyncThunk<T.ReactionsResponse, T.ReactionsPayload>(
+  T.GET_REACTIONS_ACTION,
+  async (filters) => await API.reactions.getReactions<T.ReactionsResponse>(filters),
 );
+
+const addReaction = createAsyncThunk<T.AddReactionResponse, T.AddReactionPayload>(
+  T.ADD_REACTION,
+  async (filters) => await API.reactions.addReaction<T.AddReactionResponse>(filters),
+);
+
+const deleteReaction = createAsyncThunk<T.DeleteReactionResponse, T.DeleteReactionPayload>(
+  T.DELETE_REACTION,
+  async (filters) => await API.reactions.deleteReaction<T.DeleteReactionResponse>(filters),
+);
+
 
 const slice = createSlice({
   name: T.ROOT,
   initialState,
-  reducers: {
-    clear(state) {
-      T.EntityAdapter.removeAll(state);
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
-    const setPending = (state: T.State) => {
-      state.loading = Loading.PENDING;
-      state.error = undefined;
-    };
-
-    const setSucceeded = (state: T.State) => {
-      state.loading = Loading.SUCCEEDED;
-    };
-
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const setFailed = (state: T.State, payload: any) => {
-      state.loading = Loading.FAILED;
       state.error = payload.error.message;
     };
 
     builder
-      .addCase(getList.pending, setPending)
-      .addCase(getList.fulfilled, (state: T.State, { payload }) => {
-        T.EntityAdapter.upsertMany(state, payload);
-        setSucceeded(state);
+      .addCase(getReactions.fulfilled, (state: T.State, { payload }) => {
+        const reactions = flatten(Object.values(payload)).reduce((res: Reaction[], current: Partial<Reaction>) => {
+          const reaction = {
+            ...current,
+            id: current!.parent!.id,
+            reactionId: current.id,
+          };
+
+          res.push(reaction as Reaction);
+          return res;
+        }, []);
+        T.EntityAdapter.upsertMany(state, reactions);
       })
-      .addCase(getList.rejected, setFailed)
-      .addDefaultCase((state) => state);
+      .addCase(getReactions.rejected, setFailed)
+      .addCase(addReaction.fulfilled, (state: T.State, { payload }) => {
+        const reaction = {
+          ...payload,
+          id: payload.parent.id,
+          reactionId: payload.id,
+        };
+
+        T.EntityAdapter.upsertOne(state, reaction);
+      })
+      .addCase(addReaction.rejected, setFailed)
+      .addCase(deleteReaction.fulfilled, (state: T.State, { meta: { arg: { entityId }} }) => {
+        T.EntityAdapter.removeOne(state, entityId);
+      })
+      .addCase(deleteReaction.rejected, setFailed);
   },
 });
 
-const { clear } = slice.actions;
-
-export { getList, clear };
+export { getReactions, addReaction, deleteReaction };
 
 export default slice.reducer;

@@ -59,9 +59,6 @@ export default (httpClient: AxiosInstance) => ({
     leaveNetwork: <T>(data: Config) => httpClient.delete<T>(`${Endpoint.USER_NETWORKS}/${data.networkId}`),
     joinEvent: <T>(data: Config) => httpClient.post<T>(Endpoint.USER_EVENTS, data),
     leaveEvent: <T>(data: Config) => httpClient.delete<T>(`${Endpoint.USER_EVENTS}/${data.eventId}`),
-    getReactions: <T>({ uuid, ...rest }: Config = {}) => httpClient.get<T>(`${Endpoint.USER_REACTIONS}/external/${uuid}`, { params: rest }),
-    addReaction: <T>(data: Config = {}) => httpClient.post<T>(Endpoint.USER_REACTIONS, data),
-    deleteReaction: <T>(data: Config = {}) => httpClient.delete<T>(`${Endpoint.USER_REACTIONS}/external/${data.id}?authorQuery=${data.uuid}&authorField=external_id`),
   },
   networks: {
     fetchAll: <T>(data: Config = {}) => httpClient.get<T>(Endpoint.NETWORKS, { params: data }),
@@ -109,4 +106,9 @@ export default (httpClient: AxiosInstance) => ({
     updateNotificationsSettings: <T>(data: Config = {}) =>
       httpClient.post<T>(Endpoint.CONTACT_EMAIL_NOTIFICATIONS_SETTINGS, data),
   },
+  reactions: {
+    getReactions: <T>(data: Config = {}) => httpClient.get<T>(`${Endpoint.USER_REACTIONS}/external/${data.uuid}?authorField=external_id`),
+    addReaction: <T>(data: Config = {}) => httpClient.post<T>(Endpoint.USER_REACTIONS, data),
+    deleteReaction: <T>({ reactionId, uuid }: Config = {}) => httpClient.delete<T>(`${Endpoint.USER_REACTIONS}/external/${reactionId}?authorQuery=${uuid}&authorField=external_id`),
+  }
 });

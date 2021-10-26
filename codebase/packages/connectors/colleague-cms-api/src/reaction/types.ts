@@ -16,7 +16,7 @@ export enum ContentType {
 export type Reaction = {
   id: number;
   type: ReactionType;
-  author: {
+  externalAuthor: {
     id: number;
     username: string;
     email: string;

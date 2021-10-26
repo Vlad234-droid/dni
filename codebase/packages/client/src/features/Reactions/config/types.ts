@@ -1,23 +1,19 @@
-import { ReactionsCount, ReactionType } from '@dni-connectors/colleague-cms-api';
+import {
+  ReactionsCount,
+  ReactionType,
+  ContentType,
+  ReactionBody,
+  Reactions,
+  Reaction,
+  ReactionApiParams,
+} from '@dni-connectors/colleague-cms-api';
 
-enum Variant {
-  HEART = 'heart',
-  LAUGH = 'laugh',
-  LIKE = 'like',
-  SMILE = 'smile',
-  SURPRISE = 'surprise',
-}
-
-type Emoji = {
-  variant: Variant;
-  image: File | string;
+type EmojiIcon = {
+  active: string;
+  default: string;
 };
 
-type ReactionsList = Record<Variant, number>;
-type Reaction = {
-  id: number;
-  reactions: Variant[];
-};
+type ExtraReaction = Reaction & { reactionId: number };
 
-export { ReactionType };
-export type { Emoji, ReactionsList, Reaction, ReactionsCount };
+export { ReactionType, ContentType };
+export type { ReactionsCount, ReactionBody, EmojiIcon, Reactions, ExtraReaction as Reaction, ReactionApiParams };

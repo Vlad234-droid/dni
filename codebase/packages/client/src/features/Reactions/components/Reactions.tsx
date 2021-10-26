@@ -4,11 +4,11 @@ import { useSelector } from 'react-redux';
 import useStore from 'hooks/useStore';
 import { EntityType } from 'types/entity';
 import useDispatch from 'hooks/useDispatch';
-import { addReaction, deleteReaction, selectReactionPerEntity } from 'features/Auth';
+import { addReaction, deleteReaction, byIdSelector } from '../store';
 
-import { ReactionType, ReactionsCount } from './config/types';
-import emojis from './config/emojis';
-import { getAddReactionFilters } from './utils';
+import { ReactionType, ReactionsCount } from '../config/types';
+import emojis from '../config/emojis';
+import { getAddReactionFilters } from '../utils';
 import {
   Wrapper,
   ReactionsList,
@@ -30,7 +30,7 @@ interface Props {
 const Reactions: FC<Props> = ({ entityId, entityType, reactions }) => {
   const dispatch = useDispatch();
   const { user } = useStore((state) => state.auth);
-  const userReaction = useSelector(selectReactionPerEntity(entityId));
+  const userReaction = useSelector(byIdSelector(entityId));
   const [reactionsCount, setReactionsCount] = useState(reactions);
   const totalCount = useMemo(
     () => Object.values(reactionsCount).reduce((sum, count) => sum + count, 0),
@@ -39,6 +39,10 @@ const Reactions: FC<Props> = ({ entityId, entityType, reactions }) => {
 
   const handleReactionClick = useCallback(
     async (type: ReactionType) => {
+
+      // to narrow the type
+      if (!user.colleagueUUID) return;
+
       // no reaction --> add
       if (!userReaction) {
         const filters = getAddReactionFilters({ type, entityId, uuid: user.colleagueUUID, entityType });
@@ -51,8 +55,8 @@ const Reactions: FC<Props> = ({ entityId, entityType, reactions }) => {
         // reaction exists --> delete or update
         await dispatch(deleteReaction({
           uuid: user.colleagueUUID,
-          id: userReaction.id,
-          type: userReaction.type,
+          reactionId: userReaction.reactionId,
+          entityId,
         }));
 
         setReactionsCount((reactionsCount) => ({
@@ -63,7 +67,9 @@ const Reactions: FC<Props> = ({ entityId, entityType, reactions }) => {
         // another reaction exists --> update
         if (userReaction.type !== type) {
           const filters = getAddReactionFilters({ type, entityId, uuid: user.colleagueUUID, entityType });
+
           dispatch(addReaction(filters));
+
           setReactionsCount((reactionsCount) => ({
             ...reactionsCount,
             [type]: reactionsCount[type] + 1,
@@ -71,13 +77,13 @@ const Reactions: FC<Props> = ({ entityId, entityType, reactions }) => {
         }
       }
     },
-    [userReaction, reactions, reactionsCount],
+    [userReaction, reactions, reactionsCount, user],
   );
 
   return (
     <Wrapper>
       <ReactionsList>
-        {emojis.map(({ type, icon }) => (
+        {emojis.map(({ type, icon }): JSX.Element => (
           <ReactionsItem
             key={type}
             onClick={() => {
@@ -89,21 +95,19 @@ const Reactions: FC<Props> = ({ entityId, entityType, reactions }) => {
               defaultIconSrc={icon.default}
               isActive={userReaction?.type === type}
             />
-            <ReactionCount>
-              {reactionsCount[type]}
-            </ReactionCount>
+            <ReactionCount>{reactionsCount[type]}</ReactionCount>
           </ReactionsItem>
         ))}
         <TotalCount>
           <CountDetails>
-            {emojis.map(({ type, icon }) => (
+            {emojis.map(({ type, icon }): JSX.Element => (
               <DetailsItem key={type}>
                 <PostEmotionIconSmall activeIconSrc={icon.active} />
                 {reactionsCount[type]}
               </DetailsItem>
             ))}
           </CountDetails>
-          {totalCount}
+          <span>{totalCount}</span>
         </TotalCount>
       </ReactionsList>
     </Wrapper>

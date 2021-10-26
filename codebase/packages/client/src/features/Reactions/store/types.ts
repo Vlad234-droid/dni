@@ -1,51 +1,47 @@
 import { EntityState, createEntityAdapter } from '@reduxjs/toolkit';
 
-import Loading from 'types/loading';
-import { EntityType } from 'types/entity';
+import { Reaction, ReactionBody, Reactions } from '../config/types';
 
-import { Reaction, ReactionType as Variant } from '../config/types';
+const ROOT = 'reactions';
+const GET_REACTIONS_ACTION = `${ROOT}/getReactions`;
+const ADD_REACTION = `${ROOT}/addReaction`;
+const DELETE_REACTION = `${ROOT}/deleteReaction`;
 
-const EMOJIS_ACTION = 'emojis/list';
-const ROOT = 'auth';
-const LIST_ACTION = `${ROOT}/reactions`;
-const CHANGE_ACTION = `${ROOT}/changeReactions`;
-
-const EntityAdapter = createEntityAdapter<Reactions>();
-
-type EntityId = number;
-type Reactions = {
-  reactions: Variant[];
-  reactionsCount: Record<Variant, number>;
-};
-
-type OneResponse = {
-  id: EntityId;
-  entityType: EntityType;
-} & Reactions;
-
-type Emoji = {
-  type: Variant;
-  icon: {
-    active: string;
-    default: string;
-  };
-};
-
-type EmojiResponse = Emoji[];
-
-type ListResponse = OneResponse[];
+const EntityAdapter = createEntityAdapter<Reaction>();
 
 type State = {
-  loading: Loading;
   error?: string;
-  emojis: Emoji[];
-} & EntityState<Reactions>;
+  reactions?: Reactions;
+} & EntityState<Reaction>;
 
-type OnePayload = {
-  id: EntityId;
-  entityType: EntityType;
-  reactions: Variant[];
+type ReactionsPayload = {
+  uuid: string;
 };
 
-export { EntityAdapter, EMOJIS_ACTION, ROOT, LIST_ACTION, CHANGE_ACTION };
-export type { State, OnePayload, OneResponse, ListResponse, Reaction, EmojiResponse };
+type ReactionsResponse = Reactions;
+type AddReactionPayload = ReactionBody;
+type AddReactionResponse = Reaction;
+type DeleteReactionPayload = {
+  uuid: string,
+  reactionId: number,
+  entityId: number,
+};
+type DeleteReactionResponse = {};
+
+export type {
+  State,
+  ReactionsPayload,
+  ReactionsResponse,
+  AddReactionPayload,
+  AddReactionResponse,
+  DeleteReactionPayload,
+  DeleteReactionResponse,
+};
+
+export {
+  EntityAdapter,
+  ROOT,
+  GET_REACTIONS_ACTION,
+  ADD_REACTION,
+  DELETE_REACTION,
+};

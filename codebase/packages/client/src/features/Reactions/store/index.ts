@@ -1,2 +1,4 @@
-export { default, getList } from './slice';
-export { listSelector, byIdSelector } from './selectors';
+export { default } from './slice';
+export * from './slice';
+export * from './types';
+export * from './selectors';

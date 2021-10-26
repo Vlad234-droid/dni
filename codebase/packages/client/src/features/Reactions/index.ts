@@ -1,7 +1,4 @@
-export { default } from './Reactions';
+export { default } from './components';
 export { ReactionType } from './config/types';
-export {
-  default as reactionsReducer,
-  getList as getReactionsList,
-  listSelector as reactionsListSelector,
-} from './store';
+export type { Reaction, Reactions, ReactionBody, ReactionApiParams } from './config/types';
+export { default as reactionsReducer, getReactions } from './store';

@@ -6,8 +6,9 @@ import { Spinner, Error } from 'features/Common';
 import Loading from 'types/loading';
 
 import { FetchUserAction } from '../../config/types';
-import { profile, State as AuthState, getReactions } from '../../store';
+import { profile, State as AuthState } from '../../store';
 import { AuthProvider } from '../../context/authContext';
+import { getReactions } from 'features/Reactions';
 
 const Auth: FC = ({ children }) => {
   const { user, loading, error, networkError, eventError } = useStore<AuthState>((r) => r.auth);
@@ -20,7 +21,7 @@ const Auth: FC = ({ children }) => {
 
   useEffect(() => {
     if (uuid) {
-      dispatch(getReactions({ authorField: 'external_id', uuid }));
+      dispatch(getReactions({ uuid }));
     }
   }, [uuid]);
 

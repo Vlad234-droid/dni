@@ -1,4 +1,4 @@
-import { ReactionType as Variant } from './types';
+import { ReactionType, EmojiIcon } from './types';
 import iconLikeActive from '../assets/icon-like-active.svg';
 import iconLikeDefault from '../assets/icon-like-default.svg';
 import iconHeartActive from '../assets/icon-heart-active.svg';
@@ -12,38 +12,38 @@ import iconSurpriseDefault from '../assets/icon-surprise-default.svg';
 
 export default [
   {
-    type: Variant.LIKE,
+    type: ReactionType.LIKE,
     icon: {
       active: iconLikeActive,
       default: iconLikeDefault,
-    },
+    } as EmojiIcon,
   },
   {
-    type: Variant.HEART,
+    type: ReactionType.HEART,
     icon: {
       active: iconHeartActive,
       default: iconHeartDefault,
-    },
+    } as EmojiIcon,
   },
   {
-    type: Variant.SMILE,
+    type: ReactionType.SMILE,
     icon: {
       active: iconSmileActive,
       default: iconSmileDefault,
-    },
+    } as EmojiIcon,
   },
   {
-    type: Variant.LAUGH,
+    type: ReactionType.LAUGH,
     icon: {
       active: iconLaughActive,
       default: iconLaughDefault,
-    },
+    } as EmojiIcon,
   },
   {
-    type: Variant.SURPRISE,
+    type: ReactionType.SURPRISE,
     icon: {
       active: iconSurpriseActive,
       default: iconSurpriseDefault,
-    },
+    } as EmojiIcon,
   },
 ];
