@@ -1,5 +1,5 @@
 import faker from 'faker';
-import {ReactionType} from "@dni-connectors/colleague-cms-api";
+import { ReactionType } from '@dni-connectors/colleague-cms-api';
 
 const generateArray = (length: number) =>
   Array(length)

@@ -14,9 +14,10 @@ type Props = {
   loadPost: (id: number) => void;
   post?: Post;
   error?: string;
+  reactionsError?: string;
 };
 
-const PostSingle: FC<Props> = ({ postId, loadPost, loading, post, error }) => {
+const PostSingle: FC<Props> = ({ postId, loadPost, loading, post, error, reactionsError }) => {
   const isLoading = useMemo(() => loading !== Loading.SUCCEEDED && loading !== Loading.FAILED, [loading]);
 
   useEffect(() => {
@@ -26,7 +27,7 @@ const PostSingle: FC<Props> = ({ postId, loadPost, loading, post, error }) => {
   }, [postId]);
 
   const memoizedContent = useMemo(() => {
-    if (error) return <Error errorData={{ title: error }} fullWidth />;
+    if (error || reactionsError) return <Error errorData={{ title: error || reactionsError }} fullWidth />;
 
     if (!post && isLoading) return <Spinner height='500px' />;
 

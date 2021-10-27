@@ -1,8 +1,8 @@
 import faker from 'faker';
-import {Reaction, ContentType, ReactionType, DateString} from '@dni-connectors/colleague-cms-api';
+import { Reaction, ContentType, ReactionType } from '@dni-connectors/colleague-cms-api';
 
 import { randomReactionType } from '../../../utils';
-import {generateBase} from "../base";
+import {generateBase} from '../base';
 
 const generateReaction = () => {
   const reaction: Reaction = {

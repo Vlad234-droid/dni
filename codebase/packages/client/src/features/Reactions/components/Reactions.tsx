@@ -4,8 +4,8 @@ import { useSelector } from 'react-redux';
 import useStore from 'hooks/useStore';
 import { EntityType } from 'types/entity';
 import useDispatch from 'hooks/useDispatch';
-import { addReaction, deleteReaction, byIdSelector } from '../store';
 
+import { addReaction, deleteReaction, byIdSelector } from '../store';
 import { ReactionType, ReactionsCount } from '../config/types';
 import emojis from '../config/emojis';
 import { getAddReactionFilters } from '../utils';
@@ -32,11 +32,14 @@ const Reactions: FC<Props> = ({ entityId, entityType, reactions }) => {
   const { user } = useStore((state) => state.auth);
   const userReaction = useSelector(byIdSelector(entityId));
   const [reactionsCount, setReactionsCount] = useState(reactions);
+  console.log('reactions', reactions);
+  console.log('reactionsCount', reactionsCount);
   const totalCount = useMemo(
     () => Object.values(reactionsCount).reduce((sum, count) => sum + count, 0),
     [reactionsCount],
   );
 
+  console.log('totalCount', totalCount);
   const handleReactionClick = useCallback(
     async (type: ReactionType) => {
 

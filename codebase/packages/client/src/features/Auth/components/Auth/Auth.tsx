@@ -3,12 +3,12 @@ import React, { FC, useEffect, useCallback, useMemo } from 'react';
 import useStore from 'hooks/useStore';
 import useDispatch from 'hooks/useDispatch';
 import { Spinner, Error } from 'features/Common';
+import { getReactions } from 'features/Reactions';
 import Loading from 'types/loading';
 
 import { FetchUserAction } from '../../config/types';
 import { profile, State as AuthState } from '../../store';
 import { AuthProvider } from '../../context/authContext';
-import { getReactions } from 'features/Reactions';
 
 const Auth: FC = ({ children }) => {
   const { user, loading, error, networkError, eventError } = useStore<AuthState>((r) => r.auth);

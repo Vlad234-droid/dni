@@ -3,7 +3,6 @@ import { useSelector } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroller';
 import isEmpty from 'lodash.isempty';
 import Omit from 'lodash.omit';
-import map from 'lodash.map';
 
 import { CanPerform } from 'features/Auth';
 import { Action, buildAction, Component } from 'features/Action';
@@ -60,12 +59,12 @@ const PostList: FC<Props> = ({ entityId, filter = ALL }) => {
     loading,
     error: listError,
   } = useStore((state) => state.posts);
+  const { error: reactionsError } = useStore((state) => state.reactions);
   const { networks, events } = useStore((state) => state.auth.user);
   const posts = useSelector(listSelector);
   const hasMore = useMemo(() => posts.length < total, [posts, total]);
   const isLoading = useMemo(() => loading !== Loading.SUCCEEDED && loading !== Loading.FAILED, [loading]);
-  const error = useMemo(() => listError || countError, [listError, countError]);
-  const [page, setPage] = useState(1);
+  const error = useMemo(() => listError || countError || reactionsError, [listError, countError, reactionsError]);
   const [byEntityFilter, setByEntityFilter] = useState<ByEntityFilter>(ALL);
   const [filters, setFilters] = useState<Filters>(
     filter == ALL ? getAllFilterPayload(networks, events) : getFilterPayload(filter, entityId),
@@ -96,7 +95,6 @@ const PostList: FC<Props> = ({ entityId, filter = ALL }) => {
       const next = page * DEFAULT_PAGINATION._limit;
 
       if (!(loading === Loading.PENDING) && hasMore && next <= total) {
-        setPage(page + 1);
         dispatch(
           getList({
             _sort: 'created_at:desc',
@@ -107,7 +105,7 @@ const PostList: FC<Props> = ({ entityId, filter = ALL }) => {
         );
       }
     },
-    [filters, hasMore, loading, total, page],
+    [filters, hasMore, loading, total],
   );
 
   const handleByEventFilterChange = useCallback(
@@ -144,7 +142,7 @@ const PostList: FC<Props> = ({ entityId, filter = ALL }) => {
   }, []);
 
   const memoizedContent = useMemo(() => {
-    if (error) return <Error fullWidth />;
+    if (error) return <Error errorData={{ title: error }} fullWidth />;
 
     if (isEmpty(posts) && isLoading) return <Spinner height='500px' />;
 

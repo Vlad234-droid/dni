@@ -145,7 +145,7 @@ const slice = createSlice({
       .addCase(leaveEvent.rejected, (state: T.State, payload) => {
         state.eventLoading = Loading.FAILED;
         state.eventError = payload.error.message;
-      })
+      });
   },
 });
 

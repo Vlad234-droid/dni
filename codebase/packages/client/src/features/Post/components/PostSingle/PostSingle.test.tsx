@@ -33,9 +33,10 @@ describe('<PostSingle />', () => {
         ...props,
         loading: Loading.PENDING,
       };
-      const { getByTestId } = render(<PostSingle {...newProps} />, renderOptions);
+      const { getByTestId, queryByTestId } = render(<PostSingle {...newProps} />, renderOptions);
 
       expect(getByTestId('spinner')).toBeInTheDocument();
+      expect(queryByTestId('post-item')).not.toBeInTheDocument();
     });
 
     it('should return error, if occurred', () => {
@@ -45,7 +46,7 @@ describe('<PostSingle />', () => {
         error: 'mocked-error',
       };
 
-      const { getByText, getByTestId } = render(
+      const { getByText, getByTestId, queryByTestId } = render(
         <PostSingle {...newProps} />, renderOptions
       );
 
@@ -55,6 +56,27 @@ describe('<PostSingle />', () => {
           'mocked-error',
         ),
       ).toBeInTheDocument();
+      expect(queryByTestId('post-item')).not.toBeInTheDocument();
+    });
+
+    it('should render reactions error, if occurred', () => {
+      const newProps = {
+        ...props,
+        loading: Loading.FAILED,
+        reactionsError: 'mocked-reactions-error',
+      };
+
+      const { getByText, getByTestId, queryByTestId } = render(
+        <PostSingle {...newProps} />, renderOptions
+      );
+
+      expect(getByTestId('error')).toBeInTheDocument();
+      expect(
+        getByText(
+          'mocked-reactions-error',
+        ),
+      ).toBeInTheDocument();
+      expect(queryByTestId('post-item')).not.toBeInTheDocument();
     });
 
     it('should return emptyContainer, if post is archived', () => {
@@ -67,12 +89,13 @@ describe('<PostSingle />', () => {
         post: { ...post, archived: true },
       };
 
-      const { getByText, getByTestId } = render(
+      const { getByText, getByTestId, queryByTestId } = render(
         <PostSingle {...newProps} />, renderOptions,
       );
 
       expect(getByTestId('empty-container')).toBeInTheDocument();
       expect(getByText('Post has been archived')).toBeInTheDocument();
+      expect(queryByTestId('post-item')).not.toBeInTheDocument();
     });
 
     it('should return PostItem, if it is not archived', () => {
@@ -88,9 +111,12 @@ describe('<PostSingle />', () => {
         },
       };
 
-      const { getByTestId } = render(<PostSingle {...newProps} />, renderOptions);
+      const { getByTestId, queryByTestId } = render(<PostSingle {...newProps} />, renderOptions);
 
       expect(getByTestId('post-item')).toBeInTheDocument();
+      expect(queryByTestId('empty-container')).not.toBeInTheDocument();
+      expect(queryByTestId('error')).not.toBeInTheDocument();
+      expect(queryByTestId('spinner')).not.toBeInTheDocument();
     });
   });
 
