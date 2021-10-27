@@ -14,6 +14,7 @@ export type Post = {
   event?: Event;
   network?: Network;
   attachments?: File[];
+  shortDescription: string;
 } & BaseType;
 
 export type PostApiParams = {

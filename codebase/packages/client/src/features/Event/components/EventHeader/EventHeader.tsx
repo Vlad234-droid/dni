@@ -30,12 +30,13 @@ type Props = {
 
 const EventHeader: FC<Props> = ({ event, participants }) => {
   const { events = [] } = useStore((state) => state.auth.user);
-  const { id, title, description, maxParticipants, startDate, endDate } = event;
+  const { id, title, description, maxParticipants, startDate, endDate, shortDescription } = event;
   const isJoined = events.includes(+id);
   const { isMobile, isLargeMobile } = useMedia();
   const isMobileView = isMobile || isLargeMobile;
   const isOnAir = isEventOnAir(startDate, endDate);
   const isPast = isPastEvent(endDate);
+  const calendarDescription = shortDescription ? `${shortDescription} \\n\\n` : '';
 
   return (
     <Wrapper>
@@ -61,6 +62,7 @@ const EventHeader: FC<Props> = ({ event, participants }) => {
               event={{
                 title: event.title,
                 description:
+                  calendarDescription +
                   `For more details and the link to join the virtual event please check the event link: ` +
                   `${window.location.href}`,
                 startTime: event.startDate.replace('at', ''),
