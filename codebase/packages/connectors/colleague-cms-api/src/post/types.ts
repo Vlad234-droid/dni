@@ -16,6 +16,7 @@ export type Post = {
   network?: Network;
   attachments?: File[];
   reactions: ReactionsCount,
+  shortDescription: string;
 } & BaseType;
 
 export type PostApiParams = {

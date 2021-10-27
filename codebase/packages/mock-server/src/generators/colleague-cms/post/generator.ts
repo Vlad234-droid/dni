@@ -13,6 +13,7 @@ const generatePost = () => {
     title: faker.random.words(3),
     attachments: randomArray(1, 4, generateFile),
     content: faker.random.words(10),
+    shortDescription: faker.random.words(10),
     slug: faker.random.words(2).replace(' ', '-').toLowerCase(),
     authorName: faker.name.firstName(),
     authorEmail: faker.internet.email(),
@@ -32,7 +33,6 @@ const generatePost = () => {
   return post;
 };
 
-const generatePosts = (length: number) =>
-  generateArray(length).map(() => generatePost());
+const generatePosts = (length: number) => generateArray(length).map(() => generatePost());
 
 export { generatePost, generatePosts };
