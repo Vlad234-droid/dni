@@ -1,7 +1,7 @@
 import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 import { Endpoint } from 'config/endpoints';
-import { buildEventCRUD, buildNetworkCRUD, buildPostCRUD, buildEmojiCRUD, buildEmotionCRUD } from '@dni/mock-server/src/crud';
+import { buildEventCRUD, buildNetworkCRUD, buildPostCRUD } from '@dni/mock-server/src/crud';
 
 import { getMathId } from 'utils/testUtils';
 
