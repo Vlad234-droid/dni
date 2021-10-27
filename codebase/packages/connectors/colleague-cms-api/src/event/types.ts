@@ -12,6 +12,7 @@ export type Event = {
   description: string;
   slug: string;
   image?: File;
+  shortDescription: string;
 } & BaseType;
 
 export type EventApiParams = {
