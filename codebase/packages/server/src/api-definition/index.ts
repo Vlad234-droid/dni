@@ -8,6 +8,7 @@ import {
   cmsNetworksApiDef,
   cmsOrganizationsApiDef,
   cmsEmotionsApiDef,
+  cmsReactionsApiDef,
 } from '@dni-connectors/colleague-cms-api';
 
 export const prefixApi = <T extends ApiDefinition>(prefix: string, apiDef: T): T => {
@@ -41,4 +42,5 @@ export const apiDefinition = defineAPI(() => ({
   ...prefixApi('/cms/v1', cmsNetworksApiDef),
   ...prefixApi('/cms/v1', cmsOrganizationsApiDef),
   ...prefixApi('/cms/v1', cmsEmotionsApiDef),
+  ...prefixApi('/cms/v1', cmsReactionsApiDef),
 }));

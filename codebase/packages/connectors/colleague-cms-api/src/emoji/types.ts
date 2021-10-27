@@ -3,8 +3,8 @@ import { BaseType } from '../types';
 
 export type Emoji = {
   title: string;
-  slug: string;
-  image: File;
+  type: string;
+  icon: File;
 } & BaseType;
 
 export type EmojiApiParams = {
