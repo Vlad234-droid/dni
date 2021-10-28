@@ -1,8 +1,8 @@
 import faker from 'faker';
-import { Reaction, ContentType, ReactionType } from '@dni-connectors/colleague-cms-api';
+import { Reaction, ContentType } from '@dni-connectors/colleague-cms-api';
 
 import { randomReactionType } from '../../../utils';
-import {generateBase} from '../base';
+import { generateBase } from '../base';
 
 const generateReaction = () => {
   const reaction: Reaction = {
@@ -23,12 +23,4 @@ const generateReaction = () => {
   return reaction;
 };
 
-const generateReactions = () => ({
-  [ReactionType.HEART]: [generateReaction],
-  [ReactionType.LIKE]: [generateReaction],
-  [ReactionType.LAUGH]: [generateReaction],
-  [ReactionType.SMILE]: [generateReaction],
-  [ReactionType.SURPRISE]: [generateReaction],
-});
-
-export { generateReaction, generateReactions };
+export { generateReaction };

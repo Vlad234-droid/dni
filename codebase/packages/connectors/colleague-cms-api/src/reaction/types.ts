@@ -28,9 +28,7 @@ export type Reaction = {
   };
 };
 
-export type Reactions = {
-  [key in keyof ReactionType]: Reaction[];
-};
+export type Reactions = Record<ReactionType, Reaction[]>;
 
 export type ReactionApiParams = {
   authorQuery?: string;

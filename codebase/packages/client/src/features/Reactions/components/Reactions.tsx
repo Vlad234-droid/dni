@@ -1,12 +1,9 @@
 import React, { FC, useCallback, useMemo, useState } from 'react';
-import { useSelector } from 'react-redux';
 
-import useStore from 'hooks/useStore';
 import { EntityType } from 'types/entity';
-import useDispatch from 'hooks/useDispatch';
 
-import { addReaction, deleteReaction, byIdSelector } from '../store';
-import { ReactionType, ReactionsCount } from '../config/types';
+import { AddReactionPayload, DeleteReactionPayload } from '../store';
+import { ReactionType, ReactionsCount, Reaction } from '../config/types';
 import emojis from '../config/emojis';
 import { getAddReactionFilters } from '../utils';
 import {
@@ -25,53 +22,63 @@ interface Props {
   entityId: number;
   entityType: EntityType;
   reactions: ReactionsCount;
+  addReaction: (filters: AddReactionPayload) => void;
+  deleteReaction: (data: DeleteReactionPayload) => void;
+  userReaction?: Reaction;
+  uuid?: string;
 }
 
-const Reactions: FC<Props> = ({ entityId, entityType, reactions }) => {
-  const dispatch = useDispatch();
-  const { user } = useStore((state) => state.auth);
-  const userReaction = useSelector(byIdSelector(entityId));
+const Reactions: FC<Props> = ({
+  entityId,
+  entityType,
+  reactions,
+  addReaction,
+  deleteReaction,
+  userReaction,
+  uuid,
+}) => {
   const [reactionsCount, setReactionsCount] = useState(reactions);
-  console.log('reactions', reactions);
-  console.log('reactionsCount', reactionsCount);
   const totalCount = useMemo(
     () => Object.values(reactionsCount).reduce((sum, count) => sum + count, 0),
     [reactionsCount],
   );
 
-  console.log('totalCount', totalCount);
   const handleReactionClick = useCallback(
     async (type: ReactionType) => {
 
       // to narrow the type
-      if (!user.colleagueUUID) return;
+      if (!uuid) return;
 
       // no reaction --> add
       if (!userReaction) {
-        const filters = getAddReactionFilters({ type, entityId, uuid: user.colleagueUUID, entityType });
-        dispatch(addReaction(filters));
+        const filters = getAddReactionFilters({ type, entityId, uuid, entityType });
+
+        addReaction(filters);
+
         setReactionsCount((reactionsCount) => ({
           ...reactionsCount,
           [type]: reactionsCount[type] + 1,
         }));
       } else {
+        const { type: reactionType, reactionId } = userReaction;
+
         // reaction exists --> delete or update
-        await dispatch(deleteReaction({
-          uuid: user.colleagueUUID,
-          reactionId: userReaction.reactionId,
+        deleteReaction({
+          uuid,
+          reactionId,
           entityId,
-        }));
+        });
 
         setReactionsCount((reactionsCount) => ({
           ...reactionsCount,
-          [userReaction.type]: reactionsCount[userReaction.type] - 1,
+          [reactionType]: reactionsCount[reactionType] - 1,
         }));
 
         // another reaction exists --> update
-        if (userReaction.type !== type) {
-          const filters = getAddReactionFilters({ type, entityId, uuid: user.colleagueUUID, entityType });
+        if (reactionType !== type) {
+          const filters = getAddReactionFilters({ type, entityId, uuid, entityType });
 
-          dispatch(addReaction(filters));
+          addReaction(filters);
 
           setReactionsCount((reactionsCount) => ({
             ...reactionsCount,
@@ -80,7 +87,7 @@ const Reactions: FC<Props> = ({ entityId, entityType, reactions }) => {
         }
       }
     },
-    [userReaction, reactions, reactionsCount, user],
+    [userReaction, reactions, reactionsCount, uuid],
   );
 
   return (

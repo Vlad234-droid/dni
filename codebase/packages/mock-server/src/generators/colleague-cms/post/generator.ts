@@ -22,11 +22,11 @@ const generatePost = () => {
     event: faker.random.arrayElement([generateEvent(), undefined]),
     network: faker.random.arrayElement([generateNetwork(), undefined]),
     reactions: {
-      [ReactionType.HEART]: 0,
-      [ReactionType.LIKE]: 0,
-      [ReactionType.LAUGH]: 0,
-      [ReactionType.SMILE]: 0,
-      [ReactionType.SURPRISE]: 0,
+      [ReactionType.HEART]: faker.random.number(100),
+      [ReactionType.LIKE]: faker.random.number(100),
+      [ReactionType.LAUGH]: faker.random.number(100),
+      [ReactionType.SMILE]: faker.random.number(100),
+      [ReactionType.SURPRISE]: faker.random.number(100),
     },
   };
 
