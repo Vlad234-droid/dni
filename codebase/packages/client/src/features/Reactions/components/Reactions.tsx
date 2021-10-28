@@ -63,7 +63,7 @@ const Reactions: FC<Props> = ({
         const { type: reactionType, reactionId } = userReaction;
 
         // reaction exists --> delete or update
-        deleteReaction({
+        await deleteReaction({
           uuid,
           reactionId,
           entityId,
