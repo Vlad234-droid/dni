@@ -3,6 +3,7 @@ import React, { FC, useEffect, useCallback, useMemo } from 'react';
 import useStore from 'hooks/useStore';
 import useDispatch from 'hooks/useDispatch';
 import { Spinner, Error } from 'features/Common';
+import { getReactions } from 'features/Reactions';
 import Loading from 'types/loading';
 
 import { FetchUserAction } from '../../config/types';
@@ -14,8 +15,15 @@ const Auth: FC = ({ children }) => {
   const dispatch = useDispatch();
   const isLoading = useMemo(() => loading !== Loading.SUCCEEDED && loading !== Loading.FAILED, [loading]);
   const isAuthenticated = useMemo(() => Boolean(user?.id), [user]);
+  const uuid = user.colleagueUUID;
 
   const fetchUserAction: FetchUserAction = useCallback(() => dispatch(profile()), []);
+
+  useEffect(() => {
+    if (uuid) {
+      dispatch(getReactions({ uuid }));
+    }
+  }, [uuid]);
 
   useEffect(() => {
     fetchUserAction();

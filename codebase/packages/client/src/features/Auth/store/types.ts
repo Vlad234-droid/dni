@@ -43,7 +43,15 @@ type ValidationError = {
   path: string[];
 };
 
-export type { State, UserResponse, ValidationError, NetworkPayload, NetworkResponse, EventPayload, EventResponse };
+export type {
+  State,
+  UserResponse,
+  ValidationError,
+  NetworkPayload,
+  NetworkResponse,
+  EventPayload,
+  EventResponse,
+};
 
 export {
   // actions

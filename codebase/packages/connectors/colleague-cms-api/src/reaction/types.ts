@@ -16,7 +16,7 @@ export enum ContentType {
 export type Reaction = {
   id: number;
   type: ReactionType;
-  author: {
+  externalAuthor: {
     id: number;
     username: string;
     email: string;
@@ -28,9 +28,7 @@ export type Reaction = {
   };
 };
 
-export type Reactions = {
-  [key in keyof ReactionType]: Reaction[];
-};
+export type Reactions = Record<ReactionType, Reaction[]>;
 
 export type ReactionApiParams = {
   authorQuery?: string;
@@ -56,8 +54,6 @@ export type ReactionBody = {
   };
 };
 
-export type ReactionsCount = {
-  [key in keyof ReactionType]: number;
-};
+export type ReactionsCount = Record<ReactionType, number>;
 
 export default Reaction;

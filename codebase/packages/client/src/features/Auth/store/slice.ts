@@ -151,6 +151,13 @@ const slice = createSlice({
 
 const { clear } = slice.actions;
 
-export { clear, profile, joinNetwork, leaveNetwork, joinEvent, leaveEvent };
+export {
+  clear,
+  profile,
+  joinNetwork,
+  leaveNetwork,
+  joinEvent,
+  leaveEvent,
+};
 
 export default slice.reducer;

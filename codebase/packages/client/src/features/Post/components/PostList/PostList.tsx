@@ -10,7 +10,8 @@ import useDispatch from 'hooks/useDispatch';
 import useStore from 'hooks/useStore';
 import { FilterPayload } from 'types/payload';
 import { EmptyContainer, Error, Spinner } from 'features/Common';
-import { useNotification, EntityType } from 'features/Notification';
+import { useNotification } from 'features/Notification';
+import { EntityType } from 'types/entity';
 import { DEFAULT_PAGINATION } from 'config/constants';
 import { useScrollContainer } from 'context/ScrollContainerContext';
 import Loading from 'types/loading';
@@ -58,11 +59,12 @@ const PostList: FC<Props> = ({ entityId, filter = ALL }) => {
     loading,
     error: listError,
   } = useStore((state) => state.posts);
+  const { error: reactionsError } = useStore((state) => state.reactions);
   const { networks, events } = useStore((state) => state.auth.user);
   const posts = useSelector(listSelector);
   const hasMore = useMemo(() => posts.length < total, [posts, total]);
   const isLoading = useMemo(() => loading !== Loading.SUCCEEDED && loading !== Loading.FAILED, [loading]);
-  const error = useMemo(() => listError || countError, [listError, countError]);
+  const error = useMemo(() => listError || countError || reactionsError, [listError, countError, reactionsError]);
   const [byEntityFilter, setByEntityFilter] = useState<ByEntityFilter>(ALL);
   const [filters, setFilters] = useState<Filters>(
     filter == ALL ? getAllFilterPayload(networks, events) : getFilterPayload(filter, entityId),
@@ -140,7 +142,7 @@ const PostList: FC<Props> = ({ entityId, filter = ALL }) => {
   }, []);
 
   const memoizedContent = useMemo(() => {
-    if (error) return <Error fullWidth />;
+    if (error) return <Error errorData={{ title: error }} fullWidth />;
 
     if (isEmpty(posts) && isLoading) return <Spinner height='500px' />;
 

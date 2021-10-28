@@ -3,12 +3,15 @@ import MockAdapter from 'axios-mock-adapter';
 import axios from 'axios';
 import { buildPostCRUD } from '@dni/mock-server/src/crud';
 
-import { cleanup, renderWithProviders } from 'utils/testUtils';
+import { cleanup, render } from 'utils/testUtils';
+import Loading from 'types/loading';
+import { UserRole } from 'features/User';
 
 import PostSingle from './PostSingle';
 
 describe('<PostSingle />', () => {
   const mock = new MockAdapter(axios);
+  const renderOptions = { roles: [UserRole.EMPLOYEE], events: [], networks: [] };
 
   beforeAll(() => {
     mock.reset();
@@ -19,32 +22,61 @@ describe('<PostSingle />', () => {
   describe('#render', () => {
     const props = {
       postId: 22,
-      isLoading: true,
+      loading: Loading.IDLE,
       loadPost: jest.fn(),
+      networks: [1, 2, 3],
+      events: [8, 9, 10],
     };
 
     it('should return spinner, if isLoading is true', () => {
-      const { getByTestId } = renderWithProviders(<PostSingle {...props} />);
-
-      expect(getByTestId('spinner')).toBeInTheDocument();
-    });
-
-    it('should return empty container, if !isLoading && !post', () => {
       const newProps = {
         ...props,
-        isLoading: false,
+        loading: Loading.PENDING,
+      };
+      const { getByTestId, queryByTestId } = render(<PostSingle {...newProps} />, renderOptions);
+
+      expect(getByTestId('spinner')).toBeInTheDocument();
+      expect(queryByTestId('post-item')).not.toBeInTheDocument();
+    });
+
+    it('should return error, if occurred', () => {
+      const newProps = {
+        ...props,
+        loading: Loading.FAILED,
+        error: 'mocked-error',
       };
 
-      const { getByText, getByTestId } = renderWithProviders(
-        <PostSingle {...newProps} />,
+      const { getByText, getByTestId, queryByTestId } = render(
+        <PostSingle {...newProps} />, renderOptions
       );
 
-      expect(getByTestId('empty-container')).toBeInTheDocument();
+      expect(getByTestId('error')).toBeInTheDocument();
       expect(
         getByText(
-          'Unfortunately, we did not find any matches for your request',
+          'mocked-error',
         ),
       ).toBeInTheDocument();
+      expect(queryByTestId('post-item')).not.toBeInTheDocument();
+    });
+
+    it('should render reactions error, if occurred', () => {
+      const newProps = {
+        ...props,
+        loading: Loading.FAILED,
+        reactionsError: 'mocked-reactions-error',
+      };
+
+      const { getByText, getByTestId, queryByTestId } = render(
+        <PostSingle {...newProps} />, renderOptions
+      );
+
+      expect(getByTestId('error')).toBeInTheDocument();
+      expect(
+        getByText(
+          'mocked-reactions-error',
+        ),
+      ).toBeInTheDocument();
+      expect(queryByTestId('post-item')).not.toBeInTheDocument();
     });
 
     it('should return emptyContainer, if post is archived', () => {
@@ -53,16 +85,17 @@ describe('<PostSingle />', () => {
 
       const newProps = {
         ...props,
-        isLoading: false,
+        loading: Loading.SUCCEEDED,
         post: { ...post, archived: true },
       };
 
-      const { getByText, getByTestId } = renderWithProviders(
-        <PostSingle {...newProps} />,
+      const { getByText, getByTestId, queryByTestId } = render(
+        <PostSingle {...newProps} />, renderOptions,
       );
 
       expect(getByTestId('empty-container')).toBeInTheDocument();
       expect(getByText('Post has been archived')).toBeInTheDocument();
+      expect(queryByTestId('post-item')).not.toBeInTheDocument();
     });
 
     it('should return PostItem, if it is not archived', () => {
@@ -71,16 +104,38 @@ describe('<PostSingle />', () => {
 
       const newProps = {
         ...props,
-        isLoading: false,
+        loading: Loading.SUCCEEDED,
         post: {
           ...post,
           archived: false,
         },
       };
 
-      const { getByTestId } = renderWithProviders(<PostSingle {...newProps} />);
+      const { getByTestId, queryByTestId } = render(<PostSingle {...newProps} />, renderOptions);
 
       expect(getByTestId('post-item')).toBeInTheDocument();
+      expect(queryByTestId('empty-container')).not.toBeInTheDocument();
+      expect(queryByTestId('error')).not.toBeInTheDocument();
+      expect(queryByTestId('spinner')).not.toBeInTheDocument();
+    });
+  });
+
+  describe('#useEffect', () => {
+    it('should call loadPost with postId, if provided', () => {
+      const postsCRUD = buildPostCRUD(1);
+      const post = postsCRUD.findAll()[0];
+
+      const props = {
+        postId: post.id,
+        loading: Loading.PENDING,
+        loadPost: jest.fn(),
+        loadReactions: jest.fn(),
+        post,
+      };
+
+      render(<PostSingle {...props} />, renderOptions);
+
+      expect(props.loadPost).toHaveBeenCalledTimes(1);
     });
   });
 });

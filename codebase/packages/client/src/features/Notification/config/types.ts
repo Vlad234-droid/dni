@@ -1,10 +1,5 @@
 import Loading from 'types/loading';
-
-enum EntityType {
-  NETWORK = 'network',
-  EVENT = 'event',
-  POST = 'post',
-}
+import { EntityType } from 'types/entity';
 
 type Entity = {
   id: number;
@@ -93,8 +88,6 @@ type EmailAddress = {
   alias: 'Personal' | string;
   addressIdentifier: string;
 };
-
-export { EntityType };
 
 export type {
   Entity,
