@@ -2,7 +2,14 @@ import { Request, Response } from 'express';
 import { getColleagueUuid, getOpenIdUserInfo, OpenIdUserInfo } from '@dni-connectors/onelogin';
 import { Colleague } from '@dni-connectors/colleague-api';
 
-import { getRepository, DniEntityTypeEnum, DniUser, DniUserExtras, DniUserSubscription, CcmsEntity } from '@dni/database';
+import {
+  getRepository,
+  DniEntityTypeEnum,
+  DniUser,
+  DniUserExtras,
+  DniUserSubscription,
+  CcmsEntity,
+} from '@dni/database';
 
 import { getConfig } from '../config/config-accessor';
 import { ApiError } from '../utils/api-error';
@@ -10,6 +17,11 @@ import { ApiError } from '../utils/api-error';
 type EmailNotificationSettings = {
   receivePostsEmailNotifications: boolean;
   receiveEventsEmailNotifications: boolean;
+};
+
+type ShareStory = {
+  title: string;
+  story: string;
 };
 
 const profileInfoExtractor = async (req: Request, res: Response) => {
@@ -20,11 +32,14 @@ const profileInfoExtractor = async (req: Request, res: Response) => {
   const userRoles: Set<string> = new Set(defaultRoles());
 
   if (openIdUserInfo) {
-    const userGroups = 
-      (Array.isArray(openIdUserInfo.groups) ? openIdUserInfo.groups : ((openIdUserInfo.groups as unknown as string) || '').split(',') || [])
-        .filter(Boolean)
-        .filter((group: string) => oidcGroupFiltersRegex().some((rr) => rr.test(group)));
-  
+    const userGroups = (
+      Array.isArray(openIdUserInfo.groups)
+        ? openIdUserInfo.groups
+        : ((openIdUserInfo.groups as unknown as string) || '').split(',') || []
+    )
+      .filter(Boolean)
+      .filter((group: string) => oidcGroupFiltersRegex().some((rr) => rr.test(group)));
+
     if (oidcManagerGroups().some((g) => userGroups.includes(g))) {
       userRoles.add('Manager');
     }
@@ -113,7 +128,10 @@ const removeSubscriptionEntity = async (
 };
 
 const createNetworkRelation = async (colleagueUUID: string, networkId: number) => {
-  const network = await getRepository(CcmsEntity).findOne({ entityId: networkId, entityType: DniEntityTypeEnum.NETWORK});
+  const network = await getRepository(CcmsEntity).findOne({
+    entityId: networkId,
+    entityType: DniEntityTypeEnum.NETWORK,
+  });
   if (network === undefined) {
     throw new ApiError(400, `network:${networkId} is invalid`);
   }
@@ -126,7 +144,7 @@ const removeNetworkRelation = async (colleagueUUID: string, networkId: number) =
 };
 
 const createEventRelation = async (colleagueUUID: string, eventId: number) => {
-  const event = await getRepository(CcmsEntity).findOne({ entityId: eventId, entityType: DniEntityTypeEnum.EVENT});
+  const event = await getRepository(CcmsEntity).findOne({ entityId: eventId, entityType: DniEntityTypeEnum.EVENT });
   if (event === undefined) {
     throw new ApiError(400, `eventId:${eventId} is invalid`);
   }
@@ -201,7 +219,7 @@ const findSettings = async (colleagueUUID: string) => {
   return dniUserExtras || { colleagueUUID };
 };
 
-export type { EmailNotificationSettings };
+export type { EmailNotificationSettings, ShareStory };
 
 export {
   findDniUser,

@@ -21,6 +21,11 @@ const profile = createAsyncThunk<T.UserResponse>(
   async () => await API.user.profile<T.UserResponse>(),
 );
 
+const shareStory = createAsyncThunk<T.ShareStoryResponse, T.ShareStoryPayload>(
+  T.SHARE_STORY_ACTION,
+  async (data) => await API.user.shareStory<T.ShareStoryResponse>(data),
+);
+
 const joinNetwork = createAsyncThunk<T.NetworkResponse, T.NetworkPayload>(
   T.JOIN_NETWORK_ACTION,
   async (data) => await API.user.joinNetwork<T.NetworkResponse>(data),
@@ -145,6 +150,15 @@ const slice = createSlice({
       .addCase(leaveEvent.rejected, (state: T.State, payload) => {
         state.eventLoading = Loading.FAILED;
         state.eventError = payload.error.message;
+      })
+      .addCase(shareStory.pending, (state: T.State) => {
+        state.loading = Loading.PENDING;
+      })
+      .addCase(shareStory.fulfilled, (state: T.State) => {
+        state.loading = Loading.SUCCEEDED;
+      })
+      .addCase(shareStory.rejected, (state: T.State) => {
+        state.loading = Loading.FAILED;
       });
   },
 });

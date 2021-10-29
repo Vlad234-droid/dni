@@ -14,6 +14,7 @@ export enum Endpoint {
 
   // user
   USER_PROFILE = '/dni/v1/employees/profile',
+  USER_SHARE_STORY = '/dni/v1/employees/share-story',
   USER_NETWORKS = '/dni/v1/employees/networks',
   USER_EVENTS = '/dni/v1/employees/events',
   USER_REACTIONS = '/tesco/cms/v1/reactions',
@@ -59,6 +60,7 @@ export default (httpClient: AxiosInstance) => ({
     leaveNetwork: <T>(data: Config) => httpClient.delete<T>(`${Endpoint.USER_NETWORKS}/${data.networkId}`),
     joinEvent: <T>(data: Config) => httpClient.post<T>(Endpoint.USER_EVENTS, data),
     leaveEvent: <T>(data: Config) => httpClient.delete<T>(`${Endpoint.USER_EVENTS}/${data.eventId}`),
+    shareStory: <T>(data: Config) => httpClient.get<T>(Endpoint.USER_SHARE_STORY, data),
   },
   networks: {
     fetchAll: <T>(data: Config = {}) => httpClient.get<T>(Endpoint.NETWORKS, { params: data }),

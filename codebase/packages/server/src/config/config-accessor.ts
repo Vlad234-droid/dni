@@ -18,10 +18,12 @@ export type ProcessConfig = {
   loggerPretify: () => boolean | undefined;
   // D&I application specific settings
   applicationName: () => string;
+  applicationBaseUrl: () => string;
   applicationPublicUrl: () => string;
   applicationServerUrlRoot: () => string;
   applicationUrlTemplatePost: () => string;
   applicationUrlTemplateEvent: () => string;
+  applicationUrlTemplateConfirmation: () => string;
   applicationUrlUnsubscribe: () => string;
   applicationUploadSize: () => number;
   // cookies settings
@@ -58,6 +60,12 @@ export type ProcessConfig = {
   identityUserScopedTokenCookieSecret: () => string;
   // mock
   mockServerUrl: () => string;
+  // mailing
+  mailingNewEntityTemplateId: () => string;
+  mailingConfirmationTemplateId: () => string;
+  mailingShareStoryTemplateId: () => string;
+  mailingStakeholderEmail: () => string;
+  mailingChunkSize: () => number;
 };
 
 export class ConfigAccessor {
@@ -65,6 +73,9 @@ export class ConfigAccessor {
   private readonly config: ProcessConfig;
 
   private constructor(processEnv: ProcessEnv) {
+    const applicationServerUrlRoot = processEnv.APPLICATION_SERVER_URL_ROOT;
+    const applicationPublicUrl = processEnv.APPLICATION_PUBLIC_URL;
+
     this.config = {
       // general
       buildEnvironment: () => processEnv.BUILD_ENV,
@@ -78,13 +89,16 @@ export class ConfigAccessor {
       port: () => (isNaN(Number(processEnv.NODE_PORT)) ? defaultConfig.port : Number(processEnv.NODE_PORT)),
       loggerRootName: () => processEnv.LOGGER_ROOT_NAME || defaultConfig.loggerRootName,
       loggerLevel: () => processEnv.LOGGER_LEVEL,
-      loggerPretify: () => processEnv.LOGGER_PRETIFY ? yn(processEnv.LOGGER_PRETIFY, { default: false }) : undefined,
+      loggerPretify: () => (processEnv.LOGGER_PRETIFY ? yn(processEnv.LOGGER_PRETIFY, { default: false }) : undefined),
       // D&I application specific settings
       applicationName: () => defaultConfig.applicationName,
-      applicationServerUrlRoot: () => processEnv.APPLICATION_SERVER_URL_ROOT,
-      applicationPublicUrl: () => processEnv.APPLICATION_PUBLIC_URL,
+      applicationBaseUrl: () =>
+        `${applicationServerUrlRoot}${applicationPublicUrl === '/' ? '' : applicationPublicUrl}`,
+      applicationServerUrlRoot: () => applicationServerUrlRoot,
+      applicationPublicUrl: () => applicationPublicUrl,
       applicationUrlTemplatePost: () => processEnv.APPLICATION_URL_TEMPLATE_POST,
       applicationUrlTemplateEvent: () => processEnv.APPLICATION_URL_TEMPLATE_EVENT,
+      applicationUrlTemplateConfirmation: () => processEnv.APPLICATION_URL_TEMPLATE_CONFIRMATION,
       applicationUrlUnsubscribe: () => processEnv.APPLICATION_URL_UNSUBSCRIBE,
       applicationUploadSize: () => defaultConfig.applicationUploadSize,
 
@@ -116,7 +130,8 @@ export class ConfigAccessor {
       useOneLogin: () => yn(processEnv.USE_ONELOGIN, { default: false }),
       oidcIssuerUrl: () => processEnv.OIDC_ISSUER_URL,
       oidcAuthCallbackPath: () => processEnv.OIDC_AUTH_CALLBACK_PATH || defaultConfig.oidcAuthCallbackPath,
-      oidcRedirectAfterLogoutPath: () => processEnv.OIDC_REDIRECT_AFTER_LOGOUT_CALLBACK_PATH || defaultConfig.oidcRedirectAfterLogoutPath,
+      oidcRedirectAfterLogoutPath: () =>
+        processEnv.OIDC_REDIRECT_AFTER_LOGOUT_CALLBACK_PATH || defaultConfig.oidcRedirectAfterLogoutPath,
       oidcClientId: () => processEnv.OIDC_CLIENT_ID,
       oidcClientSecret: () => processEnv.OIDC_CLIENT_SECRET,
       oidcRefreshTokenSecret: () => processEnv.OIDC_REFRESH_TOKEN_SECRET,
@@ -138,6 +153,12 @@ export class ConfigAccessor {
         }
         return processEnv.MOCK_SERVER_URL || '';
       },
+      // mailing
+      mailingNewEntityTemplateId: () => processEnv.MAILING_NEW_ENTITY_TEMPLATE_ID,
+      mailingConfirmationTemplateId: () => processEnv.MAILING_CONFIRMATION_TEMPLATE_ID,
+      mailingShareStoryTemplateId: () => processEnv.MAILING_SHARE_STORY_TEMPLATE_ID,
+      mailingStakeholderEmail: () => processEnv.MAILING_STAKEHOLDER_EMAIL,
+      mailingChunkSize: () => +processEnv.MAILING_CHUNK_SIZE,
     };
   }
 

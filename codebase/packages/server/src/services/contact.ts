@@ -27,15 +27,14 @@ type EmailAddresses = {
 
 const PERSONAL_ALIAS = 'Personal';
 
+const config = getConfig();
+
 const getContactApiConnector = async () => {
-  const ctx = await clientContext(getConfig());
+  const ctx = await clientContext(config);
   return contactApiConnector(ctx);
 };
 
-const fetchPersonalEmail = async (
-  colleagueUUID: string,
-): Promise<EmailAddresses | undefined> => {
-
+const fetchPersonalEmail = async (colleagueUUID: string): Promise<EmailAddresses | undefined> => {
   const connector = await getContactApiConnector();
 
   try {
@@ -57,11 +56,7 @@ const fetchPersonalEmail = async (
   }
 };
 
-const createPersonalEmail = async (
-  colleagueUUID: string, 
-  emailAddress: string, 
-) => {
-
+const createPersonalEmail = async (colleagueUUID: string, emailAddress: string) => {
   const connector = await getContactApiConnector();
 
   const { data: result } = await connector.createEmailAddress({
@@ -69,7 +64,7 @@ const createPersonalEmail = async (
     traceId: uuidv4(),
     body: {
       alias: PERSONAL_ALIAS,
-      emailAddress
+      emailAddress,
     },
   });
 
@@ -87,41 +82,81 @@ const updatePersonalEmail = async (colleagueUUID: string, emailAddress: string, 
     traceId: uuidv4(),
     body: {
       alias: PERSONAL_ALIAS,
-      emailAddress
+      emailAddress,
     },
   });
 
   return result;
 };
 
-const sendEmails = async (recipients: Recipient[], data: EmailData) => {
-  if (!process.env.MAILING_TEMPLATE_ID) {
-    throw new Error("Can't execute without template id");
+const sendNewEntityEmails = async (recipients: Recipient[], data: EmailData) => {
+  return await sendEmails(config.mailingNewEntityTemplateId(), recipients, data);
+};
+
+const sendShareStoryEmail = async (data: EmailData) => {
+  return await sendEmails(
+    config.mailingShareStoryTemplateId(),
+    [createRecipient(config.mailingStakeholderEmail(), 'unknown')],
+    data,
+  );
+};
+
+const sendConfirmationEmail = async (colleagueUUID: string, data: EmailData) => {
+  const email = await safeFetchEmail(colleagueUUID);
+
+  return await sendEmails(config.mailingConfirmationTemplateId(), [createRecipient(email, colleagueUUID)], data);
+};
+
+const safeFetchEmail = async (colleagueUUID: string) => {
+  const email = await fetchPersonalEmail(colleagueUUID);
+
+  if (email?.emailAddress) {
+    return email?.emailAddress;
   }
 
+  throw Error(`Personal email address for colleague ${colleagueUUID} not found.`);
+};
+
+const createRecipient = (email: string, colleagueUUID: string) => {
+  return {
+    destination: 'emailTo' as Recipient['destination'],
+    address: email,
+    colleagueUUID,
+  };
+};
+
+const sendEmails = async (templateId: string, recipients: Recipient[], data: EmailData) => {
   const connector = await getContactApiConnector();
   const traceId = uuidv4();
 
   const result = await connector.sendMessages({
     params: {
-      templateId: process.env.MAILING_TEMPLATE_ID,
+      templateId,
     },
     traceId,
     body: {
-      recipients: recipients.map(r => ({ 
-        address: r.address, 
-        destination: r.destination})) as ApiMsgBody['recipients'],
+      recipients: recipients.map((r) => ({
+        address: r.address,
+        destination: r.destination,
+      })) as ApiMsgBody['recipients'],
       data,
     },
   });
 
-  return { 
-    ...result.data, 
-    accepted: result.data.accepted || result.status === 202, 
-    traceId 
+  return {
+    ...result.data,
+    accepted: result.data.accepted || result.status === 202,
+    traceId,
   };
 };
 
 export type { EmailAddressesFilter, EmailAddresses, Recipient, EmailData };
 
-export { fetchPersonalEmail, createPersonalEmail, updatePersonalEmail, sendEmails };
+export {
+  fetchPersonalEmail,
+  createPersonalEmail,
+  updatePersonalEmail,
+  sendNewEntityEmails,
+  sendShareStoryEmail,
+  sendConfirmationEmail,
+};

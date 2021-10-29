@@ -31,6 +31,7 @@ export type ProcessEnv = {
   APPLICATION_SERVER_URL_ROOT: string;
   APPLICATION_URL_TEMPLATE_POST: string;
   APPLICATION_URL_TEMPLATE_EVENT: string;
+  APPLICATION_URL_TEMPLATE_CONFIRMATION: string;
   APPLICATION_URL_UNSUBSCRIBE: string;
   // cookies settings
   AUTH_DATA_COOKIE_NAME?: string;
@@ -64,6 +65,12 @@ export type ProcessEnv = {
   IDENTITY_USER_SCOPED_TOKEN_COOKIE_SECRET: string;
   // mock
   MOCK_SERVER_URL?: string;
+  // mailing
+  MAILING_NEW_ENTITY_TEMPLATE_ID: string;
+  MAILING_CONFIRMATION_TEMPLATE_ID: string;
+  MAILING_SHARE_STORY_TEMPLATE_ID: string;
+  MAILING_STAKEHOLDER_EMAIL: string;
+  MAILING_CHUNK_SIZE: string;
 };
 
 export class EnvAccessor {
@@ -114,6 +121,7 @@ export class EnvAccessor {
       APPLICATION_SERVER_URL_ROOT,
       APPLICATION_URL_TEMPLATE_POST,
       APPLICATION_URL_TEMPLATE_EVENT,
+      APPLICATION_URL_TEMPLATE_CONFIRMATION,
       APPLICATION_URL_UNSUBSCRIBE,
       // cookies settings
       AUTH_DATA_COOKIE_NAME,
@@ -147,6 +155,12 @@ export class EnvAccessor {
       IDENTITY_USER_SCOPED_TOKEN_COOKIE_SECRET,
       // mock
       MOCK_SERVER_URL,
+      // mailing
+      MAILING_NEW_ENTITY_TEMPLATE_ID,
+      MAILING_CONFIRMATION_TEMPLATE_ID,
+      MAILING_SHARE_STORY_TEMPLATE_ID,
+      MAILING_STAKEHOLDER_EMAIL,
+      MAILING_CHUNK_SIZE,
     } = process.env as ProcessEnv;
 
     this.variables = {
@@ -158,11 +172,12 @@ export class EnvAccessor {
       LOGGER_ROOT_NAME,
       LOGGER_LEVEL,
       LOGGER_PRETIFY,
-          // D&I application specific URLs
+      // D&I application specific URLs
       APPLICATION_PUBLIC_URL,
       APPLICATION_SERVER_URL_ROOT,
       APPLICATION_URL_TEMPLATE_POST,
       APPLICATION_URL_TEMPLATE_EVENT,
+      APPLICATION_URL_TEMPLATE_CONFIRMATION,
       APPLICATION_URL_UNSUBSCRIBE,
       // cookies settings
       AUTH_DATA_COOKIE_NAME,
@@ -194,6 +209,12 @@ export class EnvAccessor {
       IDENTITY_CLIENT_SECRET,
       IDENTITY_USER_SCOPED_TOKEN_COOKIE_NAME,
       IDENTITY_USER_SCOPED_TOKEN_COOKIE_SECRET,
+      // mailing
+      MAILING_NEW_ENTITY_TEMPLATE_ID,
+      MAILING_CONFIRMATION_TEMPLATE_ID,
+      MAILING_SHARE_STORY_TEMPLATE_ID,
+      MAILING_STAKEHOLDER_EMAIL,
+      MAILING_CHUNK_SIZE,
       // mock
       ...(isDEV(BUILD_ENV) ? { MOCK_SERVER_URL } : undefined),
     };
