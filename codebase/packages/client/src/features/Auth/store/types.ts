@@ -7,6 +7,7 @@ const JOIN_NETWORK_ACTION = `${ROOT}/joinNetwork`;
 const LEAVE_NETWORK_ACTION = `${ROOT}/leaveNetwork`;
 const JOIN_EVENT_ACTION = `${ROOT}/joinEvent`;
 const LEAVE_EVENT_ACTION = `${ROOT}/leaveEvent`;
+const SHARE_STORY_ACTION = `${ROOT}/shareStory`;
 
 type State = {
   user: DefaultUser | User;
@@ -43,6 +44,15 @@ type ValidationError = {
   path: string[];
 };
 
+type ShareStoryPayload = {
+  title: string;
+  story: string;
+};
+
+type ShareStoryResponse = {
+  message: string;
+};
+
 export type {
   State,
   UserResponse,
@@ -51,6 +61,8 @@ export type {
   NetworkResponse,
   EventPayload,
   EventResponse,
+  ShareStoryPayload,
+  ShareStoryResponse,
 };
 
 export {
@@ -61,4 +73,5 @@ export {
   LEAVE_NETWORK_ACTION,
   JOIN_EVENT_ACTION,
   LEAVE_EVENT_ACTION,
+  SHARE_STORY_ACTION,
 };

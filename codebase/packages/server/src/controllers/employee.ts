@@ -9,13 +9,19 @@ import {
   findEventsParticipants,
   findNetworksParticipants,
   EmailNotificationSettings,
+  ShareStory,
   storeSettings,
   findSettings,
   fetchPersonalEmail,
   createPersonalEmail,
   updatePersonalEmail,
+  sendShareStoryEmail,
+  sendConfirmationEmail,
 } from '../services';
 import { executeSafe } from '../utils';
+import { getConfig } from '../config/config-accessor';
+
+const config = getConfig();
 
 const getProfile: Handler = (req: Request, res: Response) => {
   executeSafe(res, async () => {
@@ -153,6 +159,46 @@ const getSetting: Handler = async (req: Request, res: Response) => {
   });
 };
 
+const shareStory: Handler = async (req: Request<{}, {}, ShareStory>, res: Response) => {
+  executeSafe(res, async () => {
+    const { title: markdownNetworkTitle, story: colleagueFullStory } = req.body;
+
+    res.json(
+      await sendShareStoryEmail({
+        markdownNetworkTitle,
+        colleagueFullStory,
+      }),
+    );
+  });
+};
+
+const confirmPersonalEmailChange: Handler = async (req: Request, res: Response) => {
+  executeSafe(res, async () => {
+    const colleagueUUID = getColleagueUuid(res);
+    const { emailAddress: markdownEmailAddress, addressIdentifier } = req.body;
+
+    res.json(
+      await sendConfirmationEmail(colleagueUUID!, {
+        markdownEmailAddress,
+        markdownConfirmLink: `${config.applicationBaseUrl()}${config.applicationUrlTemplateConfirmation()}`.replace(
+          /%\w+%/,
+          Buffer.from(JSON.stringify({ emailAddress: markdownEmailAddress, addressIdentifier })).toString('base64'),
+        ),
+      }),
+    );
+  });
+};
+
+const refreshPersonalEmailByToken: Handler = async (req: Request, res: Response) => {
+  executeSafe(res, async () => {
+    const colleagueUUID = getColleagueUuid(res);
+    const { token } = req.params;
+    const { emailAddress, addressIdentifier } = JSON.parse(Buffer.from(token, 'base64').toString('ascii'));
+
+    res.json(await updatePersonalEmail(colleagueUUID!, emailAddress, addressIdentifier));
+  });
+};
+
 export {
   getProfile,
   addNetworkToEmployee,
@@ -166,4 +212,7 @@ export {
   getPersonalEmail,
   addPersonalEmail,
   refreshPersonalEmail,
+  shareStory,
+  confirmPersonalEmailChange,
+  refreshPersonalEmailByToken,
 };
