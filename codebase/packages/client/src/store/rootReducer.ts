@@ -7,6 +7,7 @@ import { postReducer } from 'features/Post';
 import { toasterReducer } from 'features/Toaster';
 import { reportsReducer } from 'features/Reports';
 import { notificationReducer } from 'features/Notification';
+import { reactionsReducer } from 'features/Reactions';
 
 const rootReducer = combineReducers({
   auth: authReducer,
@@ -16,6 +17,7 @@ const rootReducer = combineReducers({
   toaster: toasterReducer,
   reports: reportsReducer,
   notifications: notificationReducer,
+  reactions: reactionsReducer,
   // TODO: add other reducers
 });
 

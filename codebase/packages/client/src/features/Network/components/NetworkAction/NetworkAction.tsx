@@ -4,10 +4,10 @@ import Button from '@beans/button';
 import useStore from 'hooks/useStore';
 import useDispatch from 'hooks/useDispatch';
 import { joinNetwork, leaveNetwork, leaveEvent } from 'features/Auth';
-import { useNotification } from 'features/Notification';
+import { useNotification, useSettingsModal } from 'features/Notification';
 import Event from 'features/Event';
 
-import { ModalJoin, ModalLeave } from '../Modal';
+import { ModalJoin, ModalLeave, ModalSettings } from '../Modal';
 import { joinParticipant, leaveParticipant } from '../../store';
 
 type Props = {
@@ -20,6 +20,8 @@ type Props = {
 const NetworkAction: FC<Props> = ({ id, events, onLeave, onJoin }) => {
   const dispatch = useDispatch();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const displaySettingsModal = useSettingsModal();
+  const [isSettingsModalOpen, setSettingsModalOpen] = useState(false);
   const { networks = [] } = useStore((state) => state.auth.user);
   const isJoined = networks.includes(+id);
   const { refetchNotificationsWithDelay } = useNotification();
@@ -51,6 +53,12 @@ const NetworkAction: FC<Props> = ({ id, events, onLeave, onJoin }) => {
     refetchNotificationsWithDelay();
 
     onJoin && onJoin();
+
+    displaySettingsModal && setSettingsModalOpen(true);
+  };
+
+  const handleSettingsModalClose = () => {
+    setSettingsModalOpen(false);
   };
 
   return isJoined ? (
@@ -59,6 +67,7 @@ const NetworkAction: FC<Props> = ({ id, events, onLeave, onJoin }) => {
         Leave
       </Button>
       <ModalLeave isOpen={isModalOpen} onClose={handleModalClose} onConfirm={handleConfirmLeave} />
+      {displaySettingsModal && <ModalSettings isOpen={isSettingsModalOpen} onClose={handleSettingsModalClose} />}
     </>
   ) : (
     <>

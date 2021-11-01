@@ -17,7 +17,7 @@ import {
   clientStaticFolder,
   clientStaticFile,
   errorHandler,
-  configureOneloginMidleware,
+  initializeOpenid,
   tescoApiMiddleware,
   fakeLoginConfig,
   fakeUserExtractor,
@@ -30,14 +30,22 @@ import { expressContext } from './context';
 
 const config = getConfig();
 
-const logPretify = !!config.buildEnvironment() && isLocal(config.buildEnvironment());
-const logLevel =
-  isPROD(config.runtimeEnvironment()) || isPPE(config.runtimeEnvironment()) ? 'info' : logPretify ? 'trace' : 'debug';
+let logPretify = config.loggerPretify();
+if (logPretify === undefined) {
+  logPretify = !!config.buildEnvironment() && isLocal(config.buildEnvironment());
+}  
+  
+const logLevel = config.loggerLevel() ||
+  (isPROD(config.runtimeEnvironment()) || isPPE(config.runtimeEnvironment()) ? 'info' : logPretify ? 'trace' : 'debug');
 
-const logger = initializeLogger('server', logLevel, logPretify);
+const logger = initializeLogger(config.loggerRootName(), logLevel, logPretify);
 
 logger.info(`Current build environment: ${config.buildEnvironment()}`);
 logger.info(`Current infrastructure environment: ${config.runtimeEnvironment()}`);
+
+if (isLocal(config.buildEnvironment())) {
+  prettify(config);
+}
 
 getEnv().validate();
 
@@ -62,7 +70,7 @@ const startServer = async () => {
     app.use(
       cors({
         credentials: true,
-        origin: config.applicationUrlRoot(),
+        origin: config.applicationServerUrlRoot(),
       }),
     );
 
@@ -81,7 +89,7 @@ const startServer = async () => {
         ),
       );
 
-      const openIdMiddleware = await configureOneloginMidleware(config);
+      const openIdMiddleware = await initializeOpenid(config);
       app.use(openIdMiddleware);
     } else {
       logger.warn(`WARNING! Authentication is turned off. Fake Login is being used.`);
@@ -106,11 +114,7 @@ const startServer = async () => {
     app.use(clientStaticFolder);
     app.use(clientStaticFile);
 
-    app.use(errorHandler);
-
-    if (isPPE(config.runtimeEnvironment()) || isDEV(config.runtimeEnvironment())) {
-      prettify(config);
-    }
+    app.use(errorHandler(config));
 
     server.listen(PORT, () => {
       //console.log(`⚡️ Server is running at http://localhost:${PORT}`);

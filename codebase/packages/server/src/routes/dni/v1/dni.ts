@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express';
+import express from 'express';
 
 import { roleAuth } from '../../../middlewares/role-auth-handler';
 
@@ -17,6 +17,9 @@ import {
   getPersonalEmail,
   addPersonalEmail,
   refreshPersonalEmail,
+  shareStory,
+  confirmPersonalEmailChange,
+  refreshPersonalEmailByToken,
   // notification
   getNotifications,
   getNetworkNotifications,
@@ -51,6 +54,9 @@ dniApi.post('/employees/email-notifications-settings', refreshSetting);
 dniApi.get('/employees/personal-email', getPersonalEmail);
 dniApi.post('/employees/personal-email', addPersonalEmail);
 dniApi.put('/employees/personal-email/:addressId', refreshPersonalEmail);
+dniApi.post('/employees/personal-email/:token', refreshPersonalEmailByToken);
+dniApi.post('/employees/confirm-personal-email', confirmPersonalEmailChange);
+dniApi.post('/employees/share-story', shareStory);
 
 dniApi.get('/events/participants', getEventsParticipants);
 dniApi.get('/networks/participants', getNetworksParticipants);
@@ -60,9 +66,9 @@ dniApi.get('/notifications/networks', getNetworkNotifications);
 dniApi.post('/notifications/acknowledge', acknowledgeNotification);
 
 // pls. note: roleAuth middleware is applied
-dniApi.get('/reports/members', roleAuth([ ROLE_ADMIN, ROLE_MANAGER ]), getMembersReportByFilters);
-dniApi.get('/reports/regions', roleAuth([ ROLE_ADMIN, ROLE_MANAGER ]), getRegionsReportByFilters);
-dniApi.get('/reports/departments', roleAuth([ ROLE_ADMIN, ROLE_MANAGER ]), getDepartmentsReportByFilters);
-dniApi.post('/reports/print-pdf', roleAuth([ ROLE_ADMIN, ROLE_MANAGER ]), printPDF);
+dniApi.get('/reports/members', roleAuth([ROLE_ADMIN, ROLE_MANAGER]), getMembersReportByFilters);
+dniApi.get('/reports/regions', roleAuth([ROLE_ADMIN, ROLE_MANAGER]), getRegionsReportByFilters);
+dniApi.get('/reports/departments', roleAuth([ROLE_ADMIN, ROLE_MANAGER]), getDepartmentsReportByFilters);
+dniApi.post('/reports/print-pdf', roleAuth([ROLE_ADMIN, ROLE_MANAGER]), printPDF);
 
 export { dniApi };

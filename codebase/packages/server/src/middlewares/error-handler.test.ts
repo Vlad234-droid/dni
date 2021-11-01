@@ -17,7 +17,7 @@ describe('Middleware: error-handler', () => {
     };
     const next = <NextFunction>jest.fn();
 
-    errorHandler(error, request, response, next);
+    errorHandler({ applicationPublicUrl: () => '/' })(error, request, response, next);
 
     expect(response.status).toHaveBeenCalledWith(500);
     expect(response.send).toHaveBeenCalledWith('Something broke!');

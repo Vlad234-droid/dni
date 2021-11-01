@@ -1,61 +1,24 @@
 version: '3'
 services:
-    # nginx:
-    #     image: nginx:latest
-    #     container_name: 'azure_dni_nginx'
-    #     depends_on:
-    #         - 'dni'
-    #         - 'postgres'
-    #     volumes:
-    #       - ./nginx/conf.d:/etc/nginx/conf.d
-    #     ports:
-    #     - 8000:80
+    nginx:
+        image: nginx:latest
+        container_name: 'azure_dni_nginx'
+        depends_on:
+            - 'dni'
+            - 'postgres'
+        volumes:
+          - ./nginx/conf.d:/etc/nginx/conf.d
+        ports:
+        - 9000:9000
     dni:
         image: dni_local:latest
         container_name: 'azure_dni'
         depends_on:
             - 'postgres'
-        environment:
-            - NODE_ENV=ppe
-            - NODE_PORT=9000
-            - APPLICATION_PUBLIC_URL=/
-            - APPLICATION_URL_ROOT=http://localhost:9000
-            - APPLICATION_URL_TEMPLATE_POST=/network-news/%ID%
-            - APPLICATION_URL_TEMPLATE_EVENT=/events/%ID%
-            - APPLICATION_URL_UNSUBSCRIBE=/notification/settings?unsubscribe=true
-            - APPLICATION_USER_DATA_COOKIE_NAME=dni.user.data
-            - APPLICATION_COOKIE_PARSER_SECRET=f4fada1a-9aff-4fae-9940-4ec6cede101a
-            - MAILING_TEMPLATE_ID=dfge2b6d-qfaa-47c6-bfw9-b4214y0a2e88
-            - MAILING_CHUNK_SIZE=30
-            - CACHE_COLLEAGUE_TTL=3600
-            - USE_ONELOGIN=true
-            - ONELOGIN_ISSUER_URL=https://loginppe.ourtesco.com/oidc/2
-            - ONELOGIN_CALLBACK_PATH=/auth/openid/callback
-            - ONELOGIN_REDIRECT_AFTER_LOGOUT_URL=https://loginppe.ourtesco.com/oidc/2/logout?logout=true
-            - OIDC_CLIENT_ID=cc1a44c0-7b26-0139-86ba-06f79909864e37548
-            - OIDC_CLIENT_SECRET=1aaaab9d7016c7b2ad0497d2fd55260dddb8ea6f1d8d38fcab79e17c6764d29e
-            - OIDC_REFRESH_TOKEN_SECRET=f6037124-c51b-4c48-aed8-7226d82277c1
-            # Roles groups
-            - OIDC_GROUPS_ADMIN_ROLE=GG-UK-TescoGlobal-DiversityAndInclusion-PPE-Admin
-            - OIDC_GROUPS_MANAGER_ROLE=GG-UK-TescoGlobal-DiversityAndInclusion-PPE-Manager
-            - IDENTITY_CLIENT_ID=181739bc-937d-438f-a15a-aa63095f8205
-            - IDENTITY_CLIENT_SECRET=801787eb-f6b4-4801-93c5-a7bd696111a6
-            - IDENTITY_USER_SCOPED_TOKEN_COOKIE_NAME=dni.identity.ust
-            - IDENTITY_USER_SCOPED_TOKEN_COOKIE_SECRET=cd33de5f-edc5-43a5-b478-3898478df87b
-            - TYPEORM_TYPE=postgres
-            - TYPEORM_HOST=postgres
-            - TYPEORM_PORT=5432
-            - TYPEORM_DATABASE=dni_database
-            - TYPEORM_SCHEMA=dni
-            - TYPEORM_USERNAME=dni
-            - TYPEORM_PASSWORD=dn1
-            - TYPEORM_SSL=false
-            - TYPEORM_SYNCHRONIZE=false
-            - TYPEORM_LOGGING=true
-            - TYPEORM_RUN_MIGRATION=true
-            - CCRM_RUN_SYNC=true
+        env_file:
+            - dni/dni.env
         ports:
-            - 9000:9000
+            - 5000:5000
         restart: always
     postgres:
         # https://docs.microsoft.com/en-us/azure/postgresql/concepts-supported-versions

@@ -17,7 +17,7 @@ if (process.env.NODE_ENV === 'test') {
   mock.onGet(Endpoint.USER_PROFILE).reply(200, {
     networks: [],
     events: [],
-    role: 'user',
+    roles: ['Employee'],
   });
   mock.onGet(Endpoint.USER_NETWORKS).reply(200, []);
   mock.onPost(Endpoint.USER_NETWORKS).reply(200, {
@@ -33,6 +33,7 @@ if (process.env.NODE_ENV === 'test') {
   mock.onDelete(Endpoint.USER_EVENTS).reply(200, {
     body: {},
   });
+
   // networks
   const networkCRUD = buildNetworkCRUD(COLLECTION_SIZE);
   const oneNetwork = new RegExp(`${Endpoint.NETWORKS}/(\\d+)`);

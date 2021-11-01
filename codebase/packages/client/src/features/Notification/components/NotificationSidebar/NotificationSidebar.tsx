@@ -5,9 +5,10 @@ import Button from '@beans/button';
 import isEmpty from 'lodash.isempty';
 
 import { Page } from 'features/Page';
-
 import Loading from 'types/loading';
 import { EmptyContainer, Level, Error, Spinner } from 'features/Common';
+import { EntityType } from 'types/entity';
+
 import {
   hideSidebar,
   toggleSidebar,
@@ -15,7 +16,7 @@ import {
   notificationsMetadataSelector,
   isSidebarOpenedSelector,
 } from '../../store';
-import { EntityType, AcknowledgePayload } from '../../config/types';
+import { AcknowledgePayload } from '../../config/types';
 import NotificationerItem, { NotificationItem } from '../NotificationItem';
 import { Wrapper, Title, TitleWrapper } from './styled';
 import { useNotification } from '../../context/NotificationContext';

@@ -57,9 +57,6 @@ ENV USE_ONELOGIN=true
 # Mock server (must not be empty)
 ENV MOCK_SERVER_URL=<none>
 
-# Confirmit
-ENV CONFIRMIT_PASSWORD=<none>
-
 ENV TYPEORM_TYPE=postgres
 #   TYPEORM_HOST = localhost
 #   TYPEORM_USERNAME = admin

@@ -13,12 +13,17 @@ export type ProcessConfig = {
   environment: () => string;
   apiEnv: () => ApiEnv;
   port: () => number;
+  loggerRootName: () => string;
+  loggerLevel: () => string | undefined;
+  loggerPretify: () => boolean | undefined;
   // D&I application specific settings
   applicationName: () => string;
+  applicationBaseUrl: () => string;
   applicationPublicUrl: () => string;
-  applicationUrlRoot: () => string;
+  applicationServerUrlRoot: () => string;
   applicationUrlTemplatePost: () => string;
   applicationUrlTemplateEvent: () => string;
+  applicationUrlTemplateConfirmation: () => string;
   applicationUrlUnsubscribe: () => string;
   applicationUploadSize: () => number;
   // cookies settings
@@ -37,11 +42,9 @@ export type ProcessConfig = {
   cacheColleagueTtl: () => number;
   // onelogin
   useOneLogin: () => boolean;
-  oneLoginIssuerUrl: () => string;
-  oneLoginApplicationPath: () => string | undefined;
-  oneLoginCallbackUrlRoot: () => string;
-  oneLoginCallbackPath: () => string;
-  oneLoginRedirectAfterLogoutUrl: () => string;
+  oidcIssuerUrl: () => string;
+  oidcAuthCallbackPath: () => string;
+  oidcRedirectAfterLogoutPath: () => string;
   oidcClientId: () => string;
   oidcClientSecret: () => string;
   oidcRefreshTokenSecret: () => string;
@@ -55,10 +58,14 @@ export type ProcessConfig = {
   identityClientSecret: () => string;
   identityUserScopedTokenCookieName: () => string;
   identityUserScopedTokenCookieSecret: () => string;
-  // confirmit
-  confirmitPassword: () => string;
   // mock
   mockServerUrl: () => string;
+  // mailing
+  mailingNewEntityTemplateId: () => string;
+  mailingConfirmationTemplateId: () => string;
+  mailingShareStoryTemplateId: () => string;
+  mailingStakeholderEmail: () => string;
+  mailingChunkSize: () => number;
 };
 
 export class ConfigAccessor {
@@ -66,25 +73,35 @@ export class ConfigAccessor {
   private readonly config: ProcessConfig;
 
   private constructor(processEnv: ProcessEnv) {
+    const applicationServerUrlRoot = processEnv.APPLICATION_SERVER_URL_ROOT;
+    const applicationPublicUrl = processEnv.APPLICATION_PUBLIC_URL;
+
     this.config = {
       // general
       buildEnvironment: () => processEnv.BUILD_ENV,
       runtimeEnvironment: () => processEnv.RUNTIME_ENV,
       environment: () => processEnv.NODE_ENV,
-      port: () => (isNaN(Number(processEnv.NODE_PORT)) ? defaultConfig.port : Number(processEnv.NODE_PORT)),
       apiEnv: () =>
         getAppEnv(
           this.config.runtimeEnvironment(),
           isLocal(this.config.runtimeEnvironment()) ? this.config.mockServerUrl() : undefined,
         ),
+      port: () => (isNaN(Number(processEnv.NODE_PORT)) ? defaultConfig.port : Number(processEnv.NODE_PORT)),
+      loggerRootName: () => processEnv.LOGGER_ROOT_NAME || defaultConfig.loggerRootName,
+      loggerLevel: () => processEnv.LOGGER_LEVEL,
+      loggerPretify: () => (processEnv.LOGGER_PRETIFY ? yn(processEnv.LOGGER_PRETIFY, { default: false }) : undefined),
       // D&I application specific settings
       applicationName: () => defaultConfig.applicationName,
-      applicationPublicUrl: () => processEnv.APPLICATION_PUBLIC_URL,
-      applicationUrlRoot: () => processEnv.APPLICATION_URL_ROOT,
+      applicationBaseUrl: () =>
+        `${applicationServerUrlRoot}${applicationPublicUrl === '/' ? '' : applicationPublicUrl}`,
+      applicationServerUrlRoot: () => applicationServerUrlRoot,
+      applicationPublicUrl: () => applicationPublicUrl,
       applicationUrlTemplatePost: () => processEnv.APPLICATION_URL_TEMPLATE_POST,
       applicationUrlTemplateEvent: () => processEnv.APPLICATION_URL_TEMPLATE_EVENT,
+      applicationUrlTemplateConfirmation: () => processEnv.APPLICATION_URL_TEMPLATE_CONFIRMATION,
       applicationUrlUnsubscribe: () => processEnv.APPLICATION_URL_UNSUBSCRIBE,
       applicationUploadSize: () => defaultConfig.applicationUploadSize,
+
       // cookies settings
       authDataCookieName: () => processEnv.AUTH_DATA_COOKIE_NAME || undefined,
       sessionCookieName: () => processEnv.SESSION_COOKIE_NAME || undefined,
@@ -98,6 +115,7 @@ export class ConfigAccessor {
         processEnv.APPLICATION_USER_DATA_COOKIE_NAME || defaultConfig.applicationUserDataCookieName,
       applicationUserDataCookieSecret: () => processEnv.APPLICATION_USER_DATA_COOKIE_SECRET,
       stickCookiesToApplicationPath: () => yn(processEnv.STICK_COOKIES_TO_APPLICATION_PATH, { default: false }),
+
       // cache related props
       cacheIdentityTokenKey: () => processEnv.CACHE_IDENTITY_TOKEN_KEY || defaultConfig.cacheIdentityTokenKey,
       cacheIdentityTokenTtl: () =>
@@ -110,17 +128,10 @@ export class ConfigAccessor {
           : Number(processEnv.CACHE_COLLEAGUE_TTL),
       // onelogin
       useOneLogin: () => yn(processEnv.USE_ONELOGIN, { default: false }),
-      oneLoginIssuerUrl: () => processEnv.ONELOGIN_ISSUER_URL,
-      oneLoginApplicationPath: () =>
-        processEnv.APPLICATION_PUBLIC_URL !== '/' ? processEnv.APPLICATION_PUBLIC_URL : undefined,
-      oneLoginCallbackUrlRoot: () => processEnv.APPLICATION_URL_ROOT,
-      oneLoginCallbackPath: () => processEnv.ONELOGIN_CALLBACK_PATH,
-      oneLoginRedirectAfterLogoutUrl: () =>
-        processEnv.ONELOGIN_REDIRECT_AFTER_LOGOUT_URL
-          ? processEnv.ONELOGIN_REDIRECT_AFTER_LOGOUT_URL
-          : processEnv.APPLICATION_PUBLIC_URL === '/'
-          ? processEnv.APPLICATION_URL_ROOT
-          : `${processEnv.APPLICATION_URL_ROOT}${processEnv.APPLICATION_PUBLIC_URL}`,
+      oidcIssuerUrl: () => processEnv.OIDC_ISSUER_URL,
+      oidcAuthCallbackPath: () => processEnv.OIDC_AUTH_CALLBACK_PATH || defaultConfig.oidcAuthCallbackPath,
+      oidcRedirectAfterLogoutPath: () =>
+        processEnv.OIDC_REDIRECT_AFTER_LOGOUT_CALLBACK_PATH || defaultConfig.oidcRedirectAfterLogoutPath,
       oidcClientId: () => processEnv.OIDC_CLIENT_ID,
       oidcClientSecret: () => processEnv.OIDC_CLIENT_SECRET,
       oidcRefreshTokenSecret: () => processEnv.OIDC_REFRESH_TOKEN_SECRET,
@@ -135,8 +146,6 @@ export class ConfigAccessor {
       identityClientSecret: () => processEnv.IDENTITY_CLIENT_SECRET,
       identityUserScopedTokenCookieName: () => processEnv.IDENTITY_USER_SCOPED_TOKEN_COOKIE_NAME,
       identityUserScopedTokenCookieSecret: () => processEnv.IDENTITY_USER_SCOPED_TOKEN_COOKIE_SECRET,
-      // confirmit
-      confirmitPassword: () => processEnv.CONFIRMIT_PASSWORD || '',
       // mock
       mockServerUrl: () => {
         if (!isDEV(processEnv.BUILD_ENV)) {
@@ -144,6 +153,12 @@ export class ConfigAccessor {
         }
         return processEnv.MOCK_SERVER_URL || '';
       },
+      // mailing
+      mailingNewEntityTemplateId: () => processEnv.MAILING_NEW_ENTITY_TEMPLATE_ID,
+      mailingConfirmationTemplateId: () => processEnv.MAILING_CONFIRMATION_TEMPLATE_ID,
+      mailingShareStoryTemplateId: () => processEnv.MAILING_SHARE_STORY_TEMPLATE_ID,
+      mailingStakeholderEmail: () => processEnv.MAILING_STAKEHOLDER_EMAIL,
+      mailingChunkSize: () => +processEnv.MAILING_CHUNK_SIZE,
     };
   }
 

@@ -10,6 +10,7 @@ type CommonCcrmEntity = {
   title: string;
   network?: CommonCcrmEntity;
   description?: string;
+  shortDescription?: string;
   content?: string;
 };
 
@@ -20,6 +21,8 @@ type MailingData = {
 
 const UNSUBSCRIBE_KEY = 'unsibscribe';
 
+const config = getConfig();
+
 const prepareMailingData = async (
   entityType: DniEntityTypeEnum,
   entityId: string,
@@ -29,7 +32,7 @@ const prepareMailingData = async (
   if (mailingData?.entity && mailingData?.colleagueUUIDs) {
     const entity = mailingData?.entity;
     const markdownEntityTitle = entity.title;
-    const markdownEntityContent = entity.description || entity.content || '';
+    const markdownEntityContent = entity.shortDescription || '';
     const markdownNetworkTitle = entity.network ? entity.network!.title : 'Diversity and Inclusion';
     const linkToEntityPage = buildFrontURI(entityType, entityId);
     const linkToUnsubscribePage = buildFrontURI(UNSUBSCRIBE_KEY);
@@ -49,15 +52,10 @@ const prepareMailingData = async (
 };
 
 const buildFrontURI = (type: DniEntityTypeEnum | typeof UNSUBSCRIBE_KEY, entityId?: string) => {
-  const {
-    applicationUrlRoot,
-    applicationPublicUrl,
-    applicationUrlTemplatePost,
-    applicationUrlTemplateEvent,
-    applicationUrlUnsubscribe,
-  } = getConfig();
+  const { applicationBaseUrl, applicationUrlTemplatePost, applicationUrlTemplateEvent, applicationUrlUnsubscribe } =
+    config;
 
-  const baseUrl = `${applicationUrlRoot()}${applicationPublicUrl() === '/' ? '' : applicationPublicUrl()}`;
+  const baseUrl = applicationBaseUrl();
   switch (type) {
     case DniEntityTypeEnum.POST: {
       return `${baseUrl}${applicationUrlTemplatePost()}`.replace(/%\w+%/, entityId!);
@@ -91,7 +89,7 @@ const getMailingData = async (entityType: string, entityId: string): Promise<Mai
 };
 
 const massMailing = <T, P>(list: T[], payload: P) => {
-  const workersCount = list.length <= +process.env.MAILING_CHUNK_SIZE! ? 1 : standardWorkersCount();
+  const workersCount = list.length <= config.mailingChunkSize() ? 1 : standardWorkersCount();
   spawnWorkers('colleague-sender', list, payload, workersCount);
 };
 

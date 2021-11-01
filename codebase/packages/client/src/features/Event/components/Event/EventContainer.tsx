@@ -5,7 +5,8 @@ import useStore from 'hooks/useStore';
 
 import EventComponent from './Event';
 import { getParticipants, getOne, byIdSelector } from '../../store';
-import { useNotification, EntityType } from 'features/Notification';
+import { useNotification } from 'features/Notification';
+import { EntityType } from 'types/entity';
 
 type Props = {
   id: number;

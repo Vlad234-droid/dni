@@ -11,6 +11,7 @@ export type ExpressContext = {
 export type OneloginFlow =
   | 'login'
   | 'logout'
+  | 'post-logout'
   | 'verification'
   | 'plugin'
   | 'other';

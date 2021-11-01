@@ -22,6 +22,8 @@ const notificationSelector = (state: RootState, selector: AcknowledgePayload) =>
 
 const isSidebarOpenedSelector = (state: RootState) => state.notifications.isSidebarOpened;
 
+const personalEmailSelector = (state: RootState) => state.notifications.personalEmail;
+
 export {
   networkNotificationsSelector,
   networkNotificationIdsSelector,
@@ -30,4 +32,5 @@ export {
   notificationsMetadataSelector,
   notificationSelector,
   isSidebarOpenedSelector,
+  personalEmailSelector,
 };

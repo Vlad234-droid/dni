@@ -1,5 +1,5 @@
 import { parentPort, workerData } from 'worker_threads';
-import { fetchPersonalEmail, sendEmails, Recipient, EmailData } from '../services/contact';
+import { fetchPersonalEmail, sendNewEntityEmails, Recipient, EmailData } from '../services/contact';
 import { partition } from '../utils/array';
 
 type Data = {
@@ -28,12 +28,22 @@ const mailing = async () => {
   if (recipients.length > 0) {
     const chunks = partition(recipients, Math.ceil(recipients.length / +SEND_CHUNKS));
     for (const chunk of chunks) {
-      const sendResult = await sendEmails(chunk, data);
+      const sendResult = await sendNewEntityEmails(chunk, data);
       console.log(JSON.stringify(sendResult));
       if (sendResult.accepted) {
-        parentPort?.postMessage(`Notification email to colleagues [${chunk.map(r => r.colleagueUUID).join(', ')}] accepted by contact API server. TraceId: ${sendResult.traceId}`);
+        parentPort?.postMessage(
+          `Notification email to colleagues [${chunk
+            .map((r) => r.colleagueUUID)
+            .join(', ')}] accepted by contact API server. TraceId: ${sendResult.traceId}`,
+        );
       } else {
-        parentPort?.postMessage(`WARNING: Notification email to colleagues [${chunk.map(r => r.colleagueUUID).join(', ')}] was not accepted by contact API server. TraceId: ${sendResult.traceId}. Error message: ${sendResult.description}`);
+        parentPort?.postMessage(
+          `WARNING: Notification email to colleagues [${chunk
+            .map((r) => r.colleagueUUID)
+            .join(', ')}] was not accepted by contact API server. TraceId: ${sendResult.traceId}. Error message: ${
+            sendResult.description
+          }`,
+        );
       }
     }
   }

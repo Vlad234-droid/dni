@@ -3,10 +3,6 @@ import {
   generateNetworks,
   generateEvent,
   generateEvents,
-  generateEmotion,
-  generateEmotions,
-  generateEmoji,
-  generateEmojis,
   generateOrganization,
   generateOrganizations,
   generatePost,
@@ -18,8 +14,6 @@ import {
 import {
   Network,
   Event,
-  Emotion,
-  Emoji,
   Organization,
   Post,
   UploadFile,
@@ -31,12 +25,6 @@ const buildNetworkCRUD = (size: number) =>
 
 const buildEventCRUD = (size: number) =>
   buildCRUD<Event>(() => generateEvents(size), generateEvent);
-
-const buildEmotionCRUD = (size: number) =>
-  buildCRUD<Emotion>(() => generateEmotions(size), generateEmotion);
-
-const buildEmojiCRUD = (size: number) =>
-  buildCRUD<Emoji>(() => generateEmojis(size), generateEmoji);
 
 const buildOrganizationCRUD = (size: number) =>
   buildCRUD<Organization>(
@@ -53,8 +41,6 @@ const buildUploadCRUD = (size: number) =>
 export {
   buildNetworkCRUD,
   buildEventCRUD,
-  buildEmotionCRUD,
-  buildEmojiCRUD,
   buildOrganizationCRUD,
   buildPostCRUD,
   buildUploadCRUD,

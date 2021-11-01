@@ -8,6 +8,7 @@ import ResponsiveImage from '@beans/responsive-image';
 import { Box, Vertical } from '@energon-components/layout';
 
 import { useMedia } from 'context/InterfaceContext';
+import WistiaPlayer from '../WistiaPlayer';
 
 type ElementType = keyof JSX.IntrinsicElements | React.ComponentType;
 
@@ -17,6 +18,12 @@ export type RichTextComponent = {
   text: string;
   id: number;
 };
+
+const StyledVideoContainer = styled(Box)`
+  max-width: 1000px;
+  margin: 0 auto;
+  position: relative;
+`;
 
 const MarkdownContainer = styled(Box)`
   > :first-child {
@@ -138,7 +145,14 @@ export const MarkdownRenderer = ({ source }: { source: string }) => (
         commonmark: true,
       }}
       renderers={{
-        link: (props) => <Link href={getLinkHref(props.href)}>{props.children}</Link>,
+        link: ({ title, href, children }) =>
+          title === 'video' ? (
+            <StyledVideoContainer>
+              <WistiaPlayer videoId={href} aspectRatio={16 / 9} />
+            </StyledVideoContainer>
+          ) : (
+            <Link href={getLinkHref(href)}>{children}</Link>
+          ),
         heading: (props) => (
           <Box color='tescoBlue' as={`h${props.level}` as ElementType}>
             {props.children}

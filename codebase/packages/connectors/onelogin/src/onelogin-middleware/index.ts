@@ -45,7 +45,7 @@ export type OneloginCookieConfig = {
   name?: string;
 };
 
-export type Strategy = 'saml' | 'openid';
+export type Strategy = 'openid';
 
 export const AUTHENTICATION_PATH = '/sso/auth';
 export const LOGOUT_PATH = '/sso/logout';
@@ -69,8 +69,9 @@ export type UserInfoResolver<I, O> = (rawUserInfo: I, req: express.Request, res:
 
 export type OneloginRouteInfo = {
   authenticationPath: string;
-  registeredCallbackUrlPath: string;
   logoutPath: string;
+  registeredAuthCallbackUrlPath: string;
+  registeredRedirectAfterLogoutPath: string;
 };
 
 export type IssuerMetadataLight = {
@@ -89,18 +90,7 @@ export type OpenIdStartupLog = {
   issuerMetadata: IssuerMetadataLight;
 };
 
-export type SamlStartupLog = {
-  /**
-   * information about mounted routes - logging it out might be helpful
-   */
-  oneloginRoutes: OneloginRouteInfo;
-};
-
-export type OneloginStartupLog = OpenIdStartupLog | SamlStartupLog;
-
-export type SamlRouter = express.Router & SamlStartupLog;
-
 export type OpenIdRouter = express.Router & OpenIdStartupLog;
 
-export { getOpenidMiddleware } from './openid-protocol';
+export { initializeOpenidMiddleware } from './openid-protocol';
 export type { OpenidConfig } from './openid-protocol';

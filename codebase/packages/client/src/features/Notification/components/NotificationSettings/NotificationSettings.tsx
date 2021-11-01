@@ -3,28 +3,39 @@ import CheckboxWithLabel from '@beans/checkbox-with-label';
 import Button from '@beans/button';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useDispatch } from 'react-redux';
-import omit from 'lodash.omit';
-import useQuery from 'hooks/useQuery';
 
+import omit from 'lodash.omit';
+
+import useDispatch from 'hooks/useDispatch';
+import useQuery from 'hooks/useQuery';
+import useStore from 'hooks/useStore';
 import { ToastSkin, toasterActions } from 'features/Toaster';
 import { FieldWrapper, TextInput } from 'features/Common';
 
 import schema from '../../config/schema';
-import { FormData, EmailNotificationSettings, EmailAddress } from '../../config/types';
+import { FormData, EmailAddress } from '../../config/types';
+import { getPersonalEmail, getNotificationSettings, updatePersonalEmail, createPersonalEmail, updateNotificationSettings } from '../../store';
 import { Wrapper, Content, Title } from './styled';
-import API from 'utils/api';
-import useStore from 'hooks/useStore';
 
 const SUCCESS_TOAST_ID = 'settings-success-toast';
 const ERROR_TOAST_ID = 'settings-success-toast';
 
 const NotificationSettings: FC = () => {
-  const [emailAddress, setEmailAddress] = useState<EmailAddress>();
+  const {
+    personalEmail,
+    notificationSettings,
+  } = useStore((state) => state.notifications);
+  const {
+    settings: {
+      receivePostsEmailNotifications,
+      receiveEventsEmailNotifications,
+    }
+  } = notificationSettings;
+  const [emailAddress, setEmailAddress] = useState<EmailAddress>(personalEmail!);
   const [formData, setFormData] = useState({
-    email: '',
-    receivePostsEmailNotifications: false,
-    receiveEventsEmailNotifications: false,
+    email: personalEmail ? personalEmail.emailAddress : '',
+    receivePostsEmailNotifications,
+    receiveEventsEmailNotifications,
   });
   const query = useQuery();
   const isUnsubscribe = query.get('unsubscribe') == 'true';
@@ -57,20 +68,21 @@ const NotificationSettings: FC = () => {
     try {
       // if the user changed their personal address
       if (emailAddress?.emailAddress && data.email && emailAddress?.emailAddress != data.email) {
-        await API.contact.updatePersonalEmail(emailAddress?.addressIdentifier, {
+        dispatch(updatePersonalEmail({
           ...emailAddress,
           emailAddress: data.email,
-        });
+        }));
       }
 
       // if the user created his personal address
       if (!emailAddress && data.email) {
-        await API.contact.createPersonalEmail({
+        await dispatch(createPersonalEmail({
           emailAddress: data.email,
-        });
+        }));
+        dispatch(getPersonalEmail());
       }
 
-      await API.contact.updateNotificationsSettings(omit(formData, 'email'));
+      dispatch(updateNotificationSettings(omit(formData, 'email')));
 
       setFormData({
         ...formData,
@@ -82,35 +94,28 @@ const NotificationSettings: FC = () => {
     }
   };
 
-  // fetch settings
-  useEffect(() => {
-    (async () => {
-      const emailNotificationSettings = await API.contact.getNotificationsSettings<EmailNotificationSettings>();
-
-      if (emailNotificationSettings?.settings) {
-        setFormData((formData) => ({
-          ...formData,
-          ...emailNotificationSettings.settings,
-        }));
-      }
-    })();
-  }, []);
-
   // fetch personal email address
   useEffect(() => {
-    (async () => {
-      const emailAddress = await API.contact.getPersonalEmail<EmailAddress>();
+    if (!personalEmail) {
+      dispatch(getPersonalEmail());
+    }
+  }, [colleagueUUID, personalEmail]);
 
-      if (emailAddress?.emailAddress) {
-        setEmailAddress(emailAddress);
+  // fetch settings
+  useEffect(() => {
+    if (!notificationSettings) {
+      dispatch(getNotificationSettings());
+    }
+  }, [notificationSettings]);
 
-        setFormData((formData) => ({
-          ...formData,
-          email: emailAddress.emailAddress,
-        }));
-      }
-    })();
-  }, [colleagueUUID]);
+  useEffect(() => {
+    setEmailAddress(personalEmail!);
+    setFormData({
+      email: personalEmail ? personalEmail.emailAddress : '',
+      receiveEventsEmailNotifications,
+      receivePostsEmailNotifications,
+    });
+  }, [personalEmail, receivePostsEmailNotifications, receiveEventsEmailNotifications]);
 
   return (
     <Wrapper>
