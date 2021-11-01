@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { renderWithProviders } from 'utils/testUtils';
+import { render } from 'utils/testUtils';
 
 import EmptyContainer from './EmptyContainer';
 
@@ -11,7 +11,7 @@ describe('<EmptyContainer />', () => {
         description: 'mocked_description',
       };
 
-      const { getByTestId, getByText } = renderWithProviders(
+      const { getByTestId, getByText } = render(
         <EmptyContainer {...props} />,
       );
 
@@ -24,7 +24,7 @@ describe('<EmptyContainer />', () => {
         description: <div>mocked_description</div>,
       };
 
-      const { getByTestId, getByText } = renderWithProviders(
+      const { getByTestId, getByText } = render(
         <EmptyContainer {...props} />,
       );
 
@@ -38,7 +38,7 @@ describe('<EmptyContainer />', () => {
         explanation: 'mocked_explanation',
       };
 
-      const { getByText } = renderWithProviders(<EmptyContainer {...props} />);
+      const { getByText } = render(<EmptyContainer {...props} />);
 
       expect(getByText('mocked_explanation')).toBeInTheDocument();
     });

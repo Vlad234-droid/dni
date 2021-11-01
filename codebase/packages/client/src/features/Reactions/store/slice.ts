@@ -38,17 +38,19 @@ const slice = createSlice({
 
     builder
       .addCase(getReactions.fulfilled, (state: T.State, { payload }) => {
-        const reactions = flatten(Object.values(payload)).reduce((res: Reaction[], current: Partial<Reaction>) => {
-          const reaction = {
-            ...current,
-            id: current!.parent!.id,
-            reactionId: current.id,
-          };
+        if (payload) {
+          const reactions = flatten(Object.values(payload)).reduce((res: Reaction[], current: Partial<Reaction>) => {
+            const reaction = {
+              ...current,
+              id: current!.parent!.id,
+              reactionId: current.id,
+            };
 
-          res.push(reaction as Reaction);
-          return res;
-        }, []);
-        T.EntityAdapter.upsertMany(state, reactions);
+            res.push(reaction as Reaction);
+            return res;
+          }, []);
+          T.EntityAdapter.upsertMany(state, reactions);
+        }
       })
       .addCase(getReactions.rejected, setFailed)
       .addCase(addReaction.fulfilled, (state: T.State, { payload }) => {

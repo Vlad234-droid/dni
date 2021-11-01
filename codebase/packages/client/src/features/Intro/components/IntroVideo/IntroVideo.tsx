@@ -13,7 +13,7 @@ const IntroVideo: FC = () => {
   const iconColor = isMobile || isLargeMobile ? theme.colors.grayscale : theme.colors.white;
 
   return (
-    <Wrapper>
+    <Wrapper data-testid='intro-video'>
       <Overflower>
         <video
           src={tescoVideo720}

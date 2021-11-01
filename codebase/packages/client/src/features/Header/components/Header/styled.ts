@@ -91,3 +91,7 @@ export const Title = styled.div`
     ${redDotStyles};
   }
 `;
+
+export const Aside = styled.div`
+  display: flex;
+`;

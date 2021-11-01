@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { renderWithProviders } from 'utils/testUtils';
+import { render } from 'utils/testUtils';
 
 import BackLink from './BackLink';
 
@@ -12,7 +12,7 @@ describe('<BackLink />', () => {
 
   describe('#render', () => {
     it('should render correctly', () => {
-      const { getByTestId, getByText } = renderWithProviders(
+      const { getByTestId, getByText } = render(
         <BackLink {...props} />,
       );
 
@@ -26,7 +26,7 @@ describe('<BackLink />', () => {
         to: '/mocked_to',
       };
 
-      const { getByText } = renderWithProviders(<BackLink {...props} />);
+      const { getByText } = render(<BackLink {...props} />);
 
       expect(getByText('Back')).toBeInTheDocument();
     });

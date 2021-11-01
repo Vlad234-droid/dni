@@ -4,7 +4,7 @@ import data from '../../config/data';
 import { Wrapper, Title, Subtitle } from './styled';
 
 const IntroHeading: FC = () => (
-  <Wrapper>
+  <Wrapper data-testid='intro-heading'>
     <Title>{data.title}</Title>
     <Subtitle>
       {data.subtitle.map((item, index) => (

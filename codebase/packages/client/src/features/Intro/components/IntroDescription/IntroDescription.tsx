@@ -17,11 +17,10 @@ const IntroDescription: FC<Props> = ({ onClick, isOpen }) => {
   const showReadMore = isTablet;
   const adjustedIsOpen = showReadMore ? isOpen : true;
 
-
   return (
-    <Wrapper>
+    <Wrapper data-testid='intro-description'>
       <Title>{data.description.title}</Title>
-      <Content isOpen={adjustedIsOpen}>
+      <Content data-testid='intro-description-content' isOpen={adjustedIsOpen}>
         {data.description.content.map((item, index) => (
           <p key={index}>{item}</p>
         ))}

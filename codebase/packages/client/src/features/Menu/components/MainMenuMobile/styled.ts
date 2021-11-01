@@ -42,8 +42,7 @@ export const LinkWrapper = styled(Link)<{ active?: boolean }>`
   &:last-child {
     display: flex;
     flex-direction: column;
-    margin: auto;
-    margin-bottom: 15vh;
+    margin: auto auto 5vh;
     border-top: none;
     line-height: 40px;
     width: 100%;

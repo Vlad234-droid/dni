@@ -12,7 +12,7 @@ import { Wrapper, Title, List } from './styled';
 import NetworkUpdatesItem, { UpdateItem } from '../NetworkUpdatesItem';
 import DefaultLogo from '../../assets/colleague-network-logo.jpg';
 
-const NETWORK_UPDATES_TEST_ID = 'network-updates-test-id';
+const TEST_ID = 'network-updates';
 
 const NetworkUpdates: FC = () => {
   const [items, setItems] = useState<Array<UpdateItem & { key: string | number }>>([]);
@@ -52,7 +52,7 @@ const NetworkUpdates: FC = () => {
   }, [items, error, loading]);
 
   return (
-    <Wrapper data-testid={NETWORK_UPDATES_TEST_ID}>
+    <Wrapper data-testid={TEST_ID}>
       <Title>Updates in my Networks</Title>
       {memoizedContent}
       <Link to={Page.NETWORKS}>
@@ -64,6 +64,6 @@ const NetworkUpdates: FC = () => {
   );
 };
 
-export { NETWORK_UPDATES_TEST_ID };
+export { TEST_ID };
 
 export default NetworkUpdates;

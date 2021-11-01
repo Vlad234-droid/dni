@@ -168,7 +168,7 @@ const PostList: FC<Props> = ({ entityId, filter = ALL }) => {
   }, [error, posts, loading, total]);
 
   return (
-    <>
+    <div data-testid='posts-list'>
       <CanPerform
         perform={buildAction(Component.POST_ARCHIVED, Action.LIST)}
         yes={() => (
@@ -186,7 +186,7 @@ const PostList: FC<Props> = ({ entityId, filter = ALL }) => {
         )}
       />
       {memoizedContent}
-    </>
+    </div>
   );
 };
 
