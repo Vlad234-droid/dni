@@ -57,7 +57,6 @@ const Wrapper = styled.div<{ isOpen: boolean }>`
 
   button {
     position: relative;
-    //height: unset;
     box-shadow: none;
     width: 100%;
     height: 100%;
