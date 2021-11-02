@@ -1,8 +1,8 @@
-import armedImage from './assets/armed-forces.jpg';
-import bameImage from './assets/bame.jpg';
-import disabilityImage from './assets/disability.jpg';
-import lgbtImage from './assets/lgbtq.jpg';
-import womenImage from './assets/women.jpg';
+import armedImage from '../assets/armed-forces.jpg';
+import raceAndEthnicityImage from '../assets/race-and-ethnicity.jpg';
+import disabilityImage from '../assets/disability.jpg';
+import lgbtImage from '../assets/lgbtq.jpg';
+import womenImage from '../assets/women.jpg';
 
 export default [
   {
@@ -17,12 +17,12 @@ export default [
   },
   {
     id: 2,
-    title: 'BAME at Tesco',
+    title: 'Race & Ethnicity at Tesco',
     description: [
-      'Supporting and encouraging more BAME colleagues to develop their careers with Tesco and helping connect colleagues with a similar interest and background.',
+      'Supporting and encouraging more ethnic diverse colleagues to develop their careers with Tesco and let Black Asian Minority Ethnics in the wider community know that Tesco is a great place to work.',
     ],
     image: {
-      src: bameImage,
+      src: raceAndEthnicityImage,
     },
   },
   {

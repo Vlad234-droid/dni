@@ -5,7 +5,7 @@ import { useMedia } from 'context/InterfaceContext';
 import { CarouselContent } from 'features/MainCarousel';
 import Carousel from 'features/Carousel';
 
-import networks from '../../networks';
+import networks from '../../config/networks-data';
 
 const AUTO_SLIDE_INTERVAL = 10000;
 const MOBILE_ADDITION = 140;
