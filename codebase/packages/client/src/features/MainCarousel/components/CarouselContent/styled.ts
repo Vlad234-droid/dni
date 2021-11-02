@@ -15,15 +15,19 @@ export const Wrapper = styled.div`
   `}
 `;
 
-export const ContentWrapper = styled.div.attrs((props) => ({
-  className: props.className,
-}))`
+export const ContentWrapper = styled.div`
   color: ${({ theme }) => theme.colors.white};
   padding: 32px 16px;
+  height: calc(470px - (100vw - 320px));
+
+  ${Media.large_phone`
+      height: calc((300px - (100vw - 540px) / 6));
+  `}
 
   ${Media.tablet`
     max-width: 568px;
     padding: 48px 24px 48px 48px;
+    height: auto;
   `}
 
   ${Media.desktop`
@@ -43,23 +47,8 @@ export const Title = styled.h2`
   `}
 `;
 
-export const Description = styled.div<{ isOpen: boolean }>`
+export const Description = styled.div`
   ${textSM};
-
-  &:last-child {
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: ${({ isOpen }) => (isOpen ? 'auto' : '5')};
-    overflow: ${({ isOpen }) => (isOpen ? 'visible' : 'hidden')};
-  }
-
-  &:not(:last-child) {
-    margin-bottom: 16px;
-  }
-
-  p {
-    display: contents !important;
-  }
 `;
 
 export const DescriptionWrapper = styled.div`
@@ -67,7 +56,7 @@ export const DescriptionWrapper = styled.div`
   padding-right: 16px;
 `;
 
-export const Image = styled.img<{ isOpen: boolean }>`
+export const Image = styled.img`
   object-fit: cover;
   object-position: top;
   height: 150px;
@@ -78,6 +67,6 @@ export const Image = styled.img<{ isOpen: boolean }>`
 
   ${Media.tablet`
     max-width: 50%;
-    height: 390px;
+    height: 494px;
   `}
 `;

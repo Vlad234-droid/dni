@@ -17,7 +17,6 @@ const IntroDescription: FC<Props> = ({ onClick, isOpen }) => {
   const showReadMore = isTablet;
   const adjustedIsOpen = showReadMore ? isOpen : true;
 
-
   return (
     <Wrapper>
       <Title>{data.description.title}</Title>

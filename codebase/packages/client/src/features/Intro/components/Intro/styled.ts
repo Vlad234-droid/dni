@@ -21,4 +21,14 @@ export const Content = styled.div`
     flex-direction: row;
     align-items: flex-start;
   `}
+
+  ${Media.small_desktop`
+    flex-direction: column;
+    align-items: center;
+  `}
+
+  ${Media.desktop`
+    flex-direction: row;
+    align-items: flex-start;
+  `}
 `;
