@@ -8,10 +8,10 @@ import Event from 'features/Event';
 import { headingSM } from 'styles';
 import { useMedia } from 'context/InterfaceContext';
 import Carousel from 'features/Carousel';
+import useStore from 'hooks/useStore';
 
 import NetworkPartnersList from './NetworkPartnersList';
 import NetworkAction from '../NetworkAction';
-import useStore from '../../../../hooks/useStore';
 
 type Props = {
   email?: string;

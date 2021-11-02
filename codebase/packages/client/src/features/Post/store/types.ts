@@ -7,7 +7,6 @@ import { Post } from '../config/types';
 const ROOT = 'posts';
 const LIST_ACTION = `${ROOT}/list`;
 const ONE_ACTION = `${ROOT}/one`;
-const SET_ONE_ACTION = `${ROOT}/set_one`;
 const COUNT_ACTION = `${ROOT}/count`;
 
 const EntityAdapter = createEntityAdapter<Post>();
@@ -50,6 +49,5 @@ export {
   ROOT,
   LIST_ACTION,
   ONE_ACTION,
-  SET_ONE_ACTION,
   COUNT_ACTION,
 };
