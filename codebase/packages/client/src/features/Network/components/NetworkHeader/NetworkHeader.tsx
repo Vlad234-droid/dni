@@ -1,6 +1,7 @@
 import React, { FC, useState } from 'react';
 import Link from '@beans/link';
 import Button from '@beans/button';
+import Modal from '@beans/modal';
 
 import { useMedia } from 'context/InterfaceContext';
 import { CopyLink, TextWithEllipsis } from 'features/Common';
@@ -19,7 +20,6 @@ import {
   ModalTitle,
   CopyLinkWrapper,
 } from './styled';
-import Modal from '@beans/modal';
 
 type Props = {
   id: number;

@@ -1,21 +1,20 @@
 import React, { FC, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { yupResolver } from '@hookform/resolvers/yup';
 import CheckboxWithLabel from '@beans/checkbox-with-label';
 import FormGroup from '@beans/form-group';
 import Link from '@beans/link';
 import Button from '@beans/button';
-import omit from 'lodash.omit';
 
 import { FieldWrapper, TextArea, TextInput } from 'features/Common';
 import { LINKS } from 'config/constants';
 import { ToastSkin, toasterActions } from 'features/Toaster';
-import { byIdSelector } from 'features/Network';
+import { shareStory } from 'features/Auth';
 
+import { FormData } from '../../config/types';
 import formSchema from '../../config/schema';
 import { Wrapper, Buttons } from './styled';
-import { createOne, SetOnePayload } from '../../store';
 
 type Props = {
   entityId: number;
@@ -24,7 +23,6 @@ type Props = {
 
 const PostCreate: FC<Props> = ({ entityId, onClose }) => {
   const dispatch = useDispatch();
-  const network = useSelector(byIdSelector(entityId));
 
   const [isAccepted, setAccepted ] = useState(false)
 
@@ -33,17 +31,16 @@ const PostCreate: FC<Props> = ({ entityId, onClose }) => {
   });
 
   const onSubmit = async (data: FormData) => {
-    // TODO: id of user?
+
+    // TODO: pass here networkTitle or networkId
     const result = await dispatch(
-      createOne({
-        ...omit(data, 'confirm'),
-        network: network,
-        anonymous: false,
-        archived: false,
-      } as unknown as SetOnePayload),
+      shareStory({
+        title: data.title,
+        story: data.content,
+      }),
     );
     // @ts-ignore
-    if (createOne.fulfilled.match(result)) {
+    if (shareStory.fulfilled.match(result)) {
       dispatch(
         toasterActions.createToast({
           skin: ToastSkin.ENTITY_CREATE_SUCCESS,
@@ -67,7 +64,6 @@ const PostCreate: FC<Props> = ({ entityId, onClose }) => {
             domRef={register}
             name={'title'}
             placeholder={'Input title...'}
-            // @ts-ignore
             error={errors['title']?.message}
             id={'title'}
             hideLabel
@@ -93,7 +89,6 @@ const PostCreate: FC<Props> = ({ entityId, onClose }) => {
               labelText='I agree to provide my personal story/data for the publication within this network, including the moderation version of my story'
               checked={isAccepted}
               onChange={() => setAccepted(!isAccepted)}
-              // @ts-ignore
               domRef={register}
               name={'confirm'}
               required

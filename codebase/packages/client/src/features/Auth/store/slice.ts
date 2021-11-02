@@ -172,6 +172,7 @@ export {
   leaveNetwork,
   joinEvent,
   leaveEvent,
+  shareStory,
 };
 
 export default slice.reducer;
