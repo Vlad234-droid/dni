@@ -8,9 +8,8 @@ import Event from 'features/Event';
 import { headingSM } from 'styles';
 import { useMedia } from 'context/InterfaceContext';
 import Carousel from 'features/Carousel';
-import useStore from 'hooks/useStore';
 
-import NetworkPartnersList from './NetworkPartnersList';
+import NetworkPartnersList from '../Network/NetworkPartnersList';
 import NetworkAction from '../NetworkAction';
 
 type Props = {
@@ -20,36 +19,43 @@ type Props = {
   onLeave?: () => void;
   onJoin: () => void;
   events: Event[];
+  networksIds: number[];
 };
 
-const NetworkPartners: FC<Props> = ({ email, partners, id, events, onJoin, onLeave }) => {
+const NetworkPartners: FC<Props> = ({ email, partners, id, events, onJoin, onLeave, networksIds }) => {
   const { isMobile, isLargeMobile } = useMedia();
-  const { networks = [] } = useStore((state) => state.auth.user);
-  const isJoined = networks.includes(+id);
+  const isJoined = networksIds.includes(+id);
+  const displayPartnersBlock = Boolean(partners && partners.length > 0);
 
-  if (partners && (isMobile || isLargeMobile)) {
+  if (isMobile || isLargeMobile) {
     return (
       <>
-        <LeaveBtnWrapper>
+        <LeaveBtnWrapper withMargin={displayPartnersBlock}>
           <NetworkAction {...{ id, onLeave, onJoin, events }} />
         </LeaveBtnWrapper>
-        <Title>Network Partnership</Title>
-        <Carousel itemWidth='170px' id='partners-carousel'>
-          {partners.map(({ image, id }) => (
-            <ResponsiveImage
-              key={id}
-              alt={image?.alternativeText}
-              title={image?.alternativeText}
-              src={image?.url}
-              fallbackSizeRatio='57%'
-              maxWidth='170px'
-              objectFit='contain'
-            />
-          ))}
-        </Carousel>
+        {displayPartnersBlock && (
+          <>
+            <Title>Network Partnership</Title>
+            <Carousel itemWidth='170px' id='partners-carousel'>
+              {partners!.map(({ image, id }) => (
+                <ResponsiveImage
+                  key={id}
+                  alt={image?.alternativeText}
+                  title={image?.alternativeText}
+                  src={image?.url}
+                  fallbackSizeRatio='57%'
+                  maxWidth='170px'
+                  objectFit='contain'
+                />
+              ))}
+            </Carousel>
+          </>
+        )}
       </>
     );
   }
+
+  if (!email && !isJoined && !displayPartnersBlock) return null;
 
   return (
     <>
@@ -60,14 +66,14 @@ const NetworkPartners: FC<Props> = ({ email, partners, id, events, onJoin, onLea
         </Item>
       )}
       {isJoined && (
-        <LeaveBtnWrapper>
+        <LeaveBtnWrapper withMargin>
           <NetworkAction {...{ id, onLeave, onJoin, events }} />
         </LeaveBtnWrapper>
       )}
-      {partners && (
+      {displayPartnersBlock && (
         <Item>
           <Title>Network Partnership</Title>
-          <NetworkPartnersList partners={partners} />
+          <NetworkPartnersList partners={partners!} />
         </Item>
       )}
     </>
@@ -85,10 +91,10 @@ const Title = styled.h5`
   margin-bottom: 14px;
 `;
 
-const LeaveBtnWrapper = styled.div`
+const LeaveBtnWrapper = styled.div<{ withMargin: boolean }>`
   display: flex;
   justify-content: flex-end;
-  margin-bottom: 20px;
+  margin-bottom: ${({ withMargin }) => withMargin ? '20px' : '0'};
 `;
 
 export default NetworkPartners;

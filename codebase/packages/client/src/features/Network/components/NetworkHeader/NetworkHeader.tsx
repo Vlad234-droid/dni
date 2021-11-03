@@ -56,7 +56,7 @@ const NetworkHeader: FC<Props> = ({ id, title, email, onLeave, onJoin, events })
         >
           <ModalContent>
             <ModalTitle>Please, input your story below</ModalTitle>
-            <PostCreate entityId={id} onClose={handleCloseModal} />
+            <PostCreate networkTitle={title} onClose={handleCloseModal} />
           </ModalContent>
         </Modal>
       )}

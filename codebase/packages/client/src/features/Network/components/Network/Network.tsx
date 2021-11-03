@@ -16,7 +16,7 @@ import { LINKS } from 'config/constants';
 import defaultImage from 'assets/pride-logo.jpg';
 
 import { byIdSelector, getOne } from '../../store';
-import NetworkPartners from './NetworkPartners';
+import NetworkPartners from '../NetworkPartners';
 import NetworkHeader from '../NetworkHeader';
 import { Wrapper, Content, LeftContent, RightContent, DescriptionWrapper, DescriptionTitle } from './styled';
 

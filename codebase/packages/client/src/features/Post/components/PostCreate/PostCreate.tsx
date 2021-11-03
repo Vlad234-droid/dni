@@ -17,11 +17,11 @@ import formSchema from '../../config/schema';
 import { Wrapper, Buttons } from './styled';
 
 type Props = {
-  entityId: number;
+  networkTitle: string;
   onClose: () => void;
 };
 
-const PostCreate: FC<Props> = ({ entityId, onClose }) => {
+const PostCreate: FC<Props> = ({ networkTitle, onClose }) => {
   const dispatch = useDispatch();
 
   const [isAccepted, setAccepted ] = useState(false)
@@ -37,6 +37,7 @@ const PostCreate: FC<Props> = ({ entityId, onClose }) => {
       shareStory({
         title: data.title,
         story: data.content,
+        networkTitle,
       }),
     );
     // @ts-ignore

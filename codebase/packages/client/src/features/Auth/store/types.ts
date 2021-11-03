@@ -47,6 +47,7 @@ type ValidationError = {
 type ShareStoryPayload = {
   title: string;
   story: string;
+  networkTitle: string;
 };
 
 type ShareStoryResponse = {
