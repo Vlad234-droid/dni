@@ -12,18 +12,16 @@ type Props = {
   aspectRatio: number;
 };
 
-const WistiaPlayer: React.FC<Props> = ({ videoId, aspectRatio }) => {
-  return (
-    <Container background='backgroundDark' aspectRatio={aspectRatio}>
-      <IFrame
-        src={`https://fast.wistia.net/embed/iframe/${videoId}?videoFoam=true`}
-        frameBorder='0'
-        allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture'
-        allowFullScreen
-      />
-    </Container>
-  );
-};
+const WistiaPlayer: React.FC<Props> = ({ videoId, aspectRatio }) => (
+  <Container background='backgroundDark' aspectRatio={aspectRatio}>
+    <IFrame
+      src={`https://fast.wistia.net/embed/iframe/${videoId}?videoFoam=true`}
+      frameBorder='0'
+      allow='accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture'
+      allowFullScreen
+    />
+  </Container>
+);
 
 const Container = styled(Box)<ContainerProps>`
   height: 0;

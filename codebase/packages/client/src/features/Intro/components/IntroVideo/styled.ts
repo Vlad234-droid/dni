@@ -17,7 +17,7 @@ const Label = styled.div`
 
 const Wrapper = styled.div`
   position: absolute;
-  bottom: -113px;
+  bottom: -143px;
   display: flex;
   justify-content: center;
 
@@ -38,6 +38,10 @@ const Wrapper = styled.div`
       box-shadow: none;
   `}
   }
+
+  // ${Media.large_phone`
+  //   bottom: -150px;
+  // `}
 
   ${Media.tablet`
     position: static;

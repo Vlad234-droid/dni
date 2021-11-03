@@ -16,7 +16,7 @@ export default [
   {
     id: 2,
     title: 'Race & Ethnicity at Tesco',
-    description: 'Supporting and encouraging more ethnic diverse colleagues to develop their careers with Tesco and let Black Asian Minority Ethnics in the wider community know that Tesco is a great place to work.',
+    description: 'Supporting and encouraging ethnically diverse colleagues to be the best they can be, whilst engaging with the wider community, for a more inclusive future.',
     image: {
       src: raceAndEthnicityImage,
     },

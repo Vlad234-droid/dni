@@ -22,4 +22,5 @@ export { default as Error } from './components/Error';
 export { default as TextWithEllipsis } from './components/TextWithEllipsis';
 export { default as CMSLink } from './components/CMSLink';
 export { default as ConfirmationModal } from './components/ConfirmationModal';
+export { default as WistiaPlayer } from './components/WistiaPlayer';
 export { FieldWrapper } from './styled';
