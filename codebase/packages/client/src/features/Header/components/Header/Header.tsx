@@ -5,7 +5,7 @@ import { MenuDesktop, MainMenuMobile } from 'features/Menu';
 import Toaster from 'features/Toaster';
 import { useMedia } from 'context/InterfaceContext';
 import NotificationSidebar, { NotificationRing } from 'features/Notification';
-import Accessibility, { Mode } from 'features/Accessibility';
+import { Mode, AccessibilityButton } from 'features/Accessibility';
 
 import { Wrapper, Icons, IconWrapper, ToasterWrapper, MenuWrapper, Title, Aside } from './styled';
 
@@ -29,7 +29,7 @@ const Header: FC = () => {
       {!isDesktop && isOpened && <MainMenuMobile onClose={handleCloseMenu} />}
       {!isDesktop && <Title>{'Diversity & Inclusion'}</Title>}
       <Aside>
-        {(isTablet || isLargeMobile) && <Accessibility mode={Mode.LIGHT} top={'42px'} />}
+        {(isTablet || isLargeMobile) && <AccessibilityButton mode={Mode.LIGHT} top={'42px'} />}
         <Icons>
           <IconWrapper>
             <NotificationRing buttonRef={buttonRef} inverse={!isDesktop} />

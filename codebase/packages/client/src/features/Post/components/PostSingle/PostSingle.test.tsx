@@ -11,7 +11,6 @@ import PostSingle from './PostSingle';
 
 describe('<PostSingle />', () => {
   const mock = new MockAdapter(axios);
-  const renderOptions = { roles: [UserRole.EMPLOYEE], events: [], networks: [] };
 
   beforeAll(() => {
     mock.reset();
@@ -33,7 +32,7 @@ describe('<PostSingle />', () => {
         ...props,
         loading: Loading.PENDING,
       };
-      const { getByTestId, queryByTestId } = render(<PostSingle {...newProps} />, renderOptions);
+      const { getByTestId, queryByTestId } = render(<PostSingle {...newProps} />);
 
       expect(getByTestId('spinner')).toBeInTheDocument();
       expect(queryByTestId('post-item')).not.toBeInTheDocument();
@@ -47,7 +46,7 @@ describe('<PostSingle />', () => {
       };
 
       const { getByText, getByTestId, queryByTestId } = render(
-        <PostSingle {...newProps} />, renderOptions
+        <PostSingle {...newProps} />
       );
 
       expect(getByTestId('error')).toBeInTheDocument();
@@ -67,7 +66,7 @@ describe('<PostSingle />', () => {
       };
 
       const { getByText, getByTestId, queryByTestId } = render(
-        <PostSingle {...newProps} />, renderOptions
+        <PostSingle {...newProps} />
       );
 
       expect(getByTestId('error')).toBeInTheDocument();
@@ -90,7 +89,7 @@ describe('<PostSingle />', () => {
       };
 
       const { getByText, getByTestId, queryByTestId } = render(
-        <PostSingle {...newProps} />, renderOptions,
+        <PostSingle {...newProps} />,
       );
 
       expect(getByTestId('empty-container')).toBeInTheDocument();
@@ -111,7 +110,7 @@ describe('<PostSingle />', () => {
         },
       };
 
-      const { getByTestId, queryByTestId } = render(<PostSingle {...newProps} />, renderOptions);
+      const { getByTestId, queryByTestId } = render(<PostSingle {...newProps} />);
 
       expect(getByTestId('post-item')).toBeInTheDocument();
       expect(queryByTestId('empty-container')).not.toBeInTheDocument();
@@ -133,7 +132,7 @@ describe('<PostSingle />', () => {
         post,
       };
 
-      render(<PostSingle {...props} />, renderOptions);
+      render(<PostSingle {...props} />);
 
       expect(props.loadPost).toHaveBeenCalledTimes(1);
     });

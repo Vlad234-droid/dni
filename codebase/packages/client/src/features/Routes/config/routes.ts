@@ -12,6 +12,7 @@ const routes = [
   Page.REPORTS,
   Page.PROFILE,
   Page.NOTIFICATION_SETTINGS,
+  Page.ACCESSIBILITY,
   //Page.UNAUTHORIZED,
   Page.FORBIDDEN,
   Page.SERVER_ERROR,

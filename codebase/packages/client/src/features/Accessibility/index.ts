@@ -1,2 +1,2 @@
-export { default } from './components';
 export { Mode } from './types';
+export * from './components';

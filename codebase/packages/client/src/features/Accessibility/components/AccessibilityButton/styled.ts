@@ -1,50 +1,7 @@
-import React, {FC, useState} from 'react';
 import styled from 'styled-components';
-import Button from '@beans/button';
-import Icon from '@beans/icon';
-import Link from '@beans/link';
 
 import Media from 'styles/media';
-import { useMedia } from 'context/InterfaceContext';
-
-import { Mode } from '../types';
-
-type Props = {
-  mode: Mode;
-  top?: string;
-  bottom?: string;
-  height?: string;
-}
-
-const Accessibility: FC<Props> = ({ mode, top = '0', bottom = '0' }) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const { isMobile } = useMedia();
-
-  const handleButtonClick = () => {
-    setIsOpen((isOpen) => !isOpen);
-  }
-
-  return (
-    <Wrapper data-testid='accessibility' isOpen={isOpen}>
-      <Button inverse={mode == Mode.LIGHT || (isMobile && !isOpen)} onClick={handleButtonClick}>
-        Accessibility
-        <Icon graphic={isOpen ? 'contract' : 'expand'} />
-      </Button>
-      {isOpen && (
-        <Content mode={mode} top={top}>
-          <ContentInner>
-            <LinkWrapper>
-              <Link inverse={mode == Mode.LIGHT} href={'#'}>Information</Link>
-            </LinkWrapper>
-            <LinkWrapper>
-              <Link inverse={mode == Mode.LIGHT} href={'#'}>Toolbar (Reciteme)</Link>
-            </LinkWrapper>
-          </ContentInner>
-        </Content>
-      )}
-    </Wrapper>
-  );
-};
+import { Mode } from '../../types';
 
 const Wrapper = styled.div<{ isOpen: boolean }>`
   width: 100%;
@@ -139,4 +96,4 @@ const LinkWrapper = styled.div`
   `}
 `;
 
-export default Accessibility;
+export { Wrapper, Content, ContentInner, LinkWrapper };

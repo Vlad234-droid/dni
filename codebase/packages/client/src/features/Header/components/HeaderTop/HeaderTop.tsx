@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import styled from 'styled-components';
 
-import Accessibility, { Mode } from 'features/Accessibility';
+import { Mode, AccessibilityButton } from 'features/Accessibility';
 
 import HeaderLink from '../HeaderLink';
 
@@ -11,7 +11,7 @@ const HeaderTop: FC = () => {
 
   return (
     <Wrapper data-testid='header-top'>
-      <Accessibility mode={Mode.DARK} top={'36px'} />
+      <AccessibilityButton mode={Mode.DARK} top={'36px'} />
       <HeaderLink />
     </Wrapper>
   )

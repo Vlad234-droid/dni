@@ -4,7 +4,7 @@ import Button from '@beans/button';
 import Link from '@beans/link';
 
 import { LINKS } from 'config/constants';
-import Accessibility, { Mode } from 'features/Accessibility';
+import { Mode, AccessibilityButton } from 'features/Accessibility';
 
 import { mainMenuItems } from '../../config/items';
 import HelpLink from '../HelpLink';
@@ -31,7 +31,7 @@ const MainMenuMobile: FC<Props> = ({ onClose }) => (
         </LinkWrapper>
       ))}
       <LinkWrapper>
-        <Accessibility mode={Mode.DARK} top={'unset'} />
+        <AccessibilityButton mode={Mode.DARK} top={'unset'} />
       </LinkWrapper>
       <LinkWrapper href={LINKS.signOut}>Sign out</LinkWrapper>
     </>

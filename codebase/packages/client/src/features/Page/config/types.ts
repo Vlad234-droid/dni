@@ -12,6 +12,7 @@ enum Page {
   REPORTS = 'reports',
   PROFILE = 'profile',
   NOTIFICATION_SETTINGS = 'notification/settings',
+  ACCESSIBILITY = 'accessibility',
   //UNAUTHORIZED = '401',
   FORBIDDEN = '403',
   SERVER_ERROR = '500',

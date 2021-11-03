@@ -9,6 +9,7 @@ import Network from '../components/Network';
 import NetworkNews from '../components/NetworkNews';
 import NotFound from '../components/NotFound';
 import ServerError from '../components/ServerError';
+import Accessibility from '../components/Accessibility';
 // import Unauthorized from '../components/Unauthorized';
 import Forbidden from '../components/Forbidden';
 import Reports from '../components/Reports';
@@ -27,6 +28,7 @@ const pages: Record<Page, PageElement> = {
   [Page.REPORTS]: Reports,
   [Page.PROFILE]: Profile,
   [Page.NOTIFICATION_SETTINGS]: Notifications,
+  [Page.ACCESSIBILITY]: Accessibility,
   // [Page.UNAUTHORIZED]: Unauthorized,
   [Page.FORBIDDEN]: Forbidden,
   [Page.SERVER_ERROR]: ServerError,
