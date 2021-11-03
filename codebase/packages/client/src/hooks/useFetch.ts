@@ -55,7 +55,7 @@ function useFetch<T, R = T>(initialValue: R | null = null): Response<T, R> {
           setResponse(responseHandler.current(response));
           setLoading(Loading.SUCCEEDED);
         } catch (error) {
-          setError(error.message);
+          setError(error.data?.error || error.message);
           setLoading(Loading.FAILED);
         }
       }

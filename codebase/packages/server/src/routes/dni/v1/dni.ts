@@ -18,7 +18,7 @@ import {
   addPersonalEmail,
   refreshPersonalEmail,
   shareStory,
-  confirmPersonalEmailChange,
+  sendPersonalEmailConfirmation,
   refreshPersonalEmailByToken,
   // notification
   getNotifications,
@@ -55,7 +55,7 @@ dniApi.get('/employees/personal-email', getPersonalEmail);
 dniApi.post('/employees/personal-email', addPersonalEmail);
 dniApi.put('/employees/personal-email/:addressId', refreshPersonalEmail);
 dniApi.post('/employees/personal-email/:token', refreshPersonalEmailByToken);
-dniApi.post('/employees/confirm-personal-email', confirmPersonalEmailChange);
+dniApi.post('/employees/confirm-personal-email', sendPersonalEmailConfirmation);
 dniApi.post('/employees/share-story', shareStory);
 
 dniApi.get('/events/participants', getEventsParticipants);
