@@ -35,7 +35,7 @@ const PostCreate: FC<Props> = ({ networkTitle, onClose }) => {
     // TODO: pass here networkTitle or networkId
     const result = await dispatch(
       shareStory({
-        title: data.title,
+        storyTitle: data.title,
         story: data.content,
         networkTitle,
       }),
