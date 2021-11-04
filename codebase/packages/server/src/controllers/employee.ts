@@ -182,9 +182,10 @@ const sendPersonalEmailConfirmation: Handler = async (req: Request, res: Respons
     const { emailAddress: markdownEmailAddress } = req.body;
 
     const token = uuidv4();
+    const EXPIRATION_HOUR = 8;
 
     const tokenSettings = await storeTokenSettings(colleagueUUID!, {
-      expires: String(Date.now()),
+      expires: String(new Date().getTime() + EXPIRATION_HOUR * 60 * 60 * 1000),
       token: token,
       payload: req.body,
     });
