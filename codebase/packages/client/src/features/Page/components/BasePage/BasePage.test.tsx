@@ -1,6 +1,7 @@
 import React from 'react';
 
 import { render } from 'utils/testUtils';
+import { InterfaceContext } from 'context/InterfaceContext';
 
 import BasePage from './BasePage';
 
@@ -29,10 +30,26 @@ describe('<BasePage />', () => {
     expect(getByText('Privacy Policy')).toBeInTheDocument();
   });
 
-  // TODO:
-  // it('should render menu-mobile, if mobile version', () => {
-  //   const { getByTestId } = render(<BasePage renderMain={renderMain} />);
-  //
-  //   expect(getByTestId('menu-mobile')).toBeInTheDocument();
-  // });
+  it('should render menu-mobile, if mobile version', () => {
+    const interfaceContextValueMock = {
+      viewport: 320,
+      isMobile: true,
+      isLargeMobile: false,
+      isTablet: false,
+      isDesktop: false,
+      lt: jest.fn(),
+      lte: jest.fn(),
+      gt: jest.fn(),
+      gte: jest.fn(),
+    };
+
+    const { getByTestId } = render(
+      <InterfaceContext.Provider
+        value={interfaceContextValueMock}
+      >
+        <BasePage renderMain={renderMain} />
+      </InterfaceContext.Provider>);
+
+    expect(getByTestId('menu-mobile')).toBeInTheDocument();
+  });
 });

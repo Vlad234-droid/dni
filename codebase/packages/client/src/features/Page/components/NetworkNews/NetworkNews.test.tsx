@@ -22,13 +22,17 @@ describe('<NetworkNews /> page', () => {
   });
 
   // TODO:
-  it('should render EventSidebar component and PostSingle, if id in params', () => {
-    const { getByTestId } = render(
-      <Route path={'/network-news/12345'}>
-        <NetworkNews />
-      </Route>,
-      {route: 'network-news/12345'});
-
-    // expect(history.location.pathname).toEqual('network-news/12345');
-  });
+  // fit('should render EventSidebar component and PostSingle, if id in params', () => {
+  //   const { getByTestId } = render(
+  //     <Route path={'network-news/:id'}>
+  //       <NetworkNews />
+  //     </Route>,
+  //     {route: 'network-news/12345'});
+  //
+  //   // @ts-ignore
+  //   // expect(history.location.pathname).toEqual('network-news/12345');
+  //
+  //   expect(getByTestId('events-sidebar')).toBeInTheDocument();
+  //   expect(getByTestId('posts-single')).toBeInTheDocument();
+  // });
 });
