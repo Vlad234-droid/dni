@@ -6,7 +6,6 @@ import Modal from '@beans/modal';
 import { useMedia } from 'context/InterfaceContext';
 import { CopyLink, TextWithEllipsis } from 'features/Common';
 import Event from 'features/Event';
-import useStore from 'hooks/useStore';
 import { PostCreate } from 'features/Post';
 
 import NetworkAction from '../NetworkAction';
@@ -28,13 +27,13 @@ type Props = {
   onLeave: () => void;
   onJoin: () => void;
   events: Event[];
+  networks: number[];
 };
 
-const NetworkHeader: FC<Props> = ({ id, title, email, onLeave, onJoin, events }) => {
-  const { networks = [] } = useStore((state) => state.auth.user);
-  const isJoined = networks.includes(+id);
+const NetworkHeader: FC<Props> = ({ id, title, email, onLeave, onJoin, events, networks }) => {
   const { isMobile, isLargeMobile } = useMedia();
   const isMobileView = isMobile || isLargeMobile;
+  const isJoined = networks.includes(+id);
   const [isOpen, setIsOpen] = useState(false);
 
   const handleShareStory = () => {
@@ -44,7 +43,7 @@ const NetworkHeader: FC<Props> = ({ id, title, email, onLeave, onJoin, events })
   const handleCloseModal = () => setIsOpen(false);
 
   return (
-    <Wrapper id='network-header'>
+    <Wrapper data-testid='network-header' id='network-header'>
       {isOpen && (
         <Modal
           open={isOpen}

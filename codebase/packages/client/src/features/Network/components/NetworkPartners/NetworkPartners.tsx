@@ -27,6 +27,11 @@ const NetworkPartners: FC<Props> = ({ email, partners, id, events, onJoin, onLea
   const isJoined = networksIds.includes(+id);
   const displayPartnersBlock = Boolean(partners && partners.length > 0);
 
+  console.log('partners', partners);
+  console.log('displayPartnersBlock', displayPartnersBlock);
+  console.log('isMobile', isMobile);
+  console.log('isLargeMobile', isLargeMobile);
+
   if (isMobile || isLargeMobile) {
     return (
       <>

@@ -1,6 +1,5 @@
 import React, { FC, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useDispatch } from 'react-redux';
 import { yupResolver } from '@hookform/resolvers/yup';
 import CheckboxWithLabel from '@beans/checkbox-with-label';
 import FormGroup from '@beans/form-group';
@@ -9,61 +8,36 @@ import Button from '@beans/button';
 
 import { FieldWrapper, TextArea, TextInput } from 'features/Common';
 import { LINKS } from 'config/constants';
-import { ToastSkin, toasterActions } from 'features/Toaster';
-import { shareStory } from 'features/Auth';
 
-import { FormData } from '../../config/types';
 import formSchema from '../../config/schema';
 import { Wrapper, Buttons } from './styled';
+import { FormData } from '../../config/types';
 
 type Props = {
-  networkTitle: string;
   onClose: () => void;
+  onSubmit: (data: FormData) => Promise<void>;
 };
 
-const PostCreate: FC<Props> = ({ networkTitle, onClose }) => {
-  const dispatch = useDispatch();
-
+const PostCreate: FC<Props> = ({ onClose, onSubmit }) => {
   const [isAccepted, setAccepted ] = useState(false)
 
   const { handleSubmit, errors, register } = useForm({
     resolver: yupResolver(formSchema),
   });
 
-  const onSubmit = async (data: FormData) => {
-
-    // TODO: pass here networkTitle or networkId
-    const result = await dispatch(
-      shareStory({
-        storyTitle: data.title,
-        story: data.content,
-        networkTitle,
-      }),
-    );
-    // @ts-ignore
-    if (shareStory.fulfilled.match(result)) {
-      dispatch(
-        toasterActions.createToast({
-          skin: ToastSkin.ENTITY_CREATE_SUCCESS,
-        }),
-      );
-    } else {
-      dispatch(
-        toasterActions.createToast({
-          skin: ToastSkin.ENTITY_CREATE_ERROR,
-        }),
-      );
-    }
-  };
+  const submitForm = (data: FormData) => {
+    onSubmit(data);
+  }
 
   return (
-    <Wrapper>
-      <form onSubmit={handleSubmit(onSubmit)} noValidate>
+    <Wrapper data-testid='post-create'>
+      <form onSubmit={handleSubmit(submitForm)} noValidate>
         <FieldWrapper>
           <TextInput
             // @ts-ignore
             domRef={register}
             name={'title'}
+            aria-label={'title'}
             placeholder={'Input title...'}
             error={errors['title']?.message}
             id={'title'}
@@ -75,9 +49,10 @@ const PostCreate: FC<Props> = ({ networkTitle, onClose }) => {
           <TextArea
             // @ts-ignore
             domRef={register}
-            name={'content'}
+            aria-label={'story'}
+            name={'story'}
             placeholder={'Input story...'}
-            error={errors['content']?.message}
+            error={errors['story']?.message}
             hideLabel
             required
           />

@@ -16,6 +16,7 @@ import theme from 'theme';
 import store from 'store';
 import Auth, { AuthProvider } from 'features/Auth';
 import rootReducer from 'store/rootReducer';
+import { UserRole } from 'features/User';
 
 const WithThemeProvider: FC = ({ children }) => (
   <ThemeProvider theme={theme}>
@@ -58,9 +59,9 @@ const render = (
       initialState,
       applyMiddleware(thunkMiddleware),
     ),
-    roles,
-    events,
-    networks,
+    roles = [UserRole.EMPLOYEE],
+    events = [],
+    networks = [],
     ...renderOptions
   }: // eslint-disable-next-line @typescript-eslint/no-explicit-any
   any = {},
