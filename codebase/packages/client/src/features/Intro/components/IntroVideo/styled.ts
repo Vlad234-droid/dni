@@ -39,10 +39,6 @@ const Wrapper = styled.div`
   `}
   }
 
-  // ${Media.large_phone`
-  //   bottom: -150px;
-  // `}
-
   ${Media.tablet`
     position: static;
     bottom: 0;
