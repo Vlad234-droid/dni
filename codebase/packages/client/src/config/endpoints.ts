@@ -47,6 +47,7 @@ export enum Endpoint {
   // contact
   CONTACT_PERSONAL_EMAIL = '/dni/v1/employees/personal-email',
   CONTACT_EMAIL_NOTIFICATIONS_SETTINGS = '/dni/v1/employees/email-notifications-settings',
+  CONTACT_REQUEST_CONFIRM_PERSONAL_EMAIL = '/dni/v1/employees/confirm-personal-email',
 }
 
 export default (httpClient: AxiosInstance) => ({
@@ -107,10 +108,18 @@ export default (httpClient: AxiosInstance) => ({
     getNotificationsSettings: <T>() => httpClient.get<T>(Endpoint.CONTACT_EMAIL_NOTIFICATIONS_SETTINGS),
     updateNotificationsSettings: <T>(data: Config = {}) =>
       httpClient.post<T>(Endpoint.CONTACT_EMAIL_NOTIFICATIONS_SETTINGS, data),
+    sendPersonalEmailConfirmation: <T>(data: Config = {}) =>
+      httpClient.post<T>(Endpoint.CONTACT_REQUEST_CONFIRM_PERSONAL_EMAIL, data),
+    refreshPersonalEmailByToken: <T>(data: Config = {}) =>
+      httpClient.post<T>(`${Endpoint.CONTACT_PERSONAL_EMAIL}/${data.token}`),
   },
   reactions: {
-    getReactions: <T>(data: Config = {}) => httpClient.get<T>(`${Endpoint.USER_REACTIONS}/external/${data.uuid}?authorField=external_id`),
+    getReactions: <T>(data: Config = {}) =>
+      httpClient.get<T>(`${Endpoint.USER_REACTIONS}/external/${data.uuid}?authorField=external_id`),
     addReaction: <T>(data: Config = {}) => httpClient.post<T>(Endpoint.USER_REACTIONS, data),
-    deleteReaction: <T>({ reactionId, uuid }: Config = {}) => httpClient.delete<T>(`${Endpoint.USER_REACTIONS}/external/${reactionId}?authorQuery=${uuid}&authorField=external_id`),
-  }
+    deleteReaction: <T>({ reactionId, uuid }: Config = {}) =>
+      httpClient.delete<T>(
+        `${Endpoint.USER_REACTIONS}/external/${reactionId}?authorQuery=${uuid}&authorField=external_id`,
+      ),
+  },
 });

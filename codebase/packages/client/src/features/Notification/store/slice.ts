@@ -23,8 +23,8 @@ const initialState: T.State = {
     settings: {
       receivePostsEmailNotifications: false,
       receiveEventsEmailNotifications: false,
-    }
-  }
+    },
+  },
 };
 
 const getList = createAsyncThunk<T.Notification[]>(A.GET_LIST_ACTION, async () => {
@@ -39,17 +39,23 @@ const getPersonalEmail = createAsyncThunk<T.EmailAddress>(A.GET_PERSONAL_EMAIL, 
   return await API.contact.getPersonalEmail<T.EmailAddress>();
 });
 
-const updatePersonalEmail = createAsyncThunk<T.EmailAddress, any>(A.UPDATE_PERSONAL_EMAIL, async (emailAddress: T.EmailAddress) => {
-  await API.contact.updatePersonalEmail<T.EmailAddress>(emailAddress?.addressIdentifier, emailAddress);
+const updatePersonalEmail = createAsyncThunk<T.EmailAddress, any>(
+  A.UPDATE_PERSONAL_EMAIL,
+  async (emailAddress: T.EmailAddress) => {
+    await API.contact.sendPersonalEmailConfirmation<T.EmailAddress>(emailAddress);
 
-  return emailAddress;
-});
+    return emailAddress;
+  },
+);
 
-const createPersonalEmail = createAsyncThunk<{ emailAddress: string }, any>(A.CREATE_PERSONAL_EMAIL, async (emailAddress: { emailAddress: string }) => {
-  await API.contact.createPersonalEmail<T.EmailAddress>(emailAddress);
+const createPersonalEmail = createAsyncThunk<{ emailAddress: string }, any>(
+  A.CREATE_PERSONAL_EMAIL,
+  async (emailAddress: { emailAddress: string }) => {
+    await API.contact.createPersonalEmail<T.EmailAddress>(emailAddress);
 
-  return emailAddress;
-});
+    return emailAddress;
+  },
+);
 
 const getNotificationSettings = createAsyncThunk<T.EmailNotificationSettings>(A.GET_NOTIFICATION_SETTINGS, async () => {
   return await API.contact.getNotificationsSettings<T.EmailNotificationSettings>();
@@ -151,7 +157,7 @@ const slice = createSlice({
         state.notificationSettings = action.payload;
       })
       .addCase(updateNotificationSettings.fulfilled, (state: T.State, action) => {
-        state.notificationSettings = {...state.notificationSettings, ...action.payload};
+        state.notificationSettings = { ...state.notificationSettings, ...action.payload };
       })
       .addDefaultCase((state) => state);
   },
