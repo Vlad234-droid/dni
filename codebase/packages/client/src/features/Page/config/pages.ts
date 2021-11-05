@@ -15,6 +15,7 @@ import Forbidden from '../components/Forbidden';
 import Reports from '../components/Reports';
 import Profile from '../components/Profile';
 import Notifications from '../components/Notifications';
+import EmailConfirmation from '../components/EmailConfirmation';
 
 const pages: Record<Page, PageElement> = {
   [Page.HOME]: About,
@@ -29,6 +30,7 @@ const pages: Record<Page, PageElement> = {
   [Page.PROFILE]: Profile,
   [Page.NOTIFICATION_SETTINGS]: Notifications,
   [Page.ACCESSIBILITY]: Accessibility,
+  [Page.EMAIL_CONFIRMATION]: EmailConfirmation,
   // [Page.UNAUTHORIZED]: Unauthorized,
   [Page.FORBIDDEN]: Forbidden,
   [Page.SERVER_ERROR]: ServerError,

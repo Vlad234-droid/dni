@@ -26,7 +26,7 @@ const config = {
   [T.ToastVariant.ERROR]: '#cc0000',
   [T.ToastVariant.WARNING]: '#fcd700',
   [T.ToastVariant.SUCCESS]: '#009900',
-  [T.ToastVariant.INFORMATION]: '#f6f6f6',
+  [T.ToastVariant.INFORMATION]: '#00539f',
 };
 
 type Id = number | string;

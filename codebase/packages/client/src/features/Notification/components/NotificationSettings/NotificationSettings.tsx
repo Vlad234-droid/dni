@@ -14,22 +14,22 @@ import { FieldWrapper, TextInput } from 'features/Common';
 
 import schema from '../../config/schema';
 import { FormData, EmailAddress } from '../../config/types';
-import { getPersonalEmail, getNotificationSettings, updatePersonalEmail, createPersonalEmail, updateNotificationSettings } from '../../store';
+import {
+  getPersonalEmail,
+  getNotificationSettings,
+  updatePersonalEmail,
+  createPersonalEmail,
+  updateNotificationSettings,
+} from '../../store';
 import { Wrapper, Content, Title } from './styled';
 
 const SUCCESS_TOAST_ID = 'settings-success-toast';
 const ERROR_TOAST_ID = 'settings-success-toast';
 
 const NotificationSettings: FC = () => {
+  const { personalEmail, notificationSettings } = useStore((state) => state.notifications);
   const {
-    personalEmail,
-    notificationSettings,
-  } = useStore((state) => state.notifications);
-  const {
-    settings: {
-      receivePostsEmailNotifications,
-      receiveEventsEmailNotifications,
-    }
+    settings: { receivePostsEmailNotifications, receiveEventsEmailNotifications },
   } = notificationSettings;
   const [emailAddress, setEmailAddress] = useState<EmailAddress>(personalEmail!);
   const [formData, setFormData] = useState({
@@ -68,17 +68,28 @@ const NotificationSettings: FC = () => {
     try {
       // if the user changed their personal address
       if (emailAddress?.emailAddress && data.email && emailAddress?.emailAddress != data.email) {
-        dispatch(updatePersonalEmail({
-          ...emailAddress,
-          emailAddress: data.email,
-        }));
+        dispatch(
+          updatePersonalEmail({
+            ...emailAddress,
+            emailAddress: data.email,
+          }),
+        );
+
+        dispatch(
+          toasterActions.createToast({
+            id: 'email-confirmation',
+            skin: ToastSkin.EMAIL_CONFIRMATION,
+          }),
+        );
       }
 
       // if the user created his personal address
       if (!emailAddress && data.email) {
-        await dispatch(createPersonalEmail({
-          emailAddress: data.email,
-        }));
+        await dispatch(
+          createPersonalEmail({
+            emailAddress: data.email,
+          }),
+        );
         dispatch(getPersonalEmail());
       }
 

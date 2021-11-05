@@ -1,5 +1,6 @@
 import { Handler, Request, Response } from 'express';
 import { getColleagueUuid } from '@dni-connectors/onelogin';
+import { v4 as uuidv4 } from 'uuid';
 import {
   profileInfoExtractor,
   createNetworkRelation,
@@ -17,6 +18,8 @@ import {
   updatePersonalEmail,
   sendShareStoryEmail,
   sendConfirmationEmail,
+  storeTokenSettings,
+  findTokenSettingsAndInvalidate,
 } from '../services';
 import { executeSafe } from '../utils';
 import { getConfig } from '../config/config-accessor';
@@ -161,31 +164,43 @@ const getSetting: Handler = async (req: Request, res: Response) => {
 
 const shareStory: Handler = async (req: Request<{}, {}, ShareStory>, res: Response) => {
   executeSafe(res, async () => {
-    const { title: markdownNetworkTitle, story: colleagueFullStory } = req.body;
+    const { networkTitle: markdownNetworkTitle, storyTitle: colleagueStoryTitle, story: colleagueFullStory } = req.body;
 
     res.json(
       await sendShareStoryEmail({
         markdownNetworkTitle,
+        colleagueStoryTitle,
         colleagueFullStory,
       }),
     );
   });
 };
 
-const confirmPersonalEmailChange: Handler = async (req: Request, res: Response) => {
+const sendPersonalEmailConfirmation: Handler = async (req: Request, res: Response) => {
   executeSafe(res, async () => {
     const colleagueUUID = getColleagueUuid(res);
-    const { emailAddress: markdownEmailAddress, addressIdentifier } = req.body;
+    const { emailAddress: markdownEmailAddress } = req.body;
 
-    res.json(
-      await sendConfirmationEmail(colleagueUUID!, {
-        markdownEmailAddress,
-        markdownConfirmLink: `${config.applicationBaseUrl()}${config.applicationUrlTemplateConfirmation()}`.replace(
-          /%\w+%/,
-          Buffer.from(JSON.stringify({ emailAddress: markdownEmailAddress, addressIdentifier })).toString('base64'),
-        ),
-      }),
-    );
+    const token = uuidv4();
+    const EXPIRATION_HOUR = 8;
+
+    const tokenSettings = await storeTokenSettings(colleagueUUID!, {
+      expires: String(new Date().getTime() + EXPIRATION_HOUR * 60 * 60 * 1000),
+      token: token,
+      payload: req.body,
+    });
+
+    res.json({
+      ...tokenSettings,
+      // TODO: uncomment when email templates will be available
+      // ...(await sendConfirmationEmail(colleagueUUID!, {
+      //   markdownEmailAddress,
+      //   markdownConfirmLink: `${config.applicationBaseUrl()}${config.applicationUrlTemplateConfirmation()}`.replace(
+      //     /%\w+%/,
+      //     token,
+      //   ),
+      // })),
+    });
   });
 };
 
@@ -193,9 +208,13 @@ const refreshPersonalEmailByToken: Handler = async (req: Request, res: Response)
   executeSafe(res, async () => {
     const colleagueUUID = getColleagueUuid(res);
     const { token } = req.params;
-    const { emailAddress, addressIdentifier } = JSON.parse(Buffer.from(token, 'base64').toString('ascii'));
 
-    res.json(await updatePersonalEmail(colleagueUUID!, emailAddress, addressIdentifier));
+    const tokenSettings = await findTokenSettingsAndInvalidate(colleagueUUID!, token);
+
+    res.json({ message: 'ok', ...tokenSettings });
+    // // TODO: uncomment when email templates will be available
+    // const { emailAddress, addressIdentifier } = tokenSettings.payload || {};
+    // res.json(await updatePersonalEmail(colleagueUUID!, emailAddress, addressIdentifier));
   });
 };
 
@@ -213,6 +232,6 @@ export {
   addPersonalEmail,
   refreshPersonalEmail,
   shareStory,
-  confirmPersonalEmailChange,
+  sendPersonalEmailConfirmation,
   refreshPersonalEmailByToken,
 };

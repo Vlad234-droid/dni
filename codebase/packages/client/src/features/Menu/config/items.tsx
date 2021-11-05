@@ -13,6 +13,7 @@ const iconsSrc: Record<PageWithIcon, string> = {
 
 const menuItemsDesktop = {
   [Page.NETWORK_NEWS]: 'Network News',
+  [Page.EMAIL_CONFIRMATION]: 'Email confirmation',
   [Page.EVENTS]: 'Events',
   [Page.REPORTS]: 'Reports',
   [Page.NETWORKS]: 'Networks',
