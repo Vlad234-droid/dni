@@ -71,7 +71,7 @@ const EventSidebar: FC<Props> = ({
 
     return (
       <>
-        <List>
+        <List data-testid='sidebar-events-list'>
           {events.map((eventItem, index) => {
             const { id, title, maxParticipants, image, startDate, endDate } = eventItem;
 

@@ -2,21 +2,37 @@ import React from 'react';
 import { Route, Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 
-import { renderWithProviders } from 'utils/testUtils';
+import { render } from 'utils/testUtils';
 
 import NetworkNews from './NetworkNews';
 
 describe('<NetworkNews /> page', () => {
-  const history = createMemoryHistory();
-  it('should render center content', () => {
-    const { getByTestId } = renderWithProviders(
-      <Router history={history}>
-        <Route>
-          <NetworkNews />
-        </Route>
-      </Router>,
-    );
+  it('should render left and right content', () => {
+    const { getByTestId } = render(<NetworkNews />);
 
-    expect(getByTestId('container_feeds')).toBeInTheDocument();
+    expect(getByTestId('container-feeds')).toBeInTheDocument();
+    expect(getByTestId('container-sidebar')).toBeInTheDocument();
   });
+
+  it('should render EventSidebar component and PostList, if no id in params', () => {
+    const { getByTestId } = render(<NetworkNews />);
+
+    expect(getByTestId('events-sidebar')).toBeInTheDocument();
+    expect(getByTestId('posts-list')).toBeInTheDocument();
+  });
+
+  // TODO:
+  // fit('should render EventSidebar component and PostSingle, if id in params', () => {
+  //   const { getByTestId } = render(
+  //     <Route path={'network-news/:id'}>
+  //       <NetworkNews />
+  //     </Route>,
+  //     {route: 'network-news/12345'});
+  //
+  //   // @ts-ignore
+  //   // expect(history.location.pathname).toEqual('network-news/12345');
+  //
+  //   expect(getByTestId('events-sidebar')).toBeInTheDocument();
+  //   expect(getByTestId('posts-single')).toBeInTheDocument();
+  // });
 });

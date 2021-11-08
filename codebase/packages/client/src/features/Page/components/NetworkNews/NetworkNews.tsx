@@ -23,11 +23,11 @@ const NetworkNews: FC = () => {
             pageName={menuItemsDesktop[Page.NETWORK_NEWS]}
             renderContent={() => (
               <Container>
-                <Left data-testid='container_feeds'>
+                <Left data-testid='container-feeds'>
                   {id ? <PostSingle postId={parseInt(id, 10)} /> : <PostList />}
                 </Left>
                 {isDesktop && (
-                  <Right data-testid='container_sidebar'>
+                  <Right data-testid='container-sidebar'>
                     <EventSidebar />
                   </Right>
                 )}

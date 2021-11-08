@@ -17,7 +17,7 @@ const Label = styled.div`
 
 const Wrapper = styled.div`
   position: absolute;
-  bottom: -143px;
+  bottom: -163px;
   display: flex;
   justify-content: center;
 

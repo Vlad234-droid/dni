@@ -5,7 +5,7 @@ import Link from '@beans/link';
 import { LINKS } from 'config/constants';
 
 const HeaderLink: FC = () => (
-  <Wrapper>
+  <Wrapper data-testid='header-link'>
     <Link href={LINKS.signOut} inverse>
       Sign out
     </Link>
