@@ -1,13 +1,14 @@
-import React, { useContext, useCallback, createContext, FC } from 'react';
+import React, {createContext, FC, useCallback, useContext} from 'react';
 import __useMedia from 'hooks/useMedia';
 
-import { ViewportSize } from 'config/constants';
+import {ViewportSize} from 'config/constants';
 
 interface InterfaceContext {
   viewport: ViewportSize;
   isMobile: boolean;
   isLargeMobile: boolean;
   isTablet: boolean;
+  isLargeTablet: boolean;
   isDesktop: boolean;
   lt: (size: number) => boolean;
   lte: (size: number) => boolean;
@@ -22,6 +23,7 @@ const defaultInterfaceContext: InterfaceContext = {
   isMobile: true,
   isLargeMobile: true,
   isTablet: false,
+  isLargeTablet: false,
   isDesktop: true,
   lt: (size: number) => ViewportSize.PHONE < size,
   lte: (size: number) => ViewportSize.PHONE <= size,
@@ -36,6 +38,9 @@ export const InterfaceProvider: FC = ({ children }) => {
   const isMobile = viewport === ViewportSize.PHONE;
   const isLargeMobile = viewport === ViewportSize.LARGE_PHONE;
   const isTablet = viewport === ViewportSize.TABLET;
+  const isLargeTablet = viewport === ViewportSize.LARGE_TABLET;
+  console.log('viewport', viewport);
+  console.log('ViewportSize.LARGE_TABLET', ViewportSize.LARGE_TABLET);
   const isDesktop = viewport === ViewportSize.SMALL_DESKTOP;
   const lt = useCallback((size: number) => viewport < size, [viewport]);
   const lte = useCallback((size: number) => viewport <= size, [viewport]);
@@ -49,6 +54,7 @@ export const InterfaceProvider: FC = ({ children }) => {
         isMobile,
         isLargeMobile,
         isTablet,
+        isLargeTablet,
         isDesktop,
         lt,
         lte,

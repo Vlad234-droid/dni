@@ -24,8 +24,12 @@ export const Content = styled.div<{ isOpen: boolean }>`
   -webkit-line-clamp: ${({ isOpen }) => (isOpen ? 'auto' : '5')};
   -webkit-box-orient: vertical;
   overflow: ${({ isOpen }) => (isOpen ? 'visible' : 'hidden')};
-  margin-bottom: 24px;
+  margin-bottom: 32px;
   ${textXS};
+
+  ${Media.large_phone`
+     margin-bottom: 62px;
+  `}
 
   ${({ isOpen }) => css`
     ${Media.tablet`
