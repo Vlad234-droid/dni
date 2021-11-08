@@ -20,5 +20,16 @@ export const Content = styled.div`
   ${Media.tablet`
     flex-direction: row;
     align-items: flex-start;
+    padding-bottom: 0;
+  `}
+
+  ${Media.small_desktop`
+    flex-direction: column;
+    align-items: center;
+  `}
+
+  ${Media.desktop`
+    flex-direction: row;
+    align-items: flex-start;
   `}
 `;

@@ -6,6 +6,7 @@ import { useMedia } from 'context/InterfaceContext';
 
 import { Wrapper, IconWrapper, Overflower, Label } from './styled';
 
+
 import tescoVideo720 from 'assets/videos/tesco_720p.mp4';
 
 const IntroVideo: FC = () => {
