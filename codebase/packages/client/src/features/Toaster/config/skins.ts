@@ -48,9 +48,14 @@ const skins: Record<
     Content: C.WrongInterval,
     timeout: 4000,
   },
-  [ToastSkin.EMAIL_CONFIRMATION]: {
-    variant: ToastVariant.INFORMATION,
-    Content: C.EmailConfirmation,
+  [ToastSkin.EMAIL_CONFIRMATION_SUCCESS]: {
+    variant: ToastVariant.SUCCESS,
+    Content: C.EmailConfirmationSuccess,
+    timeout: 4000,
+  },
+  [ToastSkin.EMAIL_CONFIRMATION_ERROR]: {
+    variant: ToastVariant.ERROR,
+    Content: C.EmailConfirmationError,
     timeout: 4000,
   },
 };
