@@ -66,21 +66,31 @@ const NotificationSettings: FC = () => {
 
   const onSubmit = async (data: FormData) => {
     try {
-      // if the user changed their personal address
+      // if the user changed the personal address
       if (emailAddress?.emailAddress && data.email && emailAddress?.emailAddress != data.email) {
-        dispatch(
+
+        const result = await dispatch(
           updatePersonalEmail({
             ...emailAddress,
             emailAddress: data.email,
           }),
         );
 
-        dispatch(
-          toasterActions.createToast({
-            id: 'email-confirmation',
-            skin: ToastSkin.EMAIL_CONFIRMATION,
-          }),
-        );
+        if (updatePersonalEmail.fulfilled.match(result)) {
+          dispatch(
+            toasterActions.createToast({
+              id: 'email-confirmation-success',
+              skin: ToastSkin.EMAIL_CONFIRMATION_SUCCESS,
+            }),
+          );
+        } else {
+          dispatch(
+            toasterActions.createToast({
+              id: 'email-confirmation-error',
+              skin: ToastSkin.EMAIL_CONFIRMATION_ERROR,
+            }),
+          );
+        }
       }
 
       // if the user created his personal address
