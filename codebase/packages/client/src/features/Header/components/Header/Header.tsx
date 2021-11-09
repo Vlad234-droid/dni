@@ -29,7 +29,7 @@ const Header: FC = () => {
       {!isDesktop && isOpened && <MainMenuMobile onClose={handleCloseMenu} />}
       {!isDesktop && <Title>{'Diversity & Inclusion'}</Title>}
       <Aside>
-        {(isTablet || isLargeMobile) && <AccessibilityButton mode={Mode.LIGHT} top={'42px'} />}
+        {(isTablet || isLargeMobile) && <AccessibilityButton mode={Mode.LIGHT} />}
         <Icons>
           <IconWrapper>
             <NotificationRing buttonRef={buttonRef} inverse={!isDesktop} />

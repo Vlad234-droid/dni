@@ -15,15 +15,15 @@ const Auth: FC = ({ children }) => {
   const dispatch = useDispatch();
   const isLoading = useMemo(() => loading !== Loading.SUCCEEDED && loading !== Loading.FAILED, [loading]);
   const isAuthenticated = useMemo(() => Boolean(user?.id), [user]);
-  const uuid = user.colleagueUUID;
+  const uuid = user!.colleagueUUID;
 
   const fetchUserAction: FetchUserAction = useCallback(() => dispatch(profile()), []);
 
-  useEffect(() => {
-    if (uuid) {
-      dispatch(getReactions({ uuid }));
-    }
-  }, [uuid]);
+  // useEffect(() => {
+  //   if (uuid) {
+  //     dispatch(getReactions({ uuid }));
+  //   }
+  // }, [uuid]);
 
   useEffect(() => {
     fetchUserAction();

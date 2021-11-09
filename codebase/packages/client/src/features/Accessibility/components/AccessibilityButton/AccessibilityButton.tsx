@@ -12,10 +12,9 @@ import { Wrapper, Content, ContentInner, LinkWrapper } from './styled';
 
 type Props = {
   mode: Mode;
-  top?: string;
 };
 
-const AccessibilityButton: FC<Props> = ({ mode, top = '0' }) => {
+const AccessibilityButton: FC<Props> = ({ mode }) => {
   const [isOpen, setIsOpen] = useState(false);
   const { isMobile } = useMedia();
 
@@ -27,6 +26,8 @@ const AccessibilityButton: FC<Props> = ({ mode, top = '0' }) => {
     window.loadService();
   };
 
+  const handleLinkClick = () => setIsOpen(false);
+
   return (
     <Wrapper data-testid='accessibility' isOpen={isOpen}>
       <Button
@@ -35,29 +36,27 @@ const AccessibilityButton: FC<Props> = ({ mode, top = '0' }) => {
         onClick={handleButtonClick}
       >
         Accessibility
-        <Icon graphic={isOpen ? 'contract' : 'expand'} />
+        <Icon graphic={'expand'} />
       </Button>
-      {isOpen && (
-        <Content mode={mode} top={top}>
-          <ContentInner>
-            <LinkWrapper>
-              <Link to={`/${Page.ACCESSIBILITY}`}>
-                <BeansLink inverse={mode == Mode.LIGHT}>Information</BeansLink>
-              </Link>
-            </LinkWrapper>
-            <LinkWrapper>
-              <BeansLink
-                className='reciteme'
-                inverse={mode == Mode.LIGHT}
-                href={'#'}
-                onClick={handleRecitemeButtonClick}
-              >
-                Toolbar (Reciteme)
-              </BeansLink>
-            </LinkWrapper>
-          </ContentInner>
-        </Content>
-      )}
+      <Content mode={mode}>
+        <ContentInner>
+          <LinkWrapper>
+            <Link to={`/${Page.ACCESSIBILITY}`} onClick={handleLinkClick}>
+              <BeansLink inverse={mode == Mode.LIGHT}>Information</BeansLink>
+            </Link>
+          </LinkWrapper>
+          <LinkWrapper>
+            <BeansLink
+              className='reciteme'
+              inverse={mode == Mode.LIGHT}
+              href={'#'}
+              onClick={handleRecitemeButtonClick}
+            >
+              Toolbar (Reciteme)
+            </BeansLink>
+          </LinkWrapper>
+        </ContentInner>
+      </Content>
     </Wrapper>
   );
 };
