@@ -23,7 +23,6 @@ const AccessibilityButton: FC<Props> = ({ mode }) => {
   };
 
   const handleRecitemeButtonClick = () => {
-    console.log('handleRecitemeButtonClick');
     window.loadService();
   };
 
