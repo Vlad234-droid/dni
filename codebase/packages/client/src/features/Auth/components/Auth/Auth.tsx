@@ -19,11 +19,11 @@ const Auth: FC = ({ children }) => {
 
   const fetchUserAction: FetchUserAction = useCallback(() => dispatch(profile()), []);
 
-  // useEffect(() => {
-  //   if (uuid) {
-  //     dispatch(getReactions({ uuid }));
-  //   }
-  // }, [uuid]);
+  useEffect(() => {
+    if (uuid) {
+      dispatch(getReactions({ uuid }));
+    }
+  }, [uuid]);
 
   useEffect(() => {
     fetchUserAction();

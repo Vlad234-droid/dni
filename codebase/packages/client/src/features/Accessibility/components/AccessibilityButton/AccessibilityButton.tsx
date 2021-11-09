@@ -23,6 +23,7 @@ const AccessibilityButton: FC<Props> = ({ mode }) => {
   };
 
   const handleRecitemeButtonClick = () => {
+    console.log('handleRecitemeButtonClick');
     window.loadService();
   };
 
@@ -38,14 +39,14 @@ const AccessibilityButton: FC<Props> = ({ mode }) => {
         Accessibility
         <Icon graphic={'expand'} />
       </Button>
-      <Content mode={mode}>
+      <Content mode={mode} isOpen={isOpen}>
         <ContentInner>
-          <LinkWrapper>
+          <LinkWrapper inverse={mode == Mode.LIGHT}>
             <Link to={`/${Page.ACCESSIBILITY}`} onClick={handleLinkClick}>
               <BeansLink inverse={mode == Mode.LIGHT}>Information</BeansLink>
             </Link>
           </LinkWrapper>
-          <LinkWrapper>
+          <LinkWrapper inverse={mode == Mode.LIGHT}>
             <BeansLink
               className='reciteme'
               inverse={mode == Mode.LIGHT}
