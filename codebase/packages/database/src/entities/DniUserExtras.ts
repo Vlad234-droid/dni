@@ -16,5 +16,5 @@ export class DniUserExtras {
   settings?: object;
 
   @Column('jsonb', { name: 'metadata', nullable: true })
-  metadata?: object;
+  metadata?: object | null;
 }

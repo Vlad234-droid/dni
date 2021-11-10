@@ -28,7 +28,7 @@ const Layout: FC<LayoutProps> = ({
   const mainContainer = useRef<HTMLDivElement>(null);
 
   return (
-    <Wrapper>
+    <Wrapper data-testid='layout'>
       <TopHeaderContainer>
         <TopHeaderReducer>{renderTopHeader()}</TopHeaderReducer>
       </TopHeaderContainer>

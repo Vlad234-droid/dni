@@ -6,4 +6,6 @@ export {
   ContentSuccessCopyLink,
   IntervalLimit,
   WrongInterval,
+  EmailConfirmationSuccess,
+  EmailConfirmationError,
 } from './ToasterSkinContent';

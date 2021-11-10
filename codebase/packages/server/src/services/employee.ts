@@ -19,8 +19,21 @@ type EmailNotificationSettings = {
   receiveEventsEmailNotifications: boolean;
 };
 
+type TokenSettings = {
+  token: string;
+  expires: string;
+  payload: EmailAddresses;
+};
+
+type EmailAddresses = {
+  alias: string;
+  emailAddress: string;
+  addressIdentifier: string;
+};
+
 type ShareStory = {
-  title: string;
+  networkTitle: string;
+  storyTitle: string;
   story: string;
 };
 
@@ -219,6 +232,39 @@ const findSettings = async (colleagueUUID: string) => {
   return dniUserExtras || { colleagueUUID };
 };
 
+const storeTokenSettings = async (colleagueUUID: string, settings: TokenSettings) => {
+  const repository = getRepository(DniUser);
+  const dniUser = await repository.findOneOrFail({ colleagueUUID });
+
+  if (!dniUser.extras) {
+    dniUser.initExtras();
+  }
+
+  dniUser.extras!.metadata = { ...dniUser.extras!.metadata, ...settings };
+
+  repository.save(dniUser);
+
+  return { colleagueUUID, ...settings };
+};
+
+const findTokenSettingsAndInvalidate = async (colleagueUUID: string, token: string) => {
+  const repository = getRepository(DniUserExtras);
+  const dniUserExtras = await repository.findOne({ colleagueUUID });
+
+  const settings: TokenSettings = (dniUserExtras?.metadata as TokenSettings) || {};
+
+  if (token !== settings?.token) {
+    throw new ApiError(400, `Token is not valid`);
+  } else if (settings?.expires && new Date(settings.expires).getTime() < Date.now()) {
+    throw new ApiError(400, `Token has expired`);
+  }
+
+  dniUserExtras!.metadata = null;
+  await repository.save([dniUserExtras!]);
+
+  return { colleagueUUID, ...settings };
+};
+
 export type { EmailNotificationSettings, ShareStory };
 
 export {
@@ -234,4 +280,6 @@ export {
   findEventsParticipants,
   storeSettings,
   findSettings,
+  storeTokenSettings,
+  findTokenSettingsAndInvalidate,
 };

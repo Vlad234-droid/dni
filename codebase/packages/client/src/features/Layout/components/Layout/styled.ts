@@ -81,11 +81,13 @@ export const TopHeaderContainer = styled.div.attrs({
 })<Props>`
   display: none;
 
+  // set z-index higher than main header to display it childs absolutely positioned bottom content
   ${({ theme }) => css`
     ${Media.small_desktop`
         grid-area: top-header;
         background-color: ${theme.colors.tescoBlue};
         ${stylesHeader};
+        z-index: 1001;
     `}
   `}
 `;
@@ -134,7 +136,7 @@ export const HeaderContainer = styled.div.attrs({
 `;
 
 export const HeaderReducer = styled.div`
-  position: relative;
+  //position: relative;
 
   ${Media.small_desktop`
     grid-area: header-reducer;
@@ -149,7 +151,9 @@ export const TopHeaderReducer = styled(HeaderReducer)`
   `}
 `;
 
-export const BreadCrumbContainer = styled.div`
+export const BreadCrumbContainer = styled.div.attrs({
+  'data-testid': 'breadcrumb-container',
+})`
   position: absolute;
   left: 0;
   top: 100%;

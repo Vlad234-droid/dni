@@ -12,6 +12,8 @@ enum Page {
   REPORTS = 'reports',
   PROFILE = 'profile',
   NOTIFICATION_SETTINGS = 'notification/settings',
+  ACCESSIBILITY = 'accessibility',
+  EMAIL_CONFIRMATION = 'confirm-email-change/:token',
   //UNAUTHORIZED = '401',
   FORBIDDEN = '403',
   SERVER_ERROR = '500',

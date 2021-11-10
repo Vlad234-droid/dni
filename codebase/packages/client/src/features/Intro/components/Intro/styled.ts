@@ -16,8 +16,8 @@ export const Content = styled.div`
   padding: 40px;
   color: ${({ theme }) => theme.colors.tescoBlue};
   background-color: ${({ theme }) => theme.colors.white};
-
-  ${Media.tablet`
+  
+  ${Media.small_desktop`
     flex-direction: row;
     align-items: flex-start;
   `}

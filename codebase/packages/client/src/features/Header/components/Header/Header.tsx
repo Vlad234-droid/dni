@@ -5,13 +5,14 @@ import { MenuDesktop, MainMenuMobile } from 'features/Menu';
 import Toaster from 'features/Toaster';
 import { useMedia } from 'context/InterfaceContext';
 import NotificationSidebar, { NotificationRing } from 'features/Notification';
+import { Mode, AccessibilityButton } from 'features/Accessibility';
 
-import { Wrapper, Icons, IconWrapper, ToasterWrapper, MenuWrapper, Title } from './styled';
+import { Wrapper, Icons, IconWrapper, ToasterWrapper, MenuWrapper, Title, Aside } from './styled';
 
 const TEST_ID = 'header';
 
 const Header: FC = () => {
-  const { isDesktop } = useMedia();
+  const { isDesktop, isTablet, isLargeMobile } = useMedia();
   const [isOpened, setIsOpened] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
 
@@ -27,28 +28,31 @@ const Header: FC = () => {
       )}
       {!isDesktop && isOpened && <MainMenuMobile onClose={handleCloseMenu} />}
       {!isDesktop && <Title>{'Diversity & Inclusion'}</Title>}
-      <Icons>
-        <IconWrapper>
-          <NotificationRing buttonRef={buttonRef} inverse={!isDesktop} />
-        </IconWrapper>
-        {/*<IconWrapper>*/}
-        {/*  <Link*/}
-        {/*    href={'/profile'}*/}
-        {/*    icon={{ graphic: 'account', position: { global: 'right' } }}*/}
-        {/*    inverse={!isDesktop}*/}
-        {/*    variant='iconButton'*/}
-        {/*  />*/}
-        {/*</IconWrapper>*/}
-        {!isDesktop && (
+      <Aside>
+        {(isTablet || isLargeMobile) && <AccessibilityButton mode={Mode.LIGHT} />}
+        <Icons>
           <IconWrapper>
-            <Icon graphic='menu' onClick={handleOpenMenu} />
+            <NotificationRing buttonRef={buttonRef} inverse={!isDesktop} />
           </IconWrapper>
-        )}
-      </Icons>
-      <ToasterWrapper>
-        <Toaster />
-        <NotificationSidebar buttonRef={buttonRef} />
-      </ToasterWrapper>
+          {/*<IconWrapper>*/}
+          {/*  <Link*/}
+          {/*    href={'/profile'}*/}
+          {/*    icon={{ graphic: 'account', position: { global: 'right' } }}*/}
+          {/*    inverse={!isDesktop}*/}
+          {/*    variant='iconButton'*/}
+          {/*  />*/}
+          {/*</IconWrapper>*/}
+          {!isDesktop && (
+            <IconWrapper>
+              <Icon graphic='menu' onClick={handleOpenMenu} />
+            </IconWrapper>
+          )}
+        </Icons>
+        <ToasterWrapper>
+          <Toaster />
+          <NotificationSidebar buttonRef={buttonRef} />
+        </ToasterWrapper>
+      </Aside>
     </Wrapper>
   );
 };
