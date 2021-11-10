@@ -8,6 +8,7 @@ import API from 'utils/api';
 import * as T from '../config/types';
 import * as A from './actionTypes';
 import { notificationSelector } from './selectors';
+import { CONTACT_API_ENABLED } from 'config/constants';
 
 const initialState: T.State = {
   notifications: {
@@ -42,7 +43,11 @@ const getPersonalEmail = createAsyncThunk<T.EmailAddress>(A.GET_PERSONAL_EMAIL, 
 const updatePersonalEmail = createAsyncThunk<T.EmailAddress, any>(
   A.UPDATE_PERSONAL_EMAIL,
   async (emailAddress: T.EmailAddress) => {
-    await API.contact.sendPersonalEmailConfirmation<T.EmailAddress>(emailAddress);
+    if (CONTACT_API_ENABLED) {
+      await API.contact.sendPersonalEmailConfirmation<T.EmailAddress>(emailAddress);
+    } else {
+      await API.contact.updatePersonalEmail<T.EmailAddress>(emailAddress?.addressIdentifier, emailAddress);
+    }
 
     return emailAddress;
   },
