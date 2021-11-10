@@ -1,43 +1,30 @@
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 
 import { textXS } from 'styles';
 import Media from 'styles/media';
 
 const Label = styled.div`
+  margin-top: 8px;
   color: ${({ theme }) => theme.colors.grayscale};
   text-align: center;
   ${textXS};
-
-  ${({ theme }) => css`
-    ${Media.tablet`
-      color: ${theme.colors.white}
-    `}
-  `}
+  
+  svg path {
+    stroke: ${({ theme }) => theme.colors.grayscale};
+  }
 `;
 
 const Wrapper = styled.div`
   position: absolute;
-  bottom: -163px;
+  bottom: -140px;
   display: flex;
+  flex-direction: column;
   justify-content: center;
 
-  & video {
-    max-width: 288px;
-    max-height: 165px;
-    border-radius: 10px;
-
-    ${Media.large_phone`
-      max-width: 350px;
-      max-height: 195px;
+  ${Media.large_tablet`
+    width: 440px;
+    height: 254px;
   `}
-
-    ${Media.tablet`
-      max-width: unset;
-      max-height: unset;
-      border-radius: 0;
-      box-shadow: none;
-  `}
-  }
 
   ${Media.tablet`
     position: static;
@@ -46,16 +33,25 @@ const Wrapper = styled.div`
   `}
 `;
 
+const VideoContainer = styled.div`
+  & > div {
+    width: 280px;
+    height: 149px;
+
+    ${Media.large_phone`
+      width: 350px;
+      height: 195px;
+    `}
+
+    ${Media.large_tablet`
+      width: 440px;
+      height: 254px;
+  `}
+  }
+`;
+
 const IconWrapper = styled.span`
   margin-right: 8px;
 `;
 
-const Overflower = styled.div`
-  overflow: hidden;
-
-  & > video {
-    margin: 0 -2px;
-  }
-`;
-
-export { Wrapper, IconWrapper, Overflower, Label };
+export { Wrapper, IconWrapper, Label, VideoContainer };
