@@ -3,6 +3,7 @@ import CheckboxWithLabel from '@beans/checkbox-with-label';
 import Button from '@beans/button';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { CONTACT_API_ENABLED } from 'config/constants';
 
 import omit from 'lodash.omit';
 
@@ -68,28 +69,30 @@ const NotificationSettings: FC = () => {
     try {
       // if the user changed the personal address
       if (emailAddress?.emailAddress && data.email && emailAddress?.emailAddress != data.email) {
-
         const result = await dispatch(
           updatePersonalEmail({
             ...emailAddress,
             emailAddress: data.email,
+            oldEmailAddress: emailAddress?.emailAddress,
           }),
         );
 
-        if (updatePersonalEmail.fulfilled.match(result)) {
-          dispatch(
-            toasterActions.createToast({
-              id: 'email-confirmation-success',
-              skin: ToastSkin.EMAIL_CONFIRMATION_SUCCESS,
-            }),
-          );
-        } else {
-          dispatch(
-            toasterActions.createToast({
-              id: 'email-confirmation-error',
-              skin: ToastSkin.EMAIL_CONFIRMATION_ERROR,
-            }),
-          );
+        if (CONTACT_API_ENABLED) {
+          if (updatePersonalEmail.fulfilled.match(result)) {
+            dispatch(
+              toasterActions.createToast({
+                id: 'email-confirmation-success',
+                skin: ToastSkin.EMAIL_CONFIRMATION_SUCCESS,
+              }),
+            );
+          } else {
+            dispatch(
+              toasterActions.createToast({
+                id: 'email-confirmation-error',
+                skin: ToastSkin.EMAIL_CONFIRMATION_ERROR,
+              }),
+            );
+          }
         }
       }
 

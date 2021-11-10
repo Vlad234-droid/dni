@@ -102,9 +102,19 @@ const sendShareStoryEmail = async (data: EmailData) => {
 };
 
 const sendConfirmationEmail = async (colleagueUUID: string, data: EmailData) => {
-  const email = await safeFetchEmail(colleagueUUID);
+  return await sendEmails(
+    config.mailingConfirmationTemplateId(),
+    [createRecipient(data.markdownEmailAddress, colleagueUUID)],
+    data,
+  );
+};
 
-  return await sendEmails(config.mailingConfirmationTemplateId(), [createRecipient(email, colleagueUUID)], data);
+const sendConfirmationEmailToOldEmail = async (colleagueUUID: string, data: EmailData) => {
+  return await sendEmails(
+    config.mailingConfirmationOldEmailTemplateId(),
+    [createRecipient(data.markdownNewEmailAddress, colleagueUUID)],
+    data,
+  );
 };
 
 const safeFetchEmail = async (colleagueUUID: string) => {
@@ -159,4 +169,5 @@ export {
   sendNewEntityEmails,
   sendShareStoryEmail,
   sendConfirmationEmail,
+  sendConfirmationEmailToOldEmail,
 };

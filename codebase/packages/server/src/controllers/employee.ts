@@ -18,6 +18,7 @@ import {
   updatePersonalEmail,
   sendShareStoryEmail,
   sendConfirmationEmail,
+  sendConfirmationEmailToOldEmail,
   storeTokenSettings,
   findTokenSettingsAndInvalidate,
 } from '../services';
@@ -179,7 +180,7 @@ const shareStory: Handler = async (req: Request<{}, {}, ShareStory>, res: Respon
 const sendPersonalEmailConfirmation: Handler = async (req: Request, res: Response) => {
   executeSafe(res, async () => {
     const colleagueUUID = getColleagueUuid(res);
-    const { emailAddress: markdownEmailAddress } = req.body;
+    const { emailAddress, oldEmailAddress } = req.body;
 
     const token = uuidv4();
     const EXPIRATION_HOUR = 8;
@@ -190,11 +191,13 @@ const sendPersonalEmailConfirmation: Handler = async (req: Request, res: Respons
       payload: req.body,
     });
 
+    // await sendConfirmationEmailToOldEmail(colleagueUUID!, { markdownNewEmailAddress: oldEmailAddress });
+
     res.json({
       ...tokenSettings,
       // TODO: uncomment when email templates will be available
       // ...(await sendConfirmationEmail(colleagueUUID!, {
-      //   markdownEmailAddress,
+      //   markdownEmailAddress: emailAddress,
       //   markdownConfirmLink: `${config.applicationBaseUrl()}${config.applicationUrlTemplateConfirmation()}`.replace(
       //     /%\w+%/,
       //     token,
