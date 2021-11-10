@@ -167,13 +167,14 @@ const shareStory: Handler = async (req: Request<{}, {}, ShareStory>, res: Respon
   executeSafe(res, async () => {
     const { networkTitle: markdownNetworkTitle, storyTitle: colleagueStoryTitle, story: colleagueFullStory } = req.body;
 
-    res.json(
-      await sendShareStoryEmail({
-        markdownNetworkTitle,
-        colleagueStoryTitle,
-        colleagueFullStory,
-      }),
-    );
+    res.json({
+      // ...(await sendShareStoryEmail({
+      //   markdownNetworkTitle,
+      //   colleagueStoryTitle,
+      //   colleagueFullStory,
+      // })),
+      ...req.body,
+    });
   });
 };
 
@@ -203,6 +204,7 @@ const sendPersonalEmailConfirmation: Handler = async (req: Request, res: Respons
       //     token,
       //   ),
       // })),
+      ...req.body,
     });
   });
 };
@@ -217,7 +219,7 @@ const refreshPersonalEmailByToken: Handler = async (req: Request, res: Response)
     res.json({ message: 'ok', ...tokenSettings });
     // // TODO: uncomment when email templates will be available
     // const { emailAddress, addressIdentifier } = tokenSettings.payload || {};
-    // res.json(await updatePersonalEmail(colleagueUUID!, emailAddress, addressIdentifier));
+    // res.json({ ...(await updatePersonalEmail(colleagueUUID!, emailAddress, addressIdentifier)), ...tokenSettings });
   });
 };
 
