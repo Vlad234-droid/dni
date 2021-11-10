@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import Link from '@beans/link';
 
 import Layout, { ExtraLayoutProps } from 'features/Layout';
-import { Header, HeaderMain, HeaderLink } from 'features/Header';
+import { Header, HeaderMain, HeaderTop } from 'features/Header';
 import { MenuMobile } from 'features/Menu';
 import { useMedia } from 'context/InterfaceContext';
 import { NetworkUpdates } from 'features/Notification';
@@ -17,7 +17,7 @@ const BasePage: FC<ExtraLayoutProps> = (props) => {
   return (
     <div data-testid={TEST_ID}>
       <Layout
-        renderTopHeader={() => <HeaderLink />}
+        renderTopHeader={() => <HeaderTop />}
         renderMainHeader={() => <HeaderMain />}
         renderHeader={() => <Header />}
         renderLeft={() => (

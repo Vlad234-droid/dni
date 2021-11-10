@@ -3,10 +3,10 @@ import styled from 'styled-components';
 import Media from 'styles/media';
 
 const InfoPanelReducer = styled.div`
-  margin: 162px 0 54px;
+  margin: 182px 0 54px;
 
   ${Media.tablet`
-    margin: 60px 0;
+    margin: 0 0 60px;
   `}
 `;
 

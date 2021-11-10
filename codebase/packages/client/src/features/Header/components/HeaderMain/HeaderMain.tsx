@@ -7,7 +7,7 @@ import { Logo } from './styled';
 const TEST_ID = 'header-main';
 
 const HeaderMain: FC = () => (
-  <div>
+  <div data-testid='header-main'>
     <Logo>Our Tesco</Logo>
     <MainMenuDesktop />
   </div>

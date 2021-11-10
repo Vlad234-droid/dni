@@ -5,7 +5,7 @@ import { buildEventCRUD } from '@dni/mock-server/src/crud';
 import { DateTime } from 'luxon';
 
 import { isoDateToFormat, FULL_FORMAT } from 'utils/date';
-import { cleanup, act, renderWithProviders } from 'utils/testUtils';
+import { cleanup, act, render } from 'utils/testUtils';
 import Loading from 'types/loading';
 import { VERTICAL_TILE_TEST_ID, HORIZONTAL_TILE_TEST_ID } from 'features/Tile';
 import { DEFAULT_FILTERS } from 'config/constants';
@@ -24,7 +24,7 @@ describe('<EventSidebar />', () => {
   describe('#render', () => {
     const props = {
       events: [],
-      loading: Loading.IDLE,
+      loading: Loading.PENDING,
       loadEvents: jest.fn(),
       loadCount: jest.fn(),
       loadParticipants: jest.fn(),
@@ -33,34 +33,43 @@ describe('<EventSidebar />', () => {
       networks: [1, 2],
     };
 
-    it('should not render wrapper, if loading is not started', () => {
-      const { queryByTestId } = renderWithProviders(<EventSidebar {...props} />);
+    it ('should render wrapper' , () => {
+      const { getByTestId } = render(<EventSidebar {...props} />);
 
-      expect(queryByTestId(TEST_ID)).not.toBeInTheDocument();
+      expect(getByTestId(TEST_ID)).toBeInTheDocument();
     });
 
-    it('should render Loading state is loading is pending', () => {
+    it('should render error, if provided', () => {
       const newProps = {
         ...props,
-        loading: Loading.PENDING,
+        error: 'mocked-error',
       };
 
-      const { queryByTestId } = renderWithProviders(<EventSidebar {...newProps} />);
+      const { getByText, getByTestId } = render(<EventSidebar {...newProps} />);
 
-      expect(queryByTestId(TEST_ID)).toBeInTheDocument();
+      expect(getByText('mocked-error')).toBeInTheDocument();
+      expect(getByTestId('error')).toBeInTheDocument();
+    });
+
+    it('should render Loading state is loading is pending and events are empty', () => {
+      const { queryByTestId } = render(<EventSidebar {...props} />);
+
       expect(queryByTestId('spinner')).toBeInTheDocument();
     });
 
-    it('should render failed state, if loading is failed', () => {
+    it('should render eventsList, if events provided', () => {
+      const COLLECTION_SIZE = 2;
+      const eventCRUD = buildEventCRUD(COLLECTION_SIZE);
+
+      const events = eventCRUD.findAll();
       const newProps = {
         ...props,
-        loading: Loading.FAILED,
+        events,
       };
 
-      const { queryByTestId, getByText } = renderWithProviders(<EventSidebar {...newProps} />);
+      const { getByTestId } = render(<EventSidebar {...newProps} />);
 
-      expect(queryByTestId(TEST_ID)).toBeInTheDocument();
-      expect(getByText('Here some error')).toBeInTheDocument();
+      expect(getByTestId('sidebar-events-list')).toBeInTheDocument();
     });
 
     it('should render empty container, if loading is succeeded and no events', () => {
@@ -69,10 +78,10 @@ describe('<EventSidebar />', () => {
         loading: Loading.SUCCEEDED,
       };
 
-      const { queryByTestId, getByText } = renderWithProviders(<EventSidebar {...newProps} />);
+      const { getByTestId, getByText } = render(<EventSidebar {...newProps} />);
 
-      expect(queryByTestId(TEST_ID)).toBeInTheDocument();
-      expect(getByText('You have no events')).toBeInTheDocument();
+      expect(getByText('Nothing to show')).toBeInTheDocument();
+      expect(getByTestId('empty-container')).toBeInTheDocument();
     });
 
     it('should render large tile, if 1 event in the list', () => {
@@ -87,9 +96,8 @@ describe('<EventSidebar />', () => {
         events,
       };
 
-      const { queryByTestId, queryAllByTestId, queryByText } = renderWithProviders(<EventSidebar {...newProps} />);
+      const { queryAllByTestId, queryByText } = render(<EventSidebar {...newProps} />);
 
-      expect(queryByTestId(TEST_ID)).toBeInTheDocument();
       expect(queryAllByTestId(VERTICAL_TILE_TEST_ID)).toHaveLength(1);
       expect(queryAllByTestId(HORIZONTAL_TILE_TEST_ID)).toHaveLength(0);
       expect(queryByText('All events')).toBeInTheDocument();
@@ -107,9 +115,8 @@ describe('<EventSidebar />', () => {
         events,
       };
 
-      const { queryByTestId, queryAllByTestId, queryByText } = renderWithProviders(<EventSidebar {...newProps} />);
+      const { queryAllByTestId, queryByText } = render(<EventSidebar {...newProps} />);
 
-      expect(queryByTestId(TEST_ID)).toBeInTheDocument();
       expect(queryAllByTestId(VERTICAL_TILE_TEST_ID)).toHaveLength(1);
       expect(queryAllByTestId(HORIZONTAL_TILE_TEST_ID)).toHaveLength(1);
       expect(queryByText('All events')).toBeInTheDocument();
@@ -127,9 +134,8 @@ describe('<EventSidebar />', () => {
         events,
       };
 
-      const { queryByTestId, queryAllByTestId, queryByText } = renderWithProviders(<EventSidebar {...newProps} />);
+      const { queryAllByTestId, queryByText } = render(<EventSidebar {...newProps} />);
 
-      expect(queryByTestId(TEST_ID)).toBeInTheDocument();
       expect(queryAllByTestId(VERTICAL_TILE_TEST_ID)).toHaveLength(1);
       expect(queryAllByTestId(HORIZONTAL_TILE_TEST_ID)).toHaveLength(2);
       expect(queryByText('All events')).toBeInTheDocument();
@@ -152,7 +158,7 @@ describe('<EventSidebar />', () => {
         events: [OnAirEvent],
       };
 
-      const { queryByText } = renderWithProviders(<EventSidebar {...newProps} />);
+      const { queryByText } = render(<EventSidebar {...newProps} />);
 
       expect(queryByText('On-Air')).toBeInTheDocument();
     });
@@ -175,15 +181,22 @@ describe('<EventSidebar />', () => {
       networks: [1, 2],
     };
 
-    const filters = {
-      ...FILTERS,
-      ...DEFAULT_FILTERS,
-      network_in: [...props.networks, -1],
-    };
-
     it('should call handleClear, loadEvents', async () => {
+      const filters = {
+        ...FILTERS,
+        ...DEFAULT_FILTERS,
+        _publicationState: 'preview',
+        published_at_null: false,
+        _where: {
+          _or: [
+            { network_null: true },
+            { network_in: [...props.networks] },
+          ],
+        },
+      };
+
       await act(async () => {
-        renderWithProviders(<EventSidebar {...props} />);
+        render(<EventSidebar {...props} />);
       });
 
       expect(props.handleClear).toHaveBeenCalledTimes(1);
@@ -193,7 +206,7 @@ describe('<EventSidebar />', () => {
 
     it('should call loadParticipants, if empty participants', async () => {
       await act(async () => {
-        renderWithProviders(<EventSidebar {...props} />);
+        render(<EventSidebar {...props} />);
       });
 
       expect(props.loadParticipants).toHaveBeenCalledTimes(1);

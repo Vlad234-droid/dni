@@ -1,40 +1,55 @@
 import React from 'react';
-import { Route, Router } from 'react-router-dom';
-import { createMemoryHistory } from 'history';
 
-import { renderWithProviders } from 'utils/testUtils';
+import { render } from 'utils/testUtils';
+import { InterfaceContext } from 'context/InterfaceContext';
 
 import BasePage from './BasePage';
 
 describe('<BasePage />', () => {
   const renderMain = () => <div data-testid='mocked-center' />;
-  const history = createMemoryHistory();
-
-  const render = () =>
-    renderWithProviders(
-      <Router history={history}>
-        <Route path={'/'}>
-          <BasePage renderMain={renderMain} />,
-        </Route>
-      </Router>,
-    );
 
   it('should render wrapper', () => {
-    const { getByTestId } = render();
+    const { getByTestId } = render(<BasePage renderMain={renderMain} />);
 
     expect(getByTestId('base-page')).toBeInTheDocument();
   });
 
   it('should render all base layout components', () => {
-    const { getByTestId } = render();
+    const { getByTestId } = render(<BasePage renderMain={renderMain} />);
 
+    expect(getByTestId('header-link')).toBeInTheDocument();
+    expect(getByTestId('header-main')).toBeInTheDocument();
     expect(getByTestId('header')).toBeInTheDocument();
-    expect(getByTestId('menu')).toBeInTheDocument();
   });
 
-  it('should render components received from props', () => {
-    const { getByTestId } = render();
+  it('should render network updates and links, id desktop version', () => {
+    const { getByTestId, getByText } = render(<BasePage renderMain={renderMain} />);
 
-    expect(getByTestId('mocked-center')).toBeInTheDocument();
+    expect(getByTestId('network-updates')).toBeInTheDocument();
+    expect(getByText('Terms & Conditions')).toBeInTheDocument();
+    expect(getByText('Privacy Policy')).toBeInTheDocument();
+  });
+
+  it('should render menu-mobile, if mobile version', () => {
+    const interfaceContextValueMock = {
+      viewport: 320,
+      isMobile: true,
+      isLargeMobile: false,
+      isTablet: false,
+      isDesktop: false,
+      lt: jest.fn(),
+      lte: jest.fn(),
+      gt: jest.fn(),
+      gte: jest.fn(),
+    };
+
+    const { getByTestId } = render(
+      <InterfaceContext.Provider
+        value={interfaceContextValueMock}
+      >
+        <BasePage renderMain={renderMain} />
+      </InterfaceContext.Provider>);
+
+    expect(getByTestId('menu-mobile')).toBeInTheDocument();
   });
 });

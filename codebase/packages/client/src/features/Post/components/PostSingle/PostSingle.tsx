@@ -37,7 +37,7 @@ const PostSingle: FC<Props> = ({ postId, loadPost, loading, post, error, reactio
   }, [post, error, loading]);
 
   return (
-    <div>
+    <div data-testid='post-single'>
       <BackLinkWrapper>
         <BackLink to={`/${Page.NETWORK_NEWS}`} text='Back to Network News' />
       </BackLinkWrapper>

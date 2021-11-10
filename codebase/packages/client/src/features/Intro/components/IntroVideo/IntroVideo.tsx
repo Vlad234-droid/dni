@@ -13,8 +13,8 @@ const IntroVideo: FC = () => {
 
   return (
     <Wrapper>
-      <VideoContainer>
-        <WistiaPlayer videoId='barwvn0bfw' aspectRatio={100}/>
+      <VideoContainer data-testid='intro-video'>
+        <WistiaPlayer videoId='30q7n48g4f' aspectRatio={100}/>
       </VideoContainer>
       <Label>
         <IconWrapper>

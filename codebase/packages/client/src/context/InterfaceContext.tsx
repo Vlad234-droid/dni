@@ -68,3 +68,4 @@ export const InterfaceProvider: FC = ({ children }) => {
 };
 
 export const useMedia = () => useContext(InterfaceContext);
+export { InterfaceContext };

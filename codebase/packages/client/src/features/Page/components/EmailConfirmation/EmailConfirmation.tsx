@@ -2,7 +2,6 @@ import React, { FC } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 
 import { EmailConfirmation } from 'features/EmailConfirmation';
-import { menuItemsDesktop } from 'features/Menu';
 import { Page, PAGE_PREFIX } from 'features/Page';
 
 import BasePage from '../BasePage';
@@ -18,7 +17,7 @@ const EmailConfirmationPage: FC<RouteComponentProps<{ token: string }>> = (props
         <div data-testid={TEST_ID}>
           <PageWrapper
             renderContent={() => <EmailConfirmation token={props.match.params.token} />}
-            pageName={menuItemsDesktop[Page.EMAIL_CONFIRMATION]}
+            pageName='Email confirmation'
             withBorder
           />
         </div>

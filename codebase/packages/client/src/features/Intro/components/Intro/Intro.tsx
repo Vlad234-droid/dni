@@ -1,5 +1,6 @@
 import React, { FC, useState } from 'react';
 
+
 import IntroHeading from '../IntroHeading';
 import IntroDescription from '../IntroDescription';
 import IntroVideo from '../IntroVideo';
@@ -10,7 +11,7 @@ const Intro: FC = () => {
   const handleClick = () => setIsOpen(!isOpen);
 
   return (
-    <Wrapper>
+    <Wrapper data-testid='intro'>
       <IntroHeading />
       <Content>
         <IntroDescription isOpen={isOpen} onClick={handleClick} />
