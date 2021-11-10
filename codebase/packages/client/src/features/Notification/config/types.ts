@@ -69,7 +69,7 @@ type State = {
   };
   isSidebarOpened: boolean;
   personalEmail?: EmailAddress;
-  notificationSettings : EmailNotificationSettings;
+  notificationSettings: EmailNotificationSettings;
 };
 
 type FormData = {
@@ -89,6 +89,10 @@ type EmailAddress = {
   addressIdentifier: string;
 };
 
+type ConfirmEmailAddress = {
+  oldEmailAddress: string;
+} & EmailAddress;
+
 export type {
   Entity,
   NetworkNotification,
@@ -101,4 +105,5 @@ export type {
   EntityIds,
   EmailNotificationSettings,
   EmailAddress,
+  ConfirmEmailAddress,
 };

@@ -63,6 +63,7 @@ export type ProcessConfig = {
   // mailing
   mailingNewEntityTemplateId: () => string;
   mailingConfirmationTemplateId: () => string;
+  mailingConfirmationOldEmailTemplateId: () => string;
   mailingShareStoryTemplateId: () => string;
   mailingStakeholderEmail: () => string;
   mailingChunkSize: () => number;
@@ -156,6 +157,7 @@ export class ConfigAccessor {
       // mailing
       mailingNewEntityTemplateId: () => processEnv.MAILING_NEW_ENTITY_TEMPLATE_ID,
       mailingConfirmationTemplateId: () => processEnv.MAILING_CONFIRMATION_TEMPLATE_ID,
+      mailingConfirmationOldEmailTemplateId: () => processEnv.MAILING_CONFIRMATION_OLD_EMAIL_TEMPLATE_ID,
       mailingShareStoryTemplateId: () => processEnv.MAILING_SHARE_STORY_TEMPLATE_ID,
       mailingStakeholderEmail: () => processEnv.MAILING_STAKEHOLDER_EMAIL,
       mailingChunkSize: () => +processEnv.MAILING_CHUNK_SIZE,

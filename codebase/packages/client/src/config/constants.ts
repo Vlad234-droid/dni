@@ -11,6 +11,8 @@ export const WS_URL = process.env.REACT_APP_WS_URL ? process.env.REACT_APP_WS_UR
 
 export const LOGOUT_URL = process.env.REACT_APP_LOGOUT_URL ? process.env.REACT_APP_LOGOUT_URL : '/sso/logout';
 
+export const CONTACT_API_ENABLED = process.env.REACT_APP_CONTACT_API_ENABLED === 'true';
+
 export const OURTESCO_URL = process.env.REACT_APP_OURTESCO_URL
   ? process.env.REACT_APP_OURTESCO_URL
   : 'https://www.ourtesco.com';
