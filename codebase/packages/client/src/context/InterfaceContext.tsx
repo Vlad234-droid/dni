@@ -39,8 +39,6 @@ export const InterfaceProvider: FC = ({ children }) => {
   const isLargeMobile = viewport === ViewportSize.LARGE_PHONE;
   const isTablet = viewport === ViewportSize.TABLET;
   const isLargeTablet = viewport === ViewportSize.LARGE_TABLET;
-  console.log('viewport', viewport);
-  console.log('ViewportSize.LARGE_TABLET', ViewportSize.LARGE_TABLET);
   const isDesktop = viewport === ViewportSize.SMALL_DESKTOP;
   const lt = useCallback((size: number) => viewport < size, [viewport]);
   const lte = useCallback((size: number) => viewport <= size, [viewport]);
