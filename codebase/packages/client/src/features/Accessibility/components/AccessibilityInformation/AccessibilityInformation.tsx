@@ -23,7 +23,7 @@ const AccessibilityInformation: FC = () => (
     <Description>
       We are always looking for ways to help people get the best experience from this website.
       If there is information you think should be included on this page, or if you experience any problem accessing the site then please contact us.
-      Please note: for advice on what information to include when you <strong style={{ color: 'red' }}>contact us</strong>, we recommend you read
+      Please note: for advice on what information to include when you <Link href='https://colleague-help.ourtesco.com/hc/en-us'>contact us</Link>, we recommend you read
       “Contacting organisations about inaccessible websites” (<Link href='www.w3.org/WAI/users/inaccessible' target='_blank'>www.w3.org/WAI/users/inaccessible</Link>).
     </Description>
     <Title>Accessibility guidelines</Title>

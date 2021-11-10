@@ -1,4 +1,4 @@
-import React, {FC, useState} from 'react';
+import React, { FC, useState } from 'react';
 import Button from '@beans/button';
 import Icon from '@beans/icon';
 import BeansLink from '@beans/link';
@@ -12,37 +12,51 @@ import { Wrapper, Content, ContentInner, LinkWrapper } from './styled';
 
 type Props = {
   mode: Mode;
-  top?: string;
-}
+};
 
-const AccessibilityButton: FC<Props> = ({ mode, top = '0' }) => {
+const AccessibilityButton: FC<Props> = ({ mode }) => {
   const [isOpen, setIsOpen] = useState(false);
   const { isMobile } = useMedia();
 
   const handleButtonClick = () => {
     setIsOpen((isOpen) => !isOpen);
-  }
+  };
+
+  const handleRecitemeButtonClick = () => {
+    window.loadService();
+  };
+
+  const handleLinkClick = () => setIsOpen(false);
 
   return (
     <Wrapper data-testid='accessibility' isOpen={isOpen}>
-      <Button data-testid='accessibility-open-button' inverse={mode == Mode.LIGHT || (isMobile && !isOpen)} onClick={handleButtonClick}>
+      <Button
+        data-testid='accessibility-open-button'
+        inverse={mode == Mode.LIGHT || (isMobile && !isOpen)}
+        onClick={handleButtonClick}
+      >
         Accessibility
-        <Icon graphic={isOpen ? 'contract' : 'expand'} />
+        <Icon graphic={'expand'} />
       </Button>
-      {isOpen && (
-        <Content mode={mode} top={top}>
-          <ContentInner>
-            <LinkWrapper>
-              <Link to={`/${Page.ACCESSIBILITY}`}>
-                <BeansLink inverse={mode == Mode.LIGHT}>Information</BeansLink>
-              </Link>
-            </LinkWrapper>
-            <LinkWrapper>
-              <BeansLink className='reciteme' inverse={mode == Mode.LIGHT} href={'#'}>Toolbar (Reciteme)</BeansLink>
-            </LinkWrapper>
-          </ContentInner>
-        </Content>
-      )}
+      <Content mode={mode} isOpen={isOpen}>
+        <ContentInner>
+          <LinkWrapper inverse={mode == Mode.LIGHT}>
+            <Link to={`/${Page.ACCESSIBILITY}`} onClick={handleLinkClick}>
+              <BeansLink inverse={mode == Mode.LIGHT}>Information</BeansLink>
+            </Link>
+          </LinkWrapper>
+          <LinkWrapper inverse={mode == Mode.LIGHT}>
+            <BeansLink
+              className='reciteme'
+              inverse={mode == Mode.LIGHT}
+              href={'#'}
+              onClick={handleRecitemeButtonClick}
+            >
+              Toolbar (Reciteme)
+            </BeansLink>
+          </LinkWrapper>
+        </ContentInner>
+      </Content>
     </Wrapper>
   );
 };

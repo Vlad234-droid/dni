@@ -11,7 +11,7 @@ const HeaderTop: FC = () => {
 
   return (
     <Wrapper data-testid='header-top'>
-      <AccessibilityButton mode={Mode.DARK} top={'36px'} />
+      <AccessibilityButton mode={Mode.DARK} />
       <HeaderLink />
     </Wrapper>
   )
