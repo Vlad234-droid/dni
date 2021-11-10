@@ -1,6 +1,5 @@
 import React, { FC, useState } from 'react';
 
-
 import IntroHeading from '../IntroHeading';
 import IntroDescription from '../IntroDescription';
 import IntroVideo from '../IntroVideo';
