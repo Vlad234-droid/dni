@@ -3,15 +3,11 @@ import { Route, Router } from 'react-router-dom';
 import { createMemoryHistory, createLocation } from 'history';
 import { match } from 'react-router';
 
-import { renderWithProviders } from 'utils/testUtils';
-import { TEST_ID as HEADER_TEST_ID } from 'features/Header';
-// import { TEST_ID as MENU_TEST_ID } from 'features/Menu';
-import { TEST_ID as EVENT_TEST_ID } from 'features/Event';
+import { render } from 'utils/testUtils';
 
 import { TEST_ID as BASE_PAGE_TEST_ID } from '../BasePage';
-// import { TEST_ID as PAGE_HEADER_TEST_ID } from '../PageHeader';
-import { TEST_ID as PAGE_WRAPPER_TEST_ID } from '../PageImageWrapper';
-import EventPage, { TEST_ID, IMAGE_WRAPPER_TEST_ID } from './Event';
+import { TEST_ID as PAGE_IMAGE_WRAPPER_TEST_ID } from '../PageImageWrapper';
+import EventPage, { TEST_ID, IMAGE_WRAPPER_TEST_ID, BREADCRUMB_WRAPPER_TEST_ID } from './Event';
 
 describe('<EventPage />', () => {
   const history = createMemoryHistory();
@@ -24,8 +20,8 @@ describe('<EventPage />', () => {
   };
   const location = createLocation(match.url);
 
-  const render = () =>
-    renderWithProviders(
+  const renderWithProviders = () =>
+    render(
       <Router history={history}>
         <Route path={'/'}>
           <EventPage history={history} location={location} match={match} />
@@ -34,36 +30,34 @@ describe('<EventPage />', () => {
     );
 
   it('should render page wrapper', () => {
-    const { getByTestId } = render();
+    const { getByTestId } = renderWithProviders();
 
     expect(getByTestId(TEST_ID)).toBeInTheDocument();
   });
 
   it('should render base page', () => {
-    const { getByTestId } = render();
+    const { getByTestId } = renderWithProviders();
 
     expect(getByTestId(BASE_PAGE_TEST_ID)).toBeInTheDocument();
   });
 
   it('should render main content blocks', () => {
-    const { getByTestId } = render();
+    const { getByTestId } = renderWithProviders();
 
-    // expect(getByTestId(PAGE_HEADER_TEST_ID)).toBeInTheDocument();
-    expect(getByTestId(PAGE_WRAPPER_TEST_ID)).toBeInTheDocument();
-    expect(getByTestId(HEADER_TEST_ID)).toBeInTheDocument();
-    // expect(getByTestId(MENU_TEST_ID)).toBeInTheDocument();
+    expect(getByTestId(PAGE_IMAGE_WRAPPER_TEST_ID)).toBeInTheDocument();
+    expect(getByTestId('breadcrumb-wrapper')).toBeInTheDocument();
   });
 
-  // TODO: event is not reachable?
-  // it('should render event component', () => {
-  //   const { getByTestId } = render();
-  //
-  //   expect(getByTestId(EVENT_TEST_ID)).toBeInTheDocument();
-  // });
+  it('should render event component', () => {
+    const { getByTestId } = renderWithProviders();
 
-  it('should render image container', () => {
-    const { getByTestId } = render();
+    expect(getByTestId(TEST_ID)).toBeInTheDocument();
+  });
+
+  it('should render image and breadcrumb containers', () => {
+    const { getByTestId } = renderWithProviders();
 
     expect(getByTestId(IMAGE_WRAPPER_TEST_ID)).toBeInTheDocument();
+    expect(getByTestId(BREADCRUMB_WRAPPER_TEST_ID)).toBeInTheDocument();
   });
 });

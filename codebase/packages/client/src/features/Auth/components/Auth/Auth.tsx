@@ -12,6 +12,7 @@ import { AuthProvider } from '../../context/authContext';
 
 const Auth: FC = ({ children }) => {
   const { user, loading, error, networkError, eventError } = useStore<AuthState>((r) => r.auth);
+  console.log('user', user);
   const dispatch = useDispatch();
   const isLoading = useMemo(() => loading !== Loading.SUCCEEDED && loading !== Loading.FAILED, [loading]);
   const isAuthenticated = useMemo(() => Boolean(user?.id), [user]);

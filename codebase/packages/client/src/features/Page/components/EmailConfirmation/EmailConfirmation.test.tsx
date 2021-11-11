@@ -3,7 +3,7 @@ import { Route, Router } from 'react-router-dom';
 import { createMemoryHistory, createLocation } from 'history';
 import { match } from 'react-router';
 
-import { renderWithProviders } from 'utils/testUtils';
+import { render } from 'utils/testUtils';
 import EmailConfirmationPage, { TEST_ID } from './EmailConfirmation';
 
 describe('<EmailConfirmationPage />', () => {
@@ -17,17 +17,14 @@ describe('<EmailConfirmationPage />', () => {
   };
   const location = createLocation(match.url);
 
-  const render = () =>
-    renderWithProviders(
+  it('should render page wrapper', () => {
+    const { getByTestId } = render(
       <Router history={history}>
         <Route path={'/'}>
           <EmailConfirmationPage history={history} location={location} match={match} />
         </Route>
       </Router>,
     );
-
-  it('should render page wrapper', () => {
-    const { getByTestId } = render();
 
     expect(getByTestId(TEST_ID)).toBeInTheDocument();
   });

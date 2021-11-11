@@ -38,7 +38,7 @@ const AccessibilityButton: FC<Props> = ({ mode }) => {
         Accessibility
         <Icon graphic={'expand'} />
       </Button>
-      <Content mode={mode} isOpen={isOpen}>
+      <Content mode={mode} isOpen={isOpen} data-testid='accessibility-content'>
         <ContentInner>
           <LinkWrapper inverse={mode == Mode.LIGHT}>
             <Link to={`/${Page.ACCESSIBILITY}`} onClick={handleLinkClick}>
