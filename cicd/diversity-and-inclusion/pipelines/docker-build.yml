@@ -21,7 +21,7 @@ variables:
   - name: WORKING_DIRECTORY
     value: '$(system.defaultWorkingDirectory)'
   - name: CONFIG_DIRECTORY
-    value: "$(WORKING_DIRECTORY)/cicd/$(diversity-and-inclusion)/$(ENV)"
+    value: "$(WORKING_DIRECTORY)/cicd/diversity-and-inclusion/$(ENV)"
   - name: SCRIPTS_DIRECTORY
     value: "$(WORKING_DIRECTORY)/scripts"
   - name: ACR_NAME
