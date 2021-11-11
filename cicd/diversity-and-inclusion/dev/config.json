@@ -3,15 +3,15 @@
     "name": "diversity-and-inclusion"
   },
   "build": {
-    "dockerFileDirectory": "./dockerfiles/dni-frontend_docker_build_prod.Dockerfile",
+    "dockerFileDirectory": "./dockerfiles/dni-frontend_docker_build.Dockerfile",
     "args": {
       "NEXUS_ACCESS_TOKEN": {
         "type": "secret",
-        "name": "nexus_access_token"
+        "name": "npm_access_token"
       },
       "NODE_ENV": {
         "type": "plain",
-        "value": "production"
+        "value": "ppe"
       },
       "REACT_APP_API_URL": {
         "type": "plain",
@@ -23,7 +23,7 @@
       },
       "REACT_APP_OURTESCO_URL": {
         "type": "plain",
-        "value": "https://www.ourtesco.com"
+        "value": "https://ppe.ourtesco.com"
       },
       "REACT_APP_LOGOUT_URL": {
         "type": "plain",
@@ -39,15 +39,11 @@
     "envs": {
       "NODE_ENV": {
         "type": "plain",
-        "value": "production"
-      },
-      "NODE_CONFIG_ENV": {
-        "type": "plain",
-        "value": "prod"
+        "value": "ppe"
       },
       "RUNTIME_ENV": {
         "type": "plain",
-        "value": "prod"
+        "value": "ppe"
       },
       "NODE_PORT": {
         "type": "plain",
@@ -59,7 +55,7 @@
       },
       "APPLICATION_SERVER_URL_ROOT": {
         "type": "plain",
-        "value": "https://www.ourtesco.com"
+        "value": "https://diversity-and-inclusion.dev.thp.tescocloud.com"
       },
       "APPLICATION_URL_TEMPLATE_POST": {
         "type": "plain",
@@ -93,22 +89,6 @@
         "type": "secret",
         "name": "application_cookie_parser_secret"
       },
-      "AUTH_DATA_COOKIE_NAME": {
-        "type": "plain",
-        "value": "dni.colleague.jwt"
-      },
-      "SESSION_COOKIE_NAME": {
-        "type": "plain",
-        "value": "dni.session.startup"
-      },
-      "APPLICATION_RETURN_TO_COOKIE_NAME": {
-        "type": "plain",
-        "value": "dni.return-to"
-      },
-      "STICK_COOKIES_TO_APPLICATION_PATH": {
-        "type": "plain",
-        "value": "true"
-      },
       "APPLICATION_WEB_HOOKS_SECRET": {
         "type": "secret",
         "name": "application_web_hooks_secret"
@@ -119,7 +99,7 @@
       },
       "MAILING_CHUNK_SIZE": {
         "type": "plain",
-        "value": "1"
+        "value": "30"
       },
       "USE_ONELOGIN": {
         "type": "plain",
@@ -139,7 +119,7 @@
       },
       "OIDC_ISSUER_URL": {
         "type": "plain",
-        "value": "https://login.ourtesco.com/oidc/2"
+        "value": "https://loginppe.ourtesco.com/oidc/2"
       },
       "OIDC_AUTH_CALLBACK_PATH": {
         "type": "plain",
@@ -147,7 +127,7 @@
       },
       "OIDC_REDIRECT_AFTER_LOGOUT_CALLBACK_PATH": {
         "type": "plain",
-        "value": "https://login.ourtesco.com/oidc/2/logout"
+        "value": "/sso/logout/callback"
       },
       "IDENTITY_CLIENT_ID": {
         "type": "secret",
@@ -171,7 +151,7 @@
       },
       "TYPEORM_HOST": {
         "type": "plain",
-        "value": "eun-prod-213-dai-dipostgres.postgres.database.azure.com"
+        "value": "euw-dev-213-dai-dipostgres.postgres.database.azure.com"
       },
       "TYPEORM_PORT": {
         "type": "plain",
@@ -203,11 +183,11 @@
       },
       "TYPEORM_LOGGING": {
         "type": "plain",
-        "value": "false"
+        "value": "true"
       },
       "TYPEORM_RUN_MIGRATION": {
         "type": "plain",
-        "value": "true"
+        "value": "false"
       },
       "CCRM_RUN_SYNC": {
         "type": "plain",
@@ -219,11 +199,11 @@
       },
       "OIDC_GROUPS_ADMIN_ROLE": {
         "type": "plain",
-        "value": "GG-UK-TescoGlobal-DiversityAndInclusion-Admin"
+        "value": "GG-UK-TescoGlobal-DiversityAndInclusion-PPE-Admin"
       },
       "OIDC_GROUPS_MANAGER_ROLE": {
         "type": "plain",
-        "value": "GG-UK-TescoGlobal-DiversityAndInclusion-Manager"
+        "value": "GG-UK-TescoGlobal-DiversityAndInclusion-PPE-Manager"
       }
     }
   }
