@@ -7,7 +7,7 @@
     "args": {
       "NEXUS_ACCESS_TOKEN": {
         "type": "secret",
-        "name": "nexus_access_token"
+        "name": "npm_access_token"
       },
       "NODE_ENV": {
         "type": "plain",
