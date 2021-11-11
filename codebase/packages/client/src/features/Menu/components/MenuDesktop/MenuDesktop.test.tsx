@@ -4,8 +4,8 @@ import { render, screen } from 'utils/testUtils';
 import { UserRole } from 'features/User';
 import { Page } from 'features/Page';
 
-import {menuItemsDesktop} from '../../config/items';
-import MenuDesktop, {TEST_ID} from './MenuDesktop';
+import { menuItemsDesktop } from '../../config/items';
+import MenuDesktop, { TEST_ID } from './MenuDesktop';
 
 describe('<MenuDesktop />', () => {
   describe('render', () => {
