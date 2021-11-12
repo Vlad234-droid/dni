@@ -1,0 +1,76 @@
+trigger: none
+pr: none
+
+pool:
+  name: 'SelfApp'
+
+# Variables set in UI:
+#- TESCO_ENVIRONMENT
+#- AZURE_REGION
+#- SERVICE_CONNECTION_NAME
+variables:
+  - group: github-ssh-key
+  - name: TEAM_NAME
+    value: 'dai'
+  - name: DOCKER_BUILDKIT
+    value: '1'
+  - name: ENV
+    value: $(TESCO_ENVIRONMENT) # set in pipeline UI
+  - name: REGION
+    value: $(AZURE_REGION) # set in pipeline UI
+  - name: WORKING_DIRECTORY
+    value: '$(system.defaultWorkingDirectory)'
+  - name: CONFIG_DIRECTORY
+    value: "$(WORKING_DIRECTORY)/cicd/diversity-and-inclusion/$(ENV)"
+  - name: SCRIPTS_DIRECTORY
+    value: "$(WORKING_DIRECTORY)/scripts"
+  - name: ACR_NAME
+    value: '$(REGION)$(ENV)213$(TEAM_NAME)containerregistry'
+  - name: ACR_URL
+    value: '$(ACR_NAME).azurecr.io'
+
+jobs:
+  - job: build_docker
+    displayName: Build docker image
+    steps:
+      - script:
+          echo "Building docker for $(ENV) environment with
+          $(SERVICE_CONNECTION_NAME) azure service connection on $(REGION)."
+        displayName: ' $(ENV) Build'
+      - task: NodeTool@0
+        inputs:
+          versionSpec: '14.x'
+        displayName: 'Install Node.js'
+      - task: InstallSSHKey@0
+        inputs:
+          knownHostsEntry: '$(knownhosts-entry)'
+          sshPublicKey: '$(public-key)'
+          sshKeySecureFile: 'github-private-key'
+      - task: AzureCLI@2
+        displayName: Decrypt secrets, extract config
+        inputs:
+          azureSubscription: $(SERVICE_CONNECTION_NAME)
+          scriptType: bash
+          scriptLocation: inlineScript
+          inlineScript: |
+            set -e
+            sops -d $(CONFIG_DIRECTORY)/secrets.enc.json > $(SCRIPTS_DIRECTORY)/secrets.json
+            mv  $(CONFIG_DIRECTORY)/config.json $(SCRIPTS_DIRECTORY)/config.json
+          workingDirectory: $(WORKING_DIRECTORY)
+      - script: |
+          set -e
+          node $(SCRIPTS_DIRECTORY)/build-docker-shell-scripts.js
+          sh ./build.sh
+        displayName: Trigger build
+        workingDirectory: $(WORKING_DIRECTORY)
+      - task: AzureCLI@2
+        displayName: Push container
+        inputs:
+          azureSubscription: $(SERVICE_CONNECTION_NAME)
+          scriptType: bash
+          scriptLocation: inlineScript
+          inlineScript: |
+            az acr login -n $ACR_NAME
+            sh ./push.sh
+          workingDirectory: $(WORKING_DIRECTORY)
+

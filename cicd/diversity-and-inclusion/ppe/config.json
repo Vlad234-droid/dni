@@ -7,7 +7,7 @@
     "args": {
       "NEXUS_ACCESS_TOKEN": {
         "type": "secret",
-        "name": "nexus_access_token"
+        "name": "npm_access_token"
       },
       "NODE_ENV": {
         "type": "plain",
@@ -55,7 +55,7 @@
       },
       "APPLICATION_SERVER_URL_ROOT": {
         "type": "plain",
-        "value": "https://diversity-and-inclusion.dev.thp.tescocloud.com"
+        "value": "https://ppe.ourtesco.com"
       },
       "APPLICATION_URL_TEMPLATE_POST": {
         "type": "plain",
@@ -93,13 +93,29 @@
         "type": "secret",
         "name": "application_web_hooks_secret"
       },
+      "AUTH_DATA_COOKIE_NAME": {
+        "type": "plain",
+        "value": "dni.colleague.jwt"
+      },
+      "SESSION_COOKIE_NAME": {
+        "type": "plain",
+        "value": "dni.session.startup"
+      },
+      "APPLICATION_RETURN_TO_COOKIE_NAME": {
+        "type": "plain",
+        "value": "dni.return-to"
+      },
+      "STICK_COOKIES_TO_APPLICATION_PATH": {
+        "type": "plain",
+        "value": "true"
+      },
       "MAILING_NEW_ENTITY_TEMPLATE_ID": {
         "type": "plain",
         "value": "dfge2b6d-qfaa-47c6-bfw9-b4214y0a2e88"
       },
       "MAILING_CHUNK_SIZE": {
         "type": "plain",
-        "value": "30"
+        "value": "1"
       },
       "USE_ONELOGIN": {
         "type": "plain",
@@ -151,7 +167,7 @@
       },
       "TYPEORM_HOST": {
         "type": "plain",
-        "value": "euw-dev-213-dai-dipostgres.postgres.database.azure.com"
+        "value": "eun-ppe-213-dai-dipostgres.postgres.database.azure.com"
       },
       "TYPEORM_PORT": {
         "type": "plain",
