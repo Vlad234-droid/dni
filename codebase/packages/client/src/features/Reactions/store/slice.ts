@@ -42,7 +42,7 @@ const slice = createSlice({
           const reactions = flatten(Object.values(payload)).reduce((res: Reaction[], current: Partial<Reaction>) => {
             const reaction = {
               ...current,
-              id: current!.parent!.id,
+              id: current!.parent!.relatedId,
               reactionId: current.id,
             };
 
@@ -56,7 +56,7 @@ const slice = createSlice({
       .addCase(addReaction.fulfilled, (state: T.State, { payload }) => {
         const reaction = {
           ...payload,
-          id: payload.parent.id,
+          id: payload.parent.relatedId,
           reactionId: payload.id,
         };
 
