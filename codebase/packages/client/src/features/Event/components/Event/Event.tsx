@@ -48,6 +48,7 @@ const EventComponent: FC<Props> = ({ id, event, loadEvent, loadParticipants, loa
   }, []);
 
   const memoizedContent = useMemo(() => {
+    console.log('event', error);
     if (error) return <Error errorData={{ title: ERROR_TITLE, message: ERROR_MESSAGE }} />;
 
     if (!event && isLoading) return <Spinner height='500px' />;

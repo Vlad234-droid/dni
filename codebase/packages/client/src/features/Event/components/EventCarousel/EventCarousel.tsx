@@ -38,7 +38,7 @@ const EventCarousel: FC<Props> = ({ events, loading, participants, error, loadPa
     if (error)
       return (
         <ErrorWrapper>
-          <Error />
+          <Error errorData={{ title: error }}/>
         </ErrorWrapper>
       );
 

@@ -112,6 +112,7 @@ const Network: FC<Props> = ({ id }) => {
           id={id}
           title={network!.title}
           email={network!.contact}
+          slug={network!.slug}
           onLeave={handleLeave}
           onJoin={handleJoin}
           events={network!.events}

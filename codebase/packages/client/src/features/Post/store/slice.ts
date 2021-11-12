@@ -23,6 +23,11 @@ const getOne = createAsyncThunk<T.OneResponse, T.OnePayload>(
   async ({ id }: T.OnePayload) => await API.posts.fetchOne<T.OneResponse>(id),
 );
 
+const createOne = createAsyncThunk<T.OneResponse, T.SetOnePayload>(
+  T.SET_ONE_ACTION,
+  async (data) => await API.posts.create<T.OneResponse>(data),
+);
+
 const getCount = createAsyncThunk<number, FilterPayload>(T.COUNT_ACTION, (data) => API.posts.count<number>(data));
 
 const slice = createSlice({
@@ -85,12 +90,18 @@ const slice = createSlice({
         setSucceeded(state);
       })
       .addCase(getOne.rejected, setFailed)
+      .addCase(createOne.pending, setPending)
+      .addCase(createOne.fulfilled, (state: T.State, action) => {
+        T.EntityAdapter.upsertOne(state, action.payload);
+        setSucceeded(state);
+      })
+      .addCase(createOne.rejected, setFailed)
       .addDefaultCase((state) => state);
   },
 });
 
 const { clear } = slice.actions;
 
-export { getList, getOne, getCount, clear };
+export { getList, getOne, createOne, getCount, clear };
 
 export default slice.reducer;

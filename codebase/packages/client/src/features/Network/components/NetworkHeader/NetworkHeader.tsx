@@ -28,9 +28,10 @@ type Props = {
   onJoin: () => void;
   events: Event[];
   networks: number[];
+  slug: string;
 };
 
-const NetworkHeader: FC<Props> = ({ id, title, email, onLeave, onJoin, events, networks }) => {
+const NetworkHeader: FC<Props> = ({ id, title, email, onLeave, onJoin, events, networks, slug }) => {
   const { isMobile, isLargeMobile } = useMedia();
   const isMobileView = isMobile || isLargeMobile;
   const isJoined = networks.includes(+id);
@@ -55,7 +56,7 @@ const NetworkHeader: FC<Props> = ({ id, title, email, onLeave, onJoin, events, n
         >
           <ModalContent>
             <ModalTitle>Please, input your story below</ModalTitle>
-            <PostCreate networkTitle={title} onClose={handleCloseModal} />
+            <PostCreate networkId={id} onClose={handleCloseModal} />
           </ModalContent>
         </Modal>
       )}

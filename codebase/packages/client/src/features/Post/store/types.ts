@@ -7,6 +7,7 @@ import { Post } from '../config/types';
 const ROOT = 'posts';
 const LIST_ACTION = `${ROOT}/list`;
 const ONE_ACTION = `${ROOT}/one`;
+const SET_ONE_ACTION = `${ROOT}/set_one`;
 const COUNT_ACTION = `${ROOT}/count`;
 
 const EntityAdapter = createEntityAdapter<Post>();
@@ -33,7 +34,8 @@ type OnePayload = {
   id: number;
 };
 
-type SetOnePayload = Post;
+// TODO: fix
+type SetOnePayload = any;
 
 export type {
   State,
@@ -49,5 +51,6 @@ export {
   ROOT,
   LIST_ACTION,
   ONE_ACTION,
+  SET_ONE_ACTION,
   COUNT_ACTION,
 };

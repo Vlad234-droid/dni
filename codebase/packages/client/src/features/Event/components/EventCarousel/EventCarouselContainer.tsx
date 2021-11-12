@@ -14,6 +14,7 @@ const EventCarouselContainer: FC = () => {
   const dispatch = useDispatch();
   const { participants } = useStore((state) => state.events);
   const { networks } = useStore((state) => state.auth.user);
+  const { eventError } = useStore(state => state.auth);
 
   const [filters] = useState({
     ...getPayloadWhere(networks),
@@ -24,8 +25,8 @@ const EventCarouselContainer: FC = () => {
 
   const [loading, list, hasMore, listError, countError] = useFetchEvents(filters);
   const errorMessage = useMemo(
-    () => listError || countError || participants.error,
-    [participants, listError, countError],
+    () => listError || countError || participants.error || eventError,
+    [participants, listError, countError, eventError],
   );
   const loadParticipants = () => dispatch(getParticipants());
 

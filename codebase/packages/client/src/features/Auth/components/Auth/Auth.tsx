@@ -29,7 +29,7 @@ const Auth: FC = ({ children }) => {
     fetchUserAction();
   }, [fetchUserAction]);
 
-  if (error || networkError || eventError) return <Error errorData={{ title: error }} />;
+  if (error) return <Error errorData={{ title: error }} />;
   if (isLoading) return <Spinner height='100vh' />;
 
   return (

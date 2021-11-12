@@ -12,6 +12,7 @@ type Props = {
   onLeave: () => void;
   onJoin: () => void;
   events: Event[];
+  slug: string;
 };
 
 const NetworkHeaderContainer: FC<Props> = ({ id, ...rest }) => {

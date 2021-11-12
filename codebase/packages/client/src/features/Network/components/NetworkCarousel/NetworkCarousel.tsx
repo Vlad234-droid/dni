@@ -21,10 +21,12 @@ import { Wrapper, ParticipantsWrapper } from './styled';
 
 const NetworkCarousel: FC = () => {
   const { isDesktop, isMobile, isLargeMobile } = useMedia();
+  const { networkError } = useStore((state) => state.auth);
 
-  const [{ response: networks, loading, error }, doFetch] = useFetch<Network[]>([]);
+  const [{ response: networks, loading, error: listError }, doFetch] = useFetch<Network[]>([]);
   const { participants } = useStore((state) => state.networks);
   const isLoading = useMemo(() => loading !== Loading.SUCCEEDED && loading !== Loading.FAILED, [loading]);
+  const error = useMemo(() => listError || networkError, [listError, networkError]);
   const [filters] = useState({
     _start: 0,
     _limit: 5,
@@ -38,7 +40,7 @@ const NetworkCarousel: FC = () => {
   }, [filters]);
 
   const memoizedContent = useMemo(() => {
-    if (error) return <Error />;
+    if (error) return <Error errorData={{ title: error }} />;
 
     if (isLoading) return <Spinner height='300px' />;
 

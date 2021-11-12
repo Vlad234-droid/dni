@@ -12,8 +12,9 @@ const EventSidebarContainer: FC = () => {
   const dispatch = useDispatch();
   const events = useSelector(eventsSelector);
   const { participants, loading, error } = useStore((state) => state.events);
+  const { eventError } = useStore(state => state.auth);
   const { networks } = useStore((state) => state.auth.user);
-  const errorMessage = useMemo(() => error || participants.error, [participants, error]);
+  const errorMessage = useMemo(() => error || participants.error || eventError, [participants, error, eventError]);
 
   const handleClear = () => dispatch(clear());
   const loadEvents = (filters: EntityListPayload) => dispatch(getEvents(filters));
