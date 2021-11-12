@@ -45,7 +45,7 @@ const Multiselect: FC<Props> = ({ label, error, options, placeholder, onChange }
   };
 
   return (
-    <FormGroup {...{ label, error }} testId={TEST_ID}>
+    <FormGroup {...{ label, error }} data-testid={TEST_ID}>
       <MultiSelectDropdown
         selectText={placeholder}
         onDropdownToggle={handleToggleOpen}

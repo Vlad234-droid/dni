@@ -7,17 +7,19 @@ import DateTimePicker from './DateTimePicker';
 import { Type } from '../../config/types';
 
 describe('<DateTimePicker />', () => {
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   const props = {
-    onChange: jest.fn(),
-    isRangeValid: true,
     required: true,
     dateTime: {
-      year: 2020,
-      month: 12,
-      day: 3,
-      hour: 13,
-      minute: 30,
+      yyyy: '2020',
+      mm: '12',
+      dd: '3',
     },
+    handleDateChange: jest.fn(),
   };
 
   describe('#render', () => {
@@ -40,69 +42,53 @@ describe('<DateTimePicker />', () => {
 
       expect(queryByTestId('startDate-single-calendar')).toBeInTheDocument();
     });
-
-    it('should display/hide time dropdown on input time icon click', () => {
-      const { getByTestId, queryByTestId } = renderWithTheme(<DateTimePicker type={Type.TYPE_START} {...props} />);
-
-      fireEvent.click(getByTestId('startTime-input-icon'));
-
-      expect(queryByTestId('startTime-dropdown')).toBeInTheDocument();
-
-      fireEvent.click(getByTestId('startTime-input-icon'));
-
-      expect(queryByTestId('startTime-dropdown')).not.toBeInTheDocument();
-    });
   });
 
   describe('#useEffect', () => {
     it('should call onChange with updated value, if date input changes', () => {
-      const expected = DateTime.fromObject({
-        year: 2020,
-        month: 12,
-        day: 5,
-        hour: 13,
-        minute: 30,
-      });
+      const expected = {
+        yyyy: '2020',
+        mm: '12',
+        dd: '5',
+      };
 
       renderWithTheme(<DateTimePicker type={Type.TYPE_START} {...props} />);
       fireEvent.change(screen.getByLabelText('day'), { target: { value: 5 } });
 
-      expect(props.onChange).toHaveBeenCalledTimes(2);
-      expect(props.onChange).toHaveBeenCalledWith(expected);
+      expect(props.handleDateChange).toHaveBeenCalledTimes(1);
+      expect(props.handleDateChange).toHaveBeenCalledWith(expected);
     });
 
     it('should call onChange with updated value, if time input changes', () => {
-      const expected = DateTime.fromObject({
-        year: 2020,
-        month: 12,
-        day: 3,
-        hour: 17,
-        minute: 30,
-      });
+      const expected = {
+        yyyy: '2020',
+        mm: '12',
+        dd: '17',
+      };
 
       renderWithTheme(<DateTimePicker type={Type.TYPE_START} {...props} />);
-      fireEvent.change(screen.getByLabelText('hour'), {
+      fireEvent.change(screen.getByLabelText('day'), {
         target: { value: 17 },
       });
 
-      expect(props.onChange).toHaveBeenCalledTimes(2);
-      expect(props.onChange).toHaveBeenCalledWith(expected);
+      expect(props.handleDateChange).toHaveBeenCalledTimes(1);
+      expect(props.handleDateChange).toHaveBeenCalledWith(expected);
     });
 
     it('should not call onChange, if updated value is equal to previous value', () => {
       renderWithTheme(<DateTimePicker type={Type.TYPE_START} {...props} />);
-      fireEvent.change(screen.getByLabelText('hour'), {
-        target: { value: 13 },
+      fireEvent.change(screen.getByLabelText('day'), {
+        target: { value: 3 },
       });
 
-      expect(props.onChange).toHaveBeenCalledTimes(1);
+      expect(props.handleDateChange).not.toHaveBeenCalled();
     });
 
     it('should not call onChange, if time fragment is not filled', () => {
       renderWithTheme(<DateTimePicker type={Type.TYPE_START} {...props} />);
-      fireEvent.change(screen.getByLabelText('hour'), { target: { value: 1 } });
+      fireEvent.change(screen.getByLabelText('day'), { target: { value: 1 } });
 
-      expect(props.onChange).toHaveBeenCalledTimes(1);
+      expect(props.handleDateChange).toHaveBeenCalledTimes(1);
     });
   });
 });
