@@ -10,6 +10,7 @@ import PageImageWrapper from '../PageImageWrapper';
 
 const TEST_ID = 'event-page';
 const IMAGE_WRAPPER_TEST_ID = 'image-wrapper';
+const BREADCRUMB_WRAPPER_TEST_ID = 'breadcrumb-wrapper';
 
 const EventPage: FC<RouteComponentProps<{ id: string }>> = (props) => {
   const [imageRef, setImageRef] = useState<HTMLElement | null>(null);
@@ -19,7 +20,7 @@ const EventPage: FC<RouteComponentProps<{ id: string }>> = (props) => {
     <div data-testid={TEST_ID}>
       <BreadcrumbWrapperProvider value={breadcrumbRef}>
         <BasePage
-          renderBreadcrumb={() => <div data-testid='breadcrumb-wrapper' ref={(newRef) => setBreadcrumbRef(newRef)} />}
+          renderBreadcrumb={() => <div data-testid={BREADCRUMB_WRAPPER_TEST_ID} ref={(newRef) => setBreadcrumbRef(newRef)} />}
           renderMain={() => (
             <ImageWrapperProvider value={imageRef}>
               <PageImageWrapper
@@ -45,6 +46,6 @@ const ImageWrapper = styled.div`
   bottom: 0;
 `;
 
-export { TEST_ID, IMAGE_WRAPPER_TEST_ID };
+export { TEST_ID, IMAGE_WRAPPER_TEST_ID, BREADCRUMB_WRAPPER_TEST_ID };
 
 export default EventPage;

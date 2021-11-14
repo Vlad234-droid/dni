@@ -9,8 +9,8 @@ export const getAddReactionFilters = ({ type, entityId, entityType, uuid }: { ty
     relatedType: ContentType[entityType.toUpperCase()],
   },
   externalAuthor: {
-    name: 'mocked',
-    email: 'mocked@tesco.com',
+    name: uuid,
+    email: `${uuid}@tesco.com`,
     externalId: uuid,
   },
 });

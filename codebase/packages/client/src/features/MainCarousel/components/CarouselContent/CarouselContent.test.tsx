@@ -1,7 +1,7 @@
 import React from 'react';
 import isString from 'lodash.isstring';
 
-import { renderWithTheme } from 'utils/testUtils';
+import { renderWithTheme, render } from 'utils/testUtils';
 
 import CarouselContent from '../CarouselContent';
 
@@ -33,23 +33,16 @@ describe('<CarouselContent />', () => {
         .forEach((data) => expect(slideItem).toHaveTextContent(data));
     });
 
-    it('should render "Read more" button, if isOpen is false', () => {
-      const { getByText, getByTestId } = renderWithTheme(<DummySlideItem />);
-
-      expect(getByText('Read more')).toBeInTheDocument();
-    });
-
-    it('should render "Read less" button, if isOpen is true', () => {
-      const newTestDate = {
-        ...testData,
-        isOpen: true,
+    it('should render props provided', () => {
+      const props = {
+        title: 'mocked-title',
+        description: 'mocked-description',
+        image: {
+          src: 'mocked-src',
+        }
       };
 
-      const { getByText } = renderWithTheme(
-        <CarouselContent {...newTestDate} />,
-      );
-
-      expect(getByText('Read less')).toBeInTheDocument();
+      render(<CarouselContent {...props} />);
     });
   });
 });

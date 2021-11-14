@@ -36,6 +36,7 @@ describe('<BasePage />', () => {
       isMobile: true,
       isLargeMobile: false,
       isTablet: false,
+      isLargeTablet: false,
       isDesktop: false,
       lt: jest.fn(),
       lte: jest.fn(),

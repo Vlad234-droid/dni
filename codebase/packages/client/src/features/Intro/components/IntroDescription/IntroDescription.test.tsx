@@ -9,10 +9,10 @@ jest.mock('context/InterfaceContext');
 
 describe('<IntroDescription />', () => {
   describe('#render', () => {
-    it('should render opened content, if !isTablet (even if !isOpen) and dont render buttons', () => {
+    it('should render opened content, if !isDesktop (even if !isOpen) and dont render buttons', () => {
       // @ts-ignore
       useMedia.mockReturnValue({
-        isTablet: false,
+        isDesktop: false,
       });
 
       const props = {
@@ -27,10 +27,10 @@ describe('<IntroDescription />', () => {
       expect(queryByText('Read less')).not.toBeInTheDocument();
     });
 
-    it('should render collapsed content and "Read more" button, if isTablet and !isOpen', () => {
+    it('should render collapsed content and "Read more" button, if isDesktop and !isOpen', () => {
       // @ts-ignore
       useMedia.mockReturnValue({
-        isTablet: true,
+        isDesktop: true,
       });
 
       const props = {
@@ -44,10 +44,10 @@ describe('<IntroDescription />', () => {
       expect(getByText('Read more')).toBeInTheDocument();
     });
 
-    it('should render visible content and "Read less" button, if isTablet and isOpen', () => {
+    it('should render visible content and "Read less" button, if isDesktop and isOpen', () => {
       // @ts-ignore
       useMedia.mockReturnValue({
-        isTablet: true,
+        isDesktop: true,
       });
 
       const props = {

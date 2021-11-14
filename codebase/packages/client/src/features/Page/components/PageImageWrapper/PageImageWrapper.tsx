@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 
 import { Wrapper, Header, Content } from './styled';
 
-const TEST_ID = 'page-wrapper';
+const TEST_ID = 'page-image-wrapper';
 
 type Props = {
   renderImage: () => JSX.Element;
