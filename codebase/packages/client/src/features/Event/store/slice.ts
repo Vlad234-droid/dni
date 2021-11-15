@@ -101,7 +101,6 @@ const slice = createSlice({
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const setFailed = (state: T.State, payload: any) => {
-      console.log('list', payload);
       state.loading = Loading.FAILED;
       state.error = payload.error.message;
     };

@@ -34,7 +34,7 @@ type OnePayload = {
   id: number;
 };
 
-// TODO: fix
+// TODO: temporary - remove
 type SetOnePayload = any;
 
 export type {
