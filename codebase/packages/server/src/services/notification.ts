@@ -18,7 +18,7 @@ const findNotifications = async (colleagueUUID: string) => {
       p_colleague_uuid := $1::uuid, 
       p_filter_entity_types := ARRAY['post'::${schemaPrefix}dni_entity_type_enum, 'event'::${schemaPrefix}dni_entity_type_enum],
       p_filter_subscription_entity_types := ARRAY['network'::${schemaPrefix}dni_entity_type_enum, 'event'::${schemaPrefix}dni_entity_type_enum]
-    )`,
+    ) WHERE notified_at > CURRENT_DATE - INTERVAL '3 months'`,
     [colleagueUUID],
   );
 
