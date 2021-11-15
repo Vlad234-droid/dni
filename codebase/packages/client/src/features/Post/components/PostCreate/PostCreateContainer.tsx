@@ -50,7 +50,7 @@ const PostCreateContainer: FC<Props> = ({ networkId, onClose }) => {
       createOne({
         title: data.title,
         content: data.content,
-        slug: `${network!.slug}-${Math.random()}`,
+        slug: `${network!.slug}-${String(Date.now())}`,
         tenant: 4,
         network: [networkId],
         allowComments: true,
