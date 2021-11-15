@@ -19,8 +19,8 @@ const PostCreateContainer: FC<Props> = ({ networkId, onClose }) => {
   const dispatch = useDispatch();
   const network = useSelector(byIdSelector(networkId));
 
-  const handleShareStory = async (data: FormData) =>
-    await dispatch(
+  const handleShareStory = async (data: FormData) => {
+    const result = await dispatch(
       shareStory({
         storyTitle: data.title,
         story: data.content,
@@ -28,12 +28,29 @@ const PostCreateContainer: FC<Props> = ({ networkId, onClose }) => {
       }),
     );
 
-  const handleCreatePost = async (data: FormData) =>
-    await dispatch(
+    // @ts-ignore
+    if (shareStory.fulfilled.match(result)) {
+      dispatch(
+        toasterActions.createToast({
+          skin: ToastSkin.ENTITY_CREATE_SUCCESS,
+        }),
+      );
+      onClose();
+    } else {
+      dispatch(
+        toasterActions.createToast({
+          skin: ToastSkin.ENTITY_CREATE_ERROR,
+        }),
+      );
+    }
+  }
+ // TODO: temporary solution
+  const handleCreatePost = async (data: FormData) => {
+    const result = await dispatch(
       createOne({
         title: data.title,
         content: data.content,
-        slug: network!.slug,
+        slug: `${network!.slug}-${Math.random()}`,
         tenant: 4,
         network: [networkId],
         allowComments: true,
@@ -43,22 +60,28 @@ const PostCreateContainer: FC<Props> = ({ networkId, onClose }) => {
       }),
     );
 
-  const handleSubmit = async (data: FormData) => {
-    const result = CONTACT_API_ENABLED ? await handleShareStory(data) : await handleCreatePost(data);
-
     // @ts-ignore
-    if (shareStory.fulfilled.match(result)) {
+    if (createOne.fulfilled.match(result)) {
       dispatch(
         toasterActions.createToast({
           skin: ToastSkin.ENTITY_CREATE_SUCCESS,
         }),
       );
+      onClose();
     } else {
       dispatch(
         toasterActions.createToast({
           skin: ToastSkin.ENTITY_CREATE_ERROR,
         }),
       );
+    }
+  }
+
+  const handleSubmit = async (data: FormData) => {
+    if (CONTACT_API_ENABLED) {
+      await handleShareStory(data);
+    } else {
+      await handleCreatePost(data)
     }
   };
 
