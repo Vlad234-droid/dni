@@ -16,7 +16,7 @@ import { LINKS } from 'config/constants';
 import defaultImage from 'assets/pride-logo.jpg';
 
 import { byIdSelector, getOne } from '../../store';
-import NetworkPartners from './NetworkPartners';
+import NetworkPartners from '../NetworkPartners';
 import NetworkHeader from '../NetworkHeader';
 import { Wrapper, Content, LeftContent, RightContent, DescriptionWrapper, DescriptionTitle } from './styled';
 
@@ -112,6 +112,7 @@ const Network: FC<Props> = ({ id }) => {
           id={id}
           title={network!.title}
           email={network!.contact}
+          slug={network!.slug}
           onLeave={handleLeave}
           onJoin={handleJoin}
           events={network!.events}
@@ -135,7 +136,14 @@ const Network: FC<Props> = ({ id }) => {
             <PostList entityId={id} filter={BY_NETWORK} />
           </LeftContent>
           <RightContent>
-            <NetworkPartners partners={network!.partners} email={network!.contact} />
+            <NetworkPartners
+              id={id}
+              partners={network!.partners}
+              email={network!.contact}
+              onLeave={handleLeave}
+              onJoin={handleJoin}
+              events={network!.events}
+            />
           </RightContent>
         </Content>
       </>

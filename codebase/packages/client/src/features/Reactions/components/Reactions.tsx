@@ -39,7 +39,7 @@ const Reactions: FC<Props> = ({
 }) => {
   const [reactionsCount, setReactionsCount] = useState(reactions);
   const totalCount = useMemo(
-    () => Object.values(reactionsCount).reduce((sum, count) => sum + count, 0),
+    () => reactionsCount ? Object.values(reactionsCount).reduce((sum, count) => sum + count, 0) : 0,
     [reactionsCount],
   );
 
@@ -105,7 +105,7 @@ const Reactions: FC<Props> = ({
               defaultIconSrc={icon.default}
               isActive={userReaction?.type === type}
             />
-            <ReactionCount>{reactionsCount[type]}</ReactionCount>
+            {reactionsCount && <ReactionCount>{reactionsCount[type]}</ReactionCount>}
           </ReactionsItem>
         ))}
         <TotalCount>
@@ -113,7 +113,7 @@ const Reactions: FC<Props> = ({
             {emojis.map(({ type, icon }): JSX.Element => (
               <DetailsItem key={type}>
                 <PostEmotionIconSmall activeIconSrc={icon.active} />
-                {reactionsCount[type]}
+                {reactionsCount && reactionsCount[type]}
               </DetailsItem>
             ))}
           </CountDetails>

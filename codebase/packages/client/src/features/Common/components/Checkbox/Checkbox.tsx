@@ -4,7 +4,7 @@ import FormGroup from '@beans/form-group';
 
 type Props = {
   label: string;
-  error: string;
+  error?: string;
   onChange: (checked: boolean) => null;
 };
 

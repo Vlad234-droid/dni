@@ -22,6 +22,7 @@ const EventTable: FC = () => {
   const { isMobile, isLargeMobile } = useMedia();
   const isMobileView = isMobile || isLargeMobile;
   const { networks } = useStore((state) => state.auth.user);
+  const { eventError } = useStore(state => state.auth);
   const [page, setPage] = useState<number>(0);
   const { participants } = useStore((state) => state.events);
   const filters = {
@@ -32,11 +33,11 @@ const EventTable: FC = () => {
   };
   const [loading, events, hasMore, listError, countError] = useFetchEvents(filters, page);
   const isLoading = useMemo(() => loading !== Loading.SUCCEEDED && loading !== Loading.FAILED, [loading]);
-  const error = useMemo(() => listError || countError || participants.error, [participants, listError, countError]);
+  const error = useMemo(() => listError || countError || participants.error || eventError, [participants, listError, countError, eventError]);
   const tooltipPosition = { top: '38px', left: '32px' };
 
   const memoizedContent = useMemo(() => {
-    if (error) return <Error />;
+    if (error) return <Error errorData={{ title: error }}/>;
 
     if (isEmpty(events) && isLoading) return <Spinner height='500px' />;
 

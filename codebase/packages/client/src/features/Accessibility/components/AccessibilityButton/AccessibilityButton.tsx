@@ -49,7 +49,6 @@ const AccessibilityButton: FC<Props> = ({ mode }) => {
             <BeansLink
               className='reciteme'
               inverse={mode == Mode.LIGHT}
-              href={'#'}
               onClick={handleRecitemeButtonClick}
             >
               Toolbar (Reciteme)

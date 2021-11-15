@@ -23,12 +23,13 @@ import { initialListFilters, ALL, YOUR_NETWORKS } from '../../config/filters';
 import { getList, getCount, listSelector, clear, getParticipants } from '../../store';
 import NetworkAction from '../NetworkAction';
 import { Wrapper, ListContainer, ParticipantsWrapper } from './styled';
+import {State as AuthState} from "../../../Auth/store";
 
 const TEST_ID = 'networks-list';
 
 const NetworkList: FC = () => {
   const dispatch = useDispatch();
-  const { networks } = useStore((state) => state.auth.user);
+  const { user: { networks }, networkError } = useStore((state) => state.auth);
   const [filter, setFilter] = useState<Filter>(YOUR_NETWORKS);
   const [filters, setFilters] = useState<FilterPayload>({
     id_in: [...(networks || []), -1],
@@ -45,7 +46,7 @@ const NetworkList: FC = () => {
   const networksList = useSelector((state: RootState) => listSelector(state, filter === ALL ? undefined : networks));
   const hasMore = useMemo(() => networksList.length < total, [networksList, total]);
   const isLoading = useMemo(() => loading !== Loading.SUCCEEDED && loading !== Loading.FAILED, [loading]);
-  const error = useMemo(() => listError || countError, [listError, countError]);
+  const error = useMemo(() => listError || countError || networkError, [listError, countError, networkError]);
 
   const loadNetworks = useCallback(
     (filters: FilterPayload) => {
@@ -125,7 +126,7 @@ const NetworkList: FC = () => {
   }, [networks]);
 
   const memoizedContent = useMemo(() => {
-    if (error) return <Error />;
+    if (error) return <Error errorData={{ title: error }} />;
 
     if (isEmpty(networksList) && isLoading) return <Spinner height='500px' />;
 

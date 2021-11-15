@@ -21,7 +21,13 @@ type Attachment = {
   width: number;
 };
 
+type FormData = {
+  title: string;
+  content: string;
+  confirm: boolean;
+};
+
 type Filter = typeof ALL | typeof BY_NETWORK | typeof BY_EVENT;
 
 export { PostStatus };
-export type { Post, Filter, Attachment };
+export type { Post, Filter, Attachment, FormData };

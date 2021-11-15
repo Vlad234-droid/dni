@@ -34,7 +34,8 @@ type OnePayload = {
   id: number;
 };
 
-type SetOnePayload = Post;
+// TODO: temporary - remove
+type SetOnePayload = any;
 
 export type {
   State,

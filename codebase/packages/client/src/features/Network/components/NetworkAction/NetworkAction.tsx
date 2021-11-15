@@ -63,7 +63,7 @@ const NetworkAction: FC<Props> = ({ id, events, onLeave, onJoin }) => {
 
   return isJoined ? (
     <>
-      <Button variant='primary' onClick={handleLeave}>
+      <Button variant='secondary' onClick={handleLeave}>
         Leave
       </Button>
       <ModalLeave isOpen={isModalOpen} onClose={handleModalClose} onConfirm={handleConfirmLeave} />

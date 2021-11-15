@@ -10,7 +10,7 @@ type Props = {
 };
 
 const NetworkPartnersList: FC<Props> = ({ partners }) => (
-  <Wrapper>
+  <Wrapper data-testid='network-partners'>
     {partners.map(({ id, image }) => {
       // dont show partner if there is no image for it?
       if (!image) return null;

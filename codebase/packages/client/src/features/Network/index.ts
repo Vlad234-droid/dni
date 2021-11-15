@@ -5,4 +5,5 @@ export { default as PartnersEditor } from './components/PartnersEditor';
 export { default as NetworkCarousel } from './components/NetworkCarousel';
 export { default as NetworkMainCarousel } from './components/NetworkMainCarousel';
 export { default as networksReducer, getList, listSelector, networksAdapter } from './store';
+export { byIdSelector } from './store/selectors';
 export type { default } from './config/types';
