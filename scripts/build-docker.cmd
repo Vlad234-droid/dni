@@ -18,6 +18,8 @@ docker build ^
    --progress plain ^
    --tag dni_local:latest ^
    --build-arg NEXUS_ACCESS_TOKEN=%NEXUS_ACCESS_TOKEN% ^
+   --build-arg REACT_APP_RECITE_ME_SERVICE_KEY=%REACT_APP_RECITE_ME_SERVICE_KEY% ^
+   --build-arg REACT_APP_CONTACT_API_ENABLED=false ^
    --build-arg NODE_ENV=ppe ^
    --build-arg PUBLIC_URL=/diversity-and-inclusion ^
    --build-arg REACT_APP_API_URL=/api ^
