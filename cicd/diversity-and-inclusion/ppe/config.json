@@ -53,6 +53,10 @@
         "type": "plain",
         "value": "ppe"
       },
+      "BUILD_ENV": {
+        "type": "plain",
+        "value": "ppe"
+      },
       "NODE_PORT": {
         "type": "plain",
         "value": "9000"
@@ -72,6 +76,10 @@
       "APPLICATION_URL_TEMPLATE_EVENT": {
         "type": "plain",
         "value": "/events/%ID%"
+      },
+      "APPLICATION_URL_TEMPLATE_CONFIRMATION": {
+        "type": "plain",
+        "value": "/confirm-email-change/%TOKEN%"
       },
       "APPLICATION_URL_UNSUBSCRIBE": {
         "type": "plain",
