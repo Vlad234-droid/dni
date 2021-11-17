@@ -96,6 +96,7 @@ const ContentInner = styled.div`
 
   ${Media.tablet`
     width: 70%;
+    margin: 0;
   `}
 `;
 

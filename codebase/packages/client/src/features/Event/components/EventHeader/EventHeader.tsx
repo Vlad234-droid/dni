@@ -37,6 +37,7 @@ const EventHeader: FC<Props> = ({ event, participants }) => {
   const isOnAir = isEventOnAir(startDate, endDate);
   const isPast = isPastEvent(endDate);
   const calendarDescription = shortDescription ? `${shortDescription} \\n\\n` : '';
+  const placesLeft = maxParticipants - participants;
 
   return (
     <Wrapper>
@@ -85,14 +86,17 @@ const EventHeader: FC<Props> = ({ event, participants }) => {
           {startDate}
         </TextIconWrapper>
         <Inner>
-          <TextIconWrapper>
-            <Icon graphic='account' />
-            <span>
-              {participants} {participants === 1 ? 'is' : 'are'} participating.{' '}
-              {maxParticipants && `${maxParticipants} is maximum capacity.`}
-            </span>
-            {isMobileView && <CopyLink />}
-          </TextIconWrapper>
+          {(isMobileView || maxParticipants) && (
+            <TextIconWrapper>
+              {maxParticipants && !isPast && (
+                <>
+                  <Icon graphic='account' />
+                  <span>{placesLeft}&nbsp;{`place${placesLeft === 1 ? '' : 's'} left`}</span>
+                </>
+              )}
+              {isMobileView && <CopyLink />}
+            </TextIconWrapper>
+          )}
         </Inner>
         {description && <RichTextRenderer source={description} />}
       </Description>

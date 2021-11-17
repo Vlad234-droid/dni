@@ -4,15 +4,13 @@ import Icon from '@beans/icon';
 
 type Props = {
   participants?: number;
-  maxParticipants?: number;
 };
 
-const Participants: FC<Props> = ({ participants = 0, maxParticipants }) => (
+const Participants: FC<Props> = ({ participants = 0 }) => (
   <Wrapper>
     <Icon graphic='account' size={'sm'} />
     <Text>
       <span>{participants}</span>
-      &nbsp;{maxParticipants && <span>{`/ ${maxParticipants}`}</span>}
       &nbsp;<span>{`participant${participants === 1 ? '' : 's'}`}</span>
     </Text>
   </Wrapper>

@@ -14,7 +14,6 @@ import { EmptyContainer, Error, Spinner } from 'features/Common';
 import { Page } from 'features/Page';
 import Loading from 'types/loading';
 import { RootState } from 'store/rootReducer';
-import Participants from 'features/Participants';
 import { CanPerform } from 'features/Auth';
 import { Action, buildAction, Component } from 'features/Action';
 
@@ -22,6 +21,7 @@ import { Filter } from '../../config/types';
 import { initialListFilters, ALL, YOUR_NETWORKS } from '../../config/filters';
 import { getList, getCount, listSelector, clear, getParticipants } from '../../store';
 import NetworkAction from '../NetworkAction';
+import Participants from '../Participants';
 import { Wrapper, ListContainer, ParticipantsWrapper } from './styled';
 import {State as AuthState} from "../../../Auth/store";
 

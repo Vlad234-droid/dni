@@ -7,11 +7,11 @@ import { EmptyContainer, Error, Spinner } from 'features/Common';
 import { Page } from 'features/Page';
 import Loading from 'types/loading';
 import { useMedia } from 'context/InterfaceContext';
-import Participants from 'features/Participants';
 
 import { isEventOnAir, isActionDisabled } from '../../utils';
 import Event from '../../config/types';
 import EventAction from '../EventAction';
+import Participants from '../Participants';
 import { Wrapper, ErrorWrapper } from './styled';
 
 const CONTENT_HEIGHT = '483px';
