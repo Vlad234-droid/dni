@@ -36,7 +36,7 @@ const Layout: FC<LayoutProps> = ({
         <HeaderReducer>{renderMainHeader()}</HeaderReducer>
       </MainHeaderContainer>
       <HeaderContainer>
-        <HeaderReducer>
+        <HeaderReducer relative>
           {renderHeader()}
           {renderBreadcrumb && <BreadCrumbContainer>{renderBreadcrumb()}</BreadCrumbContainer>}
         </HeaderReducer>
