@@ -239,7 +239,7 @@
       },
       "CCRM_RUN_SYNC": {
         "type": "plain",
-        "value": "false"
+        "value": "true"
       },
       "CACHE_COLLEAGUE_TTL": {
         "type": "plain",
