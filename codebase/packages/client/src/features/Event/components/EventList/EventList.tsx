@@ -11,12 +11,12 @@ import { EmptyContainer, Error, Spinner } from 'features/Common';
 import { Page } from 'features/Page';
 import Loading from 'types/loading';
 import { Type } from 'features/Tile';
-import Participants from 'features/Participants';
 
 import Event, { Filter } from '../../config/types';
 import { initialListFilters } from '../../config/filters';
 import { getPayloadPeriod, getPayloadWhere, isActionDisabled } from '../../utils';
 import EventAction from '../EventAction';
+import Participants from '../Participants';
 import { Wrapper } from './styled';
 
 const TEST_ID = 'events-list';

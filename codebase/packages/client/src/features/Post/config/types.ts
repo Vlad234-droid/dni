@@ -23,7 +23,7 @@ type Attachment = {
 
 type FormData = {
   title: string;
-  content: string;
+  story: string;
   confirm: boolean;
 };
 

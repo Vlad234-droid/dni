@@ -10,13 +10,13 @@ import { Page } from 'features/Page';
 import List from 'features/List';
 import Loading from 'types/loading';
 import { useMedia } from 'context/InterfaceContext';
-import Participants from 'features/Participants';
 import { CanPerform } from 'features/Auth';
 import { Action, buildAction, Component } from 'features/Action';
 
 import { Network } from '../../config/types';
 import { serializer } from '../../store';
 import NetworkAction from '../NetworkAction';
+import Participants from '../Participants';
 import { Wrapper, ParticipantsWrapper } from './styled';
 
 const NetworkCarousel: FC = () => {

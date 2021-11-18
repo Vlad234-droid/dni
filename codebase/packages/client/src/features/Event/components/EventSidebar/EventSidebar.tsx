@@ -9,11 +9,11 @@ import Loading from 'types/loading';
 import { EntityListPayload } from 'types/payload';
 import { Page } from 'features/Page';
 import { DEFAULT_FILTERS } from 'config/constants';
-import Participants from 'features/Participants';
 
 import { isActionDisabled, isEventOnAir, getPayloadWhere } from '../../utils';
 import Event from '../../config/types';
 import EventAction from '../EventAction';
+import Participants from '../Participants';
 import { List, Title, Wrapper } from './styled';
 
 const TEST_ID = 'events-sidebar';

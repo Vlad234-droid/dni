@@ -135,8 +135,8 @@ export const HeaderContainer = styled.div.attrs({
   `}
 `;
 
-export const HeaderReducer = styled.div`
-  //position: relative;
+export const HeaderReducer = styled.div<{relative?: boolean}>`
+  position: ${({ relative }) => relative ? 'relative' : 'static'};
 
   ${Media.small_desktop`
     grid-area: header-reducer;

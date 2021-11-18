@@ -42,70 +42,94 @@ const Reactions: FC<Props> = ({
     () => reactionsCount ? Object.values(reactionsCount).reduce((sum, count) => sum + count, 0) : 0,
     [reactionsCount],
   );
+  const [canPerform, setCanPerform] = useState(true);
 
-  const handleReactionClick = useCallback(
+  const handleCreation = useCallback(async (type: ReactionType) => {
+    // to narrow the type
+    if (!uuid) return;
+
+    // disable action
+    setCanPerform(false);
+
+    const filters = getAddReactionFilters({ type, entityId, uuid, entityType });
+    const res = await addReaction(filters);
+    setReactionsCount((reactionsCount) => ({
+      ...reactionsCount,
+      [type]: reactionsCount[type] + 1,
+    }));
+
+    // if success enable actions
+    // @ts-ignore
+    if (res.payload) {
+      setCanPerform(true);
+    }
+  }, [reactionsCount, uuid, canPerform]);
+
+  const handleDelete = useCallback(async (type: ReactionType, reactionType: ReactionType, reactionId: number) => {
+    // to narrow the type
+    if (!uuid) return;
+
+    // disable action
+    setCanPerform(false);
+
+    // reaction exists --> delete or update
+    const res = await deleteReaction({
+      uuid,
+      reactionId,
+      entityId,
+    });
+    setReactionsCount((reactionsCount) => ({
+      ...reactionsCount,
+      [reactionType]: reactionsCount[reactionType] - 1,
+    }));
+
+    // if success enable actions
+    // @ts-ignore
+    if (res.payload) {
+      setCanPerform(true);
+    }
+  }, [reactionsCount, uuid]);
+
+
+  const changeHandler = useCallback(
     async (type: ReactionType) => {
 
-      // to narrow the type
-      if (!uuid) return;
+      if (!canPerform) return;
 
       // no reaction --> add
       if (!userReaction) {
-        const filters = getAddReactionFilters({ type, entityId, uuid, entityType });
-
-        addReaction(filters);
-
-        setReactionsCount((reactionsCount) => ({
-          ...reactionsCount,
-          [type]: reactionsCount[type] + 1,
-        }));
+        await handleCreation(type);
       } else {
         const { type: reactionType, reactionId } = userReaction;
-
-        // reaction exists --> delete or update
-        await deleteReaction({
-          uuid,
-          reactionId,
-          entityId,
-        });
-
-        setReactionsCount((reactionsCount) => ({
-          ...reactionsCount,
-          [reactionType]: reactionsCount[reactionType] - 1,
-        }));
+        await handleDelete(type, reactionType, reactionId);
 
         // another reaction exists --> update
         if (reactionType !== type) {
-          const filters = getAddReactionFilters({ type, entityId, uuid, entityType });
-
-          addReaction(filters);
-
-          setReactionsCount((reactionsCount) => ({
-            ...reactionsCount,
-            [type]: reactionsCount[type] + 1,
-          }));
+          await handleCreation(type);
         }
       }
     },
-    [userReaction, reactions, reactionsCount, uuid],
+    [userReaction, canPerform],
   );
 
   return (
-    <Wrapper>
+    <Wrapper data-testid='reactions'>
       <ReactionsList>
         {emojis.map(({ type, icon }): JSX.Element => (
           <ReactionsItem
+            data-testid={`reactions-item-${type}`}
             key={type}
             onClick={() => {
-              handleReactionClick(type);
+              changeHandler(type);
             }}
           >
             <PostEmotionIconBig
+              data-testid={`reaction-icon-${type}`}
               activeIconSrc={icon.active}
               defaultIconSrc={icon.default}
               isActive={userReaction?.type === type}
             />
-            {reactionsCount && <ReactionCount>{reactionsCount[type]}</ReactionCount>}
+            {reactionsCount && <ReactionCount data-testid={`reactions-count-${type}`}>{reactionsCount[type]}</ReactionCount>}
           </ReactionsItem>
         ))}
         <TotalCount>
@@ -117,7 +141,7 @@ const Reactions: FC<Props> = ({
               </DetailsItem>
             ))}
           </CountDetails>
-          <span>{totalCount}</span>
+          <span data-testid='reactions-total-count'>{totalCount}</span>
         </TotalCount>
       </ReactionsList>
     </Wrapper>

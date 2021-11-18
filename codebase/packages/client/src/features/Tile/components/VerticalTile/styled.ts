@@ -58,8 +58,13 @@ export const Meta = styled.div<{ type: Type }>`
   line-height: 22px;
   color: ${({ theme }) => theme.colors.grayscale};
 
+  & div:first-child {
+    min-height: 44px;
+  }
+
   & div:not(:last-child) {
-    margin-bottom: 9px;
+    min-height: 44px;
+    margin-bottom: 20px;
   }
 `;
 
