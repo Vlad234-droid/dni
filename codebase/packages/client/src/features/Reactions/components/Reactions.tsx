@@ -58,7 +58,7 @@ const Reactions: FC<Props> = ({
       [type]: reactionsCount[type] + 1,
     }));
 
-    // if success unable actions
+    // if success enable actions
     // @ts-ignore
     if (res.payload) {
       setCanPerform(true);
@@ -83,7 +83,7 @@ const Reactions: FC<Props> = ({
       [reactionType]: reactionsCount[reactionType] - 1,
     }));
 
-    // if success unable actions
+    // if success enable actions
     // @ts-ignore
     if (res.payload) {
       setCanPerform(true);

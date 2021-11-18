@@ -23,7 +23,7 @@ const PostCreateContainer: FC<Props> = ({ networkId, onClose }) => {
     const result = await dispatch(
       shareStory({
         storyTitle: data.title,
-        story: data.content,
+        story: data.story,
         networkTitle: network!.title,
       }),
     );
@@ -49,7 +49,7 @@ const PostCreateContainer: FC<Props> = ({ networkId, onClose }) => {
     const result = await dispatch(
       createOne({
         title: data.title,
-        content: data.content,
+        content: data.story,
         slug: `${network!.slug}-${String(Date.now())}`,
         tenant: 4,
         network: [networkId],

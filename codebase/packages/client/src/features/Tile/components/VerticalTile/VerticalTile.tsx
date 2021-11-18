@@ -20,7 +20,7 @@ type Props = {
   } | null;
   renderAction: () => JSX.Element;
   meta?: string;
-  renderParticipants?: () => JSX.Element | null;
+  renderParticipants?: () => JSX.Element;
   isOnAir?: boolean;
 };
 
