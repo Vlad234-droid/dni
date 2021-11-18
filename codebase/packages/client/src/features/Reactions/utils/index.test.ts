@@ -20,7 +20,7 @@ describe('#Reactions utils', () => {
           relatedType: ContentType.POST,
         },
         externalAuthor: {
-          name: 'mocked-uui',
+          name: 'mocked-uuid',
           email: 'mocked-uuid@tesco.com',
           externalId: 'mocked-uuid',
         },
