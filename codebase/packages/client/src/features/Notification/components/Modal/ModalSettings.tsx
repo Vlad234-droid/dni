@@ -15,7 +15,7 @@ const ModalSettings: FC<Props> = ({ isOpen, onClose }) => (
     <ConfirmationModal
       isOpen={isOpen}
       onClose={onClose}
-      renderContent={() => <p>Please note, to receive important update you need to update your settings. Here is the <Link href={Page.NOTIFICATION_SETTINGS}>link</Link> to the setting page. If you do not want to receive notifications just cancel this notification.</p>}
+      renderContent={() => <p>Please note, to receive important update you need to update your settings. Here is the <Link href={`/${Page.NOTIFICATION_SETTINGS}`}>link</Link> to the setting page. If you do not want to receive notifications just cancel this notification.</p>}
     />
   </BeansModal>
 );

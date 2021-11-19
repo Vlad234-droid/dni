@@ -5,3 +5,4 @@ export { default as NotificationSettings } from './components/NotificationSettin
 export { default as notificationReducer, getPersonalEmail } from './store/slice';
 export { default as NotificationContext, NotificationProvider, useNotification } from './context/NotificationContext';
 export { default as useSettingsModal } from './hooks/useSettingsModal';
+export { ModalEmailSettings } from './components/Modal';
