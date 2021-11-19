@@ -15,14 +15,6 @@ export default [
   },
   {
     id: 2,
-    title: 'Race & Ethnicity at Tesco',
-    description: 'Supporting and encouraging ethnically diverse colleagues to be the best they can be, whilst engaging with the wider community, for a more inclusive future.',
-    image: {
-      src: raceAndEthnicityImage,
-    },
-  },
-  {
-    id: 3,
     title: 'Disability at Tesco',
     description: 'Supporting colleagues with disabilities, connecting with people of a similar interest and background and helping colleagues to reach their full potential.',
     image: {
@@ -30,11 +22,19 @@ export default [
     },
   },
   {
-    id: 4,
+    id: 3,
     title: 'LGBTQ+ at Tesco',
     description: 'Connecting our members together in a safe environment and provide a place where they can seek advice and support confidentially on matters that are important to them while helping to shape and support the business with policies, products and services for Tesco LGBTQ+ colleagues and customers.',
     image: {
       src: lgbtImage,
+    },
+  },
+  {
+    id: 4,
+    title: 'Race & Ethnicity at Tesco',
+    description: 'Supporting and encouraging ethnically diverse colleagues to be the best they can be, whilst engaging with the wider community, for a more inclusive future.',
+    image: {
+      src: raceAndEthnicityImage,
     },
   },
   {
