@@ -73,7 +73,7 @@ const PostCreate: FC<Props> = ({ onClose, onSubmit }) => {
         </FieldWrapper>
         <Buttons>
           <Button type='submit' size={'md'}>
-            Publish
+            Submit
           </Button>
           <Button onClick={onClose}>
             Cancel
