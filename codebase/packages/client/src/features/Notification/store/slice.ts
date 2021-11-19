@@ -44,12 +44,10 @@ const updatePersonalEmail = createAsyncThunk<T.EmailAddress, any>(
   A.UPDATE_PERSONAL_EMAIL,
   async (emailAddress: T.EmailAddress) => {
     if (CONTACT_API_ENABLED) {
-      await API.contact.sendPersonalEmailConfirmation<T.EmailAddress>(emailAddress);
+      return await API.contact.sendPersonalEmailConfirmation<T.EmailAddress>(emailAddress);
     } else {
-      await API.contact.updatePersonalEmail<T.EmailAddress>(emailAddress?.addressIdentifier, emailAddress);
+      return await API.contact.updatePersonalEmail<T.EmailAddress>(emailAddress?.addressIdentifier, emailAddress);
     }
-
-    return emailAddress;
   },
 );
 

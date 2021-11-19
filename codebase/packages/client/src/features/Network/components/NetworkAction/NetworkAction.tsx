@@ -43,21 +43,23 @@ const NetworkAction: FC<Props> = ({ id, events, onLeave, onJoin }) => {
     onLeave && onLeave();
   };
 
-  const handleConfirmJoin = async () => {
+  const handleConfirmJoin = () => {
     setIsModalOpen(false);
+    setSettingsModalOpen(true);
+  };
 
+  const handleConfirmSettings = async () => {
     await dispatch(joinNetwork({ networkId: id }));
     dispatch(joinParticipant(id));
 
     refetchNotificationsWithDelay();
 
     onJoin && onJoin();
+  }
 
-    setSettingsModalOpen(true);
-  };
-
-  const handleSettingsModalClose = () => {
+  const handleSettingsModalClose = async () => {
     setSettingsModalOpen(false);
+    await handleConfirmSettings();
   };
 
   return isJoined ? (
@@ -66,7 +68,6 @@ const NetworkAction: FC<Props> = ({ id, events, onLeave, onJoin }) => {
         Leave
       </Button>
       <ModalLeave isOpen={isModalOpen} onClose={handleModalClose} onConfirm={handleConfirmLeave} />
-      <ModalEmailSettings isOpen={isSettingsModalOpen} onClose={handleSettingsModalClose} />
     </>
   ) : (
     <>
@@ -74,6 +75,12 @@ const NetworkAction: FC<Props> = ({ id, events, onLeave, onJoin }) => {
         Join
       </Button>
       <ModalJoin isOpen={isModalOpen} onClose={handleModalClose} onConfirm={handleConfirmJoin} />
+      <ModalEmailSettings
+        isOpen={isSettingsModalOpen}
+        onClose={handleSettingsModalClose}
+        onConfirm={handleConfirmSettings}
+        onError={() => setSettingsModalOpen(false)}
+      />
     </>
   );
 };

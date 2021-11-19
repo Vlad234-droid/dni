@@ -8,6 +8,7 @@ import useDispatch from 'hooks/useDispatch';
 import useQuery from 'hooks/useQuery';
 import useStore from 'hooks/useStore';
 import { FieldWrapper, TextInput } from 'features/Common';
+import { toasterActions, ToastSkin } from 'features/Toaster';
 
 import schema from '../../config/schema';
 import {
@@ -16,6 +17,10 @@ import {
 } from '../../store';
 import useSaveEmail from '../../hooks/useSaveEmail';
 import { Wrapper, Content, Title } from './styled';
+import { FormData } from '../../config/types';
+
+const SUCCESS_TOAST_ID = 'settings-success-toast';
+const ERROR_TOAST_ID = 'settings-error-toast';
 
 const NotificationSettings: FC = () => {
   const dispatch = useDispatch();
@@ -27,7 +32,7 @@ const NotificationSettings: FC = () => {
     receivePostsEmailNotifications,
     receiveEventsEmailNotifications,
   });
-  const [email, onSubmit] = useSaveEmail(() => dispatch(updateNotificationSettings(formData)));
+  const [email, onEmailSubmit] = useSaveEmail();
 
   const { handleSubmit, errors, register } = useForm({
     resolver: yupResolver(schema),
@@ -44,6 +49,28 @@ const NotificationSettings: FC = () => {
       receiveEventsEmailNotifications,
     });
   }, [receivePostsEmailNotifications, receiveEventsEmailNotifications]);
+
+  const onSubmit = async (data: FormData) => {
+    await onEmailSubmit(data);
+
+    const result = await dispatch(updateNotificationSettings(formData));
+
+    if (updateNotificationSettings.fulfilled.match(result)) {
+      dispatch(
+        toasterActions.createToast({
+          skin: ToastSkin.SETTINGS_SUCCESS,
+          id: SUCCESS_TOAST_ID,
+        }),
+      );
+    } else {
+      dispatch(
+        toasterActions.createToast({
+          skin: ToastSkin.SETTINGS_ERROR,
+          id: ERROR_TOAST_ID,
+        }),
+      );
+    }
+  };
 
   return (
     <Wrapper>
@@ -65,7 +92,7 @@ const NotificationSettings: FC = () => {
       />
       <Content
         visible={
-          (formData.receivePostsEmailNotifications || formData.receiveEventsEmailNotifications) && !isUnsubscribe
+          !!email && (formData.receivePostsEmailNotifications || formData.receiveEventsEmailNotifications) && !isUnsubscribe
         }
       >
         <Title>Enter email address</Title>

@@ -1,4 +1,5 @@
 import { ToastSkin, ToastVariant } from './types';
+
 import * as C from '../components/ToasterSkinContent';
 
 const skins: Record<
@@ -36,6 +37,11 @@ const skins: Record<
   [ToastSkin.SETTINGS_SUCCESS]: {
     variant: ToastVariant.SUCCESS,
     Content: C.SettingsSuccess,
+    timeout: 5000,
+  },
+  [ToastSkin.SETTINGS_ERROR]: {
+    variant: ToastVariant.ERROR,
+    Content: C.SettingsError,
     timeout: 5000,
   },
   [ToastSkin.INTERVAL_LIMIT]: {

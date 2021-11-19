@@ -13,10 +13,12 @@ import useSaveEmail from '../../hooks/useSaveEmail';
 type Props = {
   isOpen: boolean;
   onClose: () => void;
+  onConfirm: () => void;
+  onError: () => void;
 };
 
-const ModalEmailSettings: FC<Props> = ({ isOpen, onClose }) => {
-  const [email, onSubmit] = useSaveEmail(onClose, onClose);
+const ModalEmailSettings: FC<Props> = ({ isOpen, onClose, onConfirm, onError }) => {
+  const [email, onSubmit] = useSaveEmail(onConfirm, onError);
 
   const { handleSubmit, errors, register } = useForm({
     resolver: yupResolver(schema),

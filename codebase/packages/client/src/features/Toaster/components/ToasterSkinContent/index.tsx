@@ -3,6 +3,7 @@ export {
   ContentSuccessEntity,
   ContentErrorEntity,
   SettingsSuccess,
+  SettingsError,
   ContentSuccessCopyLink,
   IntervalLimit,
   WrongInterval,
