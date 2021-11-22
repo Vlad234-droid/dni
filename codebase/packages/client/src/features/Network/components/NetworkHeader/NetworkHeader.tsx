@@ -1,12 +1,10 @@
-import React, { FC, useState } from 'react';
+import React, { FC } from 'react';
 import Link from '@beans/link';
-import Button from '@beans/button';
-import Modal from '@beans/modal';
 
 import { useMedia } from 'context/InterfaceContext';
 import { CopyLink, TextWithEllipsis } from 'features/Common';
 import Event from 'features/Event';
-import { PostCreate } from 'features/Post';
+import { ShareStoryButton } from 'features/GlobalModal';
 
 import NetworkAction from '../NetworkAction';
 import {
@@ -15,9 +13,8 @@ import {
   ActionWrapper,
   Actions,
   JoinButtonWrapper,
-  ModalContent,
-  ModalTitle,
   CopyLinkWrapper,
+  ShareStoryBtnWrapper,
 } from './styled';
 
 type Props = {
@@ -35,31 +32,9 @@ const NetworkHeader: FC<Props> = ({ id, title, email, onLeave, onJoin, events, n
   const { isMobile, isLargeMobile } = useMedia();
   const isMobileView = isMobile || isLargeMobile;
   const isJoined = networks.includes(+id);
-  const [isOpen, setIsOpen] = useState(false);
-
-  const handleShareStory = () => {
-    setIsOpen(true);
-  };
-
-  const handleCloseModal = () => setIsOpen(false);
 
   return (
     <Wrapper data-testid='network-header' id='network-header'>
-      {isOpen && (
-        <Modal
-          open={isOpen}
-          onChange={handleCloseModal}
-          id='share-story'
-          dynamicHeight
-          maxHeight={{ global: '100vh' }}
-          modalRootID={'network-header'}
-        >
-          <ModalContent>
-            <ModalTitle>Please, input your story below</ModalTitle>
-            <PostCreate networkId={id} onClose={handleCloseModal} />
-          </ModalContent>
-        </Modal>
-      )}
       <TitleWrapper>
         <TextWithEllipsis tooltipPosition={{ left: '24px', top: '86px' }}>{title}</TextWithEllipsis>
         {isMobileView && <CopyLink />}
@@ -73,7 +48,9 @@ const NetworkHeader: FC<Props> = ({ id, title, email, onLeave, onJoin, events, n
             </CopyLinkWrapper>
           )}
           <div>
-            <Button onClick={handleShareStory}>Share story</Button>
+            <ShareStoryBtnWrapper>
+              <ShareStoryButton id={id} block={isMobile || isLargeMobile} />
+            </ShareStoryBtnWrapper>
             {!isJoined && (
               <JoinButtonWrapper>
                 <NetworkAction {...{ id, onLeave, onJoin, events }} />

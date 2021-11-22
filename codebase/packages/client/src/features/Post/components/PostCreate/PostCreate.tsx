@@ -1,37 +1,76 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useCallback, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import CheckboxWithLabel from '@beans/checkbox-with-label';
 import FormGroup from '@beans/form-group';
 import Link from '@beans/link';
 import Button from '@beans/button';
+import DropdownGroup from '@beans/dropdown-group';
+import isEmpty from 'lodash.isempty';
 
-import { FieldWrapper, TextArea, TextInput } from 'features/Common';
+import { Error, FieldWrapper, Spinner, TextArea, TextInput } from 'features/Common';
 import { LINKS } from 'config/constants';
+import Network from 'features/Network';
+import Loading from 'types/loading';
 
 import formSchema from '../../config/schema';
-import { Wrapper, Buttons } from './styled';
 import { FormData } from '../../config/types';
+import { Buttons, Wrapper, Title } from './styled';
 
 type Props = {
-  onClose: () => void;
-  onSubmit: (data: FormData) => Promise<void>;
+  onClose?: () => void;
+  onSubmit: (data: FormData, network?: Network) => Promise<void>;
+  networks: Network[];
+  loading: Loading;
+  error?: string;
 };
 
-const PostCreate: FC<Props> = ({ onClose, onSubmit }) => {
-  const [isAccepted, setAccepted ] = useState(false)
+const PostCreate: FC<Props> = ({ onClose, onSubmit, networks, loading, error }) => {
+  const [isAccepted, setAccepted] = useState(false);
+  const networksOptions = useMemo(
+    () =>
+      networks.map(({ id, title }) => ({
+        id,
+        title,
+      })),
+    [networks],
+  );
+
+  // TODO: remove
+  const getNetworkByTitle = useCallback(
+    (title) => networks.filter((network) => network.title === title)[0],
+    [networks],
+  );
 
   const { handleSubmit, errors, register } = useForm({
     resolver: yupResolver(formSchema),
   });
 
   const submitForm = (data: FormData) => {
-    onSubmit(data);
-  }
+    // TODO: remove second arg
+    onSubmit(data, getNetworkByTitle(data.networkTitle));
+  };
 
-  return (
-    <Wrapper data-testid='post-create'>
+  const memoizedContent = useMemo(() => {
+    if (isEmpty(networks) && loading !== Loading.SUCCEEDED && loading !== Loading.FAILED)
+      return <Spinner height='500px' />;
+
+    if (error) return <Error errorData={{ title: error }} />;
+
+    return (
       <form onSubmit={handleSubmit(submitForm)} noValidate>
+        <Title>Please, input your story below</Title>
+        {networksOptions.length && (
+          <FieldWrapper>
+            <DropdownGroup domRef={register} name={'networkTitle'}>
+              {networksOptions.map(({ id, title }) => (
+                <option key={id} value={title}>
+                  {title}
+                </option>
+              ))}
+            </DropdownGroup>
+          </FieldWrapper>
+        )}
         <FieldWrapper>
           <TextInput
             // @ts-ignore
@@ -75,13 +114,13 @@ const PostCreate: FC<Props> = ({ onClose, onSubmit }) => {
           <Button type='submit' size={'md'}>
             Submit
           </Button>
-          <Button onClick={onClose}>
-            Cancel
-          </Button>
+          <Button onClick={onClose}>Cancel</Button>
         </Buttons>
       </form>
-    </Wrapper>
-  );
+    );
+  }, [loading, error, networks, networksOptions, errors, isAccepted]);
+
+  return <Wrapper data-testid='post-create'>{memoizedContent}</Wrapper>;
 };
 
 export default PostCreate;

@@ -16,8 +16,8 @@ const EventContainer: FC<Props> = ({ id }) => {
   const dispatch = useDispatch();
   const event = useSelector(byIdSelector(id));
   const { loading, participants, error } = useStore((state) => state.events);
-  const { eventError } = useStore(state => state.auth);
-  const errorMessage = useMemo(() => error || participants.error || eventError, [error, participants]);
+  const { eventError } = useStore((state) => state.auth);
+  const errorMessage = useMemo(() => error || participants.error || eventError, [error, participants, eventError]);
   const loadEvent = () => dispatch(getOne({ id }));
   const loadParticipants = () => dispatch(getParticipants());
   const { acknowledgeWithDelay } = useNotification();

@@ -12,6 +12,7 @@ export const TOP_HEADER_HEIGHT = '36px';
 export const MAIN_HEADER_HEIGHT = '131px';
 export const HEADER_HEIGHT_DESKTOP = '65px';
 export const HEADER_HEIGHT_MOBILE = '44px';
+export const HEADER_HEIGHT_TABLET = '96px';
 export const FOOTER_HEIGHT = '54px';
 const SIDEBAR_WIDTH = '240px';
 const MAIN_WIDTH_SMALL = '1007px';
@@ -31,6 +32,7 @@ export const Wrapper = styled.div<Props>`
   grid-template-columns: 1fr;
   grid-template-rows: ${HEADER_HEIGHT_MOBILE} 1fr ${FOOTER_HEIGHT};
   grid-template-areas: 'header' 'main' 'left';
+  margin-bottom: 40px;
 
   ${Media.small_desktop`
     height: 100vh;
@@ -120,6 +122,10 @@ export const HeaderContainer = styled.div.attrs({
   top: 0;
   background-color: ${({ theme }) => theme.colors.white};
 
+  ${Media.tablet`
+    height: ${HEADER_HEIGHT_TABLET};
+  `}
+
   ${Media.small_desktop`
     position: relative;
     height: auto;
@@ -135,8 +141,8 @@ export const HeaderContainer = styled.div.attrs({
   `}
 `;
 
-export const HeaderReducer = styled.div<{relative?: boolean}>`
-  position: ${({ relative }) => relative ? 'relative' : 'static'};
+export const HeaderReducer = styled.div<{ relative?: boolean }>`
+  position: ${({ relative }) => (relative ? 'relative' : 'static')};
 
   ${Media.small_desktop`
     grid-area: header-reducer;

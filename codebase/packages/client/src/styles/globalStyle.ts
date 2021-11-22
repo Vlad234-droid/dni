@@ -49,4 +49,9 @@ export default createGlobalStyle<{
   .beans-modal__mask {
     z-index: 1001 !important;
   }
+  
+  #share-story.beans-modal__modal-container {
+    min-width: 95vw;
+    max-width: 95vw;
+  }
 `;

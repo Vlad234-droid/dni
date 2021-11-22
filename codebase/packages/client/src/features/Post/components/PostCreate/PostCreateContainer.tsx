@@ -1,10 +1,12 @@
-import React, { FC } from 'react';
-import {useDispatch, useSelector} from 'react-redux';
+import React, { FC, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import { ToastSkin, toasterActions } from 'features/Toaster';
 import { shareStory } from 'features/Auth';
 import { CONTACT_API_ENABLED } from 'config/constants';
-import { byIdSelector } from 'features/Network';
+import Network, { byIdSelector, listSelector, getList } from 'features/Network';
+import { RootState } from 'store/rootReducer';
+import useStore from 'hooks/useStore';
 
 import { createOne } from '../../store';
 import { FormData } from '../../config/types';
@@ -18,13 +20,22 @@ type Props = {
 const PostCreateContainer: FC<Props> = ({ networkId, onClose }) => {
   const dispatch = useDispatch();
   const network = useSelector(byIdSelector(networkId));
+  const networks = useSelector((state: RootState) => listSelector(state, undefined));
+  const { loading, error } = useStore((state) => state.networks);
 
-  const handleShareStory = async (data: FormData) => {
+  useEffect(() => {
+    dispatch(
+      // @ts-ignore
+      getList({}),
+    );
+  }, []);
+
+  const handleShareStory = async ({ title, story, networkTitle }: FormData) => {
     const result = await dispatch(
       shareStory({
-        storyTitle: data.title,
-        story: data.story,
-        networkTitle: network!.title,
+        storyTitle: title,
+        story,
+        networkTitle,
       }),
     );
 
@@ -42,21 +53,26 @@ const PostCreateContainer: FC<Props> = ({ networkId, onClose }) => {
           skin: ToastSkin.ENTITY_CREATE_ERROR,
         }),
       );
+      onClose();
     }
-  }
- // TODO: temporary solution
-  const handleCreatePost = async (data: FormData) => {
+  };
+
+  // TODO: temporary solution - remove
+  const handleCreatePost = async (data: FormData, network?: Network) => {
+    // to narrow thw type
+    if (!network) return;
+
     const result = await dispatch(
       createOne({
         title: data.title,
         content: data.story,
-        slug: `${network!.slug}-${String(Date.now())}`,
+        slug: `${network.slug}-${String(Date.now())}`,
         tenant: 4,
-        network: [networkId],
+        network: [network.id],
         allowComments: true,
         anonymous: false,
         archived: false,
-        published_at: null
+        published_at: null,
       }),
     );
 
@@ -74,14 +90,15 @@ const PostCreateContainer: FC<Props> = ({ networkId, onClose }) => {
           skin: ToastSkin.ENTITY_CREATE_ERROR,
         }),
       );
+      onClose();
     }
-  }
+  };
 
-  const handleSubmit = async (data: FormData) => {
+  const handleSubmit = async (data: FormData, network?: Network) => {
     if (CONTACT_API_ENABLED) {
       await handleShareStory(data);
     } else {
-      await handleCreatePost(data)
+      await handleCreatePost(data, network);
     }
   };
 
@@ -89,6 +106,9 @@ const PostCreateContainer: FC<Props> = ({ networkId, onClose }) => {
     <PostCreate
       onSubmit={handleSubmit}
       onClose={onClose}
+      networks={network ? [network] : networks}
+      loading={loading}
+      error={error}
     />
   );
 };

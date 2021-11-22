@@ -1,10 +1,9 @@
 import styled from 'styled-components';
 
-import { textXX } from 'styles';
+import { headingXS, textXX } from 'styles';
 import Media from 'styles/media';
 
 export const Wrapper = styled.div`
-  
   textarea {
     height: 200px;
 
@@ -24,13 +23,13 @@ export const Wrapper = styled.div`
        height: 350px;
     `}
   }
-  
+
   // when hideLable, required dont work
-  .beans-form-group__optional, 
+  .beans-form-group__optional,
   .beans-form-group__label {
     display: none;
   }
-  
+
   .beans-checkbox-with-label__label {
     ${textXX};
   }
@@ -41,8 +40,21 @@ export const Buttons = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  
+
   button:not(:last-child) {
     margin-right: 16px;
   }
+`;
+
+export const Title = styled.h3`
+  width: 100%;
+  text-align: left;
+  margin-bottom: 16px;
+  ${headingXS};
+
+  ${Media.tablet`
+    margin-bottom: 24px;
+    font-size: 24px;
+    line-height: 28px;
+  `}
 `;

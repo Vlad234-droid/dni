@@ -23,13 +23,15 @@ import { getList, getCount, listSelector, clear, getParticipants } from '../../s
 import NetworkAction from '../NetworkAction';
 import Participants from '../Participants';
 import { Wrapper, ListContainer, ParticipantsWrapper } from './styled';
-import {State as AuthState} from "../../../Auth/store";
 
 const TEST_ID = 'networks-list';
 
 const NetworkList: FC = () => {
   const dispatch = useDispatch();
-  const { user: { networks }, networkError } = useStore((state) => state.auth);
+  const {
+    user: { networks },
+    networkError,
+  } = useStore((state) => state.auth);
   const [filter, setFilter] = useState<Filter>(YOUR_NETWORKS);
   const [filters, setFilters] = useState<FilterPayload>({
     id_in: [...(networks || []), -1],

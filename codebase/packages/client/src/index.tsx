@@ -12,6 +12,7 @@ import history from 'utils/history';
 import Auth from 'features/Auth';
 import Routes from 'features/Routes';
 import { NotificationProvider } from 'features/Notification';
+import GlobalModal from 'features/GlobalModal';
 
 import reportWebVitals from './reportWebVitals';
 
@@ -25,12 +26,14 @@ ReactDOM.render(
       <Auth>
         <InterfaceProvider>
           <NotificationProvider>
-            <Router history={history}>
-              <React.StrictMode>
-                <GlobalStyle />
-                <Routes />
-              </React.StrictMode>
-            </Router>
+            <GlobalModal>
+              <Router history={history}>
+                <React.StrictMode>
+                  <GlobalStyle />
+                  <Routes />
+                </React.StrictMode>
+              </Router>
+            </GlobalModal>
           </NotificationProvider>
         </InterfaceProvider>
       </Auth>
