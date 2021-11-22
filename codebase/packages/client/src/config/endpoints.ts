@@ -83,7 +83,7 @@ export default (httpClient: AxiosInstance) => ({
   posts: {
     fetchAll: <T>(data: Config = {}) => httpClient.get<T>(Endpoint.POSTS, { params: data }),
     fetchOne: <T>(id: number) => httpClient.get<T>(`${Endpoint.POSTS}/${id}`),
-    create: <T>(data: T) => httpClient.post<T>('ddd', data),
+    create: <T>(data: T) => httpClient.post<T>(Endpoint.POSTS, data),
     count: <T>(data: Config = {}) => httpClient.get<T>(Endpoint.POSTS_COUNT, { params: data }),
   },
   report: {
