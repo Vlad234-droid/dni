@@ -30,9 +30,11 @@ const NetworkPartners: FC<Props> = ({ email, partners, id, events, onJoin, onLea
   if (isMobile || isLargeMobile) {
     return (
       <>
-        <LeaveBtnWrapper withMargin={displayPartnersBlock}>
-          <NetworkAction {...{ id, onLeave, onJoin, events }} />
-        </LeaveBtnWrapper>
+        {isJoined && (
+          <LeaveBtnWrapper withMargin={displayPartnersBlock}>
+            <NetworkAction {...{ id, onLeave, onJoin, events }} />
+          </LeaveBtnWrapper>
+        )}
         {displayPartnersBlock && (
           <>
             <Title>Network Partnership</Title>
@@ -94,7 +96,7 @@ const Title = styled.h5`
 const LeaveBtnWrapper = styled.div<{ withMargin: boolean }>`
   display: flex;
   justify-content: flex-end;
-  margin-bottom: ${({ withMargin }) => withMargin ? '20px' : '0'};
+  margin-bottom: ${({ withMargin }) => (withMargin ? '20px' : '0')};
 `;
 
 export default NetworkPartners;

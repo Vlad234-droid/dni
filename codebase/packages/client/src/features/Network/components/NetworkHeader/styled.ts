@@ -11,15 +11,11 @@ export const Wrapper = styled.div`
     justify-content: space-between;
     padding: 24px;
   `}
-
-  .beans-modal__modal-container {
-    max-width: 100vw;
-  }
 `;
 
 export const JoinButtonWrapper = styled.div`
   position: fixed;
-  bottom: 76px;
+  bottom: 112px;
   left: 16px;
   right: 16px;
   z-index: 100;
@@ -32,6 +28,20 @@ export const JoinButtonWrapper = styled.div`
   ${Media.tablet`
      position: static;
      margin-top: 24px;
+  `}
+`;
+
+export const ShareStoryBtnWrapper = styled.div`
+  position: fixed;
+  bottom: 64px;
+  left: 16px;
+  right: 16px;
+  margin-top: 16px;
+  z-index: 1000;
+
+  ${Media.tablet`
+    position: static;
+    margin-top: 0;
   `}
 `;
 
@@ -87,28 +97,4 @@ export const Actions = styled.div`
 
 export const CopyLinkWrapper = styled.div`
   margin-right: 16px;
-`;
-
-export const ModalContent = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-
-  ${Media.tablet`
-    padding: 16px;
-  `}
-`;
-
-export const ModalTitle = styled.h3`
-  width: 100%;
-  text-align: left;
-  margin-bottom: 16px;
-  ${headingXS};
-
-  ${Media.tablet`
-    margin-bottom: 24px;
-    font-size: 24px;
-    line-height: 28px;
-  `}
 `;

@@ -6,14 +6,26 @@ import { HEADER_HEIGHT_MOBILE, HEADER_HEIGHT_DESKTOP } from 'features/Layout';
 
 export const Wrapper = styled.div`
   position: relative;
-  height: 100%;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
+  align-items: flex-end;
+  height: 100%;
   padding: 0 16px;
 
   ${Media.small_desktop`
     padding: 0;
+  `}
+`;
+
+export const MainWrapper = styled.div`
+  width: 100%;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  ${Media.small_desktop`
+    height: 100%;
   `}
 `;
 
@@ -94,4 +106,18 @@ export const Title = styled.div`
 
 export const Aside = styled.div`
   display: flex;
+`;
+
+export const ShareStoryBtnWrapper = styled.div`
+  position: fixed;
+  bottom: 64px;
+  left: 16px;
+  right: 16px;
+  z-index: 100;
+  margin-top: 16px;
+
+  ${Media.tablet`
+    position: static;
+    margin-top: 0;
+  `}
 `;

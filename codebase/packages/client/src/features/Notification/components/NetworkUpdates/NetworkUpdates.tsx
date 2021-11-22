@@ -7,6 +7,7 @@ import isEmpty from 'lodash.isempty';
 import { Page } from 'features/Page';
 import Loading from 'types/loading';
 import { EmptyContainer, Level, Error, Spinner } from 'features/Common';
+
 import { networkNotificationsSelector, networkNotificationMetadataSelector } from '../../store';
 import { Wrapper, Title, List } from './styled';
 import NetworkUpdatesItem, { UpdateItem } from '../NetworkUpdatesItem';
@@ -55,11 +56,7 @@ const NetworkUpdates: FC = () => {
     <Wrapper data-testid={TEST_ID}>
       <Title>Updates in my Networks</Title>
       {memoizedContent}
-      <Link to={`/${Page.NETWORKS}`}>
-        {!isEmpty(items) && (
-          <Button variant='secondary'>See all</Button>
-        )}
-      </Link>
+      <Link to={`/${Page.NETWORKS}`}>{!isEmpty(items) && <Button variant='secondary'>See all</Button>}</Link>
     </Wrapper>
   );
 };

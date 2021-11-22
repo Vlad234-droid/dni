@@ -8,6 +8,7 @@ import { MenuMobile } from 'features/Menu';
 import { useMedia } from 'context/InterfaceContext';
 import { NetworkUpdates } from 'features/Notification';
 import { LINKS } from 'config/constants';
+import { ShareStoryButton } from 'features/GlobalModal';
 
 const TEST_ID = 'base-page';
 
@@ -27,6 +28,9 @@ const BasePage: FC<ExtraLayoutProps> = (props) => {
                 <UpdatesWrapper>
                   <NetworkUpdates />
                 </UpdatesWrapper>
+                <ButtonWrapper>
+                  <ShareStoryButton />
+                </ButtonWrapper>
                 <LinksWrapper>
                   <Link href={LINKS.termsAndConditions} target='_self'>
                     Terms & Conditions
@@ -49,6 +53,10 @@ const BasePage: FC<ExtraLayoutProps> = (props) => {
 
 const UpdatesWrapper = styled.div`
   margin-top: 32px;
+`;
+
+const ButtonWrapper = styled.div`
+  margin-bottom: 48px;
 `;
 
 const LinksWrapper = styled.div`

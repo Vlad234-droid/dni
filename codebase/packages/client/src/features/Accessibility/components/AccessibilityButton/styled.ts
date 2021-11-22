@@ -22,14 +22,14 @@ const Wrapper = styled.div<{ isOpen: boolean }>`
     border: none;
     font-size: 18px;
     line-height: 60px;
-    font-weight: ${({ isOpen }) => isOpen ? 600 : 400};
+    font-weight: ${({ isOpen }) => (isOpen ? 600 : 400)};
 
     ${Media.large_phone`
        line-height: 18px;
        font-weight: 600;
        font-size: 16px;
     `}
-    
+
     &:hover, &:focus {
       text-decoration: none;
       box-shadow: none;
@@ -38,47 +38,52 @@ const Wrapper = styled.div<{ isOpen: boolean }>`
 
   svg {
     transition: transform 0.5s ease 0s;
-    transform: ${({ isOpen }) => isOpen ? 'rotate3d(0, 0, 1, 180deg)' : 'rotate3d(0, 0, 0, 180deg)'};
+    transform: ${({ isOpen }) => (isOpen ? 'rotate3d(0, 0, 1, 180deg)' : 'rotate3d(0, 0, 0, 180deg)')};
   }
 `;
 
-const Content = styled.div<{ mode: Mode, isOpen: boolean }>`
-  background: ${({ theme, mode }) => mode == Mode.LIGHT ? theme.colors.white : theme.colors.tescoBlue};
+const Content = styled.div<{ mode: Mode; isOpen: boolean }>`
+  background: ${({ theme, mode }) => (mode == Mode.LIGHT ? theme.colors.white : theme.colors.tescoBlue)};
   width: 100vw;
   height: 60px;
   position: absolute;
   left: 0;
   right: 0;
   top: 100%;
-  border-top: 1px solid ${({ theme, mode }) => mode == Mode.LIGHT ? theme.colors.tescoBlue : theme.colors.white};
-  transform: ${({ isOpen }) => isOpen ? 'translate3d(0, 0, 0) scaleY(1)' : 'translate3d(0, -29px, 0) scaleY(0)'};
-  transition: transform .5s ease 0s;
+  border-top: 1px solid ${({ theme, mode }) => (mode == Mode.LIGHT ? theme.colors.tescoBlue : theme.colors.white)};
+  transform: ${({ isOpen }) => (isOpen ? 'translate3d(0, 0, 0) scaleY(1)' : 'translate3d(0, -29px, 0) scaleY(0)')};
+  transition: transform 0.5s ease 0s;
   z-index: 2000;
 
   ${Media.large_phone`
-      top: 42px;
+    top: 42px;
+  `}
+
+  ${Media.tablet`
+    top: 90px;
   `}
 
   ${Media.small_desktop`
-      top: 36px;
+    top: 36px;
   `}
 
   a {
     font-weight: 600;
-    color: ${({ theme, mode }) => mode == Mode.LIGHT ? theme.colors.tescoBlue : theme.colors.white};
+    color: ${({ theme, mode }) => (mode == Mode.LIGHT ? theme.colors.tescoBlue : theme.colors.white)};
     text-decoration: none;
     padding-bottom: 4px;
-    border-bottom: 0 solid ${({ theme, mode }) => mode == Mode.LIGHT ? theme.colors.tescoBlue : theme.colors.white};
-    transition: visibility .1s ease 0s;
-    visibility: ${({ isOpen }) => isOpen ? 'visible' : 'hidden'};
-    
-    &:hover, 
-    &:focus, 
-    &:visited, 
-    &:visited:focus, 
+    border-bottom: 0 solid ${({ theme, mode }) => (mode == Mode.LIGHT ? theme.colors.tescoBlue : theme.colors.white)};
+    transition: visibility 0.1s ease 0s;
+    visibility: ${({ isOpen }) => (isOpen ? 'visible' : 'hidden')};
+
+    &:hover,
+    &:focus,
+    &:visited,
+    &:visited:focus,
     &:visited:hover {
-      color: ${({ theme, mode }) => mode == Mode.LIGHT ? theme.colors.tescoBlue : theme.colors.white};
-      border-bottom: 1px solid ${({ theme, mode }) => mode == Mode.LIGHT ? theme.colors.tescoBlue : theme.colors.white};
+      color: ${({ theme, mode }) => (mode == Mode.LIGHT ? theme.colors.tescoBlue : theme.colors.white)};
+      border-bottom: 1px solid
+        ${({ theme, mode }) => (mode == Mode.LIGHT ? theme.colors.tescoBlue : theme.colors.white)};
     }
   }
 `;
@@ -100,10 +105,10 @@ const ContentInner = styled.div`
   `}
 `;
 
-const LinkWrapper = styled.div<{inverse: boolean}>`
+const LinkWrapper = styled.div<{ inverse: boolean }>`
   margin: 0 auto;
   text-align: center;
-  
+
   &:first-child {
     width: 40%;
   }
