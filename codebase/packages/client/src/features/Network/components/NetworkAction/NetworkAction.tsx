@@ -4,10 +4,10 @@ import Button from '@beans/button';
 import useStore from 'hooks/useStore';
 import useDispatch from 'hooks/useDispatch';
 import { joinNetwork, leaveNetwork, leaveEvent } from 'features/Auth';
-import { useNotification, useSettingsModal } from 'features/Notification';
+import { useNotification, ModalEmailSettings } from 'features/Notification';
 import Event from 'features/Event';
 
-import { ModalJoin, ModalLeave, ModalSettings } from '../Modal';
+import { ModalJoin, ModalLeave } from '../Modal';
 import { joinParticipant, leaveParticipant } from '../../store';
 
 type Props = {
@@ -20,7 +20,6 @@ type Props = {
 const NetworkAction: FC<Props> = ({ id, events, onLeave, onJoin }) => {
   const dispatch = useDispatch();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const displaySettingsModal = useSettingsModal();
   const [isSettingsModalOpen, setSettingsModalOpen] = useState(false);
   const { networks = [] } = useStore((state) => state.auth.user);
   const isJoined = networks.includes(+id);
@@ -44,21 +43,23 @@ const NetworkAction: FC<Props> = ({ id, events, onLeave, onJoin }) => {
     onLeave && onLeave();
   };
 
-  const handleConfirmJoin = async () => {
+  const handleConfirmJoin = () => {
     setIsModalOpen(false);
+    setSettingsModalOpen(true);
+  };
 
+  const handleConfirmSettings = async () => {
     await dispatch(joinNetwork({ networkId: id }));
     dispatch(joinParticipant(id));
 
     refetchNotificationsWithDelay();
 
     onJoin && onJoin();
+  }
 
-    displaySettingsModal && setSettingsModalOpen(true);
-  };
-
-  const handleSettingsModalClose = () => {
+  const handleSettingsModalClose = async () => {
     setSettingsModalOpen(false);
+    await handleConfirmSettings();
   };
 
   return isJoined ? (
@@ -67,7 +68,6 @@ const NetworkAction: FC<Props> = ({ id, events, onLeave, onJoin }) => {
         Leave
       </Button>
       <ModalLeave isOpen={isModalOpen} onClose={handleModalClose} onConfirm={handleConfirmLeave} />
-      {displaySettingsModal && <ModalSettings isOpen={isSettingsModalOpen} onClose={handleSettingsModalClose} />}
     </>
   ) : (
     <>
@@ -75,6 +75,12 @@ const NetworkAction: FC<Props> = ({ id, events, onLeave, onJoin }) => {
         Join
       </Button>
       <ModalJoin isOpen={isModalOpen} onClose={handleModalClose} onConfirm={handleConfirmJoin} />
+      <ModalEmailSettings
+        isOpen={isSettingsModalOpen}
+        onClose={handleSettingsModalClose}
+        onConfirm={handleConfirmSettings}
+        onError={() => setSettingsModalOpen(false)}
+      />
     </>
   );
 };
