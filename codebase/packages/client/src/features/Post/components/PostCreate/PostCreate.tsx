@@ -28,11 +28,12 @@ type Props = {
 const PostCreate: FC<Props> = ({ onClose, onSubmit, networks, loading, error }) => {
   const [isAccepted, setAccepted] = useState(false);
   const networksOptions = useMemo(
-    () =>
-      networks.map(({ id, title }) => ({
+    () => {
+      return networks.map(({ id, title }) => ({
         id,
         title,
-      })),
+      })).sort((a, b) => a.title.localeCompare(b.title));
+    },
     [networks],
   );
 
