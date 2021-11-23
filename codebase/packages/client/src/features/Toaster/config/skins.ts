@@ -29,6 +29,16 @@ const skins: Record<
     Content: C.ContentErrorEntity,
     timeout: 5000,
   },
+  [ToastSkin.STORY_CREATE_SUCCESS]: {
+    variant: ToastVariant.SUCCESS,
+    Content: C.ContentSuccessStory,
+    timeout: 5000,
+  },
+  [ToastSkin.STORY_CREATE_ERROR]: {
+    variant: ToastVariant.ERROR,
+    Content: C.ContentErrorEntity,
+    timeout: 5000,
+  },
   [ToastSkin.LINK_COPY_SUCCESS]: {
     variant: ToastVariant.SUCCESS,
     Content: C.ContentSuccessCopyLink,

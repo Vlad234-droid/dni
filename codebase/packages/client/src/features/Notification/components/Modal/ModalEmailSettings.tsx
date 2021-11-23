@@ -1,6 +1,6 @@
 import React, { FC } from 'react';
+import { Link } from 'react-router-dom';
 import BeansModal from '@beans/modal';
-import Link from '@beans/link';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
@@ -48,7 +48,7 @@ const ModalEmailSettings: FC<Props> = ({ isOpen, onClose, onConfirm, onError }) 
                 />
               </FieldWrapper>
             </form>
-            <div>Notification settings could be changed <Link href={`/${Page.NOTIFICATION_SETTINGS}`}>here</Link>.</div>
+            <div>Notification settings could be changed <Link to={`/${Page.NOTIFICATION_SETTINGS}`}>here</Link>.</div>
           </div>
         )}
       />
