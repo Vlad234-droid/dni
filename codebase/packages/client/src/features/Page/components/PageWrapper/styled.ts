@@ -29,6 +29,10 @@ export const Wrapper = styled.div`
   padding: 24px 16px 0;
 
   ${Media.tablet`
+    padding: 52px 40px 0;
+  `}
+
+  ${Media.small_desktop`
     padding: 24px 40px 0;
   `}
 `;
