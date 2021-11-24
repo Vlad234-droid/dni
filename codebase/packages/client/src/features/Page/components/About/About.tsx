@@ -1,4 +1,5 @@
 import React, { FC } from 'react';
+import styled from 'styled-components';
 
 import { Page, PAGE_PREFIX } from 'features/Page';
 import Intro from 'features/Intro';
@@ -6,6 +7,7 @@ import InfoPanel, { InfoPanelType } from 'features/InfoPanel';
 import NetworksPreview from 'features/NetworksPreview';
 import { NetworkMainCarousel } from 'features/Network';
 import { LINKS } from 'config/constants';
+import Media from 'styles/media';
 
 import BasePage from '../BasePage';
 import { InfoPanelReducer, Reducer } from './styled';

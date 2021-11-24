@@ -205,6 +205,14 @@ export const MainContainer = styled.div.attrs({
   grid-area: main;
   overflow-y: auto;
 
+  ${Media.tablet`
+    margin-top: 52px;
+  `}
+
+  ${Media.small_desktop`
+    margin-top: 0;
+  `}
+
   ${({ theme }) => css`
     ${Media.small_desktop`
         border-left: 1px solid ${theme.colors.lines.base};
