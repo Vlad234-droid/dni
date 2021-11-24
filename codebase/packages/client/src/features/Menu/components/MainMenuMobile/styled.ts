@@ -7,7 +7,7 @@ export const Wrapper = styled.div`
   left: 0;
   width: 100%;
   background-color: ${({ theme }) => theme.colors.white};
-  z-index: 200;
+  z-index: 2000;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
