@@ -48,6 +48,8 @@ type ShareStoryPayload = {
   networkTitle: string;
   storyTitle: string;
   story: string;
+  // name: string,
+  // location: string;
 };
 
 type ShareStoryResponse = {

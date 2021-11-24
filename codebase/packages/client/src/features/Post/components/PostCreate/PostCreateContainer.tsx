@@ -30,12 +30,15 @@ const PostCreateContainer: FC<Props> = ({ networkId, onClose }) => {
     );
   }, []);
 
-  const handleShareStory = async ({ title, story, networkTitle }: FormData) => {
+  // TODO: name and location fields are not sent
+  const handleShareStory = async ({ title, story, networkTitle, name, location }: FormData) => {
     const result = await dispatch(
       shareStory({
         storyTitle: title,
         story,
         networkTitle,
+        // name,
+        // location,
       }),
     );
 
@@ -62,6 +65,7 @@ const PostCreateContainer: FC<Props> = ({ networkId, onClose }) => {
     // to narrow thw type
     if (!network) return;
 
+    // TODO: data.name and data.location are not included
     const result = await dispatch(
       createOne({
         title: data.title,

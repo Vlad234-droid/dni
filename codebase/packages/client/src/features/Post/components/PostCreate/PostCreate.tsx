@@ -62,7 +62,7 @@ const PostCreate: FC<Props> = ({ onClose, onSubmit, networks, loading, error }) 
         <Title>Please, input your story below</Title>
         {networksOptions.length && (
           <FieldWrapper>
-            <DropdownGroup domRef={register} name={'networkTitle'}>
+            <DropdownGroup domRef={register} name={'networkTitle'} aria-label={'networkTitle'}>
               {networksOptions.map(({ id, title }) => (
                 <option key={id} value={title}>
                   {title}
@@ -75,9 +75,35 @@ const PostCreate: FC<Props> = ({ onClose, onSubmit, networks, loading, error }) 
           <TextInput
             // @ts-ignore
             domRef={register}
+            name={'name'}
+            aria-label={'name'}
+            placeholder={'Input your name:'}
+            error={errors['name']?.message}
+            id={'name'}
+            hideLabel
+            required
+          />
+        </FieldWrapper>
+        <FieldWrapper>
+          <TextInput
+            // @ts-ignore
+            domRef={register}
+            name={'location'}
+            aria-label={'location'}
+            placeholder={'Input your location: (e.g. Chaltenham Superstore)'}
+            error={errors['location']?.message}
+            id={'location'}
+            hideLabel
+            required
+          />
+        </FieldWrapper>
+        <FieldWrapper>
+          <TextInput
+            // @ts-ignore
+            domRef={register}
             name={'title'}
             aria-label={'title'}
-            placeholder={'Input title...'}
+            placeholder={'Input story title:'}
             error={errors['title']?.message}
             id={'title'}
             hideLabel
@@ -90,7 +116,7 @@ const PostCreate: FC<Props> = ({ onClose, onSubmit, networks, loading, error }) 
             domRef={register}
             aria-label={'story'}
             name={'story'}
-            placeholder={'Input story...'}
+            placeholder={'Input story:'}
             error={errors['story']?.message}
             hideLabel
             required
