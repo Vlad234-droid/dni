@@ -19,7 +19,7 @@ const ShareStoryButton: FC<Props> = ({ id, block = false }) => {
   };
 
   return (
-    <Button onClick={openShareStoryModal} block={block}>
+    <Button data-testid='share-story-button' onClick={openShareStoryModal} block={block}>
       Share story
     </Button>
   );
