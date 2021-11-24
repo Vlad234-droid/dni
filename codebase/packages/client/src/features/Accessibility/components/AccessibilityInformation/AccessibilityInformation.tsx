@@ -16,15 +16,15 @@ const AccessibilityInformation: FC = () => (
       Using your web browser, you can change the size of text on this website.
       You can also make other helpful changes in your browser, as well as within your computer generally.
       To find out what else you can do, we recommend that you read “Better Web Browsing: Tips for Customising Your Computer”
-      (<Link href='www.w3.org/WAI/users/browsing' target='_blank'>www.w3.org/WAI/users/browsing</Link>)
-      from The World Wide Web Consortium (W3C) or visit ‘My Web My Way’ (<Link href='www.bbc.co.uk/accessibility/' target='_blank'>www.bbc.co.uk/accessibility/</Link>).
+      (<Link href='https://www.w3.org/WAI/users/browsing' target='_blank'>www.w3.org/WAI/users/browsing</Link>)
+      from The World Wide Web Consortium (W3C) or visit ‘My Web My Way’ (<Link href='https://www.bbc.co.uk/accessibility/' target='_blank'>www.bbc.co.uk/accessibility/</Link>).
     </Description>
     <Title>Contacting us</Title>
     <Description>
       We are always looking for ways to help people get the best experience from this website.
       If there is information you think should be included on this page, or if you experience any problem accessing the site then please contact us.
       Please note: for advice on what information to include when you <Link href='https://colleague-help.ourtesco.com/hc/en-us'>contact us</Link>, we recommend you read
-      “Contacting organisations about inaccessible websites” (<Link href='www.w3.org/WAI/users/inaccessible' target='_blank'>www.w3.org/WAI/users/inaccessible</Link>).
+      “Contacting organisations about inaccessible websites” (<Link href='https://www.w3.org/WAI/users/inaccessible' target='_blank'>www.w3.org/WAI/users/inaccessible</Link>).
     </Description>
     <Title>Accessibility guidelines</Title>
     <Description>
