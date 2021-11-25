@@ -1,7 +1,7 @@
 import express from 'express';
 import cryptoJS from 'crypto-js';
 import { GetPublicKeyOrSecret } from 'jsonwebtoken';
-import { Client, Issuer } from 'openid-client';
+import { Client, Issuer, TokenSet } from 'openid-client';
 import jwksClient, { JwksClient } from 'jwks-rsa';
 
 import { asyncHandler } from '@energon/express-middlewares';
@@ -89,12 +89,18 @@ export const getRefreshTokenMiddleware = <TClient extends Client>({
 
     const handleTokenExpired = async () => {
       logger(LoggerEvent.debug('verification', 'IdToken expired, refreshing', { req, res }));
+      let refreshedTokenSet: TokenSet;
 
       const refreshTokenSet = async () => {
         const refreshToken = cryptoJS.AES.decrypt(encRefreshToken, refreshTokenSecret).toString(cryptoJS.enc.Utf8);
-        const refreshedTokenSet = await client.refresh(refreshToken);
-        logger(LoggerEvent.debug('verification', 'IdToken token refreshed successfully', { req, res }));
-        return refreshedTokenSet;
+        try {
+          refreshedTokenSet = await client.refresh(refreshToken);
+          logger(LoggerEvent.debug('verification', 'IdToken token refreshed successfully', { req, res }));
+          return refreshedTokenSet;
+        } catch (e) {
+          logger(LoggerEvent.warn('verification', 'IdToken token refresh error', { req, res }, e as Error));
+          return { id_token: undefined, refresh_token: undefined };
+        }
       };
 
       const { id_token: newIdToken, refresh_token: newRefreshToken } = await refreshTokenSet();
@@ -132,7 +138,6 @@ export const getRefreshTokenMiddleware = <TClient extends Client>({
           res,
         }),
       );
-
     };
 
     const verifyResult = await verifyJwt<OpenIdUserInfo>(idToken, getKey(jwksClientInstance));
