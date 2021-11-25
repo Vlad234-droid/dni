@@ -32,7 +32,7 @@ describe('<PostCreate />', () => {
 
       expect(getByLabelText('title')).toBeInTheDocument();
       expect(getByLabelText('story')).toBeInTheDocument();
-      expect(getByText('I agree to provide my personal story/data for the publication within this network I understand that this story may be shared in other locations, including the moderation version of my story. Please remember to include you Name & Location.')).toBeInTheDocument();
+      expect(getByText('I agree to provide my personal story/data for the publication within this network. I understand that this story may be shared in other locations, including the moderation version of my story.')).toBeInTheDocument();
       expect(getByText('Privacy Policy')).toBeInTheDocument();
     });
 
