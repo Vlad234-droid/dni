@@ -59,7 +59,7 @@
       },
       "BUILD_ENV": {
         "type": "plain",
-        "value": "ppe"
+        "value": "production"
       },
       "NODE_PORT": {
         "type": "plain",
@@ -109,6 +109,14 @@
         "type": "secret",
         "name": "application_cookie_parser_secret"
       },
+      "APPLICATION_WEB_HOOKS_SECRET": {
+        "type": "secret",
+        "name": "application_web_hooks_secret"
+      },
+      "APPLICATION_RETURN_TO_COOKIE_NAME": {
+        "type": "plain",
+        "value": "dni.return-to"
+      },
       "AUTH_DATA_COOKIE_NAME": {
         "type": "plain",
         "value": "dni.colleague.jwt"
@@ -117,17 +125,9 @@
         "type": "plain",
         "value": "dni.session.startup"
       },
-      "APPLICATION_RETURN_TO_COOKIE_NAME": {
-        "type": "plain",
-        "value": "dni.return-to"
-      },
       "STICK_COOKIES_TO_APPLICATION_PATH": {
         "type": "plain",
         "value": "true"
-      },
-      "APPLICATION_WEB_HOOKS_SECRET": {
-        "type": "secret",
-        "name": "application_web_hooks_secret"
       },
       "MAILING_NEW_ENTITY_TEMPLATE_ID": {
         "type": "secret",
@@ -179,7 +179,7 @@
       },
       "OIDC_REDIRECT_AFTER_LOGOUT_CALLBACK_PATH": {
         "type": "plain",
-        "value": "https://login.ourtesco.com/oidc/2/logout"
+        "value": "/sso/logout/callback"
       },
       "IDENTITY_CLIENT_ID": {
         "type": "secret",
@@ -239,7 +239,7 @@
       },
       "TYPEORM_RUN_MIGRATION": {
         "type": "plain",
-        "value": "true"
+        "value": "false"
       },
       "CCRM_RUN_SYNC": {
         "type": "plain",
