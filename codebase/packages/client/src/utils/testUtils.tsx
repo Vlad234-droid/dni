@@ -17,6 +17,8 @@ import store from 'store';
 import Auth, { AuthProvider } from 'features/Auth';
 import rootReducer from 'store/rootReducer';
 import { UserRole } from 'features/User';
+import GlobalModal from 'features/GlobalModal';
+import {NotificationProvider} from "../features/Notification";
 
 const WithThemeProvider: FC = ({ children }) => (
   <ThemeProvider theme={theme}>
@@ -42,7 +44,9 @@ const WithAllProviders: FC = ({ children }) => {
       <Provider store={store}>
         <Auth>
           <InterfaceProvider>
-            <Router history={history}>{children}</Router>
+            <GlobalModal>
+              <Router history={history}>{children}</Router>
+            </GlobalModal>
           </InterfaceProvider>
         </Auth>
       </Provider>
@@ -85,7 +89,9 @@ const render = (
           fetchUser: jest.fn(),
         }}>
           <InterfaceProvider>
-            <Router history={history}>{children}</Router>
+            <GlobalModal>
+              <Router history={history}>{children}</Router>
+            </GlobalModal>
           </InterfaceProvider>
         </AuthProvider>
       </Provider>

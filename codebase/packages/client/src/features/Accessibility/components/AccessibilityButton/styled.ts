@@ -45,7 +45,7 @@ const Wrapper = styled.div<{ isOpen: boolean }>`
 const Content = styled.div<{ mode: Mode; isOpen: boolean }>`
   background: ${({ theme, mode }) => (mode == Mode.LIGHT ? theme.colors.white : theme.colors.tescoBlue)};
   width: 100vw;
-  height: 60px;
+  height: 62px;
   position: absolute;
   left: 0;
   right: 0;
@@ -53,7 +53,7 @@ const Content = styled.div<{ mode: Mode; isOpen: boolean }>`
   border-top: 1px solid ${({ theme, mode }) => (mode == Mode.LIGHT ? theme.colors.tescoBlue : theme.colors.white)};
   transform: ${({ isOpen }) => (isOpen ? 'translate3d(0, 0, 0) scaleY(1)' : 'translate3d(0, -29px, 0) scaleY(0)')};
   transition: transform 0.5s ease 0s;
-  z-index: 2000;
+  z-index: 1001;
 
   ${Media.large_phone`
     top: 42px;
