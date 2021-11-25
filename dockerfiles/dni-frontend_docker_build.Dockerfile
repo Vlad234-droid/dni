@@ -43,8 +43,6 @@ RUN yarn global add lerna@3.22.1 --prefix=/usr
 RUN which lerna
 RUN lerna --version
 
-#RUN yarn global add sqlite3@5.0.0 --prefix=/usr
-
 ENV HTTP_PROXY=$HTTP_PROXY
 ENV HTTPS_PROXY=$HTTPS_PROXY
 
