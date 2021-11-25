@@ -66,12 +66,12 @@ export const initializeOpenid = async ({
     refreshTokenSecret: oidcRefreshTokenSecret(),
 
     /**
-     * A callback root that was registered for the application e.g. https://ourtesco.com (without the applicationPath)
+     * A callback root that was registered for the application e.g. https://www.ourtesco.com (without the applicationPath)
      */
     applicationServerUrlRoot: applicationServerUrlRoot(),
 
     /**
-     * A path the app is mounted on e.g. for https://ourtesco.com/my-shift the path is /my-shift.
+     * A path the app is mounted on e.g. for https://www.ourtesco.com/my-shift the path is /my-shift.
      * If the app is mounted on root path do not provide this option.
      */
     applicationPath: applicationPublicUrl(),
