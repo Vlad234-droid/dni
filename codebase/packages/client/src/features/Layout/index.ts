@@ -6,4 +6,5 @@ export {
   HEADER_HEIGHT_MOBILE,
   HEADER_HEIGHT_DESKTOP,
   FOOTER_HEIGHT,
+  HEADER_HEIGHT_TABLET,
 } from './components/Layout/styled';

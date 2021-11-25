@@ -4,12 +4,6 @@ import { headingMD, textSM, GREY_COLOR } from 'styles';
 import Media from 'styles/media';
 
 const Wrapper = styled.div`
-  padding-bottom: 16px;
-
-  ${Media.tablet`
-    padding-bottom: 32px;
-  `}
-
   h5 {
     ${textSM};
     font-weight: normal;

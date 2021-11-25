@@ -1,4 +1,5 @@
 import React, { FC } from 'react';
+import styled from 'styled-components';
 
 import { Page, PAGE_PREFIX } from 'features/Page';
 import Intro from 'features/Intro';

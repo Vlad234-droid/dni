@@ -92,7 +92,7 @@ const NotificationSettings: FC = () => {
       />
       <Content
         visible={
-          !!email && (formData.receivePostsEmailNotifications || formData.receiveEventsEmailNotifications) && !isUnsubscribe
+          (formData.receivePostsEmailNotifications || formData.receiveEventsEmailNotifications) && !isUnsubscribe
         }
       >
         <Title>Enter email address</Title>
