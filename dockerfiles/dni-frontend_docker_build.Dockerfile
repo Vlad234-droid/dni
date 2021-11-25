@@ -1,8 +1,11 @@
-FROM node:14.4-alpine
+FROM node:14.7-slim
+
+ARG NODE_ENV
+ARG HTTP_PROXY
+ARG HTTPS_PROXY
 
 # Ourtesco NEXUS repository access token
 ARG NEXUS_ACCESS_TOKEN
-ARG NODE_ENV
 
 ARG PUBLIC_URL=/
 
@@ -15,7 +18,11 @@ ARG REACT_APP_CONTACT_API_ENABLED=false
 
 WORKDIR /home/app
 
-RUN apk --update add bash && apk --no-cache add dos2unix
+RUN apt-get update \
+    && apt-get install --yes --no-install-recommends \
+        dos2unix \
+        gcc make libc-dev python g++ \
+    && rm -rf /var/lib/apt/lists/*
 
 COPY --chmod=0644 ./codebase ./
 COPY --chmod=0755 ./scripts/create-npmrc.sh ./create-npmrc.sh
@@ -28,11 +35,16 @@ RUN dos2unix ./run.sh && dos2unix ./create-npmrc.sh && bash ./create-npmrc.sh --
 # Show information about the file system
 RUN df -h
 
+RUN yarn config set "strict-ssl" false -g
+
 # Install lerna, version 3.22.1 globally
 RUN yarn global add lerna@3.22.1 --prefix=/usr
 
 RUN which lerna
 RUN lerna --version
+
+ENV HTTP_PROXY=$HTTP_PROXY
+ENV HTTPS_PROXY=$HTTPS_PROXY
 
 RUN yarn bootstrap
 
