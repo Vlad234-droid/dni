@@ -202,7 +202,6 @@ export const MainContainer = styled.div.attrs({
   'data-testid': 'main-content',
 })<Partial<LayoutProps>>`
   grid-area: main;
-  overflow-y: auto;
   margin-bottom: 60px;
 
   ${Media.tablet`
