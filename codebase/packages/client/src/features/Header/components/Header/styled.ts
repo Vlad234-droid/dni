@@ -45,6 +45,7 @@ export const Icons = styled.div`
 
 export const IconWrapper = styled.div`
   height: 16px;
+  cursor: pointer;
 
   ${Media.small_desktop`
       height: 40px;
@@ -79,7 +80,7 @@ export const ToasterWrapper = styled.div`
   width: 100%;
   top: ${HEADER_HEIGHT_MOBILE};
   left: 0;
-  z-index: 1;
+  z-index: 2000;
 
   ${Media.small_desktop`
      top: ${HEADER_HEIGHT_DESKTOP};

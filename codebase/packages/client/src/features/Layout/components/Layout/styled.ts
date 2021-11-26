@@ -32,7 +32,6 @@ export const Wrapper = styled.div<Props>`
   grid-template-columns: 1fr;
   grid-template-rows: ${HEADER_HEIGHT_MOBILE} 1fr ${FOOTER_HEIGHT};
   grid-template-areas: 'header' 'main' 'left';
-  margin-bottom: 40px;
 
   ${Media.small_desktop`
     height: 100vh;
@@ -203,6 +202,7 @@ export const MainContainer = styled.div.attrs({
   'data-testid': 'main-content',
 })<Partial<LayoutProps>>`
   grid-area: main;
+  margin-bottom: 60px;
 
   ${Media.tablet`
     margin-top: 52px;
@@ -210,6 +210,7 @@ export const MainContainer = styled.div.attrs({
 
   ${Media.small_desktop`
     margin-top: 0;
+    margin-bottom: 0;
   `}
 
   ${({ theme }) => css`
