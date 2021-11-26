@@ -45,6 +45,7 @@ export const Icons = styled.div`
 
 export const IconWrapper = styled.div`
   height: 16px;
+  cursor: pointer;
 
   ${Media.small_desktop`
       height: 40px;
