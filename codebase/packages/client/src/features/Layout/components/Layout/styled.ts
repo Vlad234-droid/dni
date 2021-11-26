@@ -41,6 +41,7 @@ export const Wrapper = styled.div<Props>`
     );
     grid-template-rows:  ${TOP_HEADER_HEIGHT} ${MAIN_HEADER_HEIGHT} ${HEADER_HEIGHT_DESKTOP} 1fr;
     grid-template-areas: 'top-header top-header top-header top-header' 'main-header main-header main-header main-header' 'header header header header' 'left left main main';
+    margin-bottom: 0;
   `}
 
   ${Media.large_desktop`
@@ -192,6 +193,7 @@ export const LeftContainer = styled.div.attrs({
   bottom: 0;
   left: 0;
   right: 0;
+  overflow-y: auto;
 
   ${Media.small_desktop`
     position: static;
