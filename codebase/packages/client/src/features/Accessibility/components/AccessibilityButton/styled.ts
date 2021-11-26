@@ -44,7 +44,6 @@ const Wrapper = styled.div<{ isOpen: boolean }>`
 
 const Content = styled.div<{ mode: Mode; isOpen: boolean }>`
   background: ${({ theme, mode }) => (mode == Mode.LIGHT ? theme.colors.white : theme.colors.tescoBlue)};
-  width: 100vw;
   height: 62px;
   position: absolute;
   left: 0;
