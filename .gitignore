@@ -34,3 +34,4 @@
 # docker build
 temp
 **/secrets.json
+**/dni.secrets.env

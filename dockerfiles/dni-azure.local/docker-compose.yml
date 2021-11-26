@@ -17,6 +17,7 @@ services:
             - 'postgres'
         env_file:
             - dni/dni.env
+            - dni/dni.secrets.env
         ports:
             - 5000:5000
         restart: always
