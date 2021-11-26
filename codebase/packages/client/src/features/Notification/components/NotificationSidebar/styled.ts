@@ -6,6 +6,7 @@ import {
   HEADER_HEIGHT_DESKTOP,
   HEADER_HEIGHT_MOBILE,
   FOOTER_HEIGHT,
+  HEADER_HEIGHT_TABLET,
 } from 'features/Layout';
 import Media from 'styles/media';
 
@@ -33,6 +34,10 @@ export const Wrapper = styled.div<{ visible: boolean }>`
       transform: translate3d(0px, 0px, 0px);
       visibility: visible;
     `}
+
+  ${Media.tablet`
+    top: ${HEADER_HEIGHT_TABLET};
+  `}
 
   ${Media.small_desktop`
     top: calc(${TOP_HEADER_HEIGHT} + ${MAIN_HEADER_HEIGHT} + ${HEADER_HEIGHT_DESKTOP});

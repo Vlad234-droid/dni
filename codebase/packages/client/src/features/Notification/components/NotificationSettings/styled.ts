@@ -4,7 +4,7 @@ import Media from 'styles/media';
 import { headingMD } from 'styles';
 
 export const Wrapper = styled.div`
-  padding: 0 16px;
+  padding: 0 16px 20px;
 
   ${Media.small_desktop`
     padding: 32px;
