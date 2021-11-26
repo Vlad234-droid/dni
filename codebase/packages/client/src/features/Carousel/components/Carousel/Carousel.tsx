@@ -58,6 +58,14 @@ const Carousel: FC<Props> = ({
     swipe?.current?.instance?.slide(index);
   }
 
+  const handleNextClick = () => {
+    swipe?.current?.instance?.next();
+  }
+
+  const handlePrevClick = () => {
+    swipe?.current?.instance?.prev();
+  }
+
   if (fullWidth || isMobile) {
     return (
       <SwipeWrapper data-testid='carousel' height={height}>
@@ -78,8 +86,8 @@ const Carousel: FC<Props> = ({
               itemsCount={childCount}
               activeItem={activeIndex}
               onDotClick={handleDotClick}
-              next={swipe?.current?.instance?.next}
-              prev={swipe?.current?.instance?.prev}
+              next={handleNextClick}
+              prev={handlePrevClick}
             />
           </ActiveItemControlContainer>
         )}
