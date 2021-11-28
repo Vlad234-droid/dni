@@ -15,6 +15,7 @@ type Config = {
   secret?: string;
   compressed?: boolean;
 };
+
 /**
  * Returns the data saved as encrypted string in the given cookie.
  *
@@ -34,16 +35,16 @@ export const getDataFromCookie = <T>(
   try {
     const unfoldedData = pipe(
       cookie,
-      decrypt(secret || ""),
+      decrypt(secret || ''),
       decompress(!!compressed),
     );
 
     return secret || compressed
       ? JSON.parse(unfoldedData as string)
       : unfoldedData;
-  } catch (error) {
+  } catch (e: any) {
     throw new Error(
-      `Cookie value can not be extracted! reason - '${error.message}'; cookie name - '${cookieName}'; value - '${cookie}`,
+      `Cookie value can not be extracted! cookie name - '${cookieName}', error message - '${e.message}'`
     );
   }
 };

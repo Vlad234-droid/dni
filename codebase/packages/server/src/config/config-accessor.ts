@@ -27,8 +27,8 @@ export type ProcessConfig = {
   applicationUrlUnsubscribe: () => string;
   applicationUploadSize: () => number;
   // cookies settings
-  authDataCookieName: () => string | undefined;
-  sessionCookieName: () => string | undefined;
+  applicationIdTokenCookieName: () => string | undefined;
+  applicationSessionCookieName: () => string | undefined;
   applicationReturnToCookieName: () => string | undefined;
   applicationCookieParserSecret: () => string | undefined;
   applicationColleagueCookieName: () => string;
@@ -104,8 +104,8 @@ export class ConfigAccessor {
       applicationUploadSize: () => defaultConfig.applicationUploadSize,
 
       // cookies settings
-      authDataCookieName: () => processEnv.AUTH_DATA_COOKIE_NAME || undefined,
-      sessionCookieName: () => processEnv.SESSION_COOKIE_NAME || undefined,
+      applicationIdTokenCookieName: () => processEnv.APPLICATION_AUTH_TOKEN_COOKIE_NAME || undefined,
+      applicationSessionCookieName: () => processEnv.APPLICATION_SESSION_COOKIE_NAME || undefined,
       applicationReturnToCookieName: () => processEnv.APPLICATION_RETURN_TO_COOKIE_NAME || undefined,
       applicationCookieParserSecret: () =>
         processEnv.APPLICATION_COOKIE_PARSER_SECRET || defaultConfig.applicationCookieParserSecret,

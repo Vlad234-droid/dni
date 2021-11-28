@@ -117,11 +117,11 @@
         "type": "plain",
         "value": "dni.return-to"
       },
-      "AUTH_DATA_COOKIE_NAME": {
+      "APPLICATION_AUTH_TOKEN_COOKIE_NAME": {
         "type": "plain",
         "value": "dni.colleague.jwt"
       },
-      "SESSION_COOKIE_NAME": {
+      "APPLICATION_SESSION_COOKIE_NAME": {
         "type": "plain",
         "value": "dni.session.startup"
       },

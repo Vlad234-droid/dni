@@ -52,7 +52,7 @@ export const LOGOUT_PATH = '/sso/logout';
 export const REFRESH_PATH = '/sso/refresh';
 
 export const USER_INFO_COOKIE_NAME = 'tesco.userinfo';
-export const AUTH_DATA_COOKIE_NAME = 'tesco.colleague.jwt';
+export const AUTH_TOKEN_COOKIE_NAME = 'tesco.colleague.jwt';
 export const SESSION_COOKIE_NAME = 'tesco.session';
 
 export const ONELOGIN_RETURN_URI_COOKIE_NAME = 'onelogin.return.uri';

@@ -1,7 +1,7 @@
 import { Response } from 'express';
 import { Strategy } from '../identity-swap';
 import { OneloginError } from '../..';
-import { getOpenIdAuthData } from '../../auth-data-extractor';
+import { getOpenIdAuthData } from '../../oidc-data-extractor';
 
 /**
  * Returns token used in identity token swap endpoint.
@@ -14,7 +14,7 @@ export const getIdentitySwapToken = (res: Response, strategy: Strategy) => {
     throw new OneloginError('other', `Unsupported OneLogin strategy: ${strategy}`);
   }
 
-  const { idToken: oidcToken } = getOpenIdAuthData(res, false) || {};
+  const { accessToken: oidcToken } = getOpenIdAuthData(res, false) || {};
   if (!oidcToken) {
     throw Error('No open-id token found');
   }

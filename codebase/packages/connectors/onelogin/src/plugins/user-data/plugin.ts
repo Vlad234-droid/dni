@@ -3,7 +3,7 @@ import { getUserData, setUserData } from './user-data';
 import { setDataToCookie, getDataFromCookie, PluginCookieConfig, clearPluginCookiesIfSessionExpired } from '../utils';
 import { Optional, Plugin } from '../plugin';
 import { OneloginError } from '../..';
-import { getOpenIdUserInfo, OpenIdUserInfo } from '../../user-info-extractor';
+import { extractOpenIdUserInfo, OpenIdUserInfo } from '../../oidc-data-extractor';
 
 type Config<O> = {
   /**
@@ -51,7 +51,7 @@ export const userDataPlugin = <O>(config: Config<O> & Optional): Plugin => {
     if (cookieConfig) {
       clearPluginCookiesIfSessionExpired(req, res, cookieConfig!);
   
-      const {  secret, cookieName, compressed } = cookieConfig;
+      const { secret, cookieName, compressed } = cookieConfig;
       const dataFromCookie = getDataFromCookie<O>(req, { cookieName, secret, compressed });
   
       if (dataFromCookie) {
@@ -60,12 +60,19 @@ export const userDataPlugin = <O>(config: Config<O> & Optional): Plugin => {
       }
     }
   
-    const userInfo = getOpenIdUserInfo(res);
+    const userInfo = await extractOpenIdUserInfo(res.openIdClient, res);
     if (userInfo) {
       if (cookieConfig) {
-        const { cookieShapeResolver = (data: any) => data } = cookieConfig;
-        const sid = userInfo?.sid;
-        const payload = { ...cookieShapeResolver(userInfo, res), sid };
+        let payload: O | OpenIdUserInfo;
+
+        const { cookieShapeResolver } = cookieConfig;
+        if (cookieShapeResolver && typeof cookieShapeResolver === 'function') {
+          const sid = userInfo?.sid;
+          payload =  { ...cookieShapeResolver(userInfo, res), sid };
+        } else {
+          payload =  { ...userInfo };
+        }
+
         setDataToCookie(res, payload, { ...cookieConfig });
         setUserData(res, payload);
       } else {
@@ -76,7 +83,7 @@ export const userDataPlugin = <O>(config: Config<O> & Optional): Plugin => {
     }
   };
 
-  plugin.info = 'User Data plugin';
+  plugin.info = 'Application User Data plugin';
   plugin.optional = config.optional || false;
 
   return plugin;

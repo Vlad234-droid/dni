@@ -4,7 +4,7 @@ import {
   clearCookie as clearResponseCookie,
   clearRequestCookie,
 } from "./cookie";
-import { getOpenIdUserInfo } from "../../user-info-extractor";
+import { getOpenIdSessionId } from "../../oidc-data-extractor";
 import { getDataFromCookie } from "./get-data-from-cookie";
 
 export const clearPluginCookiesIfSessionExpired = (
@@ -14,7 +14,7 @@ export const clearPluginCookiesIfSessionExpired = (
   additionalCookiesToClear: Omit<PluginCookieConfig, "maxAge">[] = [],
 ) => {
   const { cookieName, secret, compressed } = cookieConfig;
-  const sessionId = getOpenIdUserInfo(res)?.sid;
+  const sessionId = getOpenIdSessionId(res);
   const pluginSessionId = getDataFromCookie<{ sid: string }>(req, {
     cookieName,
     secret,
