@@ -73,8 +73,8 @@ export class CcmsNotificationSubscriber implements EntitySubscriberInterface<Ccm
         ccmsEntity.notificationUUID = ccmsNotification.notificationUUID;
         ccmsEntity.notificationTriggerEvent = ccmsNotification.notificationTriggerEvent;
   
-        const parentEvent = Array.isArray(entityInstance.event) && entityInstance.event.length > 0 ? entityInstance.event[0] : entityInstance.event as CommonCcmsEntity | undefined;
-        const parentNetwork = Array.isArray(entityInstance.network) && entityInstance.network.length > 0 ? entityInstance.network[0] : entityInstance.network as CommonCcmsEntity | undefined;
+        const parentEvent = (Array.isArray(entityInstance.event) && entityInstance.event.length > 0) ? entityInstance.event[0] : entityInstance.event as CommonCcmsEntity | undefined;
+        const parentNetwork = (Array.isArray(entityInstance.network) && entityInstance.network.length > 0) ? entityInstance.network[0] : entityInstance.network as CommonCcmsEntity | undefined;
 
         if (parentEvent || parentNetwork) {
           const parentEntityType = parentEvent?.id
