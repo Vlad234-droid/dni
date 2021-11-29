@@ -239,9 +239,9 @@
       },
       "TYPEORM_RUN_MIGRATION": {
         "type": "plain",
-        "value": "false"
+        "value": "true"
       },
-      "CCRM_RUN_SYNC": {
+      "CCMS_RUN_SYNC": {
         "type": "plain",
         "value": "false"
       },

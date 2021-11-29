@@ -7,7 +7,7 @@ if [ "$TYPEORM_RUN_MIGRATION" = "true" ]; then
     yarn ws:db migration:run
 fi
 
-if [ "$CCRM_RUN_SYNC" = "true" ]; then
+if [ "$CCMS_RUN_SYNC" = "true" ]; then
     yarn ws:server cli:ccms-sync
 fi
 
