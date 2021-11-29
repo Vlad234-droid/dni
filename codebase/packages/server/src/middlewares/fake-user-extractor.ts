@@ -27,6 +27,9 @@ export const fakeUserExtractor: express.Handler = (req, res, next) => {
   return res.redirect(req.path);
 };
 
+const generateFakeTokens = (iamId: string = 'UK38011111'): AuthData => {
+
+}
 const buildFakeUserInfo = (employeeNumber = 'UK45006148'): OpenIdUserInfo => ({
   sub: 'fake-openid',
   preferred_username: 'AD',
@@ -50,5 +53,6 @@ const buildFakeAuth = (userInfo: OpenIdUserInfo): AuthData => {
     accessToken,
     idToken: accessToken, // TODO: reimplement
     encRefreshToken: 'FakeEncRefreshToken',
+    sessionId: userInfo.sid,
   };
 };
