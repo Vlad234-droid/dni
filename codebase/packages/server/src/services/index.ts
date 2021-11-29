@@ -1,4 +1,4 @@
-export * from './ccrm-event-handler';
+export * from './ccms-event-handler';
 export * from './contact';
 export * from './employee';
 export * from './identity-cst';

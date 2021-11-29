@@ -2,15 +2,15 @@ import { CcmsEntity, CcmsNotification, DniEntityTypeEnum, CcmsTriggerEventEnum }
 import { EntitySubscriberInterface, EventSubscriber, InsertEvent, EntityManager } from 'typeorm';
 import { slugify } from '../utils';
 
-interface CommonCcrmEntity {
+interface CommonCcmsEntity {
   id: number;
   slug: string;
   title: string;
   created_at: Date;
   updated_at: Date;
   published_at: Date;
-  network?: CommonCcrmEntity;
-  event?: CommonCcrmEntity;
+  network?: CommonCcmsEntity | CommonCcmsEntity[] ;
+  event?: CommonCcmsEntity | CommonCcmsEntity[];
 }
 
 @EventSubscriber()
@@ -23,85 +23,72 @@ export class CcmsNotificationSubscriber implements EntitySubscriberInterface<Ccm
   }
 
   async afterInsert(event: InsertEvent<CcmsNotification>) {
-    await this.upsertCcrmEntity(event.entity, event.manager, event.queryRunner.data.entityInstance);
+    await this.ccmsNotification(event.entity, event.manager, event.queryRunner.data.entityInstance);
   }
 
-  async upsertCcrmEntity(ccrmNotification: CcmsNotification, manager: EntityManager, entityInstance: CommonCcrmEntity) {
-    if (CcmsTriggerEventEnum.DELETED == ccrmNotification.notificationTriggerEvent) {
+  async ccmsNotification(ccmsNotification: CcmsNotification, manager: EntityManager, entityInstance: CommonCcmsEntity) {
+    if (CcmsTriggerEventEnum.DELETED == ccmsNotification.notificationTriggerEvent) {
       // Process DELETED event
       const builder = manager
         .getRepository(CcmsEntity)
         .createQueryBuilder()
         .update()
         .set({ 
-          notificationUUID: ccrmNotification.notificationUUID, 
-          notificationTriggerEvent: ccrmNotification.notificationTriggerEvent,
+          notificationUUID: ccmsNotification.notificationUUID, 
+          notificationTriggerEvent: ccmsNotification.notificationTriggerEvent,
           updatedAt: new Date(), 
-          entityDeletedAt: ccrmNotification.receivedAt,   
+          entityDeletedAt: ccmsNotification.receivedAt,   
         })
         .where(`entityId = :entityId AND entityType = :entityType`, {
-          entityId: ccrmNotification.entityId,
-          entityType: ccrmNotification.entityType,
+          entityId: ccmsNotification.entityId,
+          entityType: ccmsNotification.entityType,
         });
 
-      if (DniEntityTypeEnum.POST != ccrmNotification.entityType) {
+      if (DniEntityTypeEnum.POST != ccmsNotification.entityType) {
         builder.orWhere(`parentEntityId = :parentEntityId AND parentEntityType = :parentEntityType`, {
-          parentEntityId: ccrmNotification.entityId,
-          parentEntityType: ccrmNotification.entityType,
+          parentEntityId: ccmsNotification.entityId,
+          parentEntityType: ccmsNotification.entityType,
         });
       }
 
       builder.execute();
     } else {
       // Process CREATED,UPDATED event
-      const ccrmEntity = new CcmsEntity();
+      const ccmsEntity = new CcmsEntity();
 
-      ccrmEntity.entityId = ccrmNotification.entityId;
-      ccrmEntity.entityType = ccrmNotification.entityType;
+      ccmsEntity.entityId = ccmsNotification.entityId;
+      ccmsEntity.entityType = ccmsNotification.entityType;
 
-      console.log(` ==> ccrmEntityInstance = ${JSON.stringify(entityInstance, undefined, 3)}`);
+      console.log(` ==> ccmsEntityInstance = ${JSON.stringify(entityInstance, undefined, 3)}`);
 
       if (entityInstance) {
-        ccrmEntity.slug = entityInstance.slug || slugify(entityInstance.title);
-        ccrmEntity.entityInstance = entityInstance;
-        ccrmEntity.entityCreatedAt = 
-          entityInstance.created_at || entityInstance.published_at || ccrmNotification.receivedAt || new Date;
+        ccmsEntity.slug = entityInstance.slug || slugify(entityInstance.title);
+        ccmsEntity.entityInstance = entityInstance;
+        ccmsEntity.entityCreatedAt = 
+          entityInstance.created_at || entityInstance.published_at || ccmsNotification.receivedAt || new Date;
 
-        ccrmEntity.entityUpdatedAt = entityInstance.updated_at || ccrmNotification.receivedAt || new Date;
-        ccrmEntity.entityPublishedAt = entityInstance.published_at;
+        ccmsEntity.entityUpdatedAt = entityInstance.updated_at || ccmsNotification.receivedAt || new Date;
+        ccmsEntity.entityPublishedAt = entityInstance.published_at;
 
-        ccrmEntity.notificationUUID = ccrmNotification.notificationUUID;
-        ccrmEntity.notificationTriggerEvent = ccrmNotification.notificationTriggerEvent;
+        ccmsEntity.notificationUUID = ccmsNotification.notificationUUID;
+        ccmsEntity.notificationTriggerEvent = ccmsNotification.notificationTriggerEvent;
   
-        const parent = entityInstance.event || entityInstance.network;
-        if (parent) {
-          const parentEntityType = entityInstance.event?.id
+        const parentEvent = (Array.isArray(entityInstance.event) && entityInstance.event.length > 0) ? entityInstance.event[0] : entityInstance.event as CommonCcmsEntity | undefined;
+        const parentNetwork = (Array.isArray(entityInstance.network) && entityInstance.network.length > 0) ? entityInstance.network[0] : entityInstance.network as CommonCcmsEntity | undefined;
+
+        if (parentEvent || parentNetwork) {
+          const parentEntityType = parentEvent?.id
             ? DniEntityTypeEnum.EVENT
-            : entityInstance.network?.id
+            : parentNetwork?.id
             ? DniEntityTypeEnum.NETWORK
             : undefined;
 
-          // const ccrmParentEntity = new CcmsEntity();
-
-          // ccrmParentEntity.entityId = parent.id;
-          // ccrmParentEntity.entityType = parentEntityType!;
-          // ccrmParentEntity.slug = parent?.slug || slugify(parent!.title);
-          // ccrmParentEntity.entityInstance = parent;
-          // ccrmParentEntity.entityCreatedAt = parent?.published_at;
-          // ccrmParentEntity.entityUpdatedAt = parent?.published_at;
-          // ccrmParentEntity.entityPublishedAt = parent?.published_at;
-
-          // ccrmParentEntity.notificationUUID = ccrmNotification.notificationUUID;
-          // ccrmParentEntity.notificationTriggerEvent = ccrmNotification.notificationTriggerEvent;
-
-          // manager.save(ccrmParentEntity);
-
-          ccrmEntity.parentEntityId = parent.id;
-          ccrmEntity.parentEntityType = parentEntityType;
+          ccmsEntity.parentEntityId = (parentEvent || parentNetwork)?.id;
+          ccmsEntity.parentEntityType = parentEntityType;
         }
       }
 
-      manager.save(ccrmEntity);
+      manager.save(ccmsEntity);
     }
   }
 }

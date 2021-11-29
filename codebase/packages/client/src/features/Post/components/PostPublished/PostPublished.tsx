@@ -1,4 +1,5 @@
 import React, { FC } from 'react';
+import { Event, Network } from '@dni-connectors/colleague-cms-api';
 
 import { useMedia } from 'context/InterfaceContext';
 import { EntityType } from 'types/entity';
@@ -29,6 +30,10 @@ const TEST_ID = 'post-published';
 
 const PostPublished: FC<PostPublishedProps> = ({ item }) => {
   const { title, content, authorName, attachments, id, published_at, network, event, reactions } = item;
+
+  const parentEvent = (Array.isArray(event) && event.length > 0) ? event[0] : event as Event | undefined;
+  const parentNetwork = (Array.isArray(network) && network.length > 0) ? network[0] : network as Network | undefined;
+
   const media = useMedia();
 
   return (
@@ -37,7 +42,7 @@ const PostPublished: FC<PostPublishedProps> = ({ item }) => {
         <PostPublisher>
           <PostPublisherAvatarBox>{/* <PostPublisherAvatar src={createdBy.avatar} /> */}</PostPublisherAvatarBox>
           <PostPublisherName>
-            {`${authorName || network?.title || event?.title || 'Diversity and Inclusion'}`}
+            {`${authorName || parentNetwork?.title || parentEvent?.title || 'Diversity and Inclusion'}`}
           </PostPublisherName>
         </PostPublisher>
         <PostPublishDate>{new Date(published_at).toDateString()}</PostPublishDate>

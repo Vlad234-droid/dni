@@ -4,8 +4,8 @@ import { BaseApiParams, BaseType } from '../types';
 
 export type Event = {
   title: string;
-  network: Network;
-  maxParticipants: number;
+  network?: Network | Network[];
+  maxParticipants?: number;
   startDate: DateString;
   endDate: DateString;
   surveryUrl?: string;

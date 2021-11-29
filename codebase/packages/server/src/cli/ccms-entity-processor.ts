@@ -12,8 +12,8 @@ interface CommonEntity {
   created_at: string;
   updated_at: string;
   published_at: string;
-  network?: CommonEntity;
-  event?: CommonEntity;
+  network?: CommonEntity | CommonEntity[];
+  event?: CommonEntity | CommonEntity[];
 }
 
 type GetCountFn = (query: ApiInput<BaseApiParams>) => Promise<{ data: number }>;
@@ -26,8 +26,8 @@ const getCmsEntityCount = async (getCountFn: GetCountFn): Promise<number> => {
     },
   };
 
-  const ccrmResponse = await getCountFn(countQuery);
-  return ccrmResponse.data;
+  const ccmsResponse = await getCountFn(countQuery);
+  return ccmsResponse.data;
 };
 
 const getCmsEntity = async (
@@ -44,9 +44,9 @@ const getCmsEntity = async (
     },
   };
 
-  const ccrmResponse = await getEntityFn(entityQuery);
+  const ccmsResponse = await getEntityFn(entityQuery);
 
-  return ccrmResponse.data;
+  return ccmsResponse.data;
 };
 
 const convertToCcmsEntity = (
@@ -55,13 +55,14 @@ const convertToCcmsEntity = (
   entity: CommonEntity,
 ): CcmsEntity => {
   const getParent = () => {
-    const parent = entity.event || entity.network;
-    if (parent) {
+    const parentEvent = (Array.isArray(entity.event) && entity.event.length > 0) ? entity.event[0] : entity.event as CommonEntity | undefined;
+    const parentNetwork = (Array.isArray(entity.network) && entity.network.length > 0) ? entity.network[0] : entity.network as CommonEntity | undefined;
+    if (parentEvent || parentNetwork) {
       return {
-        parentEntityId: parent.id,
-        parentEntityType: entity.event?.id
+        parentEntityId: (parentEvent || parentNetwork)?.id,
+        parentEntityType: parentEvent?.id
           ? DniEntityTypeEnum.EVENT
-          : entity.network?.id
+          : parentNetwork?.id
           ? DniEntityTypeEnum.NETWORK
           : undefined,
       };
