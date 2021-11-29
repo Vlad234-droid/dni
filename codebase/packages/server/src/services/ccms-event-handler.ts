@@ -76,5 +76,7 @@ const analyzeEntity = async (payload: CepPayload, ctx: DniCmsApiContext) => {
       const connector = cmsNetworksApiConnector(ctx);
       return await connector.getNetwork(reqPayload);
     }
+    default:
+      return undefined;
   }
 };

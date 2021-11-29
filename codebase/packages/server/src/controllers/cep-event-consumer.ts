@@ -1,14 +1,6 @@
 import { Handler, Request, Response } from 'express';
-import { CcmsTriggerEventEnum } from '@dni/database';
 import { handleCepRequest } from '../services';
-
-export type CepPayload = {
-  id: string;
-  model: string;
-  trigger: CcmsTriggerEventEnum;
-  created_at: string;
-  updated_at: string;
-};
+import { CepPayload } from './cep-types';
 
 export const consumeCepEvent: Handler = async (req: Request<{}, CepPayload>, res: Response) => {
   try {
