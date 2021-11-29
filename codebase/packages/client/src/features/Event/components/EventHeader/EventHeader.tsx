@@ -37,7 +37,7 @@ const EventHeader: FC<Props> = ({ event, participants }) => {
   const isOnAir = isEventOnAir(startDate, endDate);
   const isPast = isPastEvent(endDate);
   const calendarDescription = shortDescription ? `${shortDescription} \\n\\n` : '';
-  const placesLeft = maxParticipants - participants;
+  const placesLeft = maxParticipants && (maxParticipants - participants);
 
   return (
     <Wrapper>
