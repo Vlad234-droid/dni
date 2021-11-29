@@ -55,8 +55,8 @@ const convertToCcmsEntity = (
   entity: CommonEntity,
 ): CcmsEntity => {
   const getParent = () => {
-    const parentEvent = Array.isArray(entity.event) && entity.event.length > 0 ? entity.event[0] : entity.event as CommonEntity | undefined;
-    const parentNetwork = Array.isArray(entity.network) && entity.network.length > 0 ? entity.network[0] : entity.network as CommonEntity | undefined;
+    const parentEvent = (Array.isArray(entity.event) && entity.event.length > 0) ? entity.event[0] : entity.event as CommonEntity | undefined;
+    const parentNetwork = (Array.isArray(entity.network) && entity.network.length > 0) ? entity.network[0] : entity.network as CommonEntity | undefined;
     if (parentEvent || parentNetwork) {
       return {
         parentEntityId: (parentEvent || parentNetwork)?.id,
