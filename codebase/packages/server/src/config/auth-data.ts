@@ -33,6 +33,8 @@ export const openIdUserInfoResolver = (
     .filter(Boolean)
     .filter((group: string) => oidcGroupFiltersRegex().some((rr) => rr.test(group)));
 
+  const employeeNumber = (src.params?.employeeNumber as string) || (src.params?.EmployeeNumber as string) || undefined;
+
   const userRoles: Set<string> = new Set(defaultRoles());
 
   if (oidcManagerGroups().some((g) => userGroups.includes(g))) {
@@ -49,12 +51,12 @@ export const openIdUserInfoResolver = (
   const userInfo = {
     //...userInfo,
     fullName: src.name,
-    firstName: src.given_name || getProperty(src.params, 'Firstname') || src.name.split(/\s+/)[0],
-    lastName: src.family_name || getProperty(src.params, 'Lastname') || src.name.split(/\s+/)[1],
+    firstName: src.given_name || getProperty(src.params, 'Firstname') || src.name?.split(/\s+/)[0],
+    lastName: src.family_name || getProperty(src.params, 'Lastname') || src.name?.split(/\s+/)[1],
     email: getProperty(src, 'email') || src.preferred_username,
     roles: Array.from(userRoles.values()),
     params: {
-      employeeNumber: (src.params?.employeeNumber as string) || (src.params?.EmployeeNumber as string) || undefined,
+      employeeNumber,
     },
     // aud: src.aud,
     // sid: src.sid,
