@@ -32,6 +32,8 @@ export const dniUserDataResolver = (
     .filter(Boolean)
     .filter((group: string) => oidcGroupFiltersRegex().some((rr) => rr.test(group)));
 
+  const employeeNumber = (src.params?.employeeNumber as string) || (src.params?.EmployeeNumber as string) || undefined;
+
   const userRoles: Set<string> = new Set(defaultRoles());
 
   if (oidcManagerGroups().some((g) => userGroups.includes(g))) {
@@ -52,7 +54,7 @@ export const dniUserDataResolver = (
     email: getProperty(src, 'email') || src.preferred_username,
     roles: Array.from(userRoles.values()),
     params: {
-      employeeNumber: (src.params?.employeeNumber as string) || (src.params?.EmployeeNumber as string) || undefined,
+      employeeNumber,
     },
     updatedAt: !isNaN(Number(src.updated_at)) ? Number(src.updated_at) : undefined,
   };
