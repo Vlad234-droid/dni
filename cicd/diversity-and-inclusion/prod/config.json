@@ -239,7 +239,7 @@
       },
       "TYPEORM_RUN_MIGRATION": {
         "type": "plain",
-        "value": "true"
+        "value": "false"
       },
       "CCMS_RUN_SYNC": {
         "type": "plain",

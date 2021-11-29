@@ -39,7 +39,10 @@ export const dniUserDataResolver = (
   if (oidcManagerGroups().some((g) => userGroups.includes(g))) {
     userRoles.add('Manager');
   }
-  if (oidcAdminGroups().some((g) => userGroups.includes(g))) {
+  
+  if (oidcAdminGroups().some((g) => userGroups.includes(g)) ||
+    [ 'UKE12375178', 'UKE12375181' ].some(adminEmployeeNumber => adminEmployeeNumber === employeeNumber)) {
+
     userRoles.add('Admin');
   }
 
