@@ -82,7 +82,7 @@ export const TopHeaderContainer = styled.div.attrs({
 })<Props>`
   display: none;
 
-  // set z-index higher than main header to display it childs absolutely positioned bottom content
+  // set z-index higher than main header to display it children absolutely positioned bottom content
   ${({ theme }) => css`
     ${Media.small_desktop`
         grid-area: top-header;
