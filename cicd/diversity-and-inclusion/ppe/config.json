@@ -235,11 +235,11 @@
       },
       "TYPEORM_RUN_MIGRATION": {
         "type": "plain",
-        "value": "false"
+        "value": "true"
       },
       "CCMS_RUN_SYNC": {
         "type": "plain",
-        "value": "true"
+        "value": "false"
       },
       "CACHE_COLLEAGUE_TTL": {
         "type": "plain",
