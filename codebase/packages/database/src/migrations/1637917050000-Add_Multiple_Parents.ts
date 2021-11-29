@@ -60,7 +60,7 @@ export class Migration_Add_Multiple_Patents implements MigrationInterface {
     // -- ccms_entity
     // -- ===========
     await queryRunner.query(
-      `ALTER TABLE ccms_entity ADD parents ccms_entity_descriptor[] NOT NULL DEFAULT '{}';`,
+      `ALTER TABLE ccms_entity ADD COLUMN IF NOT EXISTS parents ccms_entity_descriptor[] NOT NULL DEFAULT '{}';`,
     );
   }
 
