@@ -18,7 +18,7 @@ import Loading from 'types/loading';
 import ButtonFilter from 'features/ButtonFilter';
 
 import { Filter } from '../../config/types';
-import { ALL, ARCHIVED } from '../../config/constants';
+import { ALL, ARCHIVED, DEFAULT_FILTERS } from '../../config/constants';
 import { getList, getCount, listSelector, clear } from '../../store';
 import { getAllFilterPayload, getFilterPayload } from '../../utils';
 import PostItem from '../PostItem';
@@ -80,7 +80,7 @@ const PostList: FC<Props> = ({ entityId, filter = ALL }) => {
     (filters: Filters) => {
       dispatch(
         getList({
-          _sort: 'created_at:desc',
+          ...DEFAULT_FILTERS,
           ...filters,
           ...DEFAULT_PAGINATION,
           _start: 0,
@@ -97,7 +97,7 @@ const PostList: FC<Props> = ({ entityId, filter = ALL }) => {
       if (!(loading === Loading.PENDING) && hasMore && next <= total) {
         dispatch(
           getList({
-            _sort: 'created_at:desc',
+            ...DEFAULT_FILTERS,
             ...filters,
             ...DEFAULT_PAGINATION,
             _start: next,
