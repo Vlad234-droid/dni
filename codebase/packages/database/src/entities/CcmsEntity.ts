@@ -1,6 +1,7 @@
 import { Column, CreateDateColumn, Entity, Index, PrimaryColumn, UpdateDateColumn } from 'typeorm';
 
 import { CcmsTriggerEventEnum, DniEntityTypeEnum } from './enums';
+import { fromPostgresCompositeTypeArray, toPostgresCompositeTypeArray, CcmsEntityParentKey } from './CcmsEntityParentKey';
 
 @Entity('ccms_entity')
 @Index('c_entity__pk', ['entityId', 'entityType'], { unique: true })
@@ -31,6 +32,9 @@ class CcmsEntity {
 
   @Column('timestamp with time zone', { name: 'entity_deleted_at', nullable: true })
   entityDeletedAt?: Date;
+
+  @Column('text', { name: 'parents', transformer: { from: fromPostgresCompositeTypeArray, to: toPostgresCompositeTypeArray } })
+  parents?: CcmsEntityParentKey[];
 
   @Column('integer', { name: 'parent_entity_id', nullable: true })
   parentEntityId?: number;
