@@ -14,3 +14,8 @@ export const Logo = styled.div`
     ${redDotStyles};
   }
 `;
+
+export const LogoWrapper = styled.div`
+    display: flex;
+    height: 54px;
+`;

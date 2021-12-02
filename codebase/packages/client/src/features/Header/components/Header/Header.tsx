@@ -8,6 +8,7 @@ import NotificationSidebar, { NotificationRing } from 'features/Notification';
 import { Mode, AccessibilityButton } from 'features/Accessibility';
 import { ShareStoryButton } from 'features/GlobalModal';
 
+import TescoLogo from '../../assets/christmas-tesco-logo.png';
 import {
   Wrapper,
   MainWrapper,
@@ -39,7 +40,8 @@ const Header: FC = () => {
           </MenuWrapper>
         )}
         {!isDesktop && isOpened && <MainMenuMobile onClose={handleCloseMenu} />}
-        {!isDesktop && <Title>{'Diversity & Inclusion'}</Title>}
+        {!isDesktop && <img src={TescoLogo} alt='Tesco logo' />}
+        {/*{!isDesktop && <Title>{'Diversity & Inclusion'}</Title>}*/}
         <Aside>
           {(isTablet || isLargeMobile) && <AccessibilityButton mode={Mode.LIGHT} />}
           <Icons>
