@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components';
 
 import Media from 'styles/media';
 import { GREY_COLOR } from 'styles';
+import { isNextYear } from 'features/Header';
 
 import { LayoutProps } from '../../config/types';
 
@@ -11,8 +12,7 @@ type Props = HTMLProps<HTMLDivElement>;
 export const TOP_HEADER_HEIGHT = '36px';
 export const MAIN_HEADER_HEIGHT = '131px';
 export const HEADER_HEIGHT_DESKTOP = '65px';
-// export const HEADER_HEIGHT_MOBILE = '44px';
-export const HEADER_HEIGHT_MOBILE = '78px';
+export const HEADER_HEIGHT_MOBILE = isNextYear() ? '44px' : '78px';
 export const HEADER_HEIGHT_TABLET = '96px';
 export const FOOTER_HEIGHT = '54px';
 const SIDEBAR_WIDTH = '240px';
