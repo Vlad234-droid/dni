@@ -32,8 +32,6 @@ const Header: FC = () => {
   const handleOpenMenu = () => setIsOpened(true);
   const handleCloseMenu = () => setIsOpened(false);
 
-  isNextYear();
-
   return (
     <Wrapper data-testid={TEST_ID}>
       <MainWrapper>
