@@ -228,6 +228,7 @@ export const LeftContent = styled.div`
 
   ${Media.small_desktop`
      max-width: ${SIDEBAR_WIDTH};
+     margin-bottom: 40px;
   `}
 `;
 
