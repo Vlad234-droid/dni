@@ -102,7 +102,7 @@ const PostCreate: FC<Props> = ({ onClose, onSubmit, networks, loading, error }) 
           <FormGroup errorMessage={errors['confirm']?.message} error={Boolean(errors['confirm']?.message)}>
             <CheckboxWithLabel
               id='confirm'
-              labelText='I agree to provide my personal story/data for the publication within this network. I understand that this story may be shared in other locations, including the moderation version of my story.'
+              labelText='I agree to provide my personal story/data for the publication within this network. I understand that my story will be shared with the Network and will not be shared directly onto the site and that story may be shared in other locations, including the moderation version of my story.'
               checked={isAccepted}
               onChange={() => setAccepted(!isAccepted)}
               domRef={register}
