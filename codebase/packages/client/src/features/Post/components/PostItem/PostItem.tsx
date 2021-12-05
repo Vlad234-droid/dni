@@ -16,11 +16,12 @@ const PostItemWrapper = styled.div`
 
 interface PostItemProps {
   item: Post;
+  entityTitle?: string;
 }
 
 const TEST_ID = 'post-item';
 
-const PostItem: FC<PostItemProps> = ({ item }) => {
+const PostItem: FC<PostItemProps> = ({ item, entityTitle }) => {
   const { archived } = item;
   const { acknowledgeWithDelay } = useNotification();
 
@@ -33,10 +34,10 @@ const PostItem: FC<PostItemProps> = ({ item }) => {
       {archived ? (
         <CanPerform
           perform={buildAction(Component.POST_ARCHIVED, Action.LIST)}
-          yes={() => <PostArchived item={item} />}
+          yes={() => <PostArchived item={item} entityTitle={entityTitle} />}
         />
       ) : (
-        <PostPublished item={item} />
+        <PostPublished item={item} entityTitle={entityTitle} />
       )}
     </PostItemWrapper>
   );
