@@ -24,11 +24,12 @@ import {
 
 interface PostPublishedProps {
   item: Post;
+  entityTitle?: string;
 }
 
 const TEST_ID = 'post-published';
 
-const PostPublished: FC<PostPublishedProps> = ({ item }) => {
+const PostPublished: FC<PostPublishedProps> = ({ item, entityTitle }) => {
   const { title, content, authorName, attachments, id, published_at, network, event, reactions } = item;
 
   const parentEvent = (Array.isArray(event) && event.length > 0) ? event[0] : event as Event | undefined;
@@ -42,7 +43,7 @@ const PostPublished: FC<PostPublishedProps> = ({ item }) => {
         <PostPublisher>
           <PostPublisherAvatarBox>{/* <PostPublisherAvatar src={createdBy.avatar} /> */}</PostPublisherAvatarBox>
           <PostPublisherName>
-            {`${authorName || parentNetwork?.title || parentEvent?.title || 'Diversity and Inclusion'}`}
+            {`${authorName || entityTitle || parentNetwork?.title || parentEvent?.title || 'Diversity and Inclusion'}`}
           </PostPublisherName>
         </PostPublisher>
         <PostPublishDate>{new Date(published_at).toDateString()}</PostPublishDate>
