@@ -2,7 +2,7 @@ import cliProgress from 'cli-progress';
 import chalk from 'chalk';
 import { Repository } from 'typeorm';
 
-import { DniEntityTypeEnum, CcmsEntity, slugify } from '@dni/database';
+import { DniEntityTypeEnum, CcmsEntity, slugify, CcmsEntityParentKey } from '@dni/database';
 import { ApiInput, BaseApiParams } from '@dni-connectors/colleague-cms-api';
 
 interface CommonEntity {
@@ -55,10 +55,27 @@ const convertToCcmsEntity = (
   entity: CommonEntity,
 ): CcmsEntity => {
   const getParent = () => {
+    const parents: CcmsEntityParentKey[] | undefined = [];
+    if (Array.isArray(entity.event) && entity.event.length > 0) {
+      const parentEvents = entity.event.map(p => { return { entityId: p.id, entityType: DniEntityTypeEnum.EVENT }});
+      parents.push(...parentEvents);
+    } else if (!!entity.event && typeof entity.event === 'object' && !Array.isArray(entity.event)) {
+      const parentEvent = { entityId: (entity.event as CommonEntity)?.id, entityType: DniEntityTypeEnum.EVENT };
+      parents.push(parentEvent);
+    }
+    if (Array.isArray(entity.network) && entity.network.length > 0) {
+      const parentNetworks = entity.network.map(p => { return { entityId: p.id, entityType: DniEntityTypeEnum.NETWORK }});
+      parents.push(...parentNetworks);
+    } else if (!!entity.network && typeof entity.network === 'object' && !Array.isArray(entity.network)) {
+      const parentNetwork = { entityId: (entity.network as CommonEntity)?.id, entityType: DniEntityTypeEnum.NETWORK };
+      parents.push(parentNetwork);
+    }
+    
     const parentEvent = (Array.isArray(entity.event) && entity.event.length > 0) ? entity.event[0] : entity.event as CommonEntity | undefined;
     const parentNetwork = (Array.isArray(entity.network) && entity.network.length > 0) ? entity.network[0] : entity.network as CommonEntity | undefined;
-    if (parentEvent || parentNetwork) {
+    if (parentEvent || parentNetwork || parents) {
       return {
+        parents,
         parentEntityId: (parentEvent || parentNetwork)?.id,
         parentEntityType: parentEvent?.id
           ? DniEntityTypeEnum.EVENT
