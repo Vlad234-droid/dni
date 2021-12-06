@@ -18,7 +18,7 @@ const mailing = async () => {
     const email = await fetchPersonalEmail(colleagueUUID);
 
     if (email?.emailAddress) {
-      parentPort?.postMessage(`Personal email address for colleague ${colleagueUUID} is found.`);
+      parentPort?.postMessage(`Personal ${email?.emailAddress} address for colleague ${colleagueUUID} is found.`);
       addRecipient(recipients, email?.emailAddress, colleagueUUID);
     } else {
       parentPort?.postMessage(`WARNING: Personal email address for colleague ${colleagueUUID} not found.`);
@@ -40,6 +40,8 @@ const mailing = async () => {
         parentPort?.postMessage(
           `WARNING: Notification email to colleagues [${chunk
             .map((r) => r.colleagueUUID)
+            .join(', ')}] with emails [${chunk
+            .map((r) => r.address)
             .join(', ')}] was not accepted by contact API server. TraceId: ${sendResult.traceId}. Error message: ${
             sendResult.description
           }`,
