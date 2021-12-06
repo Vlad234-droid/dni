@@ -1,4 +1,4 @@
-import { Response, Request, NextFunction, Handler } from 'express';
+import { Response, Request } from 'express';
 import { markApiCall } from '@energon/splunk-logger';
 import { ApiEnv, resolveBaseUrl, TESCO_API_URLS } from '@energon-connectors/core';
 
@@ -14,7 +14,7 @@ import {
 
 import { getIdentityApi, UserScopeToken } from '../api';
 import { setIdentityData, getIdentityData, setColleagueUuid } from './identity-data';
-import { getOpenIdUserInfo } from '../../user-info-extractor';
+import { getOpenIdSessionId } from '../../oidc-data-extractor';
 import { Optional, Plugin } from '../plugin';
 
 export type Strategy = 'oidc' | 'saml';
@@ -150,7 +150,7 @@ export const identityTokenSwapPlugin = <O>(config: Config<O> & Optional): Plugin
         const { cookieShapeResolver = (data: any) => data } = cookieConfig;
 
         // OneLogin unique identifier of session of end user
-        const sid = getOpenIdUserInfo(res)?.sid;
+        const sid = getOpenIdSessionId(res);
         const payload = { ...cookieShapeResolver(data), sid };
 
         const identityTokenMaxAge = getMaxAge(data.claims);
@@ -159,7 +159,7 @@ export const identityTokenSwapPlugin = <O>(config: Config<O> & Optional): Plugin
           maxAge: identityTokenMaxAge,
         };
 
-        const refreshTokenMaxAge = identityTokenMaxAge + 59 * 60 * 1000; // 59 mins
+        const refreshTokenMaxAge = identityTokenMaxAge + data.expires_in * 1000; // 59 mins
         const identityRefreshTokenCookie = {
           ...cookieConfig,
           cookieName: refreshCookieName(cookieConfig.cookieName),
