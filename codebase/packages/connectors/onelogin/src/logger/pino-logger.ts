@@ -59,7 +59,11 @@ export const pinoLogger = (options?: pino.Bindings) => {
             break;
          }
          case 'warning': {
-            logger.warn({ flow, req: context.req, res: context.res, error: payload?.error || error || undefined }, payload?.message ? `${payload?.message}` : `Onelogin plugin warning`);
+            if (payload?.error || error) {
+               logger.warn({ flow, req: context.req, res: context.res, error: payload?.error || error }, payload?.message ? `${payload?.message}` : `Onelogin plugin warning`);
+            } else {
+               logger.warn({ flow, req: context.req, res: context.res }, payload?.message ? `${payload?.message}` : `Onelogin plugin warning`);
+            }
             break;
          }
          case 'info': {

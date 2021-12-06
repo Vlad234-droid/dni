@@ -94,7 +94,7 @@ export type OpenidConfig = {
   /**
    * Optional, auth data cookie configuration
    */
-  authDataCookie?: OneloginCookieConfig;
+  authTokenCookie?: OneloginCookieConfig;
 
   /**
    * Optional, session cookie configuration
@@ -116,8 +116,8 @@ export type OpenidConfig = {
   logger?: Logger;
 
   /**
-   * If true sets idToken and encRefreshToken in 'authData' cookie.
+   * If true sets authToken and encRefreshToken in 'authData' cookie.
    */
-  requireIdToken?: boolean;
+  requireAccessToken?: boolean;
 
 };

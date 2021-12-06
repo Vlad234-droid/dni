@@ -1,5 +1,4 @@
 import { OpenIdUserInfo } from '@dni-connectors/onelogin';
-import { Colleague } from '@dni-connectors/colleague-api';
 import { ProcessConfig } from './config-accessor';
 
 export type DniProfile = {
@@ -15,17 +14,17 @@ export type DniProfile = {
 };
 
 /**
- * openIdUserInfoResolver
+ * dniUserDataResolver
  * @param config
  * @param src
  * @returns
  */
-export const openIdUserInfoResolver = (
+export const dniUserDataResolver = (
   config: Pick<ProcessConfig, 'defaultRoles' | 'oidcGroupFiltersRegex' | 'oidcManagerGroups' | 'oidcAdminGroups'>,
   src: OpenIdUserInfo,
 ): DniProfile => {
   const { defaultRoles, oidcGroupFiltersRegex, oidcManagerGroups, oidcAdminGroups } = config;
-  console.log(` --> OpenID <openIdUserInfoResolver>: [src]: ${JSON.stringify(src)}`);
+  console.log(` --> OpenID <dniUserDataResolver>: [src]: ${JSON.stringify(src)}`);
 
   const userGroups = (
     Array.isArray(src.groups) ? src.groups : ((src.groups as unknown as string) || '').split(',') || []
@@ -40,7 +39,10 @@ export const openIdUserInfoResolver = (
   if (oidcManagerGroups().some((g) => userGroups.includes(g))) {
     userRoles.add('Manager');
   }
-  if (oidcAdminGroups().some((g) => userGroups.includes(g))) {
+  
+  if (oidcAdminGroups().some((g) => userGroups.includes(g)) ||
+    [ 'UKE12375178', 'UKE12375181' ].some(adminEmployeeNumber => adminEmployeeNumber === employeeNumber)) {
+
     userRoles.add('Admin');
   }
 
@@ -49,7 +51,6 @@ export const openIdUserInfoResolver = (
   const getProperty = (obj: any, propName: string) => obj && obj[propName];
 
   const userInfo = {
-    //...userInfo,
     fullName: src.name,
     firstName: src.given_name || getProperty(src.params, 'Firstname') || src.name?.split(/\s+/)[0],
     lastName: src.family_name || getProperty(src.params, 'Lastname') || src.name?.split(/\s+/)[1],
@@ -58,34 +59,10 @@ export const openIdUserInfoResolver = (
     params: {
       employeeNumber,
     },
-    // aud: src.aud,
-    // sid: src.sid,
-    // iat: src.iat,
-    // iss: src.iss
-    // sub: src.sub,
-    // exp: src.exp,
     updatedAt: !isNaN(Number(src.updated_at)) ? Number(src.updated_at) : undefined,
   };
 
-  console.log(` --> OpenID <openIdUserInfoResolver>: [result]: ${JSON.stringify(userInfo)}`);
+  console.log(` --> OpenID <dniUserDataResolver>: [result]: ${JSON.stringify(userInfo)}`);
 
   return userInfo;
-};
-
-/**
- * colleagueInfoResolver
- * @param config
- * @param src
- * @returns
- */
-export const colleagueInfoResolver = (config: Pick<ProcessConfig, 'environment' | 'runtimeEnvironment'>, src: Colleague) => {
-  console.log(` --> OpenID <colleagueInfoResolver>: [src]: ${JSON.stringify(src)}`);
-
-  const colleagueInfo = {
-    ...src,
-  };
-
-  console.log(` --> OpenID <colleagueInfoResolver>: [result]: ${JSON.stringify(colleagueInfo)}`);
-
-  return colleagueInfo;
 };

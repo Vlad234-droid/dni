@@ -1,4 +1,4 @@
-export * from './convert-niddleware';
+export * from './convert-middleware';
 export * from './static-content';
 export * from './error-handler';
 export * from './open-id';

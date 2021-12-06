@@ -1,7 +1,8 @@
-import { Response, Request, NextFunction } from 'express';
-import { getColleagueData, getColleagueUuid, getOpenIdUserInfo, Optional, Plugin } from '@dni-connectors/onelogin';
-import { ColleagueType, createOrUpdateDniUser } from '../../services';
+import { Response, Request } from 'express';
 import NodeCache from 'node-cache';
+import { getColleagueData, getColleagueUuid, getUserData, Optional, Plugin } from '@dni-connectors/onelogin';
+import { ColleagueType, createOrUpdateDniUser } from '../../services';
+import { DniProfile } from '../../config/auth-data';
 
 type Config<O> = {
   /**
@@ -62,8 +63,8 @@ export const dniUserRefreshPlugin = <O>(config: Config<O> & Optional): Plugin =>
       // if for some reason colleague data not found,
       // we are constructing user from data we should have
 
-      const openIdUserInfo = getOpenIdUserInfo(res);
-      const employeeNumber = openIdUserInfo?.params?.employeeNumber || openIdUserInfo?.params?.EmployeeNumber;
+      const userData = getUserData<DniProfile>(res);
+      const employeeNumber = userData?.params?.employeeNumber;
       if (!employeeNumber) {
         throw Error('No Employee Number (IAM ID) found');
       }

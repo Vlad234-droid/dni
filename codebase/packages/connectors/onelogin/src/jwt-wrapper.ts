@@ -3,7 +3,7 @@ import jwt, {
   Secret,
   VerifyOptions,
   VerifyErrors,
-} from "jsonwebtoken";
+} from 'jsonwebtoken';
 
 export type VerifyResult<T> =
   | { ok: true; value: T }

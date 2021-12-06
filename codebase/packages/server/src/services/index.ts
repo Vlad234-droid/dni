@@ -6,3 +6,4 @@ export * from './mailer';
 export * from './notification';
 export * from './print';
 export * from './report';
+export * from './debug';
