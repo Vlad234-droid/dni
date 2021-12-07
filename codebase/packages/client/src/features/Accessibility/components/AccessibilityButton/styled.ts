@@ -1,6 +1,7 @@
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 import Media from 'styles/media';
+import { HEADER_HEIGHT_MOBILE, HEADER_HEIGHT_TABLET, HEADER_HEIGHT_DESKTOP } from 'features/Layout';
 
 import { Mode } from '../../types';
 
@@ -42,7 +43,7 @@ const Wrapper = styled.div<{ isOpen: boolean }>`
   }
 `;
 
-const Content = styled.div<{ mode: Mode; isOpen: boolean }>`
+const Content = styled.div<{ mode: Mode; isOpen: boolean; isNextYear: boolean }>`
   background: ${({ theme, mode }) => (mode == Mode.LIGHT ? theme.colors.white : theme.colors.tescoBlue)};
   height: 62px;
   position: absolute;
@@ -54,12 +55,16 @@ const Content = styled.div<{ mode: Mode; isOpen: boolean }>`
   transition: transform 0.5s ease 0s;
   z-index: 1001;
 
-  ${Media.large_phone`
-    top: 42px;
+  ${({ isNextYear }) => css`
+    ${Media.large_phone`
+        top: ${isNextYear ? HEADER_HEIGHT_MOBILE : '78px'};
+    `}
   `}
 
-  ${Media.tablet`
-    top: 90px;
+  ${({ isNextYear }) => css`
+    ${Media.tablet`
+        top: ${HEADER_HEIGHT_TABLET};
+    `}
   `}
 
   ${Media.small_desktop`

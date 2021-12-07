@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 
 import { useMedia } from 'context/InterfaceContext';
 import { Page } from 'features/Page';
+import { isNextYear } from 'features/Header';
 
 import { Mode } from '../../types';
 import { Wrapper, Content, ContentInner, LinkWrapper } from './styled';
@@ -38,7 +39,7 @@ const AccessibilityButton: FC<Props> = ({ mode }) => {
         Accessibility
         <Icon graphic={'expand'} />
       </Button>
-      <Content mode={mode} isOpen={isOpen} data-testid='accessibility-content'>
+      <Content mode={mode} isOpen={isOpen} isNextYear={isNextYear()} data-testid='accessibility-content'>
         <ContentInner>
           <LinkWrapper inverse={mode == Mode.LIGHT}>
             <Link to={`/${Page.ACCESSIBILITY}`} onClick={handleLinkClick}>
