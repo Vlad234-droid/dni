@@ -26,7 +26,11 @@ const AccessibilityButton: FC<Props> = ({ mode }) => {
     window.loadService();
   };
 
-  const handleLinkClick = () => setIsOpen(false);
+  const handleLinkClick = () => {
+    setIsOpen(false);
+    // the handler is needed to hide the reciteme tooltip
+    document.body.click();
+  };
 
   return (
     <Wrapper data-testid='accessibility' isOpen={isOpen}>
@@ -46,11 +50,7 @@ const AccessibilityButton: FC<Props> = ({ mode }) => {
             </Link>
           </LinkWrapper>
           <LinkWrapper inverse={mode == Mode.LIGHT}>
-            <BeansLink
-              className='reciteme'
-              inverse={mode == Mode.LIGHT}
-              onClick={handleRecitemeButtonClick}
-            >
+            <BeansLink className='reciteme' inverse={mode == Mode.LIGHT} onClick={handleRecitemeButtonClick}>
               Toolbar (Reciteme)
             </BeansLink>
           </LinkWrapper>
