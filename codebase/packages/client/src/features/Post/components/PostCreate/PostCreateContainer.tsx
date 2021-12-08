@@ -37,8 +37,8 @@ const PostCreateContainer: FC<Props> = ({ networkId, onClose }) => {
         storyTitle: title,
         story,
         networkTitle,
-        // name,
-        // location,
+        name,
+        location,
       }),
     );
 
@@ -65,11 +65,12 @@ const PostCreateContainer: FC<Props> = ({ networkId, onClose }) => {
     // to narrow thw type
     if (!network) return;
 
-    // TODO: data.name and data.location are not included
     const result = await dispatch(
       createOne({
         title: data.title,
         content: data.story,
+        authorName: data.name,
+        authorLocation: data.location,
         slug: `${network.slug}-${String(Date.now())}`,
         tenant: 4,
         network: [network.id],
