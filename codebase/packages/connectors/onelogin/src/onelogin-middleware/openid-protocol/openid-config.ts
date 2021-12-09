@@ -49,12 +49,12 @@ export type OpenidConfig = {
   issuerUrl: string;
 
   /**
-   * A callback root that was registered for the application e.g. https://ourtesco.com (without the applicationPath)
+   * A callback root that was registered for the application e.g. https://www.ourtesco.com (without the applicationPath)
    */
   applicationServerUrlRoot: string;
 
   /**
-   * A path the app is mounted on e.g. for https://ourtesco.com/my-shift the path is /my-shift.
+   * A path the app is mounted on e.g. for https://www.ourtesco.com/my-shift the path is /my-shift.
    * If the app is mounted on root path do not provide this option.
    */
   applicationPath?: string;
@@ -94,7 +94,7 @@ export type OpenidConfig = {
   /**
    * Optional, auth data cookie configuration
    */
-  authDataCookie?: OneloginCookieConfig;
+  authTokenCookie?: OneloginCookieConfig;
 
   /**
    * Optional, session cookie configuration
@@ -116,8 +116,8 @@ export type OpenidConfig = {
   logger?: Logger;
 
   /**
-   * If true sets idToken and encRefreshToken in 'authData' cookie.
+   * If true sets authToken and encRefreshToken in 'authData' cookie.
    */
-  requireIdToken?: boolean;
+  requireAccessToken?: boolean;
 
 };

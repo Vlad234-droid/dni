@@ -1,16 +1,17 @@
 import express from "express";
 import jwt from "jsonwebtoken";
 import * as TypeMoq from "typemoq";
+import { getOpenIdAuthData } from "../../oidc-data-extractor";
 import { clearPluginCookiesIfSessionExpired } from "./clear-plugin-cookies";
 
 describe("clearPluginCookiesIfSessionExpired", () => {
   it("clears main cookie on sid mismatch", () => {
     const response = TypeMoq.Mock.ofType<express.Response>();
     response
-      .setup((x) => x.oneLoginAuthData)
+      .setup((x) => getOpenIdAuthData(x))
       .returns(() => {
         return {
-          idToken: jwt.sign({ sid: "sid" }, "secret"),
+          authToken: jwt.sign({ sid: "sid" }, "secret"),
         };
       });
 
@@ -38,10 +39,10 @@ describe("clearPluginCookiesIfSessionExpired", () => {
   it("clears main cookie and additional cookies  on sid mismatch", () => {
     const response = TypeMoq.Mock.ofType<express.Response>();
     response
-      .setup((x) => x.oneLoginAuthData)
+      .setup((x) => getOpenIdAuthData(x))
       .returns(() => {
         return {
-          idToken: jwt.sign({ sid: "sid" }, "secret"),
+          authToken: jwt.sign({ sid: "sid" }, "secret"),
         };
       });
 
@@ -80,10 +81,10 @@ describe("clearPluginCookiesIfSessionExpired", () => {
   it("clears request cookies", () => {
     const response = TypeMoq.Mock.ofType<express.Response>();
     response
-      .setup((x) => x.oneLoginAuthData)
+      .setup((x) => getOpenIdAuthData(x))
       .returns(() => {
         return {
-          idToken: jwt.sign({ sid: "sid" }, "secret"),
+          authToken: jwt.sign({ sid: "sid" }, "secret"),
         };
       });
 
@@ -123,10 +124,10 @@ describe("clearPluginCookiesIfSessionExpired", () => {
   it("doesn't clear plugin cookies if sid matches", () => {
     const response = TypeMoq.Mock.ofType<express.Response>();
     response
-      .setup((x) => x.oneLoginAuthData)
+      .setup((x) => getOpenIdAuthData(x))
       .returns(() => {
         return {
-          idToken: jwt.sign({ sid: "sid" }, "secret"),
+          authToken: jwt.sign({ sid: "sid" }, "secret"),
         };
       });
 
@@ -162,9 +163,9 @@ describe("clearPluginCookiesIfSessionExpired", () => {
     response.verifyAll();
   });
 
-  it("doesn't clear plugin cookies if oneLoginAuthData not present in response", () => {
+  it("doesn't clear plugin cookies if OneLogin AuthData not present in response", () => {
     const response = TypeMoq.Mock.ofType<express.Response>();
-    response.setup((x) => x.oneLoginAuthData).returns(() => undefined);
+    response.setup((x) => getOpenIdAuthData(x)).returns(() => undefined);
 
     const request = TypeMoq.Mock.ofType<express.Request>();
     request

@@ -495,7 +495,7 @@ export function prettifyObject (params: Partial<PPrettifyObject>): string {
          if (pretiefierSearch) {
             // Pre-apply custom prettifiers, because all 3 cases below will need this
             const [_, customPrettifier] = pretiefierSearch; 
-            pretty = customPrettifier(v, k, input as object);
+            pretty = typeof input === 'object' ? customPrettifier(v, k, input as object) : input;
          } else {
             pretty = v;
          }

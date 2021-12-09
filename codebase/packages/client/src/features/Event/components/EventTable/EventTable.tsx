@@ -11,6 +11,7 @@ import { EmptyContainer, Spinner, Error, TextWithEllipsis } from 'features/Commo
 import { Page } from 'features/Page';
 import Loading from 'types/loading';
 import { DEFAULT_FILTERS, DEFAULT_PAGINATION } from 'config/constants';
+import { Network } from '@dni-connectors/colleague-cms-api';
 
 import useFetchEvents from '../../hooks/useFetchEvents';
 import { getPayloadWhere } from '../../utils';
@@ -45,6 +46,29 @@ const EventTable: FC = () => {
       return <EmptyContainer description='Nothing to show' />;
     }
 
+    const singleNetwork = (n: Network | Network[]): Network => {
+      if (Array.isArray(n) && n.length > 0) {
+        return (n[0] as Network);
+      } else { 
+        return (n as Network); 
+      }
+    }
+
+    const renderNetwork = (network: Network, eventId: number) => {
+      return (
+        <NetworkWrapper>
+          {network.image && (
+            <ImageWrapper>
+              <img src={network.image!.url} />
+            </ImageWrapper>
+          )}
+          <TextWithEllipsis height='30px' href={`${Page.EVENTS}/${eventId}`} tooltipPosition={tooltipPosition}>
+            {network.title}
+          </TextWithEllipsis>
+        </NetworkWrapper>
+      );
+    }
+
     return (
       <>
         <Table styles={styles}>
@@ -61,18 +85,9 @@ const EventTable: FC = () => {
                 </Cell>
                 <Cell width={isMobileView ? '25%' : '15%'}>{participants.data[id]! || 0} members</Cell>
                 <Cell width='25%' visible={!isMobileView}>
-                  {network && (
-                    <NetworkWrapper>
-                      {network.image && (
-                        <ImageWrapper>
-                          <img src={network.image!.url} />
-                        </ImageWrapper>
-                      )}
-                      <TextWithEllipsis height='30px' href={`${Page.EVENTS}/${id}`} tooltipPosition={tooltipPosition}>
-                        {network.title}
-                      </TextWithEllipsis>
-                    </NetworkWrapper>
-                  )}
+                  {network && 
+                    renderNetwork(singleNetwork(network), id)
+                  }
                 </Cell>
               </Row>
             ))}

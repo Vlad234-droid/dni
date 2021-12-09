@@ -15,7 +15,6 @@ export const Container = styled.div`
 
 export const Left = styled.div`
   grid-area: left;
-  padding-bottom: 56px;
 
   ${Media.small_desktop`
     padding-right: 16px;

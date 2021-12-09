@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState, useCallback, useMemo } from 'react';
+import React, { FC, useEffect, useState, useCallback, useMemo, useRef } from 'react';
 import { useSelector } from 'react-redux';
 import InfiniteScroll from 'react-infinite-scroller';
 import isEmpty from 'lodash.isempty';
@@ -18,7 +18,7 @@ import Loading from 'types/loading';
 import ButtonFilter from 'features/ButtonFilter';
 
 import { Filter } from '../../config/types';
-import { ALL, ARCHIVED } from '../../config/constants';
+import { ALL, ARCHIVED, DEFAULT_FILTERS } from '../../config/constants';
 import { getList, getCount, listSelector, clear } from '../../store';
 import { getAllFilterPayload, getFilterPayload } from '../../utils';
 import PostItem from '../PostItem';
@@ -27,6 +27,7 @@ import { FiltersContainer } from './styled';
 type Props = {
   filter?: Filter;
   entityId?: number;
+  entityTitle?: string;
 };
 
 const byEventFilters = [
@@ -51,8 +52,9 @@ type Filters = FilterPayload & {
 };
 type ByEntityFilter = typeof ALL | typeof ARCHIVED;
 
-const PostList: FC<Props> = ({ entityId, filter = ALL }) => {
+const PostList: FC<Props> = ({ entityId, entityTitle, filter = ALL }) => {
   const dispatch = useDispatch();
+  const containerRef = useRef<HTMLDivElement>(null);
   const scrollContainer = useScrollContainer();
   const {
     meta: { total, error: countError },
@@ -80,14 +82,14 @@ const PostList: FC<Props> = ({ entityId, filter = ALL }) => {
     (filters: Filters) => {
       dispatch(
         getList({
-          _sort: 'created_at:desc',
+          ...DEFAULT_FILTERS,
           ...filters,
           ...DEFAULT_PAGINATION,
           _start: 0,
         }),
       );
     },
-    [filters],
+    [filters, entityId],
   );
 
   const loadMorePosts = useCallback(
@@ -97,7 +99,7 @@ const PostList: FC<Props> = ({ entityId, filter = ALL }) => {
       if (!(loading === Loading.PENDING) && hasMore && next <= total) {
         dispatch(
           getList({
-            _sort: 'created_at:desc',
+            ...DEFAULT_FILTERS,
             ...filters,
             ...DEFAULT_PAGINATION,
             _start: next,
@@ -139,7 +141,12 @@ const PostList: FC<Props> = ({ entityId, filter = ALL }) => {
 
   useEffect(() => {
     loadPosts(filters);
-  }, []);
+    containerRef?.current?.scrollTo(0, 0);
+  }, [filters, containerRef]);
+
+  useEffect(() => {
+    setFilters((filters) => ({...filters, network_eq: entityId }))
+  }, [entityId]);
 
   const memoizedContent = useMemo(() => {
     if (error) return <Error errorData={{ title: error }} fullWidth />;
@@ -160,15 +167,15 @@ const PostList: FC<Props> = ({ entityId, filter = ALL }) => {
           useWindow={false}
         >
           {posts.map((post) => (
-            <PostItem key={post.id} item={post} />
+            <PostItem key={post.id} item={post} entityTitle={entityTitle} />
           ))}
         </InfiniteScroll>
       </>
     );
-  }, [error, posts, loading, total]);
+  }, [entityTitle, entityId, error, posts, loading, total]);
 
   return (
-    <div data-testid='posts-list'>
+    <div data-testid='posts-list' ref={containerRef}>
       <CanPerform
         perform={buildAction(Component.POST_ARCHIVED, Action.LIST)}
         yes={() => (

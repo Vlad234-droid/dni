@@ -109,17 +109,17 @@
         "type": "secret",
         "name": "application_web_hooks_secret"
       },
-      "AUTH_DATA_COOKIE_NAME": {
-        "type": "plain",
-        "value": "dni.colleague.jwt"
-      },
-      "SESSION_COOKIE_NAME": {
-        "type": "plain",
-        "value": "dni.session.startup"
-      },
       "APPLICATION_RETURN_TO_COOKIE_NAME": {
         "type": "plain",
         "value": "dni.return-to"
+      },
+      "APPLICATION_AUTH_TOKEN_COOKIE_NAME": {
+        "type": "plain",
+        "value": "dni.colleague.jwt"
+      },
+      "APPLICATION_SESSION_COOKIE_NAME": {
+        "type": "plain",
+        "value": "dni.session.startup"
       },
       "STICK_COOKIES_TO_APPLICATION_PATH": {
         "type": "plain",
@@ -235,11 +235,11 @@
       },
       "TYPEORM_RUN_MIGRATION": {
         "type": "plain",
-        "value": "false"
-      },
-      "CCRM_RUN_SYNC": {
-        "type": "plain",
         "value": "true"
+      },
+      "CCMS_RUN_SYNC": {
+        "type": "plain",
+        "value": "false"
       },
       "CACHE_COLLEAGUE_TTL": {
         "type": "plain",

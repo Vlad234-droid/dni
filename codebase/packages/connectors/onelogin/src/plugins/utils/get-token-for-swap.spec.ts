@@ -1,21 +1,22 @@
 import express from "express";
 import * as TypeMoq from "typemoq";
 import { getIdentitySwapToken } from "./get-token-for-swap";
+import { getOpenIdAuthData } from "../../auth-data-extractor";
 
 describe("get token for swap", () => {
   it("returns correct token for given res and oidc strategy", () => {
     const response = TypeMoq.Mock.ofType<express.Response>();
     response
-      .setup((x) => x.oneLoginAuthData)
+      .setup((x) => getOpenIdAuthData(x))
       .returns(() => ({
         encRefreshToken: "encRefreshToken",
-        idToken: "testToken",
+        authToken: "testToken",
       }));
     const token = getIdentitySwapToken(response.object, "oidc");
     expect(token).toEqual("testToken");
   });
 
-  it("throws an eror if no idToken is present for oidc strategy", () => {
+  it("throws an eror if no authToken is present for oidc strategy", () => {
     const response = TypeMoq.Mock.ofType<express.Response>();
     expect(() => {
       getIdentitySwapToken(response.object, "oidc");

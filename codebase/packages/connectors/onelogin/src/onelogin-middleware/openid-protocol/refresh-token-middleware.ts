@@ -1,18 +1,20 @@
 import express from 'express';
 import cryptoJS from 'crypto-js';
 import { GetPublicKeyOrSecret } from 'jsonwebtoken';
-import { Client, Issuer } from 'openid-client';
+import { Client, Issuer, TokenSet } from 'openid-client';
 import jwksClient, { JwksClient } from 'jwks-rsa';
 
 import { asyncHandler } from '@energon/express-middlewares';
+import { validateCookies } from '@energon/cookie-utils';
 
 import { getDataFromCookie, setDataToCookie } from '../../plugins/utils';
-import { AuthData, OpenIdUserInfo, OneloginError } from '../..';
+import { AuthData, OneloginError } from '../..';
 import { OneloginCookieConfig } from '..';
 import { Logger, LoggerEvent } from '../../logger';
 import { printCookieInfo } from '../../utils';
-import { setOpenIdAuthData } from '../../auth-data-extractor';
+import { setOpenIdAuthData, OpenIdUserInfo } from '../../oidc-data-extractor';
 import { verifyJwt } from '../../jwt-wrapper';
+import jwt from 'jsonwebtoken';
 
 const getKey =
   (client: JwksClient): GetPublicKeyOrSecret =>
@@ -29,17 +31,17 @@ const getKey =
 
 export const getRefreshTokenMiddleware = <TClient extends Client>({
   client,
-  authDataCookie,
+  authTokenCookie,
   refreshTokenSecret,
   logger,
-  requireIdToken,
+  requireAccessToken,
   tescoIssuer,
 }: {
   client: TClient;
-  authDataCookie: Required<OneloginCookieConfig>;
+  authTokenCookie: Required<OneloginCookieConfig>;
   refreshTokenSecret: string;
   logger: Logger;
-  requireIdToken: boolean;
+  requireAccessToken: boolean;
   tescoIssuer: Issuer<TClient>;
 }): express.Handler => {
   const jwksUri = tescoIssuer.metadata.jwks_uri;
@@ -57,85 +59,98 @@ export const getRefreshTokenMiddleware = <TClient extends Client>({
     logger(
       LoggerEvent.info(
         'verification',
-        `Refresh token middleware: path: ${req.path}, validating auth cookie (${authDataCookie.name})`,
+        `Refresh token middleware: path: ${req.path}, validating auth cookie (${authTokenCookie.name})`,
         { req, res },
       ),
     );
 
     const authData = getDataFromCookie<AuthData>(req, {
-      cookieName: authDataCookie.name,
+      cookieName: authTokenCookie.name,
       compressed: true,
     });
 
     if (!authData) {
-      throw new OneloginError('verification', `Cookie not set: ${printCookieInfo('authdata', authDataCookie)}`, 401);
+      throw new OneloginError('verification', `Cookie not set: ${printCookieInfo('authdata', authTokenCookie)}`, 401);
     }
 
-    if (!requireIdToken) {
-      logger(LoggerEvent.debug('verification', 'IdToken not required', { req, res }));
+    if (!requireAccessToken) {
+      logger(LoggerEvent.debug('verification', 'accessToken is not required', { req, res }));
       next();
       return;
     }
 
-    const { idToken, encRefreshToken } = authData;
+    const { accessToken, encRefreshToken } = authData;
 
-    if (idToken == null || encRefreshToken == null) {
-      throw new OneloginError('verification', 'Missing idToken or encRefreshToken', 401);
+    if (accessToken == null || encRefreshToken == null) {
+      throw new OneloginError('verification', 'Missing accessToken or encRefreshToken', 401);
     }
 
     const handleTokenValid = () => {
-      logger(LoggerEvent.debug('verification', 'IdToken is valid', { req, res }));
+      logger(LoggerEvent.debug('verification', 'accessToken is valid', { req, res }));
     };
 
     const handleTokenExpired = async () => {
-      logger(LoggerEvent.debug('verification', 'IdToken expired, refreshing', { req, res }));
+      logger(LoggerEvent.debug('verification', 'accessToken expired, refreshing', { req, res }));
 
-      const refreshTokenSet = async () => {
-        const refreshToken = cryptoJS.AES.decrypt(encRefreshToken, refreshTokenSecret).toString(cryptoJS.enc.Utf8);
-        const refreshedTokenSet = await client.refresh(refreshToken);
-        logger(LoggerEvent.debug('verification', 'IdToken token refreshed successfully', { req, res }));
-        return refreshedTokenSet;
-      };
-
-      const { id_token: newIdToken, refresh_token: newRefreshToken } = await refreshTokenSet();
-
-      if (newIdToken == null || newRefreshToken == null) {
-        throw new OneloginError('verification', 'Missing idToken or refreshToken', 401);
+      const refreshToken = cryptoJS.AES.decrypt(encRefreshToken, refreshTokenSecret).toString(cryptoJS.enc.Utf8);
+      let newTokenSet: TokenSet;
+      try {
+        newTokenSet = await client.refresh(refreshToken);
+        logger(LoggerEvent.debug('verification', 'tokenset refreshed successfully', { req, res }));
+      } catch (e) {
+        throw new OneloginError('verification', 'tokenset refresh error', 401);
       }
 
-      const resolveAuthData = () => {
-        const encRefreshToken = cryptoJS.AES.encrypt(newRefreshToken, refreshTokenSecret).toString();
+      if (!newTokenSet.refresh_token || !newTokenSet.access_token || !newTokenSet.id_token) {
+        throw new OneloginError('verification', 'missing refreshed authToken, idToken or refreshToken', 401);
+      }
 
-        const newAuthData: AuthData = {
-          encRefreshToken: encRefreshToken,
-          idToken: newIdToken,
-        };
+      const idTokenData = jwt.decode(newTokenSet.id_token) as OpenIdUserInfo;
 
-        setOpenIdAuthData(res, newAuthData);
-        return newAuthData;
+      const newAuthData: AuthData = {
+        accessToken: newTokenSet.access_token,
+        encRefreshToken: cryptoJS.AES.encrypt(newTokenSet.refresh_token, refreshTokenSecret).toString(),
+        idToken: newTokenSet.id_token,
+        sessionId: idTokenData.sid,
       };
 
-      const authData = resolveAuthData();
-      const authDataFromCookie = setDataToCookie(res, authData, {
-        signed: authDataCookie.signed,
-        cookieName: authDataCookie.name,
-        secure: authDataCookie.secure,
-        httpOnly: authDataCookie.httpOnly,
-        path: authDataCookie.path,
+      setOpenIdAuthData(res, newAuthData);
+
+      const newAuthDataInCookie = {
+        accessToken: newAuthData.accessToken,
+        encRefreshToken: newAuthData.encRefreshToken,
+        sessionId: idTokenData.sid,
+      };
+
+      const newAuthDataCookieValue = setDataToCookie(res, newAuthDataInCookie, {
+        signed: authTokenCookie.signed,
+        cookieName: authTokenCookie.name,
+        secure: authTokenCookie.secure,
+        httpOnly: authTokenCookie.httpOnly,
+        path: authTokenCookie.path,
         compressed: true,
       });
-      req.signedCookies[authDataCookie.name] = authDataFromCookie;
 
-      logger(
-        LoggerEvent.info('verification', 'Refreshed auth cookie set', {
-          req,
-          res,
-        }),
-      );
+      req.signedCookies[authTokenCookie.name] = newAuthDataCookieValue;
 
+      const newValidationStatus = validateCookies({
+        ...req.cookies,
+        ...req.signedCookies,
+        [authTokenCookie.name]: newAuthDataCookieValue,
+      });
+  
+      if (newValidationStatus.valid) {
+        logger(LoggerEvent.debug('login', 
+          `Following cookies have been refreshed: - ${printCookieInfo(`authdata${requireAccessToken ? '' : ' (empty)'}`, authTokenCookie)}`, 
+          { req, res }));
+
+        logger(LoggerEvent.info('verification', 'Refreshed auth cookie set', { req, res }));
+      } else {
+        logger(LoggerEvent.warn('login', `Auth cookie set may not be refreshed. Cookie validation response: ${newValidationStatus.message}`, { req, res }));
+      }
     };
 
-    const verifyResult = await verifyJwt<OpenIdUserInfo>(idToken, getKey(jwksClientInstance));
+    const verifyResult = await verifyJwt(accessToken, getKey(jwksClientInstance));
 
     if (verifyResult.ok) {
       handleTokenValid();

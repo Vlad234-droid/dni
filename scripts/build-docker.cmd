@@ -14,13 +14,22 @@ if "%NEXUS_ACCESS_TOKEN%"=="" (
     goto completed
 )
 
+if "%REACT_APP_RECITE_ME_SERVICE_KEY%"=="" (
+    echo ERROR: ReciteMe service key is not set.
+    echo Set REACT_APP_RECITE_ME_SERVICE_KEY environment variable
+    goto completed
+)
+
 docker build ^
    --progress plain ^
    --tag dni_local:latest ^
+   --network host ^
+   --build-arg HTTP_PROXY=http://10.251.0.42:80 ^
+   --build-arg HTTPS_PROXY=http://10.251.0.42:80 ^
+   --build-arg NODE_ENV=ppe ^
    --build-arg NEXUS_ACCESS_TOKEN=%NEXUS_ACCESS_TOKEN% ^
    --build-arg REACT_APP_RECITE_ME_SERVICE_KEY=%REACT_APP_RECITE_ME_SERVICE_KEY% ^
    --build-arg REACT_APP_CONTACT_API_ENABLED=false ^
-   --build-arg NODE_ENV=ppe ^
    --build-arg PUBLIC_URL=/diversity-and-inclusion ^
    --build-arg REACT_APP_API_URL=/api ^
    --build-arg REACT_APP_WS_URL=/socket.io ^
@@ -28,7 +37,6 @@ docker build ^
    --build-arg REACT_APP_OURTESCO_URL=https://ppe.ourtesco.com ^
    --file dockerfiles/dni-frontend_docker_build.Dockerfile ^
    .
-
 
 rem Login to TescoAzure tenant
 rem az login --tenant f55b1f7d-7a7f-49e4-9b90-55218aad89f8

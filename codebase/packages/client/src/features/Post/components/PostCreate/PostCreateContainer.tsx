@@ -46,14 +46,14 @@ const PostCreateContainer: FC<Props> = ({ networkId, onClose }) => {
     if (shareStory.fulfilled.match(result)) {
       dispatch(
         toasterActions.createToast({
-          skin: ToastSkin.ENTITY_CREATE_SUCCESS,
+          skin: ToastSkin.STORY_CREATE_SUCCESS,
         }),
       );
       onClose();
     } else {
       dispatch(
         toasterActions.createToast({
-          skin: ToastSkin.ENTITY_CREATE_ERROR,
+          skin: ToastSkin.STORY_CREATE_ERROR,
         }),
       );
       onClose();
@@ -85,14 +85,14 @@ const PostCreateContainer: FC<Props> = ({ networkId, onClose }) => {
     if (createOne.fulfilled.match(result)) {
       dispatch(
         toasterActions.createToast({
-          skin: ToastSkin.ENTITY_CREATE_SUCCESS,
+          skin: ToastSkin.STORY_CREATE_SUCCESS,
         }),
       );
       onClose();
     } else {
       dispatch(
         toasterActions.createToast({
-          skin: ToastSkin.ENTITY_CREATE_ERROR,
+          skin: ToastSkin.STORY_CREATE_ERROR,
         }),
       );
       onClose();

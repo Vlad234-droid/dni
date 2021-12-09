@@ -38,6 +38,7 @@ describe('<NetworkHeader />', () => {
       isMobile: false,
       isLargeMobile: false,
       isTablet: false,
+      isLargeTablet: false,
       isDesktop: false,
       lt: jest.fn(),
       lte: jest.fn(),
@@ -113,19 +114,10 @@ describe('<NetworkHeader />', () => {
       expect(queryByText('Join')).not.toBeInTheDocument();
     });
 
-    it('should not render share story modal by default', () => {
+    it('should render share story button', () => {
       const { queryByTestId } = render(<NetworkHeader {...props} />);
 
-      expect(queryByTestId('share-story-modal')).not.toBeInTheDocument();
-    });
-
-    it('should display modal', () => {
-      const { getByText, getByTestId } = render(<NetworkHeader {...props} />);
-
-      fireEvent.click(getByText('Share story'));
-
-      expect(getByText('Please, input your story below')).toBeInTheDocument();
-      expect(getByTestId('post-create')).toBeInTheDocument();
+      expect(queryByTestId('share-story-button')).toBeInTheDocument();
     });
   });
 });

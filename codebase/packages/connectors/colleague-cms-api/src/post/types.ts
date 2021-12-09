@@ -12,8 +12,8 @@ export type Post = {
   authorEmail?: string;
   anonymous: boolean;
   archived: boolean;
-  event?: Event;
-  network?: Network;
+  event?: Event | Event[];
+  network?: Network | Network[];
   attachments?: File[];
   reactions: ReactionsCount,
   shortDescription: string;

@@ -29,6 +29,14 @@
         "type": "plain",
         "value": "/sso/logout"
       },
+      "REACT_APP_RECITE_ME_SERVICE_KEY": {
+        "type": "secret",
+        "name": "react_app_recite_me_service_key"
+      },
+      "REACT_APP_CONTACT_API_ENABLED": {
+        "type": "plain",
+        "value": "false"
+      },
       "PUBLIC_URL": {
         "type": "plain",
         "value": "/diversity-and-inclusion"
@@ -49,6 +57,10 @@
         "type": "plain",
         "value": "prod"
       },
+      "BUILD_ENV": {
+        "type": "plain",
+        "value": "production"
+      },
       "NODE_PORT": {
         "type": "plain",
         "value": "9000"
@@ -68,6 +80,10 @@
       "APPLICATION_URL_TEMPLATE_EVENT": {
         "type": "plain",
         "value": "/events/%ID%"
+      },
+      "APPLICATION_URL_TEMPLATE_CONFIRMATION": {
+        "type": "plain",
+        "value": "/confirm-email-change/%TOKEN%"
       },
       "APPLICATION_URL_UNSUBSCRIBE": {
         "type": "plain",
@@ -93,33 +109,49 @@
         "type": "secret",
         "name": "application_cookie_parser_secret"
       },
-      "AUTH_DATA_COOKIE_NAME": {
-        "type": "plain",
-        "value": "dni.colleague.jwt"
-      },
-      "SESSION_COOKIE_NAME": {
-        "type": "plain",
-        "value": "dni.session.startup"
+      "APPLICATION_WEB_HOOKS_SECRET": {
+        "type": "secret",
+        "name": "application_web_hooks_secret"
       },
       "APPLICATION_RETURN_TO_COOKIE_NAME": {
         "type": "plain",
         "value": "dni.return-to"
       },
+      "APPLICATION_AUTH_TOKEN_COOKIE_NAME": {
+        "type": "plain",
+        "value": "dni.colleague.jwt"
+      },
+      "APPLICATION_SESSION_COOKIE_NAME": {
+        "type": "plain",
+        "value": "dni.session.startup"
+      },
       "STICK_COOKIES_TO_APPLICATION_PATH": {
         "type": "plain",
         "value": "true"
       },
-      "APPLICATION_WEB_HOOKS_SECRET": {
-        "type": "secret",
-        "name": "application_web_hooks_secret"
-      },
       "MAILING_NEW_ENTITY_TEMPLATE_ID": {
-        "type": "plain",
-        "value": "dfge2b6d-qfaa-47c6-bfw9-b4214y0a2e88"
+        "type": "secret",
+        "value": "mailing_new_entity_template_id"
+      },
+      "MAILING_CONFIRMATION_TEMPLATE_ID": {
+        "type": "secret",
+        "value": "mailing_confirmation_template_id"
+      },
+      "MAILING_CONFIRMATION_OLD_EMAIL_TEMPLATE_ID": {
+        "type": "secret",
+        "value": "mailing_confirmation_old_email_template_id"
+      },
+      "MAILING_SHARE_STORY_TEMPLATE_ID": {
+        "type": "secret",
+        "value": "mailing_share_story_template_id"
       },
       "MAILING_CHUNK_SIZE": {
         "type": "plain",
         "value": "1"
+      },
+      "MAILING_STAKEHOLDER_EMAIL": {
+        "type": "plain",
+        "value": "Inclusion.Queries@tesco.com"
       },
       "USE_ONELOGIN": {
         "type": "plain",
@@ -147,7 +179,7 @@
       },
       "OIDC_REDIRECT_AFTER_LOGOUT_CALLBACK_PATH": {
         "type": "plain",
-        "value": "https://login.ourtesco.com/oidc/2/logout"
+        "value": "/sso/logout/callback"
       },
       "IDENTITY_CLIENT_ID": {
         "type": "secret",
@@ -209,7 +241,7 @@
         "type": "plain",
         "value": "true"
       },
-      "CCRM_RUN_SYNC": {
+      "CCMS_RUN_SYNC": {
         "type": "plain",
         "value": "false"
       },
