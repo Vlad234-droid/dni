@@ -27,10 +27,10 @@ const NotificationSettings: FC = () => {
   const query = useQuery();
   const isUnsubscribe = query.get('unsubscribe') == 'true';
 
-  const { notificationSettings: { settings: { receivePostsEmailNotifications, receiveEventsEmailNotifications } } } = useStore((state) => state.notifications);
+  const { notificationSettings } = useStore((state) => state.notifications);
   const [formData, setFormData] = useState({
-    receivePostsEmailNotifications,
-    receiveEventsEmailNotifications,
+    receivePostsEmailNotifications: notificationSettings?.settings?.receivePostsEmailNotifications,
+    receiveEventsEmailNotifications: notificationSettings?.settings?.receiveEventsEmailNotifications,
   });
   const [email, onEmailSubmit] = useSaveEmail();
 
@@ -45,10 +45,10 @@ const NotificationSettings: FC = () => {
 
   useEffect(() => {
     setFormData({
-      receivePostsEmailNotifications,
-      receiveEventsEmailNotifications,
+      receivePostsEmailNotifications: notificationSettings?.settings?.receivePostsEmailNotifications,
+      receiveEventsEmailNotifications: notificationSettings?.settings?.receiveEventsEmailNotifications,
     });
-  }, [receivePostsEmailNotifications, receiveEventsEmailNotifications]);
+  }, [notificationSettings]);
 
   const onSubmit = async (data: FormData) => {
     await onEmailSubmit(data);
@@ -92,7 +92,7 @@ const NotificationSettings: FC = () => {
       />
       <Content
         visible={
-          !!email && (formData.receivePostsEmailNotifications || formData.receiveEventsEmailNotifications) && !isUnsubscribe
+          (formData.receivePostsEmailNotifications || formData.receiveEventsEmailNotifications) && !isUnsubscribe
         }
       >
         <Title>Enter email address</Title>

@@ -2,7 +2,7 @@ import cliProgress from 'cli-progress';
 import chalk from 'chalk';
 import { Repository } from 'typeorm';
 
-import { DniEntityTypeEnum, CcmsEntity, slugify } from '@dni/database';
+import { DniEntityTypeEnum, CcmsEntity, slugify, CcmsEntityParentKey } from '@dni/database';
 import { ApiInput, BaseApiParams } from '@dni-connectors/colleague-cms-api';
 
 interface CommonEntity {
@@ -12,8 +12,8 @@ interface CommonEntity {
   created_at: string;
   updated_at: string;
   published_at: string;
-  network?: CommonEntity;
-  event?: CommonEntity;
+  network?: CommonEntity | CommonEntity[];
+  event?: CommonEntity | CommonEntity[];
 }
 
 type GetCountFn = (query: ApiInput<BaseApiParams>) => Promise<{ data: number }>;
@@ -26,8 +26,8 @@ const getCmsEntityCount = async (getCountFn: GetCountFn): Promise<number> => {
     },
   };
 
-  const ccrmResponse = await getCountFn(countQuery);
-  return ccrmResponse.data;
+  const ccmsResponse = await getCountFn(countQuery);
+  return ccmsResponse.data;
 };
 
 const getCmsEntity = async (
@@ -44,9 +44,9 @@ const getCmsEntity = async (
     },
   };
 
-  const ccrmResponse = await getEntityFn(entityQuery);
+  const ccmsResponse = await getEntityFn(entityQuery);
 
-  return ccrmResponse.data;
+  return ccmsResponse.data;
 };
 
 const convertToCcmsEntity = (
@@ -55,13 +55,31 @@ const convertToCcmsEntity = (
   entity: CommonEntity,
 ): CcmsEntity => {
   const getParent = () => {
-    const parent = entity.event || entity.network;
-    if (parent) {
+    const parents: CcmsEntityParentKey[] | undefined = [];
+    if (Array.isArray(entity.event) && entity.event.length > 0) {
+      const parentEvents = entity.event.map(p => { return { entityId: p.id, entityType: DniEntityTypeEnum.EVENT }});
+      parents.push(...parentEvents);
+    } else if (!!entity.event && typeof entity.event === 'object' && !Array.isArray(entity.event)) {
+      const parentEvent = { entityId: (entity.event as CommonEntity)?.id, entityType: DniEntityTypeEnum.EVENT };
+      parents.push(parentEvent);
+    }
+    if (Array.isArray(entity.network) && entity.network.length > 0) {
+      const parentNetworks = entity.network.map(p => { return { entityId: p.id, entityType: DniEntityTypeEnum.NETWORK }});
+      parents.push(...parentNetworks);
+    } else if (!!entity.network && typeof entity.network === 'object' && !Array.isArray(entity.network)) {
+      const parentNetwork = { entityId: (entity.network as CommonEntity)?.id, entityType: DniEntityTypeEnum.NETWORK };
+      parents.push(parentNetwork);
+    }
+    
+    const parentEvent = (Array.isArray(entity.event) && entity.event.length > 0) ? entity.event[0] : entity.event as CommonEntity | undefined;
+    const parentNetwork = (Array.isArray(entity.network) && entity.network.length > 0) ? entity.network[0] : entity.network as CommonEntity | undefined;
+    if (parentEvent || parentNetwork || parents) {
       return {
-        parentEntityId: parent.id,
-        parentEntityType: entity.event?.id
+        parents,
+        parentEntityId: (parentEvent || parentNetwork)?.id,
+        parentEntityType: parentEvent?.id
           ? DniEntityTypeEnum.EVENT
-          : entity.network?.id
+          : parentNetwork?.id
           ? DniEntityTypeEnum.NETWORK
           : undefined,
       };

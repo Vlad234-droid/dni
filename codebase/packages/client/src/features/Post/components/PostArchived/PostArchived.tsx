@@ -1,4 +1,5 @@
 import { FC, useState } from 'react';
+import { Event, Network } from '@dni-connectors/colleague-cms-api';
 
 import { useMedia } from 'context/InterfaceContext';
 
@@ -20,13 +21,17 @@ import {
 
 interface PostArchivedProps {
   item: Post;
+  entityTitle?: string;
 }
 
 const TEST_ID = 'post-archived';
 
-const PostArchived: FC<PostArchivedProps> = ({ item }) => {
+const PostArchived: FC<PostArchivedProps> = ({ item, entityTitle }) => {
   const { title, content, authorName, network, event } = item;
   const [isContentVisible, setVisible] = useState(false);
+
+  const parentEvent = (Array.isArray(event) && event.length > 0) ? event[0] : event as Event | undefined;
+  const parentNetwork = (Array.isArray(network) && network.length > 0) ? network[0] : network as Network | undefined;
 
   const onPostClick = () => {
     setVisible(!isContentVisible);
@@ -39,7 +44,7 @@ const PostArchived: FC<PostArchivedProps> = ({ item }) => {
       <PostHead>
         <PostPublisherAvatarBox>{/* <PostPublisherAvatar src={createdBy.avatarSrc} /> */}</PostPublisherAvatarBox>
         <PostPublisherName>
-          {`${authorName || network?.title || event?.title || 'Diversity and Inclusion'}`}
+          {`${authorName || entityTitle || parentNetwork?.title || parentEvent?.title || 'Diversity and Inclusion'}`}
         </PostPublisherName>
         <PostArchiveMark>
           <PostArchiveEllipse />

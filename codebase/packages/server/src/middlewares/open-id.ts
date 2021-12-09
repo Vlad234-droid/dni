@@ -5,18 +5,23 @@ import {
   colleagueApiPlugin,
   userDataPlugin,
   OpenIdRouter,
+  OpenIdUserInfo,
 } from '@dni-connectors/onelogin';
 
-import { isPROD } from '../config/env';
+import { dniUserDataResolver } from '../config/auth-data';
 import { ProcessConfig } from '../config/config-accessor';
-import { dniRolesPlugin, dniUserRefreshPlugin } from './onelogin-plugins';
+import { isPROD } from '../config/env';
+
+import { dniUserRefreshPlugin } from './onelogin-plugins';
 
 export const initializeOpenid = async ({
   runtimeEnvironment,
   apiEnv,
-  authDataCookieName,
-  sessionCookieName,
+  applicationIdTokenCookieName,
+  applicationSessionCookieName,
   applicationCookieParserSecret,
+  applicationUserDataCookieName,
+  applicationUserDataCookieSecret,
   stickCookiesToApplicationPath,
   oidcIssuerUrl,
   applicationServerUrlRoot,
@@ -66,12 +71,12 @@ export const initializeOpenid = async ({
     refreshTokenSecret: oidcRefreshTokenSecret(),
 
     /**
-     * A callback root that was registered for the application e.g. https://ourtesco.com (without the applicationPath)
+     * A callback root that was registered for the application e.g. https://www.ourtesco.com (without the applicationPath)
      */
     applicationServerUrlRoot: applicationServerUrlRoot(),
 
     /**
-     * A path the app is mounted on e.g. for https://ourtesco.com/my-shift the path is /my-shift.
+     * A path the app is mounted on e.g. for https://www.ourtesco.com/my-shift the path is /my-shift.
      * If the app is mounted on root path do not provide this option.
      */
     applicationPath: applicationPublicUrl(),
@@ -108,8 +113,8 @@ export const initializeOpenid = async ({
     /**
      * Optional, auth data cookie configuration
      */
-    authDataCookie: {
-      name: authDataCookieName(),
+    authTokenCookie: {
+      name: applicationIdTokenCookieName(),
       path: stickCookiesToApplicationPath() ? applicationPublicUrl() : '/',
     },
 
@@ -117,7 +122,7 @@ export const initializeOpenid = async ({
      * Optional, session cookie configuration
      */
     sessionCookie: {
-      name: sessionCookieName(),
+      name: applicationSessionCookieName(),
       path: stickCookiesToApplicationPath() ? applicationPublicUrl() : '/',
     },
 
@@ -132,28 +137,26 @@ export const initializeOpenid = async ({
     logger: pinoLogger({ name: 'middleware.onelogin' }),
 
     /**
-     * If true sets idToken and encRefreshToken in 'authData' cookie.
+     * If true sets authToken and encRefreshToken in 'authData' cookie.
      */
-    requireIdToken: true,
+    requireAccessToken: true,
 
     plugins: [
       userDataPlugin({
         optional: false,
-        // ====================================================
-        // Omit cookie config to do not store data into cookies
-        // cookieConfig: {
-        //   cookieName: applicationUserDataCookieName(),
-        //   secret: applicationUserDataCookieSecret(),
-        //   path: stickCookiesToApplicationPath() ? applicationPublicUrl() : undefined,
-        //   httpOnly: false,
-        //   secure: isProduction,
-        //   signed: isProduction,
-        //   cookieShapeResolver: (userInfo: OpenIdUserInfo) =>
-        //     openIdUserInfoResolver(
-        //       { defaultRoles, oidcGroupFiltersRegex, oidcManagerGroups, oidcAdminGroups } as ProcessConfig,
-        //       userInfo,
-        //     ),
-        // },
+        cookieConfig: {
+          cookieName: applicationUserDataCookieName(),
+          secret: applicationUserDataCookieSecret(),
+          path: stickCookiesToApplicationPath() ? applicationPublicUrl() : '/',
+          httpOnly: false,
+          secure: isProduction,
+          signed: isProduction,
+          cookieShapeResolver: (userInfo: OpenIdUserInfo) =>
+            dniUserDataResolver(
+              { defaultRoles, oidcGroupFiltersRegex, oidcManagerGroups, oidcAdminGroups } as ProcessConfig,
+              userInfo,
+            ),
+        },
       }),
       identityTokenSwapPlugin({
         identityClientId: identityClientId(),
@@ -183,12 +186,6 @@ export const initializeOpenid = async ({
         //   signed: isProduction,
         //   cookieShapeResolver: (colleague: Colleague) => colleagueInfoResolver({} as ProcessConfig, colleague),
         // },
-      }),
-      dniRolesPlugin({
-        defaultRoles: defaultRoles(),
-        oidcGroupFiltersRegex: oidcGroupFiltersRegex(),
-        oidcManagerGroups: oidcManagerGroups(),
-        oidcAdminGroups: oidcAdminGroups(),
       }),
       dniUserRefreshPlugin({
         optional: false,

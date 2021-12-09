@@ -1,6 +1,7 @@
 export {
   ContentExample,
   ContentSuccessEntity,
+  ContentSuccessStory,
   ContentErrorEntity,
   SettingsSuccess,
   SettingsError,

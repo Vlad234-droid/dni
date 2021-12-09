@@ -61,6 +61,7 @@ export const DEFAULT_FILTERS: FilterPayload = {
 
 export const LINKS = {
   signOut: PUBLIC_URL === '/' ? LOGOUT_URL : `${PUBLIC_URL}${LOGOUT_URL}`,
+  cmsLink: `${OURTESCO_URL}/colleague-cms/admin/`,
   thisIsMeSurvey: `${OURTESCO_URL}/thisisme/office`,
   termsAndConditions: `${OURTESCO_URL}/colleague/terms-and-conditions`,
   privacyPolicy:

@@ -4,18 +4,18 @@ import { getConfig } from '../config/config-accessor';
 
 import { spawnWorkers, standardWorkersCount } from './workers';
 
-type CommonCcrmEntity = {
+type CommonCcmsEntity = {
   id: number;
   slug: string;
   title: string;
-  network?: CommonCcrmEntity;
+  network?: CommonCcmsEntity;
   description?: string;
   shortDescription?: string;
   content?: string;
 };
 
 type MailingData = {
-  entity: CommonCcrmEntity;
+  entity: CommonCcmsEntity;
   colleagueUUIDs: string[];
 };
 

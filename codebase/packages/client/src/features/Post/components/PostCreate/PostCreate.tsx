@@ -28,11 +28,12 @@ type Props = {
 const PostCreate: FC<Props> = ({ onClose, onSubmit, networks, loading, error }) => {
   const [isAccepted, setAccepted] = useState(false);
   const networksOptions = useMemo(
-    () =>
-      networks.map(({ id, title }) => ({
+    () => {
+      return networks.map(({ id, title }) => ({
         id,
         title,
-      })),
+      })).sort((a, b) => a.title.localeCompare(b.title));
+    },
     [networks],
   );
 
@@ -127,7 +128,7 @@ const PostCreate: FC<Props> = ({ onClose, onSubmit, networks, loading, error }) 
           <FormGroup errorMessage={errors['confirm']?.message} error={Boolean(errors['confirm']?.message)}>
             <CheckboxWithLabel
               id='confirm'
-              labelText='I agree to provide my personal story/data for the publication within this network, including the moderation version of my story'
+              labelText='I agree to provide my personal story/data for the publication within this network. I understand that my story will be shared with the Network and will not be shared directly onto the site and that story may be shared in other locations, including the moderation version of my story.'
               checked={isAccepted}
               onChange={() => setAccepted(!isAccepted)}
               domRef={register}

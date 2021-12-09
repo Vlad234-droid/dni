@@ -53,6 +53,7 @@ const NetworkAction: FC<Props> = ({ id, events, onLeave, onJoin }) => {
     dispatch(joinParticipant(id));
 
     refetchNotificationsWithDelay();
+    setSettingsModalOpen(false);
 
     onJoin && onJoin();
   }

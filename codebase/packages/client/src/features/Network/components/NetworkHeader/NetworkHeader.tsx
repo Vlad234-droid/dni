@@ -25,10 +25,9 @@ type Props = {
   onJoin: () => void;
   events: Event[];
   networks: number[];
-  slug: string;
 };
 
-const NetworkHeader: FC<Props> = ({ id, title, email, onLeave, onJoin, events, networks, slug }) => {
+const NetworkHeader: FC<Props> = ({ id, title, email, onLeave, onJoin, events, networks }) => {
   const { isMobile, isLargeMobile } = useMedia();
   const isMobileView = isMobile || isLargeMobile;
   const isJoined = networks.includes(+id);

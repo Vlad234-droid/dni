@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components';
 
 import Media from 'styles/media';
 import { GREY_COLOR } from 'styles';
+import { isNextYear } from 'features/Header';
 
 import { LayoutProps } from '../../config/types';
 
@@ -11,7 +12,7 @@ type Props = HTMLProps<HTMLDivElement>;
 export const TOP_HEADER_HEIGHT = '36px';
 export const MAIN_HEADER_HEIGHT = '131px';
 export const HEADER_HEIGHT_DESKTOP = '65px';
-export const HEADER_HEIGHT_MOBILE = '44px';
+export const HEADER_HEIGHT_MOBILE = isNextYear() ? '44px' : '78px';
 export const HEADER_HEIGHT_TABLET = '96px';
 export const FOOTER_HEIGHT = '54px';
 const SIDEBAR_WIDTH = '240px';
@@ -32,7 +33,6 @@ export const Wrapper = styled.div<Props>`
   grid-template-columns: 1fr;
   grid-template-rows: ${HEADER_HEIGHT_MOBILE} 1fr ${FOOTER_HEIGHT};
   grid-template-areas: 'header' 'main' 'left';
-  margin-bottom: 40px;
 
   ${Media.small_desktop`
     height: 100vh;
@@ -42,6 +42,7 @@ export const Wrapper = styled.div<Props>`
     );
     grid-template-rows:  ${TOP_HEADER_HEIGHT} ${MAIN_HEADER_HEIGHT} ${HEADER_HEIGHT_DESKTOP} 1fr;
     grid-template-areas: 'top-header top-header top-header top-header' 'main-header main-header main-header main-header' 'header header header header' 'left left main main';
+    margin-bottom: 0;
   `}
 
   ${Media.large_desktop`
@@ -83,7 +84,7 @@ export const TopHeaderContainer = styled.div.attrs({
 })<Props>`
   display: none;
 
-  // set z-index higher than main header to display it childs absolutely positioned bottom content
+  // set z-index higher than main header to display it children absolutely positioned bottom content
   ${({ theme }) => css`
     ${Media.small_desktop`
         grid-area: top-header;
@@ -193,6 +194,7 @@ export const LeftContainer = styled.div.attrs({
   bottom: 0;
   left: 0;
   right: 0;
+  overflow-y: auto;
 
   ${Media.small_desktop`
     position: static;
@@ -204,6 +206,16 @@ export const MainContainer = styled.div.attrs({
 })<Partial<LayoutProps>>`
   grid-area: main;
   overflow-y: auto;
+  margin-bottom: 60px;
+
+  ${Media.tablet`
+    margin-top: 52px;
+  `}
+
+  ${Media.small_desktop`
+    margin-top: 0;
+    margin-bottom: 0;
+  `}
 
   ${({ theme }) => css`
     ${Media.small_desktop`
@@ -217,6 +229,7 @@ export const LeftContent = styled.div`
 
   ${Media.small_desktop`
      max-width: ${SIDEBAR_WIDTH};
+     margin-bottom: 40px;
   `}
 `;
 

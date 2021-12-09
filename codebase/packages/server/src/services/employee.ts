@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { getColleagueUuid, getOpenIdUserInfo, OpenIdUserInfo } from '@dni-connectors/onelogin';
+import { getColleagueUuid, getUserData } from '@dni-connectors/onelogin';
 import { Colleague } from '@dni-connectors/colleague-api';
 
 import {
@@ -12,7 +12,9 @@ import {
 } from '@dni/database';
 
 import { getConfig } from '../config/config-accessor';
+import { DniProfile } from '../config/auth-data';
 import { ApiError } from '../utils/api-error';
+
 
 type EmailNotificationSettings = {
   receivePostsEmailNotifications: boolean;
@@ -40,35 +42,35 @@ type ShareStory = {
 };
 
 const profileInfoExtractor = async (req: Request, res: Response) => {
-  const openIdUserInfo = getOpenIdUserInfo<OpenIdUserInfo>(res);
+  const applicationUserData = getUserData<DniProfile>(res);
   const colleagueUUID = getColleagueUuid(res);
 
-  const { defaultRoles, oidcGroupFiltersRegex, oidcManagerGroups, oidcAdminGroups } = getConfig();
-  const userRoles: Set<string> = new Set(defaultRoles());
+  // const { defaultRoles } = getConfig();
+  // const userRoles: Set<string> = new Set(defaultRoles());
 
-  if (openIdUserInfo) {
-    const userGroups = (
-      Array.isArray(openIdUserInfo.groups)
-        ? openIdUserInfo.groups
-        : ((openIdUserInfo.groups as unknown as string) || '').split(',') || []
-    )
-      .filter(Boolean)
-      .filter((group: string) => oidcGroupFiltersRegex().some((rr) => rr.test(group)));
+  // if (openIdUserInfo) {
+  //   const userGroups = (
+  //     Array.isArray(openIdUserInfo.groups)
+  //       ? openIdUserInfo.groups
+  //       : ((openIdUserInfo.groups as unknown as string) || '').split(',') || []
+  //   )
+  //     .filter(Boolean)
+  //     .filter((group: string) => oidcGroupFiltersRegex().some((rr) => rr.test(group)));
 
-    if (oidcManagerGroups().some((g) => userGroups.includes(g))) {
-      userRoles.add('Manager');
-    }
-    if (oidcAdminGroups().some((g) => userGroups.includes(g))) {
-      userRoles.add('Admin');
-    }
-  }
+  //   if (oidcManagerGroups().some((g) => userGroups.includes(g))) {
+  //     userRoles.add('Manager');
+  //   }
+  //   if (oidcAdminGroups().some((g) => userGroups.includes(g))) {
+  //     userRoles.add('Admin');
+  //   }
+  // }
 
   const networks: number[] = await findSubscriptionEntityIdsBy(colleagueUUID!, DniEntityTypeEnum.NETWORK);
   const events: number[] = await findSubscriptionEntityIdsBy(colleagueUUID!, DniEntityTypeEnum.EVENT);
 
   return {
+    ...applicationUserData,
     colleagueUUID,
-    roles: Array.from(userRoles.values()),
     networks,
     events,
   };

@@ -1,4 +1,5 @@
-export * from './ccrm-event-consumer';
+export * from './cep-event-consumer';
+export * from './cep-types';
 export * from './notification';
 export * from './employee';
 export * from './report';

@@ -1,18 +1,19 @@
 import { Router, RequestHandler } from "express";
+
 import { getAllCookies, isCookiePresent } from "@energon/cookie-utils";
-import { AUTH_DATA_COOKIE_NAME } from "../onelogin-middleware";
+import { AUTH_TOKEN_COOKIE_NAME } from "../onelogin-middleware";
 
 export type ViewPathPredicate = (path: string) => boolean;
 
 export const saveReturnToUrl = (
-  authDataCookieName: string,
+  authTokenCookieName: string,
   cookieName: string,
   cookieStickToAppPath: boolean,
   appPath: string,
   isViewPath: ViewPathPredicate,
 ): RequestHandler => {
   return (req, res, next) => {
-    const isUserLogged = isCookiePresent(req, authDataCookieName);
+    const isUserLogged = isCookiePresent(req, authTokenCookieName);
     const isReturnToUrlSet = isCookiePresent(req, cookieName);
     const isView = isViewPath(req.path);
 
@@ -58,7 +59,7 @@ export const redirectAfterLogin = (
 
 type ReturnToConfig = {
   isViewPath: ViewPathPredicate;
-  authDataCookieName?: string;
+  authTokenCookieName?: string;
   cookieName?: string;
   cookieStickToAppPath?: boolean;
   mainPage?: string;
@@ -67,14 +68,14 @@ type ReturnToConfig = {
 
 export const getReturnToMiddlewares = ({
   isViewPath,
-  authDataCookieName = AUTH_DATA_COOKIE_NAME,
+  authTokenCookieName = AUTH_TOKEN_COOKIE_NAME,
   cookieName = "returnTo",
   cookieStickToAppPath = false,
   mainPage = "/",
   appPath = "",
 }: ReturnToConfig) => {
   return {
-    saveReturnToUrl: saveReturnToUrl(authDataCookieName, cookieName, cookieStickToAppPath, appPath, isViewPath),
+    saveReturnToUrl: saveReturnToUrl(authTokenCookieName, cookieName, cookieStickToAppPath, appPath, isViewPath),
     redirectAfterLogin: redirectAfterLogin(
       cookieName,
       mainPage,
