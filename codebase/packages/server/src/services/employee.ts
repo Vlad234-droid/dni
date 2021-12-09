@@ -37,6 +37,8 @@ type ShareStory = {
   networkTitle: string;
   storyTitle: string;
   story: string;
+  name: string;
+  location: string;
 };
 
 const profileInfoExtractor = async (req: Request, res: Response) => {
