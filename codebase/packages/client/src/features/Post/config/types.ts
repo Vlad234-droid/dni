@@ -23,6 +23,8 @@ type Attachment = {
 
 type FormData = {
   networkTitle: string;
+  name: string;
+  location: string;
   title: string;
   story: string;
   confirm: boolean;

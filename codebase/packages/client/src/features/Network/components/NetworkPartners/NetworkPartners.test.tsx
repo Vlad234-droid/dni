@@ -17,6 +17,7 @@ describe('<NetworkPartners />', () => {
     isMobile: false,
     isLargeMobile: false,
     isTablet: false,
+    isLargeTablet: false,
     isDesktop: false,
     lt: jest.fn(),
     lte: jest.fn(),
