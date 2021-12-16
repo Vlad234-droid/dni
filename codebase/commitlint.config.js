@@ -7,7 +7,7 @@ module.exports = {
     {
       rules: {
         'tesco-jira': ({subject}) => {
-          const jiraRegExp = /^TESCO-\d{1,5}/;
+          const jiraRegExp = /^(UNTRACKED)|(TESCO-\d{1,5})/;
           return [
             jiraRegExp.test(subject),
             `Your subject should contain jira task link`,
