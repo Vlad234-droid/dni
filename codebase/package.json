@@ -22,7 +22,6 @@
     "clean": "lerna run --parallel clean",
     "clean:all": "lerna run --parallel clean:all && rimraf node_modules",
     "lint": "prettier --write --config ./prettier.config.js './packages/*/src/**/*.{ts,tsx}'",
-    "on-pre-push": "commitlint --from=$(git merge-base master $(git rev-parse --abbrev-ref HEAD)) --to=HEAD",
     "run:dev": "lerna run --parallel run:dev --scope @dni/client --scope @dni/server",
     "run:prod": "lerna run --parallel run:prod --scope @dni/server",
     "run:server": "lerna run --parallel run:server --scope @dni/server",
@@ -43,6 +42,8 @@
     "server": "lerna run --scope @dni/server",
     "run:dev:server": "yarn server run:dev --stream",
     "run:dev:client": "yarn client run:dev --stream",
+    "run-lint-branch-commit-msg": "cross-env commitlint --from=$(git merge-base master $(git rev-parse --abbrev-ref HEAD)) --to=HEAD",
+    "run-lint-staged": "lint-staged",
     "test": "lerna run test --stream --scope @dni/client",
     "test:coverage": "lerna run test:coverage --stream --scope @dni/client"
   },
@@ -64,6 +65,7 @@
     "eslint-plugin-react": "^7.21.5",
     "husky": "^4.3.7",
     "jest-environment-jsdom-sixteen": "^1.0.3",
+    "lerna": "3.22.1",
     "lint-staged": "^10.5.3",
     "lodash": "^4.17.20",
     "prettier": "^2.2.1",
@@ -72,9 +74,9 @@
   },
   "husky": {
     "hooks": {
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
+      "commit-msg": "commitlint --env HUSKY_GIT_PARAMS",
       "pre-commit": "yarn lint-staged",
-      "pre-push": "yarn on-pre-push"
+      "pre-push": "yarn run-lint-branch-commit-msg"
     }
   },
   "lint-staged": {
