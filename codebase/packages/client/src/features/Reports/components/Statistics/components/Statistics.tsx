@@ -1,6 +1,5 @@
 import React, { ChangeEvent } from 'react';
 import styled from 'styled-components';
-// import Checkbox from '@beans/checkbox';
 
 import { TextWithEllipsis } from 'features/Common';
 
@@ -30,6 +29,27 @@ interface Props {
 const Statistics = ({ data, onChange, entityType, reportType }: Props) => {
   const handleChangeItem = (e: ChangeEvent<HTMLInputElement>) => onChange(e.target.id, e.target.checked);
 
+  const calculateChangePercentage = (start: number, end: number) => {
+    if (start == 0) {
+      return end * 100;
+    }
+
+    return Math.round(((end - start) / start) * 100);
+  };
+
+  const renderRowData = (item: T.StatisticsItemByPeriod) => {
+    const { startSubscribers, endSubscribers, joined, leaved } = item;
+    return (
+      <>
+        <Cell>{startSubscribers}</Cell>
+        <Cell>{endSubscribers}</Cell>
+        <Cell>{calculateChangePercentage(+startSubscribers, +endSubscribers)}</Cell>
+        <Cell>{joined}</Cell>
+        <Cell>{leaved}</Cell>
+      </>
+    );
+  };
+
   return (
     <Table>
       <tbody>
@@ -52,15 +72,7 @@ const Statistics = ({ data, onChange, entityType, reportType }: Props) => {
               <Checkbox checked={item.checked} entityId={item.entityId} onChange={handleChangeItem} />
               <TextWithEllipsis>{item.name}</TextWithEllipsis>
             </CellName>
-            {reportType === T.ReportType.PERIOD && (
-              <>
-                <Cell>{(item as T.StatisticsItemByPeriod).startSubscribers}</Cell>
-                <Cell>{(item as T.StatisticsItemByPeriod).endSubscribers}</Cell>
-                <Cell>{(item as T.StatisticsItemByPeriod).endSubscribers}</Cell>
-                <Cell>{(item as T.StatisticsItemByPeriod).joined}</Cell>
-                <Cell>{(item as T.StatisticsItemByPeriod).leaved}</Cell>
-              </>
-            )}
+            {reportType === T.ReportType.PERIOD && renderRowData(item as T.StatisticsItemByPeriod)}
             {(reportType === T.ReportType.REGION || reportType === T.ReportType.FORMAT) && (
               <Cell>{item.participants}</Cell>
             )}
