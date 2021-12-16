@@ -153,9 +153,21 @@ const sendEmails = async (templateId: string, recipients: Recipient[], data: Ema
     },
   });
 
+  const accepted = result.data.accepted || result.status === 202;
+
+  console.log(
+    `INFO: Notification email to colleagues [${recipients
+      .map((r) => r.colleagueUUID)
+      .join(', ')}] with emails [${recipients.map((r) => r.address).join(', ')}] was sent. Payload: ${JSON.stringify(
+      data,
+      null,
+      2,
+    )} TraceId: ${traceId}. TemplateId: ${templateId}. Accepted: ${accepted}`,
+  );
+
   return {
     ...result.data,
-    accepted: result.data.accepted || result.status === 202,
+    accepted,
     traceId,
   };
 };

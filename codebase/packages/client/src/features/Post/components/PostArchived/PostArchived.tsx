@@ -21,11 +21,12 @@ import {
 
 interface PostArchivedProps {
   item: Post;
+  entityTitle?: string;
 }
 
 const TEST_ID = 'post-archived';
 
-const PostArchived: FC<PostArchivedProps> = ({ item }) => {
+const PostArchived: FC<PostArchivedProps> = ({ item, entityTitle }) => {
   const { title, content, authorName, network, event } = item;
   const [isContentVisible, setVisible] = useState(false);
 
@@ -43,7 +44,7 @@ const PostArchived: FC<PostArchivedProps> = ({ item }) => {
       <PostHead>
         <PostPublisherAvatarBox>{/* <PostPublisherAvatar src={createdBy.avatarSrc} /> */}</PostPublisherAvatarBox>
         <PostPublisherName>
-          {`${authorName || parentNetwork?.title || parentEvent?.title || 'Diversity and Inclusion'}`}
+          {`${authorName || entityTitle || parentNetwork?.title || parentEvent?.title || 'Diversity and Inclusion'}`}
         </PostPublisherName>
         <PostArchiveMark>
           <PostArchiveEllipse />

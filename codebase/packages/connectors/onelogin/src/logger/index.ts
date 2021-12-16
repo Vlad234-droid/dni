@@ -77,16 +77,29 @@ export namespace LoggerEvent {
     context,
   });
 
-  export const warn: WarnFn = (flow, message, context, error) => ({
-    severity: 'warning',
-    payload: {
-      message,
-      error: error ? convertErrorToPlainObject(error) : undefined,
-    },
-    flow,
-    context,
-    error,
-  });
+  export const warn: WarnFn = (flow, message, context, error) => {
+    if (error) {
+      return {
+        severity: 'warning',
+        payload: {
+          message,
+          error: convertErrorToPlainObject(error),
+        },
+        flow,
+        context,
+        error,
+      };
+    } else {
+      return {
+        severity: 'warning',
+        payload: {
+          message,
+        },
+        flow,
+        context,
+      };
+    }
+  }
 
   export const error: ErrorFn = (flow, error, context) => ({
     severity: 'error',

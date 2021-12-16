@@ -1,17 +1,18 @@
 import express from 'express';
 import jwt from 'jsonwebtoken';
-import { AuthData, OpenIdUserInfo } from '@dni-connectors/onelogin';
+import { AuthData, OpenIdUserInfo, setOpenIdAuthData } from '@dni-connectors/onelogin';
 
 const USER_KEY = 'employeeNumber';
 
 export const fakeUserExtractor: express.Handler = (req, res, next) => {
   if (!req.query.employeeNumber) {
     const employeeNumber = req.cookies[USER_KEY] as string;
-    const fakeUserInfo = buildFakeUserInfo(employeeNumber);
-    const fakeAuth = buildFakeAuth(fakeUserInfo);
 
-    res.oneLoginAuthData = fakeAuth;
-    res.oneLoginUserInfo = fakeUserInfo;
+    const fakeAuthData = buildFakeAuth(
+      buildFakeUserInfo(employeeNumber),
+      );
+
+    setOpenIdAuthData(res, fakeAuthData);
 
     next();
     return;
@@ -41,11 +42,14 @@ const buildFakeUserInfo = (employeeNumber = 'UK45006148'): OpenIdUserInfo => ({
   },
 });
 
+
 const buildFakeAuth = (userInfo: OpenIdUserInfo): AuthData => {
-  const idToken = jwt.sign(userInfo, 'secret');
+  const accessToken = jwt.sign(userInfo, 'secret');
 
   return {
-    idToken,
+    accessToken,
+    idToken: accessToken, // TODO: reimplement
     encRefreshToken: 'FakeEncRefreshToken',
+    sessionId: userInfo.sid,
   };
 };

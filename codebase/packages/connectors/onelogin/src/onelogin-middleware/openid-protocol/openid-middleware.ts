@@ -4,16 +4,18 @@ import passport from 'passport';
 import cookieSession from 'cookie-session';
 import cookieParser from 'cookie-parser';
 import { Issuer, Client } from 'openid-client';
+import jwt from 'jsonwebtoken';
 
 import { validateCookies } from '@energon/cookie-utils';
 import { asyncHandler } from '@energon/express-middlewares';
 
 import { getDataFromCookie, setDataToCookie } from '../../plugins/utils';
+import { OpenIdUserInfo } from '../../oidc-data-extractor';
 
 import {
   AUTHENTICATION_PATH,
   LOGOUT_PATH,
-  AUTH_DATA_COOKIE_NAME,
+  AUTH_TOKEN_COOKIE_NAME,
   SESSION_COOKIE_NAME,
   ONELOGIN_RETURN_URI_COOKIE_NAME,
   ONELOGIN_RETURN_URI_PARAM,
@@ -27,7 +29,7 @@ import {
 
 import { defaultLogger, LoggerEvent } from '../../logger';
 import { Plugin } from '../../plugins';
-import { openIdAuthDataMiddleware, AuthData, setOpenIdAuthData, getOpenIdAuthData } from '../../auth-data-extractor';
+import { openIdAuthDataMiddleware, AuthData, setOpenIdAuthData, getOpenIdAuthData } from '../../oidc-data-extractor';
 import { persistentTracingMiddleware, requestTracingMiddleware } from '../../tracing';
 import { errorHandler } from '../../error-handler';
 import * as OpenId from '../../passport-wrappers/openid';
@@ -54,7 +56,7 @@ export const initializeOpenidMiddleware = async (configuration: OpenidConfig): P
     noRedirectPathFragments = [ '/api' ],
     plugins = [],
     logger = defaultLogger,
-    requireIdToken = false,
+    requireAccessToken = false,
   } = configuration;
 
   //process.env.NODE_ENV === "development" ? false : true;
@@ -64,11 +66,11 @@ export const initializeOpenidMiddleware = async (configuration: OpenidConfig): P
     return cloned;
   };
 
-  const authDataCookie: Required<OneloginCookieConfig> = {
+  const authTokenCookie: Required<OneloginCookieConfig> = {
     ...defaultCookieConfig(runtimeEnvironment),
     path: '/',
-    name: AUTH_DATA_COOKIE_NAME,
-    ...omitUndefinedPeoperties(configuration.authDataCookie),
+    name: AUTH_TOKEN_COOKIE_NAME,
+    ...omitUndefinedPeoperties(configuration.authTokenCookie),
   };
 
   const sessionCookie: Required<OneloginCookieConfig> = {
@@ -111,7 +113,7 @@ export const initializeOpenidMiddleware = async (configuration: OpenidConfig): P
 
   const clearCookies = (res: express.Response) => {
     res
-      .clearCookie(authDataCookie.name, { path: authDataCookie.path })
+      .clearCookie(authTokenCookie.name, { path: authTokenCookie.path })
       .clearCookie(sessionCookie.name, { path: sessionCookie.path })
       .clearCookie(`${sessionCookie.name}.sig`, { path: sessionCookie.path });
   };
@@ -184,7 +186,9 @@ export const initializeOpenidMiddleware = async (configuration: OpenidConfig): P
   router.use(requestTracingMiddleware);
   router.use(persistentTracingMiddleware);
 
-  router.use(openIdAuthDataMiddleware(authDataCookie.name));
+  router.use(
+    openIdAuthDataMiddleware(client, authTokenCookie.name), 
+    );
 
   router.get(AUTHENTICATION_PATH, authHandler);
 
@@ -206,6 +210,11 @@ export const initializeOpenidMiddleware = async (configuration: OpenidConfig): P
         throw new OneloginError('login', authenticateResult.error);
       }
 
+      const accessToken = authenticateResult.tokenSet.access_token;
+      if (accessToken == null) {
+        throw new OneloginError('login', 'Missing accessToken', 401);
+      }
+
       const refreshToken = authenticateResult.tokenSet.refresh_token;
       if (refreshToken == null) {
         throw new OneloginError('login', 'Missing refreshToken', 401);
@@ -213,19 +222,23 @@ export const initializeOpenidMiddleware = async (configuration: OpenidConfig): P
 
       const idToken = authenticateResult.tokenSet.id_token;
       if (idToken == null) {
-        throw new OneloginError('login', 'Missing idToken', 401);
+        throw new OneloginError('login', 'Missing authToken', 401);
       }
 
-      return { refreshToken, idToken };
+      const idTokenData = jwt.decode(idToken) as OpenIdUserInfo;
+
+      return { accessToken, idToken, refreshToken, sessionId: idTokenData.sid };
     };
 
-    const { idToken, refreshToken } = await getTokens();
+    const { accessToken, idToken, refreshToken, sessionId } = await getTokens();
 
     const encRefreshToken = cryptoJS.AES.encrypt(refreshToken, refreshTokenSecret).toString();
 
     const authData: AuthData = {
-      encRefreshToken: encRefreshToken,
-      idToken: idToken,
+      accessToken,
+      idToken,
+      encRefreshToken,
+      sessionId,
     };
 
     setOpenIdAuthData(res, authData);
@@ -259,30 +272,50 @@ export const initializeOpenidMiddleware = async (configuration: OpenidConfig): P
       throw Error('cookie-parser with correct key is required');
     }
 
-    const authData = requireIdToken ? getOpenIdAuthData(res, true) : {};
+    const authData = requireAccessToken ? getOpenIdAuthData(res, true) : {};
 
-    const authDataInCookie = setDataToCookie(res, authData!, {
-      signed: authDataCookie.signed,
-      secure: authDataCookie.secure,
-      httpOnly: authDataCookie.httpOnly,
-      cookieName: authDataCookie.name,
-      path: authDataCookie.path,
+    if (!authData || authData?.accessToken == null) {
+      throw new OneloginError('login', 'Missing accessToken', 401);
+    }
+
+    if (!authData || authData?.encRefreshToken == null) {
+      throw new OneloginError('login', 'Missing refreshToken', 401);
+    }
+
+    if (!authData || authData?.sessionId == null) {
+      throw new OneloginError('login', 'Missing sessionId', 401);
+    }
+
+    const authDataInCookie = {
+      accessToken: authData.accessToken,
+      encRefreshToken: authData.encRefreshToken,
+      sessionId: authData.sessionId,
+    };
+
+    const authDataCookieValue = setDataToCookie(res, authDataInCookie, {
+      signed: authTokenCookie.signed,
+      secure: authTokenCookie.secure,
+      httpOnly: authTokenCookie.httpOnly,
+      cookieName: authTokenCookie.name,
+      path: authTokenCookie.path,
       compressed: true,
     });
 
     const validationStatus = validateCookies({
       ...req.cookies,
       ...req.signedCookies,
-      [authDataCookie.name]: authDataInCookie,
+      [authTokenCookie.name]: authDataCookieValue,
     });
 
-    if (!validationStatus.valid) {
-      logger(LoggerEvent.warn('login', `Cookie validation reponse: ${validationStatus.message}`, { req, res }));
-    }
+    if (validationStatus.valid) {
+      logger(LoggerEvent.debug('login', 
+        `Following cookies have been created: - ${printCookieInfo(`authdata${requireAccessToken ? '' : ' (empty)'}`, authTokenCookie)}`, 
+        { req, res }));
 
-    logger(LoggerEvent.debug('login', 
-      `Following cookies have been created: - ${printCookieInfo(`authdata${requireIdToken ? '' : ' (empty)'}`, authDataCookie)}`, 
-      { req, res }));
+      logger(LoggerEvent.info('verification', 'Auth cookie set have beed created', { req, res }));
+    } else {
+      logger(LoggerEvent.warn('login', `Auth cookie set may not be refreshed. Cookie validation response: ${validationStatus.message}`, { req, res }));
+    }
 
     let returnUriFromCookie: string | undefined = req.cookies[ONELOGIN_RETURN_URI_COOKIE_NAME];
 
@@ -314,29 +347,29 @@ export const initializeOpenidMiddleware = async (configuration: OpenidConfig): P
       logger(LoggerEvent.info('logout', 'Logout handler was called', { req, res }));
 
       const authData = getDataFromCookie<AuthData>(req, {
-        cookieName: authDataCookie.name,
+        cookieName: authTokenCookie.name,
         compressed: true,
       });
 
       if (!authData) {
-        throw new OneloginError('logout', `Cookie not found: ${authDataCookie.name} cookie`, 503);
+        throw new OneloginError('logout', `Cookie not found: ${authTokenCookie.name} cookie`, 503);
       }
 
       logger(LoggerEvent.debug('logout', 'Clearing cookies...', { req, res }));
       clearCookies(res);
     
-      const { idToken, encRefreshToken } = authData;
+      const { accessToken, encRefreshToken } = authData;
 
-      if (idToken && encRefreshToken) {
+      if (accessToken && encRefreshToken) {
         logger(LoggerEvent.debug('logout', 'Revoking tokens...', { req, res }));
         const refreshToken = cryptoJS.AES.decrypt(encRefreshToken, refreshTokenSecret).toString(cryptoJS.enc.Utf8);
         await client.revoke(refreshToken, 'refresh_token');
 
         logger(LoggerEvent.debug('logout', `Redirecting user to onelogin logout. Post logout URL: ${registeredRedirectAfterLogoutPath}`, { req, res }));
-        const afterLogoutRedirectCallbackUrl = client.endSessionUrl({ id_token_hint: idToken });
+        const afterLogoutRedirectCallbackUrl = client.endSessionUrl({ id_token_hint: accessToken });
         return res.redirect(afterLogoutRedirectCallbackUrl);
       } else {
-        throw new OneloginError('logout', `id_token is missing in ${authDataCookie.name} cookie`, 503);
+        throw new OneloginError('logout', `access_token is missing in ${authTokenCookie.name} cookie`, 503);
       }
     }
   ));
@@ -362,10 +395,10 @@ export const initializeOpenidMiddleware = async (configuration: OpenidConfig): P
       [...allIgnoredPaths],
       getRefreshTokenMiddleware({
         client,
-        authDataCookie,
+        authTokenCookie,
         refreshTokenSecret,
         logger,
-        requireIdToken,
+        requireAccessToken,
         tescoIssuer,
       }),
     ),
