@@ -34,7 +34,7 @@ const Statistics = ({ data, onChange, entityType, reportType }: Props) => {
       return end * 100;
     }
 
-    return ((end - start) / start) * 100;
+    return Math.round(((end - start) / start) * 100);
   };
 
   const renderRowData = (item: T.StatisticsItemByPeriod) => {
