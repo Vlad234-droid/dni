@@ -30,12 +30,15 @@ const PostCreateContainer: FC<Props> = ({ networkId, onClose }) => {
     );
   }, []);
 
-  const handleShareStory = async ({ title, story, networkTitle }: FormData) => {
+  // TODO: name and location fields are not sent
+  const handleShareStory = async ({ title, story, networkTitle, name, location }: FormData) => {
     const result = await dispatch(
       shareStory({
         storyTitle: title,
         story,
         networkTitle,
+        name,
+        location,
       }),
     );
 
@@ -66,6 +69,8 @@ const PostCreateContainer: FC<Props> = ({ networkId, onClose }) => {
       createOne({
         title: data.title,
         content: data.story,
+        authorName: data.name,
+        authorLocation: data.location,
         slug: `${network.slug}-${String(Date.now())}`,
         tenant: 4,
         network: [network.id],

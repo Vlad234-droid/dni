@@ -165,14 +165,22 @@ const getSetting: Handler = async (req: Request, res: Response) => {
 
 const shareStory: Handler = async (req: Request<{}, {}, ShareStory>, res: Response) => {
   executeSafe(res, async () => {
-    const { networkTitle: markdownNetworkTitle, storyTitle: colleagueStoryTitle, story: colleagueFullStory } = req.body;
+    const {
+      networkTitle: markdownNetworkTitle,
+      storyTitle: colleagueStoryTitle,
+      story: colleagueFullStory,
+      name: colleagueName,
+      location: colleagueLocation,
+    } = req.body;
 
     res.json({
-      // ...(await sendShareStoryEmail({
-      //   markdownNetworkTitle,
-      //   colleagueStoryTitle,
-      //   colleagueFullStory,
-      // })),
+      ...(await sendShareStoryEmail({
+        markdownNetworkTitle,
+        colleagueStoryTitle,
+        colleagueFullStory,
+        colleagueName,
+        colleagueLocation,
+      })),
       ...req.body,
     });
   });

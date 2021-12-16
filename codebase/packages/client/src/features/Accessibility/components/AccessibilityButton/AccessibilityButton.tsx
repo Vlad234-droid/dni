@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 
 import { useMedia } from 'context/InterfaceContext';
 import { Page } from 'features/Page';
+import { isNextYear } from 'features/Header';
 
 import { Mode } from '../../types';
 import { Wrapper, Content, ContentInner, LinkWrapper } from './styled';
@@ -26,7 +27,11 @@ const AccessibilityButton: FC<Props> = ({ mode }) => {
     window.loadService();
   };
 
-  const handleLinkClick = () => setIsOpen(false);
+  const handleLinkClick = () => {
+    setIsOpen(false);
+    // the handler is needed to hide the reciteme tooltip
+    document.body.click();
+  };
 
   return (
     <Wrapper data-testid='accessibility' isOpen={isOpen}>
@@ -38,7 +43,7 @@ const AccessibilityButton: FC<Props> = ({ mode }) => {
         Accessibility
         <Icon graphic={'expand'} />
       </Button>
-      <Content mode={mode} isOpen={isOpen} data-testid='accessibility-content'>
+      <Content mode={mode} isOpen={isOpen} isNextYear={isNextYear()} data-testid='accessibility-content'>
         <ContentInner>
           <LinkWrapper inverse={mode == Mode.LIGHT}>
             <Link to={`/${Page.ACCESSIBILITY}`} onClick={handleLinkClick}>
@@ -46,11 +51,7 @@ const AccessibilityButton: FC<Props> = ({ mode }) => {
             </Link>
           </LinkWrapper>
           <LinkWrapper inverse={mode == Mode.LIGHT}>
-            <BeansLink
-              className='reciteme'
-              inverse={mode == Mode.LIGHT}
-              onClick={handleRecitemeButtonClick}
-            >
+            <BeansLink className='reciteme' inverse={mode == Mode.LIGHT} onClick={handleRecitemeButtonClick}>
               Toolbar (Reciteme)
             </BeansLink>
           </LinkWrapper>

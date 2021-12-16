@@ -63,7 +63,7 @@ const PostCreate: FC<Props> = ({ onClose, onSubmit, networks, loading, error }) 
         <Title>Please, input your story below</Title>
         {networksOptions.length && (
           <FieldWrapper>
-            <DropdownGroup domRef={register} name={'networkTitle'}>
+            <DropdownGroup domRef={register} name={'networkTitle'} aria-label={'networkTitle'}>
               {networksOptions.map(({ id, title }) => (
                 <option key={id} value={title}>
                   {title}
@@ -76,9 +76,35 @@ const PostCreate: FC<Props> = ({ onClose, onSubmit, networks, loading, error }) 
           <TextInput
             // @ts-ignore
             domRef={register}
+            name={'name'}
+            aria-label={'name'}
+            placeholder={'Input your name:'}
+            error={errors['name']?.message}
+            id={'name'}
+            hideLabel
+            required
+          />
+        </FieldWrapper>
+        <FieldWrapper>
+          <TextInput
+            // @ts-ignore
+            domRef={register}
+            name={'location'}
+            aria-label={'location'}
+            placeholder={'Input your location: (e.g. Chaltenham Superstore)'}
+            error={errors['location']?.message}
+            id={'location'}
+            hideLabel
+            required
+          />
+        </FieldWrapper>
+        <FieldWrapper>
+          <TextInput
+            // @ts-ignore
+            domRef={register}
             name={'title'}
             aria-label={'title'}
-            placeholder={'Input title...'}
+            placeholder={'Input story title:'}
             error={errors['title']?.message}
             id={'title'}
             hideLabel
@@ -91,7 +117,7 @@ const PostCreate: FC<Props> = ({ onClose, onSubmit, networks, loading, error }) 
             domRef={register}
             aria-label={'story'}
             name={'story'}
-            placeholder={'Input story...'}
+            placeholder={'Input story:'}
             error={errors['story']?.message}
             hideLabel
             required
@@ -102,7 +128,7 @@ const PostCreate: FC<Props> = ({ onClose, onSubmit, networks, loading, error }) 
           <FormGroup errorMessage={errors['confirm']?.message} error={Boolean(errors['confirm']?.message)}>
             <CheckboxWithLabel
               id='confirm'
-              labelText='I agree to provide my personal story/data for the publication within this network. I understand that this story may be shared in other locations, including the moderation version of my story.'
+              labelText='I agree to provide my personal story/data for the publication within this network. I understand that my story will be shared with the Network and will not be shared directly onto the site and that story may be shared in other locations, including the moderation version of my story.'
               checked={isAccepted}
               onChange={() => setAccepted(!isAccepted)}
               domRef={register}

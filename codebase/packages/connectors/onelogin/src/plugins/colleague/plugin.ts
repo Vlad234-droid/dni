@@ -13,7 +13,7 @@ import { getDataFromCookie, setDataToCookie, PluginCookieConfig, clearPluginCook
 
 import { Optional, Plugin } from '../plugin';
 import { getIdentityClientScopeToken } from '../identity-cst';
-import { getOpenIdUserInfo } from '../../user-info-extractor';
+import { getOpenIdSessionId } from '../../oidc-data-extractor';
 
 export type Strategy = 'oidc' | 'saml';
 
@@ -153,7 +153,7 @@ export const colleagueApiPlugin = <O>(config: Config<O> & Optional): Plugin => {
         const { cookieShapeResolver = (data: any) => data } = cookieConfig;
 
         // OneLogin unique identifier of session of end user
-        const sid = getOpenIdUserInfo(res)?.sid;
+        const sid = getOpenIdSessionId(res);
         const payload = { ...cookieShapeResolver(colleague), sid };
 
         if (cache) {
