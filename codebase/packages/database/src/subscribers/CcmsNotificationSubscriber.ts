@@ -23,10 +23,18 @@ export class CcmsNotificationSubscriber implements EntitySubscriberInterface<Ccm
   }
 
   async afterInsert(event: InsertEvent<CcmsNotification>) {
-    await this.ccmsNotification(event.entity, event.manager, event.queryRunner.data.entityInstance);
+    await this.ccmsNotification(
+      event.entity, 
+      event.manager, 
+      event.queryRunner.data.entityInstance
+      );
   }
 
-  async ccmsNotification(ccmsNotification: CcmsNotification, manager: EntityManager, entityInstance: CommonCcmsEntity) {
+  async ccmsNotification(
+    ccmsNotification: CcmsNotification, 
+    manager: EntityManager, 
+    entityInstance: CommonCcmsEntity | undefined) {
+
     if (CcmsTriggerEventEnum.DELETED == ccmsNotification.notificationTriggerEvent) {
       // Process DELETED event
       const builder = manager
@@ -38,6 +46,7 @@ export class CcmsNotificationSubscriber implements EntitySubscriberInterface<Ccm
           notificationTriggerEvent: ccmsNotification.notificationTriggerEvent,
           updatedAt: new Date(), 
           entityDeletedAt: ccmsNotification.receivedAt,   
+          //entityInstance: undefined,
         })
         .where(`entityId = :entityId AND entityType = :entityType`, {
           entityId: ccmsNotification.entityId,
@@ -59,7 +68,7 @@ export class CcmsNotificationSubscriber implements EntitySubscriberInterface<Ccm
       ccmsEntity.entityId = ccmsNotification.entityId;
       ccmsEntity.entityType = ccmsNotification.entityType;
 
-      console.log(` ==> ccmsEntityInstance = ${JSON.stringify(entityInstance, undefined, 3)}`);
+      console.log(` ==> ccmsEntityInstance = ${entityInstance ? JSON.stringify(entityInstance, undefined, 3): 'NULL'}`);
 
       if (entityInstance) {
         ccmsEntity.slug = entityInstance.slug || slugify(entityInstance.title);
