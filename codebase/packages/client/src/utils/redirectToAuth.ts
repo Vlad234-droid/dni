@@ -1,15 +1,17 @@
 export const redirectToAuth = (returnUri?: string) => {
-  const redirectToAuth = window.localStorage.getItem('redirectToAuth');
+  const applicationRootPrefix = process.env.PUBLIC_URL ?? '';
+  const redirectToAuthKey = `${applicationRootPrefix}/redirectToAuth`;
+  const redirectToAuth = window.localStorage.getItem(redirectToAuthKey);
 
   if (redirectToAuth === null) {
-    window.localStorage.setItem('redirectToAuth', new Date().toISOString());
+    window.localStorage.setItem(redirectToAuthKey, new Date().toISOString());
 
     setTimeout(() => {
-      window.localStorage.removeItem('redirectToAuth');
+      window.localStorage.removeItem(redirectToAuthKey);
       if (returnUri) {
-        window.location.assign(`/sso/auth?onelogin_return_uri=${encodeURI(returnUri)}`);
+        window.location.assign(`${applicationRootPrefix}/sso/auth?onelogin_return_uri=${encodeURI(returnUri)}`);
       } else {
-        window.location.assign(`/sso/auth`);
+        window.location.assign(`${applicationRootPrefix}/sso/auth`);
       }
     }, 100);
   }
