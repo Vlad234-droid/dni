@@ -22,7 +22,7 @@ export class Backfill_population_2 implements MigrationInterface {
       await queryRunner.query(`SET search_path TO "$user", ${schema}, public;`);
     }
 
-    await queryRunner.query(`ALTER TABLE dni_user ALTER COLUMN employee_number TYPE varchar(16) USING employee_number::varchar;      ;`);
+    await queryRunner.query(`ALTER TABLE dni_user ALTER COLUMN employee_number TYPE varchar(16) USING employee_number::varchar;`);
     
     type EmployeeData = { 
       employeeNumber: string, 
