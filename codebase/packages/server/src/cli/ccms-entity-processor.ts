@@ -2,19 +2,8 @@ import cliProgress from 'cli-progress';
 import chalk from 'chalk';
 import { Repository } from 'typeorm';
 
-import { DniEntityTypeEnum, CcmsEntity, slugify, CcmsEntityParentKey } from '@dni/database';
+import { DniEntityTypeEnum, CcmsEntity, slugify, CommonCcmsEntity, CcmsEntityParentKey } from '@dni/database';
 import { ApiInput, BaseApiParams } from '@dni-connectors/colleague-cms-api';
-
-interface CommonEntity {
-  id: number;
-  slug: string;
-  title: string;
-  created_at: string;
-  updated_at: string;
-  published_at: string;
-  network?: CommonEntity | CommonEntity[];
-  event?: CommonEntity | CommonEntity[];
-}
 
 type GetCountFn = (query: ApiInput<BaseApiParams>) => Promise<{ data: number }>;
 type GetEntityFn<T> = (query: ApiInput<BaseApiParams>) => Promise<{ data: Array<T> }>;
@@ -33,8 +22,8 @@ const getCmsEntityCount = async (getCountFn: GetCountFn): Promise<number> => {
 const getCmsEntity = async (
   offset: number,
   count: number,
-  getEntityFn: GetEntityFn<CommonEntity>,
-): Promise<Array<CommonEntity>> => {
+  getEntityFn: GetEntityFn<CommonCcmsEntity<string>>,
+): Promise<Array<CommonCcmsEntity<string>>> => {
   const entityQuery: ApiInput<BaseApiParams> = {
     params: {
       _start: `${offset}`,
@@ -52,28 +41,34 @@ const getCmsEntity = async (
 const convertToCcmsEntity = (
   repository: Repository<CcmsEntity>,
   entityType: DniEntityTypeEnum,
-  entity: CommonEntity,
+  entity: CommonCcmsEntity<string>,
 ): CcmsEntity => {
   const getParent = () => {
-    const parents: CcmsEntityParentKey[] | undefined = [];
+    const parents: CcmsEntityParentKey[] = [];
     if (Array.isArray(entity.event) && entity.event.length > 0) {
       const parentEvents = entity.event.map(p => { return { entityId: p.id, entityType: DniEntityTypeEnum.EVENT }});
       parents.push(...parentEvents);
     } else if (!!entity.event && typeof entity.event === 'object' && !Array.isArray(entity.event)) {
-      const parentEvent = { entityId: (entity.event as CommonEntity)?.id, entityType: DniEntityTypeEnum.EVENT };
+      const parentEvent = { entityId: (entity.event as CommonCcmsEntity<string>)?.id, entityType: DniEntityTypeEnum.EVENT };
       parents.push(parentEvent);
     }
     if (Array.isArray(entity.network) && entity.network.length > 0) {
       const parentNetworks = entity.network.map(p => { return { entityId: p.id, entityType: DniEntityTypeEnum.NETWORK }});
       parents.push(...parentNetworks);
     } else if (!!entity.network && typeof entity.network === 'object' && !Array.isArray(entity.network)) {
-      const parentNetwork = { entityId: (entity.network as CommonEntity)?.id, entityType: DniEntityTypeEnum.NETWORK };
+      const parentNetwork = { entityId: (entity.network as CommonCcmsEntity<string>)?.id, entityType: DniEntityTypeEnum.NETWORK };
       parents.push(parentNetwork);
     }
     
-    const parentEvent = (Array.isArray(entity.event) && entity.event.length > 0) ? entity.event[0] : entity.event as CommonEntity | undefined;
-    const parentNetwork = (Array.isArray(entity.network) && entity.network.length > 0) ? entity.network[0] : entity.network as CommonEntity | undefined;
-    if (parentEvent || parentNetwork || parents) {
+    const parentEvent = (Array.isArray(entity.event) && entity.event.length > 0) 
+      ? entity.event[0] 
+      : entity.event as CommonCcmsEntity<string> | undefined;
+
+    const parentNetwork = (Array.isArray(entity.network) && entity.network.length > 0) 
+      ? entity.network[0] 
+      : entity.network as CommonCcmsEntity<string> | undefined;
+
+    if (parentEvent || parentNetwork || parents.length > 0) {
       return {
         parents,
         parentEntityId: (parentEvent || parentNetwork)?.id,
@@ -104,7 +99,7 @@ export const processEntity = async (
   repository: Repository<CcmsEntity>,
   entityType: DniEntityTypeEnum,
   getCountFn: GetCountFn,
-  getEntityFn: GetEntityFn<CommonEntity>,
+  getEntityFn: GetEntityFn<CommonCcmsEntity<string>>,
 ) => {
   const totalCount = await getCmsEntityCount(getCountFn);
 
@@ -126,7 +121,7 @@ export const processEntity = async (
       const entities = await getCmsEntity(i, 1, getEntityFn);
       const entity = Array.isArray(entities) && entities.length === 1 ? entities[0] : undefined;
 
-      const ccmsEntity = convertToCcmsEntity(repository, entityType, entity as CommonEntity);
+      const ccmsEntity = convertToCcmsEntity(repository, entityType, entity as CommonCcmsEntity<string>);
       await repository.save(ccmsEntity);
 
       //console.log(`Entity ID: ${entity?.id}, created at: ${entity?.created_at}`);
