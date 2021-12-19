@@ -2,7 +2,7 @@ import { MigrationInterface, QueryRunner } from 'typeorm';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 
 export class Migration_Add_Multiple_Patents implements MigrationInterface {
-  name = 'Add_Multiple_Parents-1637917050000';
+  name = 'Add_Multiple_Parents-1638356416000';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     const schema = (queryRunner.connection.options as PostgresConnectionOptions).schema;
