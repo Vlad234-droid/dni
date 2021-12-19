@@ -1,9 +1,5 @@
 import React, { FC, ReactElement } from 'react';
-import {
-  render as rtlRender,
-  cleanup,
-  RenderOptions,
-} from '@testing-library/react';
+import { render as rtlRender, cleanup, RenderOptions } from '@testing-library/react';
 import { ThemeProvider } from '@beans/theme';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
@@ -18,7 +14,7 @@ import Auth, { AuthProvider } from 'features/Auth';
 import rootReducer from 'store/rootReducer';
 import { UserRole } from 'features/User';
 import GlobalModal from 'features/GlobalModal';
-import {NotificationProvider} from "../features/Notification";
+import { NotificationProvider } from '../features/Notification';
 
 const WithThemeProvider: FC = ({ children }) => (
   <ThemeProvider theme={theme}>
@@ -58,11 +54,7 @@ const render = (
   ui: ReactElement,
   {
     initialState,
-    store = createStore(
-      rootReducer,
-      initialState,
-      applyMiddleware(thunkMiddleware),
-    ),
+    store = createStore(rootReducer, initialState, applyMiddleware(thunkMiddleware)),
     roles = [UserRole.EMPLOYEE],
     events = [],
     networks = [],
@@ -75,19 +67,21 @@ const render = (
   const Wrapper: FC = ({ children }) => (
     <ThemeProvider theme={theme}>
       <Provider store={store}>
-        <AuthProvider value={{
-          authenticated: true,
-          user: {
-            id: 111,
-            name: 'mocked-user-name',
-            preferred_username: 'mocked-user-name',
-            events,
-            networks,
-            roles,
-            colleagueUUID: '111',
-          },
-          fetchUser: jest.fn(),
-        }}>
+        <AuthProvider
+          value={{
+            authenticated: true,
+            user: {
+              id: 111,
+              name: 'mocked-user-name',
+              preferred_username: 'mocked-user-name',
+              events,
+              networks,
+              roles,
+              colleagueUUID: '111',
+            },
+            fetchUser: jest.fn(),
+          }}
+        >
           <InterfaceProvider>
             <GlobalModal>
               <Router history={history}>{children}</Router>
@@ -104,11 +98,11 @@ const render = (
 type AuthOptions = {
   authenticated: boolean;
   user: {
-    events: number[],
-    networks: number[],
-    roles: string[],
-  }
-}
+    events: number[];
+    networks: number[];
+    roles: string[];
+  };
+};
 
 const renderWithProviders = (ui: ReactElement, options?: RenderOptions, authOptions?: AuthOptions) =>
   rtlRender(ui, { ...options, ...authOptions, wrapper: WithAllProviders });
@@ -130,13 +124,6 @@ const getMathId = (url: string, exp: RegExp) => {
   return 0;
 };
 
-export * from '@testing-library/react';
+export { act, cleanup, createEvent, fireEvent, screen, waitFor, within } from '@testing-library/react';
 
-export {
-  render,
-  renderWithProviders,
-  renderWithTheme,
-  renderWithRouter,
-  cleanupAfterEach,
-  getMathId,
-};
+export { render, renderWithProviders, renderWithTheme, renderWithRouter, cleanupAfterEach, getMathId };
