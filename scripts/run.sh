@@ -5,8 +5,6 @@ if [ "$TYPEORM_RUN_MIGRATION" = "true" ]; then
         yarn ws:db typeorm query "CREATE SCHEMA IF NOT EXISTS \"$TYPEORM_SCHEMA\";" 
     fi
 
-    yarn ws:db migration:revert
-    
     yarn ws:db migration:run
 fi
 
