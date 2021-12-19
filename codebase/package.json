@@ -22,7 +22,6 @@
     "clean": "lerna run --parallel clean",
     "clean:all": "lerna run --parallel clean:all && rimraf node_modules",
     "lint": "prettier --write --config ./prettier.config.js './packages/*/src/**/*.{ts,tsx}'",
-    "on-pre-push": "commitlint --from=$(git merge-base master $(git rev-parse --abbrev-ref HEAD)) --to=HEAD",
     "run:dev": "lerna run --parallel run:dev --scope @dni/client --scope @dni/server",
     "run:prod": "lerna run --parallel run:prod --scope @dni/server",
     "run:server": "lerna run --parallel run:server --scope @dni/server",
@@ -43,14 +42,16 @@
     "server": "lerna run --scope @dni/server",
     "run:dev:server": "yarn server run:dev --stream",
     "run:dev:client": "yarn client run:dev --stream",
+    "run-lint-branch-commit-msg": "cross-env commitlint --from=$(git merge-base master $(git rev-parse --abbrev-ref HEAD)) --to=HEAD",
+    "run-lint-staged": "lint-staged",
     "test": "lerna run test --stream --scope @dni/client",
     "test:coverage": "lerna run test:coverage --stream --scope @dni/client"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.12.11",
-    "@commitlint/cli": "^11.0.0",
-    "@commitlint/config-conventional": "^11.0.0",
-    "@commitlint/config-lerna-scopes": "^11.0.0",
+    "@commitlint/cli": "^15.0.0",
+    "@commitlint/config-conventional": "^15.0.0",
+    "@commitlint/config-lerna-scopes": "^15.0.0",
     "@typescript-eslint/eslint-plugin": "^4.10.0",
     "@typescript-eslint/parser": "^4.10.0",
     "babel-jest": "^26.6.3",
@@ -70,11 +71,14 @@
     "rimraf": "^3.0.2",
     "ts-jest": "^26.4.4"
   },
+  "peerDependencies": {
+    "lerna": "^3.22.1"
+  },
   "husky": {
     "hooks": {
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS",
+      "commit-msg": "commitlint --env HUSKY_GIT_PARAMS",
       "pre-commit": "yarn lint-staged",
-      "pre-push": "yarn on-pre-push"
+      "pre-push": "yarn run-lint-branch-commit-msg"
     }
   },
   "lint-staged": {
