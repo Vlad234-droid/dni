@@ -76,9 +76,9 @@
   },
   "husky": {
     "hooks": {
-      "commit-msg": "env commitlint --env HUSKY_GIT_PARAMS",
-      "pre-commit": "env yarn lint-staged",
-      "pre-push": "env yarn run-lint-branch-commit-msg"
+      "commit-msg": "commitlint --env HUSKY_GIT_PARAMS",
+      "pre-commit": "yarn lint-staged",
+      "pre-push": "yarn run-lint-branch-commit-msg"
     }
   },
   "lint-staged": {
