@@ -1,4 +1,5 @@
-import { getManager, DniEntityTypeEnum, getSchemaPrefix } from '@dni/database';
+import { getManager } from '@dni/database';
+import { DniEntityTypeEnum, getSchemaPrefix } from '@dni/database';
 
 import { getConfig } from '../config/config-accessor';
 
