@@ -1,62 +1,101 @@
-import { getManager, getSchemaPrefix, DniUserNotificationAcknowledge, DniEntityTypeEnum } from '@dni/database';
+import { objectToCamel } from 'ts-case-convert';
 
-const findNotifications = async (colleagueUUID: string) => {
+import { getManager, getSchemaPrefix, serializeEnum } from '@dni/database';
+import { DniUserNotificationAcknowledge, DniEntityTypeEnum } from '@dni/database';
+
+const NOTIFICATION_RETENTION_INTERVAL = '3 month';
+
+export const colleagueNotificationsList = async (
+  colleagueUUID: string,
+) => {
   const schemaPrefix = getSchemaPrefix();
   const enrichedNotificationList = await getManager().connection.query(
     `SELECT 
-        entity_type AS "entityType",
-        entity_id AS "entityId",
-        entity_instance AS "entity",
-        root_ancestor_type AS "rootAncestorType",
-        root_ancestor_id AS "rootAncestorId",
-        root_ancestor_instance AS "rootAncestor",
-        parent_entity_type AS "parentEntityType",
-        parent_entity_id AS "parentEntityId",
-        parent_entity_instance AS "parentEntity",
-        notified_at AS "notifiedAt"
-    FROM ${schemaPrefix}fn_get_dni_user_notification_enriched_list(
-      p_colleague_uuid := $1::uuid, 
-      p_filter_entity_types := ARRAY['post'::${schemaPrefix}dni_entity_type_enum, 'event'::${schemaPrefix}dni_entity_type_enum],
-      p_filter_subscription_entity_types := ARRAY['network'::${schemaPrefix}dni_entity_type_enum, 'event'::${schemaPrefix}dni_entity_type_enum]
-    ) WHERE notified_at > CURRENT_DATE - INTERVAL '3 months'`,
-    [colleagueUUID],
+        entity_type
+      , entity_id
+      , entity_instance
+      , ancestor_type
+      , ancestor_id
+      , ancestor_instance
+      , notified_at
+      , acknowledged_at
+    FROM ${schemaPrefix}fn_get_dni_user_notification_enriched_list_2(
+        p_colleague_uuid := $1::uuid
+      , p_filter_entity_types := ${serializeEnum('dni_entity_type_enum', [DniEntityTypeEnum.EVENT, DniEntityTypeEnum.POST])}
+      , p_filter_subscription_entity_types := ${serializeEnum('dni_entity_type_enum', [DniEntityTypeEnum.NETWORK, DniEntityTypeEnum.EVENT])}
+      , p_filter_root_entity_types := ${serializeEnum('dni_entity_type_enum', [DniEntityTypeEnum.NETWORK])}
+      , p_return_only_non_acknowledged := TRUE
+      , p_return_only_one_ancestor_per_entity := TRUE
+      , p_affected_interval := $2::INTERVAL)`,
+    [colleagueUUID, NOTIFICATION_RETENTION_INTERVAL],
   );
 
-  return enrichedNotificationList;
+  if (Array.isArray(enrichedNotificationList) && enrichedNotificationList.length) {
+    return enrichedNotificationList.map(enl => objectToCamel(enl));
+  } else {
+    return [];
+  }
 };
 
-const findNetworkNotifications = async (colleagueUUID: string) => {
+export const colleagueNotificationsGroupBy = async (
+  colleagueUUID: string, 
+  groupBy: DniEntityTypeEnum[] = [DniEntityTypeEnum.NETWORK],
+) => {
+
   const schemaPrefix = getSchemaPrefix();
   const grouppedNotificationList = await getManager().connection.query(
     `SELECT 
-        root_ancestor_type AS "rootAncestorType",
-        root_ancestor_id AS "rootAncestorId",
-        root_ancestor_instance AS "rootAncestor",
-        details_as_array AS "entitiesDetails", 
-        recent_notified_at AS "recentNotifiedAt",
-        total_entities_count AS "totalEntitiesCount"
-    FROM ${schemaPrefix}fn_get_dni_user_notification_groupped_list(
-      p_colleague_uuid := $1::uuid, 
-      p_filter_entity_types := ARRAY['post'::${schemaPrefix}dni_entity_type_enum, 'event'::${schemaPrefix}dni_entity_type_enum],
-      p_filter_subscription_entity_types := ARRAY['network'::${schemaPrefix}dni_entity_type_enum, 'event'::${schemaPrefix}dni_entity_type_enum]
-    )
-    WHERE root_ancestor_type IS NULL OR root_ancestor_type = 'network'::${schemaPrefix}dni_entity_type_enum`,
-    [colleagueUUID],
+        ancestor_type
+      , ancestor_id
+      , ancestor_instance
+      , recent_notified_at
+      , nested_total
+      , nested_as_array
+    FROM ${schemaPrefix}fn_get_dni_user_notification_groupped_list_2(
+        p_colleague_uuid := $1::uuid
+      , p_filter_entity_types := ${serializeEnum('dni_entity_type_enum', [DniEntityTypeEnum.EVENT, DniEntityTypeEnum.POST])}
+      , p_filter_subscription_entity_types := ${serializeEnum('dni_entity_type_enum', [DniEntityTypeEnum.NETWORK, DniEntityTypeEnum.EVENT])}
+      , p_filter_root_entity_types := ${serializeEnum('dni_entity_type_enum', groupBy)}
+      , p_return_only_non_acknowledged := TRUE
+      , p_return_only_one_ancestor_per_entity := TRUE
+      , p_affected_interval := $2::INTERVAL)`,
+    [colleagueUUID, NOTIFICATION_RETENTION_INTERVAL],
   );
 
-  return grouppedNotificationList;
+  if (Array.isArray(grouppedNotificationList) && grouppedNotificationList.length) {
+    return grouppedNotificationList.map(gnl => objectToCamel(gnl));
+  } else {
+    return [];
+  }
 };
 
-const createColleagueNotificationRelation = async (
+export const createColleagueNotificationAcknowledgement = async (
   entityId: number,
   entityType: DniEntityTypeEnum,
   colleagueUUID: string,
 ) => {
-  return await getManager().getRepository(DniUserNotificationAcknowledge).save({
-    colleagueUUID,
-    acknowledgeEntityType: entityType,
-    acknowledgeEntityId: entityId,
-  });
-};
+  const schemaPrefix = getSchemaPrefix();
+  const notificationAcknowledge = await getManager().connection.query(`
+    INSERT INTO 
+      ${schemaPrefix}dni_user_notification_acknowledge(colleague_uuid, acknowledge_entity_id, acknowledge_entity_type)
+    VALUES($1, $2, $3)
+    ON CONFLICT ON CONSTRAINT "d_u_n_acknowledge$colleague_uuid$a_entity_type$a_entity_id__uq" DO 
+    UPDATE SET acknowledge_created_at=now()
+    WHERE dni_user_notification_acknowledge.colleague_uuid = $1
+      AND dni_user_notification_acknowledge.acknowledge_entity_id = $2
+      AND dni_user_notification_acknowledge.acknowledge_entity_type = $3
+    RETURNING 
+      acknowledge_uuid AS "acknowledgeUUID", 
+      colleague_uuid AS "colleagueUUID", 
+      acknowledge_entity_id AS "acknowledgeEntityId", 
+      acknowledge_entity_type AS "acknowledgeEntityType", 
+      acknowledge_created_at AS "acknowledgeCreatedAt"`,
+    [colleagueUUID, entityId, entityType],
+  );
 
-export { findNotifications, findNetworkNotifications, createColleagueNotificationRelation };
+  if (Array.isArray(notificationAcknowledge) && notificationAcknowledge.length === 1) 
+    return notificationAcknowledge[0];
+  else {
+    throw new Error('[createColleagueNotificationAcknowledgement]: Unexpected resposnse from DB');
+  }
+};

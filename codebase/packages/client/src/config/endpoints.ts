@@ -40,8 +40,8 @@ export enum Endpoint {
   REPORT_PRINT_PDF = '/dni/v1/reports/print-pdf',
 
   // notifications
-  NOTIFICATIONS = '/dni/v1/notifications',
-  NOTIFICATIONS_NETWORKS = '/dni/v1/notifications/networks',
+  NOTIFICATIONS_LIST = '/dni/v1/notifications/list',
+  NOTIFICATIONS_GROUPBY = '/dni/v1/notifications/groupby',
   NOTIFICATIONS_ACKNOWLEDGE = '/dni/v1/notifications/acknowledge',
 
   // contact
@@ -96,8 +96,8 @@ export default (httpClient: AxiosInstance) => ({
       }),
   },
   notifications: {
-    fetchAll: <T>() => httpClient.get<T>(Endpoint.NOTIFICATIONS),
-    fetchAllGroupByNetwork: <T>() => httpClient.get<T>(Endpoint.NOTIFICATIONS_NETWORKS),
+    fetchAllPlain: <T>() => httpClient.get<T>(Endpoint.NOTIFICATIONS_LIST),
+    fetchAllGroupBy: <T>(query: Config = {}) => httpClient.get<T>(Endpoint.NOTIFICATIONS_GROUPBY, { params: query }),
     acknowledge: <T>(data: Config = {}) => httpClient.post<T>(Endpoint.NOTIFICATIONS_ACKNOWLEDGE, data),
   },
   contact: {
