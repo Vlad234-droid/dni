@@ -21,8 +21,8 @@ import {
   sendPersonalEmailConfirmation,
   refreshPersonalEmailByToken,
   // notification
-  getNotifications,
-  getNetworkNotifications,
+  getNotificationsList,
+  getNetworkNotificationsGroupBy,
   acknowledgeNotification,
   // networks
   getNetworksParticipants,
@@ -61,8 +61,8 @@ dniApi.post('/employees/share-story', shareStory);
 dniApi.get('/events/participants', getEventsParticipants);
 dniApi.get('/networks/participants', getNetworksParticipants);
 
-dniApi.get('/notifications', getNotifications);
-dniApi.get('/notifications/networks', getNetworkNotifications);
+dniApi.get('/notifications/list', getNotificationsList);
+dniApi.get('/notifications/groupby', getNetworkNotificationsGroupBy);
 dniApi.post('/notifications/acknowledge', acknowledgeNotification);
 
 // pls. note: roleAuth middleware is applied

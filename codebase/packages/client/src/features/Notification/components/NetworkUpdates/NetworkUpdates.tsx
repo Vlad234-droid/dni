@@ -8,7 +8,7 @@ import { Page } from 'features/Page';
 import Loading from 'types/loading';
 import { EmptyContainer, Level, Error, Spinner } from 'features/Common';
 
-import { networkNotificationsSelector, networkNotificationMetadataSelector } from '../../store';
+import { grouppedNotificationsSelector, grouppedNotificationsMetadataSelector } from '../../store';
 import { Wrapper, Title, List } from './styled';
 import NetworkUpdatesItem, { UpdateItem } from '../NetworkUpdatesItem';
 import DefaultLogo from '../../assets/colleague-network-logo.jpg';
@@ -18,19 +18,19 @@ const TEST_ID = 'network-updates';
 const NetworkUpdates: FC = () => {
   const [items, setItems] = useState<Array<UpdateItem & { key: string | number }>>([]);
 
-  const networkNotifications = useSelector(networkNotificationsSelector);
-  const { error, loading } = useSelector(networkNotificationMetadataSelector);
+  const networkNotifications = useSelector(grouppedNotificationsSelector);
+  const { error, loading } = useSelector(grouppedNotificationsMetadataSelector);
 
   const isLoading = useMemo(() => loading !== Loading.SUCCEEDED && loading !== Loading.FAILED, [loading]);
 
   useEffect(() => {
     setItems(
-      networkNotifications.map(({ rootAncestorId, rootAncestor, totalEntitiesCount }, idx) => ({
-        key: rootAncestorId || `network-news-${idx}`,
-        href: rootAncestorId ? `/${Page.NETWORKS}/${rootAncestorId}` : `/${Page.NETWORK_NEWS}`,
-        name: rootAncestor?.title || 'D&I News',
-        avatar: rootAncestor?.image?.url || DefaultLogo,
-        count: totalEntitiesCount,
+      networkNotifications.map(({ ancestorId, ancestorInstance, nestedTotal }, idx) => ({
+        key: ancestorId || `network-news-${idx}`,
+        href: ancestorId ? `/${Page.NETWORKS}/${ancestorId}` : `/${Page.NETWORK_NEWS}`,
+        name: ancestorInstance?.title || 'D&I News',
+        avatar: ancestorInstance?.image?.url || DefaultLogo,
+        count: nestedTotal,
       })),
     );
   }, [networkNotifications]);

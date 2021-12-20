@@ -2,35 +2,24 @@ import { isUndefined } from 'lodash';
 import { RootState } from 'store/rootReducer';
 import { AcknowledgePayload } from '../config/types';
 
-const networkNotificationsSelector = (state: RootState) => state.notifications.networkNotifications.list;
+export const grouppedNotificationsSelector = (state: RootState) => state.notifications.grouppedNotifications.list;
 
-const networkNotificationIdsSelector = (state: RootState): number[] =>
-  state.notifications.networkNotifications.list
-    .filter((nn) => !isUndefined(nn.rootAncestorId))
-    .reduce((acc, nn) => [...acc, nn.rootAncestorId!], [] as number[]);
+export const grouppedNotificationIdsSelector = (state: RootState): number[] =>
+  state.notifications.grouppedNotifications.list
+    .filter((nn) => !isUndefined(nn.ancestorId))
+    .reduce((acc, nn) => [...acc, nn.ancestorId!], [] as number[]);
 
-const networkNotificationMetadataSelector = (state: RootState) => state.notifications.networkNotifications.metadata;
+export const grouppedNotificationsMetadataSelector = (state: RootState) => state.notifications.grouppedNotifications.metadata;
 
-const notificationsSelector = (state: RootState) => state.notifications.notifications.list;
+export const plainNotificationsSelector = (state: RootState) => state.notifications.plainNotifications.list;
 
-const notificationsMetadataSelector = (state: RootState) => state.notifications.notifications.metadata;
+export const plainNotificationsMetadataSelector = (state: RootState) => state.notifications.plainNotifications.metadata;
 
-const notificationSelector = (state: RootState, selector: AcknowledgePayload) =>
-  state.notifications.notifications.list.find(
+export const plainNotificationSelector = (state: RootState, selector: AcknowledgePayload) =>
+  state.notifications.plainNotifications.list.find(
     (n) => n.entityId == selector.entityId && n.entityType == selector.entityType,
   );
 
-const isSidebarOpenedSelector = (state: RootState) => state.notifications.isSidebarOpened;
+export const isSidebarOpenedSelector = (state: RootState) => state.notifications.isSidebarOpened;
 
-const personalEmailSelector = (state: RootState) => state.notifications.personalEmail;
-
-export {
-  networkNotificationsSelector,
-  networkNotificationIdsSelector,
-  networkNotificationMetadataSelector,
-  notificationsSelector,
-  notificationsMetadataSelector,
-  notificationSelector,
-  isSidebarOpenedSelector,
-  personalEmailSelector,
-};
+export const personalEmailSelector = (state: RootState) => state.notifications.personalEmail;

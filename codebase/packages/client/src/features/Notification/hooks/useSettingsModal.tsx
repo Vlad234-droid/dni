@@ -12,10 +12,8 @@ const useModalSettings = () => {
     notificationSettings,
   } = useStore((state) => state.notifications);
   const {
-    settings: {
-      receivePostsEmailNotifications,
-      receiveEventsEmailNotifications,
-    }
+    receivePostsEmailNotifications,
+    receiveEventsEmailNotifications,
   } = notificationSettings;
   const displayModal = !personalEmail?.emailAddress || (!receivePostsEmailNotifications && !receiveEventsEmailNotifications);
 

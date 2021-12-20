@@ -9,26 +9,23 @@ type Entity = {
   };
 };
 
-type Notification = {
+type NotificationListItem = {
   entityType: EntityType;
   entityId: number;
-  entity: Entity;
-  rootAncestorType?: EntityType;
-  rootAncestorId?: number;
-  rootAncestor?: Entity;
-  parentEntityType?: EntityType;
-  parentEntityId?: number;
-  parentEntity?: Entity;
-  notifiedAt: string;
+  entityInstance: Entity;
+  ancestorType?: EntityType;
+  ancestorId?: number;
+  ancestorInstance?: Entity;
+  notifiedAt: Date;
+  acknowledgedAt?: Date;
 };
 
-type NetworkNotification = {
-  rootAncestorType?: EntityType;
-  rootAncestorId?: number;
-  rootAncestor?: Entity;
-  entitiesDetails: { entityType: EntityType; entitiesIds: number[] }[];
-  recentNotifiedAt: string;
-  totalEntitiesCount: number;
+type NotificationGrouppedItem = {
+  ancestorType?: EntityType;
+  ancestorId?: number;
+  ancestorInstance?: Entity;
+  nestedAsArray: { entityType: EntityType; entitiesIds: number[] }[];
+  nestedTotal: number;
 };
 
 type EntityIds = {
@@ -59,12 +56,12 @@ type Error = {
 };
 
 type State = {
-  notifications: {
-    list: Notification[];
+  plainNotifications: {
+    list: NotificationListItem[];
     metadata: MetaData;
   };
-  networkNotifications: {
-    list: NetworkNotification[];
+  grouppedNotifications: {
+    list: NotificationGrouppedItem[];
     metadata: MetaData;
   };
   isSidebarOpened: boolean;
@@ -77,10 +74,8 @@ type FormData = {
 };
 
 type EmailNotificationSettings = {
-  settings: {
-    receivePostsEmailNotifications: boolean;
-    receiveEventsEmailNotifications: boolean;
-  };
+  receivePostsEmailNotifications: boolean;
+  receiveEventsEmailNotifications: boolean;
 };
 
 type EmailAddress = {
@@ -95,8 +90,8 @@ type ConfirmEmailAddress = {
 
 export type {
   Entity,
-  NetworkNotification,
-  Notification,
+  NotificationListItem,
+  NotificationGrouppedItem,
   AcknowledgePayload,
   Acknowledge,
   Error,
