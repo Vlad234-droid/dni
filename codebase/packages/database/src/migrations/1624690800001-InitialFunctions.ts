@@ -902,7 +902,7 @@ export class Migration_InitialFunctions implements MigrationInterface {
           RETURN report_jsonb;
       END
       $function$
-      ;`,
+    `,
     );
 
     // -- ==================================
@@ -966,8 +966,7 @@ export class Migration_InitialFunctions implements MigrationInterface {
           RETURN report_jsonb;
       END
       $function$
-      ;
-      `,
+    `,
     );
   }
 
