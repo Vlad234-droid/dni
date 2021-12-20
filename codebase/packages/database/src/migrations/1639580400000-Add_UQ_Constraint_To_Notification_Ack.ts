@@ -42,7 +42,7 @@ export class Migration_Add_UQ_Constraint_To_Notification_Ack implements Migratio
 
     await queryRunner.query(`
       ALTER TABLE dni.dni_user_notification_acknowledge 
-        ADD CONSTRAINT IF NOT EXISTS "d_u_n_acknowledge$colleague_uuid$a_entity_type$a_entity_id__uq" 
+        ADD CONSTRAINT "d_u_n_acknowledge$colleague_uuid$a_entity_type$a_entity_id__uq" 
           UNIQUE (acknowledge_entity_type,acknowledge_entity_id,colleague_uuid);
     `);
   }
