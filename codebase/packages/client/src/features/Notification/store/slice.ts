@@ -114,7 +114,7 @@ const slice = createSlice({
       })
       .addCase(getList.rejected, (state: T.State, action) => {
         state.plainNotifications.metadata.loading = Loading.FAILED;
-        state.plainNotifications.metadata.error = (action.payload as T.Error).error.message;
+        state.plainNotifications.metadata.error = (action as T.Error).error.message;
       })
       .addCase(getListGroupByNetwork.pending, (state: T.State) => {
         state.grouppedNotifications.metadata.loading = Loading.PENDING;
@@ -125,7 +125,7 @@ const slice = createSlice({
       })
       .addCase(getListGroupByNetwork.rejected, (state: T.State, action) => {
         state.grouppedNotifications.metadata.loading = Loading.FAILED;
-        state.grouppedNotifications.metadata.error = (action.payload as T.Error).error.message;
+        state.grouppedNotifications.metadata.error = (action as T.Error).error.message;
       })
       .addCase(acknowledge.pending, (state: T.State) => {
         state.plainNotifications.metadata.loading = Loading.PENDING;
