@@ -29,8 +29,8 @@ const NotificationSettings: FC = () => {
 
   const { notificationSettings } = useStore((state) => state.notifications);
   const [formData, setFormData] = useState({
-    receivePostsEmailNotifications: notificationSettings?.settings?.receivePostsEmailNotifications,
-    receiveEventsEmailNotifications: notificationSettings?.settings?.receiveEventsEmailNotifications,
+    receivePostsEmailNotifications: notificationSettings?.receivePostsEmailNotifications,
+    receiveEventsEmailNotifications: notificationSettings?.receiveEventsEmailNotifications,
   });
   const [email, onEmailSubmit] = useSaveEmail();
 
@@ -45,14 +45,13 @@ const NotificationSettings: FC = () => {
 
   useEffect(() => {
     setFormData({
-      receivePostsEmailNotifications: notificationSettings?.settings?.receivePostsEmailNotifications,
-      receiveEventsEmailNotifications: notificationSettings?.settings?.receiveEventsEmailNotifications,
+      receivePostsEmailNotifications: notificationSettings?.receivePostsEmailNotifications,
+      receiveEventsEmailNotifications: notificationSettings?.receiveEventsEmailNotifications,
     });
   }, [notificationSettings]);
 
   const onSubmit = async (data: FormData) => {
-    await onEmailSubmit(data);
-
+    onEmailSubmit(data);
     const result = await dispatch(updateNotificationSettings(formData));
 
     if (updateNotificationSettings.fulfilled.match(result)) {

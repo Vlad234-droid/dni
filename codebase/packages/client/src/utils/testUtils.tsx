@@ -14,7 +14,6 @@ import Auth, { AuthProvider } from 'features/Auth';
 import rootReducer from 'store/rootReducer';
 import { UserRole } from 'features/User';
 import GlobalModal from 'features/GlobalModal';
-import { NotificationProvider } from '../features/Notification';
 
 const WithThemeProvider: FC = ({ children }) => (
   <ThemeProvider theme={theme}>

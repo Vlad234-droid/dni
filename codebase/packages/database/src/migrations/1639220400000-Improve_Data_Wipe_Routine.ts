@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 
-export class Migration_Add_Multiple_Patents implements MigrationInterface {
+export class Migration_Improve_Data_Wipe_Routine implements MigrationInterface {
   name = 'Improve_Data_Wipe_Routine-1639220400000';
 
   public async up(queryRunner: QueryRunner): Promise<void> {

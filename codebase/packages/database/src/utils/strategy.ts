@@ -4,6 +4,7 @@ import { snakeCase, shorten } from 'typeorm/util/StringUtils';
 export class SnakeNamingStrategy
   extends DefaultNamingStrategy
   implements NamingStrategyInterface {
+    
   toSnakeCase(items: string[], separator = '_'): string {
     return items.join(separator);
   }

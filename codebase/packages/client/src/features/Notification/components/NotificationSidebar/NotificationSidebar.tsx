@@ -12,8 +12,8 @@ import { EntityType } from 'types/entity';
 import {
   hideSidebar,
   toggleSidebar,
-  notificationsSelector,
-  notificationsMetadataSelector,
+  plainNotificationsSelector,
+  plainNotificationsMetadataSelector,
   isSidebarOpenedSelector,
 } from '../../store';
 import { AcknowledgePayload } from '../../config/types';
@@ -69,8 +69,8 @@ const NotificationSidebar: FC<Props> = ({ buttonRef }) => {
 
   const isSidebarOpened = useSelector(isSidebarOpenedSelector);
 
-  const notifications = useSelector(notificationsSelector);
-  const { error, loading } = useSelector(notificationsMetadataSelector);
+  const notifications = useSelector(plainNotificationsSelector);
+  const { error, loading } = useSelector(plainNotificationsMetadataSelector);
   const isLoading = useMemo(() => loading !== Loading.SUCCEEDED && loading !== Loading.FAILED, [loading]);
 
   const memoizedContent = useMemo(() => {
@@ -102,35 +102,32 @@ const NotificationSidebar: FC<Props> = ({ buttonRef }) => {
   };
 
   useEffect(() => {
-    setItems(
-      notifications.map(
-        ({
-          entityType,
-          entityId,
-          entity,
-          rootAncestorId,
-          rootAncestorType,
-          rootAncestor,
-          parentEntityId,
-          parentEntityType,
-          parentEntity,
-          notifiedAt,
-        }) => ({
-          key: `${entityType}-${entityId}` || `network-news-${entityId}`,
-          href: buildLink(entityId, entityType),
-          name: parentEntity?.title || 'Diversity & Inclusion News',
-          title: entity?.title || 'Unknown Post',
-          subName:
-            rootAncestor && rootAncestorId != parentEntityId && rootAncestorType != parentEntityType
-              ? `on behalf of ${rootAncestor?.title}`
-              : undefined,
-          avatar: parentEntity?.image?.url || '',
-          notifiedAt,
-          onCloserClick: () => handleCloserClick({ entityType, entityId }),
-          onLinkClick: () => (EntityType.EVENT == entityType ? handleCloserClick({ entityType, entityId }) : null),
-        }),
-      ),
-    );
+    setItems(notifications.map(
+      ({
+        entityType,
+        entityId,
+        entityInstance,
+        // ancestorId,
+        // ancestorType,
+        ancestorInstance,
+        notifiedAt,
+        // acknowledgedAt,
+      }) => ({
+        key: `${entityType}-${entityId}` || `network-news-${entityId}`,
+        href: buildLink(entityId, entityType),
+        name: ancestorInstance?.title || 'Diversity & Inclusion News',
+        title: entityInstance?.title || 'Unknown Post',
+        subName: undefined,
+        // subName:
+        //   rootAncestor && rootAncestorId != parentEntityId && rootAncestorType != parentEntityType
+        //     ? `on behalf of ${rootAncestor?.title}`
+        //     : undefined,
+        avatar: ancestorInstance?.image?.url || '',
+        notifiedAt: notifiedAt?.toLocaleString('en_GB'),
+        onCloserClick: () => handleCloserClick({ entityType, entityId }),
+        onLinkClick: () => (EntityType.EVENT == entityType ? handleCloserClick({ entityType, entityId }) : null),
+      }),
+    ));
   }, [notifications, handleCloserClick]);
 
   return (

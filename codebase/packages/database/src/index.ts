@@ -1,16 +1,17 @@
 import 'reflect-metadata';
-import { createTypeOrmConnection, getTypeOrmConnectionOptions, getSchema, getSchemaPrefix, slugify } from './utils';
-import { getManager, getRepository } from 'typeorm';
+
+export {  
+  getManager,
+  getRepository,
+} from 'typeorm';
+
+export { 
+  createTypeOrmConnection, 
+  getTypeOrmConnectionOptions, 
+  getSchema, 
+  getSchemaPrefix, 
+  slugify 
+} from './utils';
 
 export * from './entities';
 export * from './subscribers';
-
-export {
-  createTypeOrmConnection,
-  getTypeOrmConnectionOptions,
-  getManager,
-  getRepository,
-  getSchema,
-  getSchemaPrefix,
-  slugify,
-};

@@ -1,6 +1,7 @@
 const ROOT = 'notifications';
-const GET_LIST_ACTION = `${ROOT}/list`;
-const GET_LIST_NETWORKS_ACTION = `${ROOT}/networks/list`;
+
+const FETCH_LIST_PLAIN = `${ROOT}/list`;
+const FETCH_LIST_GROUPBY = `${ROOT}/groupby`;
 const ACKNOWLEDGE_ACTION = `${ROOT}/acknowledge`;
 const TOGGLE_SIDEBAR_ACTION = `${ROOT}/toggle-sidebar`;
 const GET_PERSONAL_EMAIL = `${ROOT}/email`;
@@ -11,8 +12,8 @@ const UPDATE_NOTIFICATION_SETTINGS = `${ROOT}/update-notification-settings`;
 
 export {
   ROOT,
-  GET_LIST_ACTION,
-  GET_LIST_NETWORKS_ACTION,
+  FETCH_LIST_PLAIN,
+  FETCH_LIST_GROUPBY,
   ACKNOWLEDGE_ACTION,
   TOGGLE_SIDEBAR_ACTION,
   GET_PERSONAL_EMAIL,

@@ -2,8 +2,9 @@ import { Request, Response } from 'express';
 import { getColleagueUuid, getUserData } from '@dni-connectors/onelogin';
 import { Colleague } from '@dni-connectors/colleague-api';
 
+import { getRepository } from '@dni/database';
+
 import {
-  getRepository,
   DniEntityTypeEnum,
   DniUser,
   DniUserExtras,
@@ -11,7 +12,6 @@ import {
   CcmsEntity,
 } from '@dni/database';
 
-import { getConfig } from '../config/config-accessor';
 import { DniProfile } from '../config/auth-data';
 import { ApiError } from '../utils/api-error';
 
@@ -205,35 +205,24 @@ const storeSettings = async (colleagueUUID: string, settings: EmailNotificationS
   const repository = getRepository(DniUser);
   const dniUser = await repository.findOneOrFail({ colleagueUUID });
 
-  // console.log(JSON.stringify(dniUser));
-  // console.log(JSON.stringify(dniUser?.extras));
-
   if (!dniUser.extras) {
     dniUser.initExtras();
   }
 
-  // console.log(JSON.stringify(settings));
-
   dniUser.extras!.settings = { ...dniUser.extras!.settings, ...settings };
-
-  // console.log(JSON.stringify(dniUser));
-
   repository.save(dniUser);
 
-  return { colleagueUUID, settings };
+  // return { colleagueUUID, settings };
+  return settings;
 };
 
 const findSettings = async (colleagueUUID: string) => {
   const repository = getRepository(DniUserExtras);
   const dniUserExtras = await repository.findOne({ colleagueUUID });
-
-  // console.log(JSON.stringify(dniUserExtras));
-  // console.log(JSON.stringify(dniUserExtras?.settings));
-
   const settings = dniUserExtras?.settings || {};
-  // console.log(JSON.stringify(settings));
 
-  return dniUserExtras || { colleagueUUID };
+  // return { colleagueUUID, settings };
+  return settings;
 };
 
 const storeTokenSettings = async (colleagueUUID: string, settings: TokenSettings) => {
