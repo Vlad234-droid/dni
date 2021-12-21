@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 
-export class Multiple_Parents_Functions_P1 implements MigrationInterface {
+export class Migration_Multiple_Parents_Functions_P1 implements MigrationInterface {
   name = 'Multiple_Parents_Functions_P1-1638475830000';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
@@ -199,7 +199,6 @@ export class Multiple_Parents_Functions_P1 implements MigrationInterface {
       END
       $function$
     `);
-
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {

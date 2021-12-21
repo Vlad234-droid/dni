@@ -1,4 +1,5 @@
-import { getManager, CcmsEntity, CcmsNotification, DniEntityTypeEnum, CcmsTriggerEventEnum } from '@dni/database';
+import { getManager } from '@dni/database';
+import { CcmsEntity, CcmsNotification, DniEntityTypeEnum, CcmsTriggerEventEnum } from '@dni/database';
 
 import {
   Network,
@@ -25,6 +26,7 @@ import { getConfig } from '../config/config-accessor';
 
 export const handleCepRequest = async (req: Request<{}, CepPayload>, res: Response) => {
   const payload = req.body;
+  const entityManager = getManager();
 
   // 1. create notification entity instance
   const notification = new CcmsNotification();
@@ -47,13 +49,11 @@ export const handleCepRequest = async (req: Request<{}, CepPayload>, res: Respon
   }
 
   // 3. store notification into the db
-  await getManager()
-    .getRepository(CcmsNotification)
+  await entityManager.getRepository(CcmsNotification)
     .save(notification, { data: { entityInstance: entityInstance } });
 
   // 4. get CMS entity from DB repo
-  const cmsEntity = await getManager()
-    .getRepository(CcmsEntity)
+  const cmsEntity = await entityManager.getRepository(CcmsEntity)
     .preload({ entityId: notification.entityId, entityType: notification.entityType });
     
   const isMailingAlreadyDone = cmsEntity
@@ -69,8 +69,7 @@ export const handleCepRequest = async (req: Request<{}, CepPayload>, res: Respon
 
       if (cmsEntity) {
         cmsEntity.entityMetadata = { ...cmsEntity.entityMetadata, mailing_at: new Date() };
-        await getManager()
-          .getRepository(CcmsEntity)
+        await entityManager.getRepository(CcmsEntity)
           .save(cmsEntity);
       }
     }

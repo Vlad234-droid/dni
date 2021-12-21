@@ -1,7 +1,11 @@
 import styled, { css } from 'styled-components';
 
 import Media from 'styles/media';
-import { HEADER_HEIGHT_MOBILE, HEADER_HEIGHT_TABLET, HEADER_HEIGHT_DESKTOP } from 'features/Layout';
+import { 
+  HEADER_HEIGHT_MOBILE, 
+  HEADER_HEIGHT_TABLET, 
+  // HEADER_HEIGHT_DESKTOP,
+} from 'features/Layout';
 
 import { Mode } from '../../types';
 
@@ -61,7 +65,7 @@ const Content = styled.div<{ mode: Mode; isOpen: boolean; isNextYear: boolean }>
     `}
   `}
 
-  ${({ isNextYear }) => css`
+  ${() => css`
     ${Media.tablet`
         top: ${HEADER_HEIGHT_TABLET};
     `}

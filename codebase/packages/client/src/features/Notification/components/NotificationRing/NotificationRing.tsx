@@ -5,7 +5,7 @@ import Icon from '@beans/icon';
 import Button from '@beans/button';
 
 import Media from 'styles/media';
-import { toggleSidebar, notificationsSelector } from '../../store';
+import { toggleSidebar, plainNotificationsSelector } from '../../store';
 
 const NotificationCounter = styled.div`
   position: absolute;
@@ -39,7 +39,7 @@ interface NotificationerRingProps {
 
 const NotificationRing: FC<NotificationerRingProps> = ({ inverse, buttonRef }) => {
   const dispatch = useDispatch();
-  const notifications = useSelector(notificationsSelector);
+  const notifications = useSelector(plainNotificationsSelector);
 
   return (
     <NotificationRingWrapper

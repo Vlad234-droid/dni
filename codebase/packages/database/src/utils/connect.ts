@@ -5,14 +5,21 @@ const packageDistFolder = getPackageDistFolder('@dni/database', ['src', '']);
 
 const connectionOptionsReader = new ConnectionOptionsReader({ root: packageDistFolder });
 
-let connectionOptions: ConnectionOptions;
-let connection: Promise<Connection>;
+let connectionOptions: ConnectionOptions & { schema?: string };
+let connection: Connection | undefined;
 
-export function getTypeOrmConnectionOptions(): ConnectionOptions {
-  return connectionOptions;
+const assertConnectionValid = () => {
+  if (!connection || !connection.isConnected) {
+    throw new Error('Connection is not yet inialized!');
+  }
 }
 
-export async function createTypeOrmConnection(overrideOptions?: Partial<ConnectionOptions>): Promise<Connection> {
+/**
+ * 
+ * @param overrideOptions 
+ * @returns 
+ */
+ export async function createTypeOrmConnection(overrideOptions?: Partial<ConnectionOptions>): Promise<Connection> {
   if (!connectionOptions) {
     connectionOptions = {
       ...(await connectionOptionsReader.get(process.env.TYPEORM_CONNECTION || 'default')),
@@ -24,8 +31,38 @@ export async function createTypeOrmConnection(overrideOptions?: Partial<Connecti
   }
 
   if (!connection) {
-    connection = createConnection(connectionOptions);
+    connection = await createConnection(connectionOptions);
   }
 
   return connection;
 }
+
+/**
+ * 
+ * @returns 
+ */
+export function getTypeOrmConnectionOptions(): ConnectionOptions {
+  assertConnectionValid();
+  return connectionOptions;
+}
+
+/**
+ * 
+ * @returns 
+ */
+export function getSchema(): string | undefined {
+  assertConnectionValid();
+  const { schema } = connectionOptions;
+  return schema;
+};
+
+/**
+ * 
+ * @returns 
+ */
+export function getSchemaPrefix(): string {
+  const schema = getSchema();
+  return schema ? `"${schema}".` : '';
+};
+
+

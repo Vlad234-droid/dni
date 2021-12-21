@@ -1,47 +1,65 @@
 import store from 'store';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import omit from 'lodash.omit';
 
 import Loading from 'types/loading';
 import API from 'utils/api';
 
 import * as T from '../config/types';
 import * as A from './actionTypes';
-import { notificationSelector } from './selectors';
+import { plainNotificationSelector } from './selectors';
 import { CONTACT_API_ENABLED } from 'config/constants';
 
 const initialState: T.State = {
-  notifications: {
+  plainNotifications: {
     list: [],
     metadata: { loading: Loading.IDLE },
   },
-  networkNotifications: {
+  grouppedNotifications: {
     list: [],
     metadata: { loading: Loading.IDLE },
   },
   isSidebarOpened: false,
   notificationSettings: {
-    settings: {
-      receivePostsEmailNotifications: false,
-      receiveEventsEmailNotifications: false,
-    },
+    receivePostsEmailNotifications: false,
+    receiveEventsEmailNotifications: false,
   },
 };
 
-const getList = createAsyncThunk<T.Notification[]>(A.GET_LIST_ACTION, async () => {
-  return await API.notifications.fetchAll<T.Notification[]>();
+const getList = createAsyncThunk<T.NotificationListItem[]>(
+  A.FETCH_LIST_PLAIN, 
+  async () => {
+
+  return await API.notifications.fetchAllPlain<T.NotificationListItem[]>();
 });
 
-const getListGroupByNetwork = createAsyncThunk<T.NetworkNotification[]>(A.GET_LIST_NETWORKS_ACTION, async () => {
-  return await API.notifications.fetchAllGroupByNetwork<T.NetworkNotification[]>();
+const getListGroupByNetwork = createAsyncThunk<T.NotificationGrouppedItem[]>(
+  A.FETCH_LIST_GROUPBY, 
+  async () => {
+
+  return await API.notifications.fetchAllGroupBy<T.NotificationGrouppedItem[]>();
 });
 
-const getPersonalEmail = createAsyncThunk<T.EmailAddress>(A.GET_PERSONAL_EMAIL, async () => {
+const acknowledge = createAsyncThunk<T.Acknowledge | undefined, T.AcknowledgePayload>(
+  A.ACKNOWLEDGE_ACTION, 
+  async (data) => {
+
+  const entity = plainNotificationSelector(store.getState(), data);
+  if (!entity) {
+    return;
+  }
+
+  return await API.notifications.acknowledge<T.Acknowledge>(data);
+});
+
+const getPersonalEmail = createAsyncThunk<T.EmailAddress>(
+  A.GET_PERSONAL_EMAIL, 
+  async () => {
+
   return await API.contact.getPersonalEmail<T.EmailAddress>();
 });
 
-const updatePersonalEmail = createAsyncThunk<T.EmailAddress, any>(
-  A.UPDATE_PERSONAL_EMAIL,
+const updatePersonalEmail = createAsyncThunk<T.EmailAddress, T.EmailAddress & { oldEmailAddress?: string }>(
+  A.UPDATE_PERSONAL_EMAIL, 
   async (emailAddress: T.EmailAddress) => {
     if (CONTACT_API_ENABLED) {
       return await API.contact.sendPersonalEmailConfirmation<T.EmailAddress>(emailAddress);
@@ -51,11 +69,10 @@ const updatePersonalEmail = createAsyncThunk<T.EmailAddress, any>(
   },
 );
 
-const createPersonalEmail = createAsyncThunk<{ emailAddress: string }, any>(
+const createPersonalEmail = createAsyncThunk<Pick<T.EmailAddress, 'emailAddress'>, Pick<T.EmailAddress, 'emailAddress'>>(
   A.CREATE_PERSONAL_EMAIL,
-  async (emailAddress: { emailAddress: string }) => {
+  async (emailAddress: Pick<T.EmailAddress, 'emailAddress'>) => {
     await API.contact.createPersonalEmail<T.EmailAddress>(emailAddress);
-
     return emailAddress;
   },
 );
@@ -64,20 +81,10 @@ const getNotificationSettings = createAsyncThunk<T.EmailNotificationSettings>(A.
   return await API.contact.getNotificationsSettings<T.EmailNotificationSettings>();
 });
 
-const updateNotificationSettings = createAsyncThunk(A.UPDATE_NOTIFICATION_SETTINGS, async (settings: any) => {
-  return await API.contact.updateNotificationsSettings(settings);
-});
-
-const acknowledge = createAsyncThunk<T.Acknowledge | undefined, T.AcknowledgePayload>(
-  A.ACKNOWLEDGE_ACTION,
-  async (data) => {
-    const entity = notificationSelector(store.getState(), data);
-
-    if (!entity) {
-      return;
-    }
-
-    return await API.notifications.acknowledge<T.Acknowledge>(data);
+const updateNotificationSettings = createAsyncThunk<T.EmailNotificationSettings, T.EmailNotificationSettings>(
+  A.UPDATE_NOTIFICATION_SETTINGS, 
+  async (settings: T.EmailNotificationSettings) => {
+    return await API.contact.updateNotificationsSettings(settings);
   },
 );
 
@@ -99,56 +106,63 @@ const slice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(getList.pending, (state: T.State) => {
-        state.notifications.metadata.loading = Loading.PENDING;
+        state.plainNotifications.metadata.loading = Loading.PENDING;
       })
       .addCase(getList.fulfilled, (state: T.State, action) => {
-        state.notifications.list = action.payload;
-        state.notifications.metadata.loading = Loading.SUCCEEDED;
+        state.plainNotifications.list = action.payload;
+        state.plainNotifications.metadata.loading = Loading.SUCCEEDED;
       })
       .addCase(getList.rejected, (state: T.State, action) => {
-        state.notifications.metadata.loading = Loading.FAILED;
-        state.notifications.metadata.error = (action.payload as T.Error).error.message;
+        state.plainNotifications.metadata.loading = Loading.FAILED;
+        state.plainNotifications.metadata.error = (action as T.Error).error.message;
       })
       .addCase(getListGroupByNetwork.pending, (state: T.State) => {
-        state.networkNotifications.metadata.loading = Loading.PENDING;
+        state.grouppedNotifications.metadata.loading = Loading.PENDING;
       })
       .addCase(getListGroupByNetwork.fulfilled, (state: T.State, action) => {
-        state.networkNotifications.list = action.payload;
-        state.networkNotifications.metadata.loading = Loading.SUCCEEDED;
+        state.grouppedNotifications.list = action.payload;
+        state.grouppedNotifications.metadata.loading = Loading.SUCCEEDED;
       })
       .addCase(getListGroupByNetwork.rejected, (state: T.State, action) => {
-        state.networkNotifications.metadata.loading = Loading.FAILED;
-        state.networkNotifications.metadata.error = (action.payload as T.Error).error.message;
+        state.grouppedNotifications.metadata.loading = Loading.FAILED;
+        state.grouppedNotifications.metadata.error = (action as T.Error).error.message;
       })
       .addCase(acknowledge.pending, (state: T.State) => {
-        state.networkNotifications.metadata.loading = Loading.PENDING;
-        state.notifications.metadata.loading = Loading.PENDING;
+        state.plainNotifications.metadata.loading = Loading.PENDING;
+        state.grouppedNotifications.metadata.loading = Loading.PENDING;
       })
       .addCase(acknowledge.fulfilled, (state: T.State, action) => {
         const acknowledge: T.Acknowledge | undefined = action.payload;
-
-        state.notifications.metadata.loading = Loading.SUCCEEDED;
-        state.networkNotifications.metadata.loading = Loading.SUCCEEDED;
 
         if (!acknowledge) {
           return state;
         }
 
-        state.networkNotifications.list = state.networkNotifications.list
-          .map((nn) => ({
-            ...nn,
-            totalEntitiesCount:
-              nn.entitiesDetails.some((d) => d.entitiesIds.includes(acknowledge?.acknowledgeEntityId)) &&
-              nn.entitiesDetails.some((d) => d.entityType == acknowledge?.acknowledgeEntityType)
-                ? nn.totalEntitiesCount - 1
-                : nn.totalEntitiesCount,
-          }))
-          .filter((nn) => nn.totalEntitiesCount > 0);
+        state.plainNotifications.metadata.loading = Loading.SUCCEEDED;
+        state.grouppedNotifications.metadata.loading = Loading.SUCCEEDED;
 
-        state.notifications.list = state.notifications.list.filter(
-          (n) =>
-            !(n.entityId == acknowledge?.acknowledgeEntityId && n.entityType == acknowledge?.acknowledgeEntityType),
+        state.plainNotifications.list = state.plainNotifications.list.filter(n =>
+          (n.entityId !== acknowledge?.acknowledgeEntityId || n.entityType !== acknowledge?.acknowledgeEntityType),
         );
+
+        state.grouppedNotifications.list = state.grouppedNotifications.list
+          .map(({ ancestorType, ancestorId, ancestorInstance, nestedAsArray, nestedTotal }) => ({
+            ancestorType,
+            ancestorId,
+            ancestorInstance,
+            nestedTotal:
+              nestedAsArray.some(d => d.entitiesIds.includes(acknowledge?.acknowledgeEntityId)) &&
+              nestedAsArray.some(d => d.entityType === acknowledge?.acknowledgeEntityType)
+                ? nestedTotal - 1
+                : nestedTotal,
+            nestedAsArray: nestedAsArray.map(({entityType, entitiesIds}) => ({
+              entityType,
+              entitiesIds: entitiesIds.filter(ii => entityType !== acknowledge?.acknowledgeEntityType ||
+                (entityType === acknowledge?.acknowledgeEntityType && ii === acknowledge?.acknowledgeEntityId))
+            }))
+            .filter(nnnn => nnnn.entitiesIds.length > 0)
+          }))
+          .filter(nnn => nnn.nestedTotal > 0);
       })
       .addCase(getPersonalEmail.fulfilled, (state: T.State, action) => {
         state.personalEmail = action.payload;

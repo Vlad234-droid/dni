@@ -1,6 +1,7 @@
 import { ArgumentConfig, parse } from 'ts-command-line-args';
 
-import { getManager, DniEntityTypeEnum, CcmsEntity } from '@dni/database';
+import { getManager } from '@dni/database';
+import { DniEntityTypeEnum, CcmsEntity } from '@dni/database';
 
 import {
   cmsPostsApiConnector,

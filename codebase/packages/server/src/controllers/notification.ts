@@ -1,22 +1,25 @@
 import { Handler, Request, Response } from 'express';
 import { getColleagueUuid } from '@dni-connectors/onelogin';
+import { DniEntityTypeEnum } from '@dni/database';
 
-import { findNotifications, findNetworkNotifications, createColleagueNotificationRelation } from '../services';
+import { colleagueNotificationsList, colleagueNotificationsGroupBy, createColleagueNotificationAcknowledgement } from '../services';
 
 import { executeSafe } from '../utils';
 
-export const getNotifications: Handler = async (_: Request, res: Response) => {
+export const getNotificationsList: Handler = async (_: Request, res: Response) => {
   executeSafe(res, async () => {
     const colleagueUUID = getColleagueUuid(res);
-    const notifications = await findNotifications(colleagueUUID!);
+    const notifications = await colleagueNotificationsList(colleagueUUID!);
     res.status(200).json(notifications);
   });
 };
 
-export const getNetworkNotifications: Handler = async (_: Request, res: Response) => {
+export const getNetworkNotificationsGroupBy: Handler = async (req: Request, res: Response) => {
+  const { entity_type } = req.query;
+
   executeSafe(res, async () => {
     const colleagueUUID = getColleagueUuid(res);
-    const networkNotifications = await findNetworkNotifications(colleagueUUID!);
+    const networkNotifications = await colleagueNotificationsGroupBy(colleagueUUID!, entity_type as Array<DniEntityTypeEnum>);
     res.status(200).json(networkNotifications);
   });
 };
@@ -25,7 +28,7 @@ export const acknowledgeNotification: Handler = async (req: Request, res: Respon
   const { entityId, entityType } = req.body;
   executeSafe(res, async () => {
     const colleagueUUID = getColleagueUuid(res);
-    const colleagueNotificationRelation = await createColleagueNotificationRelation(
+    const colleagueNotificationRelation = await createColleagueNotificationAcknowledgement(
       entityId,
       entityType,
       colleagueUUID!,
