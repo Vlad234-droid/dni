@@ -27,15 +27,14 @@ type Props = {
 
 const PostCreate: FC<Props> = ({ onClose, onSubmit, networks, loading, error }) => {
   const [isAccepted, setAccepted] = useState(false);
-  const networksOptions = useMemo(
-    () => {
-      return networks.map(({ id, title }) => ({
+  const networksOptions = useMemo(() => {
+    return networks
+      .map(({ id, title }) => ({
         id,
         title,
-      })).sort((a, b) => a.title.localeCompare(b.title));
-    },
-    [networks],
-  );
+      }))
+      .sort((a, b) => a.title.localeCompare(b.title));
+  }, [networks]);
 
   // TODO: remove
   const getNetworkByTitle = useCallback(
@@ -91,7 +90,7 @@ const PostCreate: FC<Props> = ({ onClose, onSubmit, networks, loading, error }) 
             domRef={register}
             name={'location'}
             aria-label={'location'}
-            placeholder={'Input your location: (e.g. Chaltenham Superstore)'}
+            placeholder={'Input your location: (e.g. Cheltenham Supersore 2280)'}
             error={errors['location']?.message}
             id={'location'}
             hideLabel
