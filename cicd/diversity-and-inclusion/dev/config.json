@@ -5,7 +5,7 @@
   "build": {
     "dockerFileDirectory": "./dockerfiles/dni-frontend_docker_build.Dockerfile",
     "args": {
-      "NEXUS_ACCESS_TOKEN": {
+      "NPM_ACCESS_TOKEN": {
         "type": "secret",
         "name": "npm_access_token"
       },
