@@ -2,9 +2,7 @@ import nodeFetch from 'node-fetch';
 import { createFetchClient } from '@energon/fetch-client';
 import { createApiConsumer } from '@energon/rest-api-consumer';
 import { defineAPI } from '@energon/rest-api-definition';
-// import { ColleagueBody, ColleagueResponse } from "./colleague-types";
 import { LocationResponse } from './location-types';
-import { MarkApiCall } from '@energon/splunk-logger';
 import {
   ClientTokenIssueBody,
   UserScopeToken,
@@ -17,22 +15,14 @@ export const getIdentityApi = (
   baseHeaders: Record<string, () => string>,
   baseUrl: string,
   path: string,
-  markApiCall: MarkApiCall,
 ) => {
-  const censoredMarkApiCall: MarkApiCall = ({ requestUrl, traceId, params }) =>
-    markApiCall({
-      requestUrl,
-      traceId,
-      params,
-      requestBody: '[hidden due to sensitive information]',
-    });
 
   const fetchClient = createFetchClient({
     fetchFn: nodeFetch as any,
     baseUrl,
     baseHeaders,
-    markApiCall: censoredMarkApiCall,
   });
+  
   const identityApiDef = defineAPI((endpoint) => ({
     exchangeUserToken: endpoint.post(path).body<UserTokenExchangeBody>().response<UserScopeToken>().build(),
 
@@ -40,6 +30,7 @@ export const getIdentityApi = (
 
     issueToken: endpoint.post(path).body<ClientTokenIssueBody>().response<ClientScopeToken>().build(),
   }));
+
   return createApiConsumer(identityApiDef, fetchClient);
 };
 
@@ -69,13 +60,13 @@ export const getLocationApi = (
   baseHeaders: Record<string, () => string>,
   baseUrl: string,
   path: string,
-  markApiCall: MarkApiCall,
+  // markApiCall: MarkApiCall,
 ) => {
   const fetchClient = createFetchClient({
     fetchFn: nodeFetch as any,
     baseUrl,
     baseHeaders,
-    markApiCall,
+    // markApiCall,
   });
   const locationApiDef = defineAPI((endpoint) => ({
     call: endpoint.get(path).params<{ locationUUID: string; fields: string }>().response<LocationResponse>().build(),

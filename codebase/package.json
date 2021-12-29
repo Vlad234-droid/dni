@@ -1,6 +1,6 @@
 {
   "name": "dni",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "license": "MIT",
   "private": true,
   "engines": {
@@ -13,19 +13,17 @@
     ]
   },
   "scripts": {
-    "bootstrap": "yarn install --production=false --frozen-lockfile && lerna bootstrap",
-    "bootstrap:prod": "yarn install --production --frozen-lockfile && lerna bootstrap",
+    "bootstrap": "yarn install --frozen-lockfile && lerna bootstrap",
+    "bootstrap:dev": "yarn install --production=false --frozen-lockfile",
+    "bootstrap:prod": "yarn install --production=true --frozen-lockfile --ignore-optional",
+    "build:client": "lerna run build:prod --scope @dni/client",
+    "build:dev": "lerna run build:prod --include-dependencies --stream --ignore @dni/client",
     "build:prod": "lerna run build:prod --include-dependencies --stream",
-    "build:server": "lerna run build:prod --include-dependencies --stream --ignore @dni/client",
-    "build:dev": "lerna run build:dev --include-dependencies --stream",
     "build:test": "lerna run --parallel build:test",
     "clean": "lerna run --parallel clean",
+    "clean:npm": "lerna run --parallel clean:npm && rimraf node_modules",
     "clean:all": "lerna run --parallel clean:all && rimraf node_modules",
     "lint": "prettier --write --config ./prettier.config.js './packages/*/src/**/*.{ts,tsx}'",
-    "run:dev": "lerna run --parallel run:dev --scope @dni/client --scope @dni/server",
-    "run:prod": "lerna run --parallel run:prod --scope @dni/server",
-    "run:server": "lerna run --parallel run:server --scope @dni/server",
-    "run:local:dev": "lerna run --parallel run:dev --scope @dni/server --scope @dni/client --scope @dni/mock-server",
     "ws:client": "yarn workspace @dni/client",
     "ws:db": "yarn workspace @dni/database",
     "ws:server": "yarn workspace @dni/server",
@@ -38,17 +36,18 @@
     "ws:c:contact": "yarn workspace @dni-connectors/contact-api",
     "ws:c:confirmit": "yarn workspace @dni-connectors/confirmit-api",
     "ws:c:onelogin": "yarn workspace @dni-connectors/onelogin",
-    "client": "lerna run --scope @dni/client",
-    "server": "lerna run --scope @dni/server",
-    "run:dev:server": "yarn server run:dev --stream",
-    "run:dev:client": "yarn client run:dev --stream",
     "run-lint-branch-commit-msg": "cross-env commitlint --from=$(git merge-base master $(git rev-parse --abbrev-ref HEAD)) --to=HEAD",
     "run-lint-staged": "lint-staged",
+    "start:dev": "lerna run --parallel start:dev --scope @dni/client --scope @dni/server",
+    "start:dev:client": "lerna run --stream start:dev --scope @dni/client",
+    "start:dev:server": "lerna run --stream start:dev --scope @dni/server",
+    "start:prod": "lerna run --parallel start:prod --scope @dni/server",
+    "start:server": "lerna run --parallel start:server --scope @dni/server",
+    "start:local:dev": "lerna run --parallel start:dev --scope @dni/server --scope @dni/client --scope @dni/mock-server",
     "test": "lerna run test --stream --scope @dni/client",
     "test:coverage": "lerna run test:coverage --stream --scope @dni/client"
   },
   "devDependencies": {
-    "@babel/preset-env": "^7.12.11",
     "@commitlint/cli": "^15.0.0",
     "@commitlint/config-conventional": "^15.0.0",
     "@commitlint/config-lerna-scopes": "^15.0.0",
@@ -59,6 +58,7 @@
     "core-js": "^2.6.5",
     "cross-env": "^7.0.3",
     "cz-conventional-changelog": "^3.3.0",
+    "env-cmd": "^10.1.0",
     "eslint-config-prettier": "^7.1.0",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-prettier": "^3.3.0",
@@ -69,10 +69,8 @@
     "lodash": "^4.17.20",
     "prettier": "^2.2.1",
     "rimraf": "^3.0.2",
-    "ts-jest": "^26.4.4"
-  },
-  "peerDependencies": {
-    "lerna": "^3.22.1"
+    "ts-jest": "^26.4.4",
+    "typescript": "^4.1.3"
   },
   "husky": {
     "hooks": {

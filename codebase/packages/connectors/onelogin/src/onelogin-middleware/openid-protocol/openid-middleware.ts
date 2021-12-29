@@ -7,7 +7,7 @@ import { Issuer, Client } from 'openid-client';
 import jwt from 'jsonwebtoken';
 
 import { validateCookies } from '@energon/cookie-utils';
-import { asyncHandler } from '@energon/express-middlewares';
+import { asyncHandler } from '@dni-common/express-middlewares';
 
 import { getDataFromCookie, setDataToCookie } from '../../plugins/utils';
 import { OpenIdUserInfo } from '../../oidc-data-extractor';

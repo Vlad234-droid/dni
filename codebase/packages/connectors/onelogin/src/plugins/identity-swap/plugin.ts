@@ -1,5 +1,4 @@
 import { Response, Request } from 'express';
-import { markApiCall } from '@energon/splunk-logger';
 import { ApiEnv, resolveBaseUrl, TESCO_API_URLS } from '@energon-connectors/core';
 
 import {
@@ -127,7 +126,12 @@ export const identityTokenSwapPlugin = <O>(config: Config<O> & Optional): Plugin
         Accept: () => 'application/vnd.tesco.identity.tokenresponse.v4claims+json',
       };
 
-      const api = getIdentityApi(headerProvider, baseUrl, path, markApiCall(res));
+      const api = getIdentityApi(
+        headerProvider, 
+        baseUrl, 
+        path, 
+        // markApiCall(res),
+      );
 
       const { data } = await (refreshToken
         ? api.refreshUserToken({

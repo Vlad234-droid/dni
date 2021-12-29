@@ -52,4 +52,9 @@ const printPDF: Handler = async (req: Request<{}, {}, PrintParams>, res: Respons
   stream.pipe(res);
 };
 
-export { getMembersReportByFilters, getRegionsReportByFilters, getDepartmentsReportByFilters, printPDF };
+export { 
+  getMembersReportByFilters, 
+  getRegionsReportByFilters, 
+  getDepartmentsReportByFilters,
+  printPDF,
+};
