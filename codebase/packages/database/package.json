@@ -1,6 +1,6 @@
 {
   "name": "@dni/database",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "license": "MIT",
   "private": true,
   "files": [
@@ -9,11 +9,12 @@
   "main": "./build/index.js",
   "types": "./build/index.d.ts",
   "scripts": {
-    "build:prod": "tsc -p .",
-    "clean": "rimraf build coverage storybook-static .eslintcache",
-    "clean:all": "yarn clean && rimraf node_modules",
-    "start": "ts-node src/index.ts",
-    "typeorm": "ts-node --transpile-only ../../node_modules/typeorm/cli.js --config ./src/ormconfig.ts",
+    "clean": "rimraf build coverage .eslintcache",
+    "clean:npm": "rimraf node_modules",
+    "clean:all": "yarn clean && yarn clean:npm",
+    "build:prod": "cross-env tsc -p . && mkdir -p ./build/migrations/data && cp -r ./src/migrations/data/* ./build/migrations/data",
+    "typeorm:dev": "ts-node --transpile-only ../../node_modules/typeorm/cli.js --config ./src/ormconfig.ts",
+    "typeorm": "node ../../node_modules/typeorm/cli.js --config ./build/ormconfig.js",
     "entity:create": "yarn typeorm entity:create -n",
     "subscriber:create": "yarn typeorm subscriber:create -n",
     "cache:clear": "yarn typeorm cache:clear",
@@ -49,7 +50,9 @@
     "@types/node": "^14.14.41",
     "@types/pg": "^7.14.11",
     "@types/pg-copy-streams": "^1.2.1",
+    "cross-env": "^7.0.3",
     "env-cmd": "^10.1.0",
-    "ts-node": "^9.1.1"
+    "ts-node": "^9.1.1",
+    "typescript": "^4.1.3"
   }
 }

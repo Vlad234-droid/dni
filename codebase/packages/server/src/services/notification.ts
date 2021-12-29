@@ -1,7 +1,7 @@
-import { objectToCamel } from 'ts-case-convert';
+import { objectToCamel } from '@dni-common/object-utils';
 
 import { getManager, getSchemaPrefix, serializeEnum } from '@dni/database';
-import { DniUserNotificationAcknowledge, DniEntityTypeEnum } from '@dni/database';
+import { DniEntityTypeEnum } from '@dni/database';
 
 const NOTIFICATION_RETENTION_INTERVAL = '3 month';
 
