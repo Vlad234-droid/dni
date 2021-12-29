@@ -53,7 +53,9 @@ type Params = {
 };
 
 type ChartItem = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   elements: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   entities: any[];
 };
 
@@ -131,6 +133,12 @@ type State = {
 
   [EntityType.NETWORK]: EntityState<Network>;
   [EntityType.EVENT]: EntityState<Event>;
+};
+
+type Error = {
+  error: {
+    message: string;
+  };
 };
 
 type EntryId = {
@@ -225,6 +233,7 @@ type Point = {
 
 export type {
   State,
+  Error,
   Interval,
   Params,
   Response,
