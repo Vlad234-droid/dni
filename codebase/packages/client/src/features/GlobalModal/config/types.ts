@@ -4,8 +4,10 @@ enum ModalType {
   SHARE_STORY = 'SHARE_STORY',
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type ModalProps = any;
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type ModalElement = ComponentType | FC<any>;
 
 type Store = {
