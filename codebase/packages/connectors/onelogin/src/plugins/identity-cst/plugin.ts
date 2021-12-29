@@ -1,7 +1,6 @@
 import { Response, Request, NextFunction, Handler } from 'express';
 
-import { markApiCall } from '@energon/splunk-logger';
-import { ApiEnv, Headers, resolveBaseUrl, TESCO_API_URLS } from '@energon-connectors/core';
+import { ApiEnv, resolveBaseUrl, TESCO_API_URLS } from '@energon-connectors/core';
 
 import { ClientScopeToken, ClientTokenIssueBody, getIdentityApi } from '../api';
 import { getIdentityClientScopeToken, setIdentityClientScopeToken } from './identity-cst-data';
@@ -81,7 +80,13 @@ export const identityClientScopedTokenPlugin = (config: Config & Optional): Plug
       Accept: () => 'application/vnd.tesco.identity.tokenresponse.v4claims+json',
     };
 
-    const api = getIdentityApi(headerProvider, baseUrl, path, markApiCall(res));
+    const api = getIdentityApi(
+      headerProvider, 
+      baseUrl, 
+      path, 
+      // markApiCall(res),
+      );
+
     const { data } = await api.issueToken({ body });
 
     setIdentityClientScopeToken(res, data);

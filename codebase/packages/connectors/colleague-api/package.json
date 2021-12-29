@@ -1,6 +1,6 @@
 {
   "name": "@dni-connectors/colleague-api",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "license": "MIT",
   "files": [
     "build"
@@ -8,14 +8,18 @@
   "main": "./build/index.js",
   "types": "./build/index.d.ts",
   "scripts": {
-    "build:prod": "tsc -p .",
-    "clean": "rimraf build coverage storybook-static .eslintcache",
-    "clean:all": "yarn clean && rimraf node_modules"
+    "clean": "rimraf build coverage .eslintcache",
+    "clean:npm": "rimraf node_modules",
+    "clean:all": "yarn clean && yarn clean:npm",
+    "build:prod": "tsc -p ."
   },
   "dependencies": {
     "@energon-connectors/core": "^0.8.7",
     "@energon/rest-api-consumer": "^0.7.7",
     "@energon/rest-api-definition": "^0.5.7",
-    "@dni-common/connector-utils": "1.0.0"
+    "@dni-common/connector-utils": "^0.1.0"
+  },
+  "devDependencies": {
+    "typescript": "^4.1.3"
   }
 }
