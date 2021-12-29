@@ -1,0 +1,11 @@
+{
+  "name": "@dni/client",
+  "version": "0.1.0",
+  "main": "build/index.html",
+  "license": "MIT",
+  "scripts": {
+    "clean": "rimraf build coverage storybook-static .eslintcache",
+    "clean:npm": "rimraf node_modules",
+    "clean:all": "yarn clean && yarn clean:npm"
+  }
+}

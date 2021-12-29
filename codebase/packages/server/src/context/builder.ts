@@ -1,5 +1,3 @@
-import { markApiCall } from '@energon/splunk-logger';
-
 import { getIdentityData, getIdentityClientScopeToken as expressIdentityClientScopeToken} from '@dni-connectors/onelogin';
 import { getIdentityClientScopeToken as localIdentityClientScopeToken } from '../services';
 
@@ -37,7 +35,7 @@ export const expressContext: (config: ProcessConfig) => ExpressContextProvider<C
     apiEnv: () =>
       getAppEnv(config.runtimeEnvironment(), isDEV(config.buildEnvironment()) ? config.mockServerUrl() : undefined),
 
-    markApiCall: markApiCall(res),
+    // markApiCall: markApiCall(res),
 
     config: (): ContextConfigData => ({ runtimeEnvironment: config.runtimeEnvironment() }),
 

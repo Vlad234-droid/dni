@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { convertErrorToPlainObject } from "@energon/splunk-logger";
+import { convertErrorToPlainObject } from "@dni-common/object-utils";
 import { JSON } from "@energon/type-utils";
 
 

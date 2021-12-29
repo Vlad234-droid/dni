@@ -4,7 +4,7 @@ import { GetPublicKeyOrSecret } from 'jsonwebtoken';
 import { Client, Issuer, TokenSet } from 'openid-client';
 import jwksClient, { JwksClient } from 'jwks-rsa';
 
-import { asyncHandler } from '@energon/express-middlewares';
+import { asyncHandler } from '@dni-common/express-middlewares';
 import { validateCookies } from '@energon/cookie-utils';
 
 import { getDataFromCookie, setDataToCookie } from '../../plugins/utils';
