@@ -32,8 +32,9 @@ const createOne = createAsyncThunk<T.OneResponse, T.SetOnePayload>(
   async (data) => await API.networks.create<T.OneResponse>(data),
 );
 
-const getCount = createAsyncThunk<number, FilterPayload>(A.GET_COUNT_ACTION, (data) =>
-  API.networks.count<number>(data),
+const getCount = createAsyncThunk<number, FilterPayload>(
+  A.GET_COUNT_ACTION, 
+  async (data) => await API.networks.count<number>(data),
 );
 
 const getParticipants = createAsyncThunk<Record<number, number>>(A.GET_PARTICIPANTS_ACTION, async () =>

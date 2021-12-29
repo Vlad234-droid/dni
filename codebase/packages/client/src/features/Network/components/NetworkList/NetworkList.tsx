@@ -110,7 +110,7 @@ const NetworkList: FC = () => {
   // TODO: move to handleFilterChange?
   useEffect(() => {
     (async () => {
-      await dispatch(clear());
+      dispatch(clear());
       await dispatch(getCount(filters));
     })();
   }, [filters]);

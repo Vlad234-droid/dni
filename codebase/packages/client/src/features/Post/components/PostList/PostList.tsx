@@ -134,7 +134,7 @@ const PostList: FC<Props> = ({ entityId, entityTitle, filter = ALL }) => {
 
   useEffect(() => {
     (async () => {
-      await dispatch(clear());
+      dispatch(clear());
       await dispatch(getCount(filters));
     })();
   }, [filters]);
