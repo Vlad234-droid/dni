@@ -21,14 +21,17 @@ export class DniUserSubscriptionSubscriber implements EntitySubscriberInterface<
     }
   }
 
-  async generateDniUserSubscriptionLog(entity: DniUserSubscription, userAction: DniUserActionEnum) {
+  async generateDniUserSubscriptionLog(subscription: DniUserSubscription, userAction: DniUserActionEnum) {
     const manager = getManager();
     const subscriptionLog = new DniUserSubscriptionLog();
 
-    subscriptionLog.colleagueUUID = entity.colleagueUUID;
-    subscriptionLog.subscriptionEntityType = entity.subscriptionEntityType;
-    subscriptionLog.subscriptionEntityId = entity.subscriptionEntityId;
+    subscriptionLog.colleagueUUID = subscription.colleagueUUID;
+    subscriptionLog.subscriptionEntityType = subscription.subscriptionEntityType;
+    subscriptionLog.subscriptionEntityId = subscription.subscriptionEntityId;
     subscriptionLog.userAction = userAction;
+    if (userAction === DniUserActionEnum.JOIN) {
+      subscriptionLog.createdAt = subscription.createdAt;
+    }
 
     await manager.save(subscriptionLog);
   }
