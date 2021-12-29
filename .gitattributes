@@ -4,6 +4,7 @@
 # Declare files that will always have LF line endings on checkout.
 *.sh text eol=lf
 gradlew text eol=lf
+package.json text eol=lf
 
 # Declare files that will always have CRLF line endings on checkout.
 *.sln text eol=crlf
