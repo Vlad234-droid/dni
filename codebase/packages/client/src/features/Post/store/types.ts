@@ -34,7 +34,7 @@ type OnePayload = {
   id: number;
 };
 
-// TODO: temporary - remove
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type SetOnePayload = any;
 
 export type {
