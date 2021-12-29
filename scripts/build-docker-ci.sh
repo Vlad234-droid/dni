@@ -1,3 +1,5 @@
+#!/bin/sh
+
 mkdir temp
 
 cp -v ./codebase/package.json ./codebase/yarn.lock ./codebase/lerna.json ./codebase/tsconfig.json ./codebase/.eslintrc.js ./codebase/.npmrc temp/
