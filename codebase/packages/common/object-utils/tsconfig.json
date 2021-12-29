@@ -1,0 +1,18 @@
+{
+  "extends": "../../../tsconfig.json",
+  "compilerOptions": {
+    // "target": "es2016",
+    // "module": "commonjs",
+    "typeRoots": ["../../../node_modules/@types"],
+    // "rootDir": "./src",
+    "baseUrl": "./src",
+    "outDir": "./build",
+    "noEmit": false,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "declaration": true,
+    "declarationMap": true,
+    "strictPropertyInitialization": false
+  },
+  "include": ["./src/**/*"]
+}

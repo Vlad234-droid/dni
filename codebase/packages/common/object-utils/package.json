@@ -1,0 +1,23 @@
+{
+  "name": "@dni-common/object-utils",
+  "version": "0.1.0",
+  "license": "MIT",
+  "private": true,
+  "files": [
+    "build"
+  ],
+  "main": "./build/index.js",
+  "types": "./build/index.d.ts",
+  "scripts": {
+    "clean": "rimraf build coverage .eslintcache",
+    "clean:npm": "rimraf node_modules",
+    "clean:all": "yarn clean && yarn clean:npm",
+    "build:prod": "tsc -p ."
+  },
+  "dependencies": {
+    "@energon/type-utils": "^0.10.0"
+  },
+  "devDependencies": {
+    "typescript": "^4.1.3"
+  }
+}
