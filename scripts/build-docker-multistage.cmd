@@ -24,7 +24,6 @@ docker build ^
    --progress plain ^
    --tag dni_local:latest ^
    --network host ^
-   --shm-size 256m ^
    --build-arg HTTP_PROXY=http://10.251.0.42:80 ^
    --build-arg HTTPS_PROXY=http://10.251.0.42:80 ^
    --build-arg NODE_ENV=production ^
