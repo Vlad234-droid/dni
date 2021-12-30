@@ -37,7 +37,6 @@ RUN --mount=type=cache,id=yarn_cache,target=/usr/local/share/.cache/yarn \
     && yarn config set "strict-ssl" false -g \
     && yarn global add lerna@3.22.1 --prefix=/usr 
 
-
 # ==============
 # codebase stage 
 # ==============
@@ -54,7 +53,6 @@ RUN find . -type d -name node_modules -prune -o -name 'package.json' -exec bash 
 
 # print filesystem usage info
 RUN df -h
-
 
 # ===========
 # build stage
@@ -109,7 +107,6 @@ RUN --mount=type=cache,id=yarn_cache,target=/usr/local/share/.cache/yarn \
     && find . -type d -name node_modules -prune -o -name 'public' -exec cp -r '{}' '../build/{}' \; \
     && find . -type d -name node_modules -prune -o -name 'build' -exec cp -r '{}' '../build/{}' \;
 
-
 # ==========
 # main stage
 # ==========
@@ -142,7 +139,6 @@ RUN --mount=type=cache,id=yarn_cache,target=/usr/local/share/.cache/yarn \
     find . -type d -name node_modules -prune -o -name 'package.prod.json' -exec bash -c 'mv {} $(dirname {})/package.json' \; \
     && yarn bootstrap:prod \
     && dos2unix ./run.sh
-#    && yarn cache clean --all
 
 # These ENV variable must be set to run app:
 ENV USE_ONELOGIN=true 
