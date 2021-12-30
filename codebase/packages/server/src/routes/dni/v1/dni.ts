@@ -32,7 +32,6 @@ import {
   getMembersReportByFilters,
   getRegionsReportByFilters,
   getDepartmentsReportByFilters,
-  printPDF,
 } from '../../../controllers';
 
 const dniApi = express.Router();
@@ -69,6 +68,5 @@ dniApi.post('/notifications/acknowledge', acknowledgeNotification);
 dniApi.get('/reports/members', roleAuth([ROLE_ADMIN, ROLE_MANAGER]), getMembersReportByFilters);
 dniApi.get('/reports/regions', roleAuth([ROLE_ADMIN, ROLE_MANAGER]), getRegionsReportByFilters);
 dniApi.get('/reports/departments', roleAuth([ROLE_ADMIN, ROLE_MANAGER]), getDepartmentsReportByFilters);
-dniApi.post('/reports/print-pdf', roleAuth([ROLE_ADMIN, ROLE_MANAGER]), printPDF);
 
 export { dniApi };
