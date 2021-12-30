@@ -37,7 +37,6 @@ export enum Endpoint {
   REPORT_MEMBERS = '/dni/v1/reports/members',
   REPORT_REGIONS = '/dni/v1/reports/regions',
   REPORT_DEPARTMENTS = '/dni/v1/reports/departments',
-  REPORT_PRINT_PDF = '/dni/v1/reports/print-pdf',
 
   // notifications
   NOTIFICATIONS_LIST = '/dni/v1/notifications/list',
@@ -90,10 +89,6 @@ export default (httpClient: AxiosInstance) => ({
     members: <T>(query: Config = {}) => httpClient.get<T>(Endpoint.REPORT_MEMBERS, { params: query }),
     regions: <T>(query: Config = {}) => httpClient.get<T>(Endpoint.REPORT_REGIONS, { params: query }),
     departments: <T>(query: Config = {}) => httpClient.get<T>(Endpoint.REPORT_DEPARTMENTS, { params: query }),
-    printPdf: <T>(data: T) =>
-      httpClient.post<Blob>(Endpoint.REPORT_PRINT_PDF, data, {
-        responseType: 'blob',
-      }),
   },
   notifications: {
     fetchAllPlain: <T>() => httpClient.get<T>(Endpoint.NOTIFICATIONS_LIST),
