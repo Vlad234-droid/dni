@@ -3,10 +3,8 @@ import {
   cmsEmojisApiConnector,
   cmsEventsApiConnector,
   cmsPostsApiConnector,
-  cmsRoutingApiConnector,
   cmsNetworksApiConnector,
   cmsOrganizationsApiConnector,
-  cmsEmotionsApiConnector,
   cmsReactionsApiConnector,
 } from '@dni-connectors/colleague-cms-api';
 
@@ -27,20 +25,6 @@ const tescoApi = (requestCtx: ContextProvider<any>) =>
     },
     getEmojis: async ({ params }, ctx) => {
       const res = await cmsEmojisApiConnector(ctx).getEmojis({ params });
-      return unsafelyUnpackResponseData(res);
-    },
-
-    // Colleague CMS: Emotions
-    postEmotion: async ({ params, body }, ctx) => {
-      const res = await cmsEmotionsApiConnector(ctx).postEmotion({ params, body });
-      return unsafelyUnpackResponseData(res);
-    },
-    putEmotion: async ({ params, body }, ctx) => {
-      const res = await cmsEmotionsApiConnector(ctx).putEmotion({ params, body });
-      return unsafelyUnpackResponseData(res);
-    },
-    deleteEmotion: async ({ params }, ctx) => {
-      const res = await cmsEmotionsApiConnector(ctx).deleteEmotion({ params });
       return unsafelyUnpackResponseData(res);
     },
 
@@ -137,12 +121,6 @@ const tescoApi = (requestCtx: ContextProvider<any>) =>
     },
     deleteNetwork: async ({ params }, ctx) => {
       const res = await cmsNetworksApiConnector(ctx).deleteNetwork({ params });
-      return unsafelyUnpackResponseData(res);
-    },
-
-    // Colleague CMS: Routing
-    getRoutingConfig: async ({ params }, ctx) => {
-      const res = await cmsRoutingApiConnector(ctx).getRoutingConfig({ params });
       return unsafelyUnpackResponseData(res);
     },
 

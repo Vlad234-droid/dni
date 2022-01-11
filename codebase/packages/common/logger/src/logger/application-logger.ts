@@ -91,14 +91,14 @@ class ApplicationLogger {
 
    static getInstance(): ApplicationLogger {
       if (!this.instance) {
-         throw new Error(`Pino logger subsystem is not yet initialized. Use initialize() to init.`);
+         throw Error(`Pino logger subsystem is not yet initialized. Use initialize() to init.`);
       }
       return this.instance;
    }
 
    static initialize(rootLoggerName: string, logLevel: string, pretity: boolean): pino.Logger {
       if (this.instance) {
-         throw new Error(`Pino logger is already initialized.`);
+         throw Error(`Pino logger is already initialized.`);
       }
       this.instance = new this(rootLoggerName, logLevel, pretity);
       return this.instance.rootLogger;
