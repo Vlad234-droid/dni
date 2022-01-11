@@ -461,68 +461,6 @@
       ]
     },
     {
-      "name": "EMOTIONS",
-      "item": [
-        {
-          "name": "/emotions",
-          "request": {
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"count\": 1,\n    \"post\": 2,\n    \"emoji\": 1\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{HOST}}/emotions",
-              "host": ["{{HOST}}"],
-              "path": ["emotions"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "/emotions/:id",
-          "request": {
-            "method": "DELETE",
-            "header": [],
-            "url": {
-              "raw": "{{HOST}}/emotions/1",
-              "host": ["{{HOST}}"],
-              "path": ["emotions", "1"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "/emotions/:id",
-          "request": {
-            "method": "PUT",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n    \"count\": 3\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{HOST}}/emotions/2",
-              "host": ["{{HOST}}"],
-              "path": ["emotions", "2"]
-            }
-          },
-          "response": []
-        }
-      ]
-    },
-    {
       "name": "UPLOAD",
       "item": [
         {
