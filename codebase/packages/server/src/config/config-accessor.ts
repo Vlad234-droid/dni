@@ -2,7 +2,7 @@ import yn from 'yn';
 
 import { ApiEnv } from '@energon-connectors/core';
 
-import { getAppEnv, isLocal, isDEV } from './env';
+import { getAppEnv, isLocal, isDEV } from '@dni-common/connector-utils';
 import { ProcessEnv, getEnv } from './env-accessor';
 import { defaultConfig } from './default';
 
@@ -53,6 +53,9 @@ export type ProcessConfig = {
   oidcAdminGroups: () => string[];
   oidcManagerGroups: () => string[];
   defaultRoles: () => string[];
+  // colleague CMS
+  colleagueCmsBaseUrl: () => string | undefined;
+  colleagueCmsTenantKey: () => string | undefined;
   // identity
   identityClientId: () => string;
   identityClientSecret: () => string;
@@ -142,6 +145,9 @@ export class ConfigAccessor {
       oidcManagerGroups: () =>
         processEnv.OIDC_GROUPS_MANAGER_ROLE ? processEnv.OIDC_GROUPS_MANAGER_ROLE.split(/[,;]/) : [],
       defaultRoles: () => [defaultConfig.defaultRole],
+      // colleague CMS
+      colleagueCmsBaseUrl: () => processEnv.COLLEAGUE_CMS_URL,
+      colleagueCmsTenantKey: () => processEnv.COLLEAGUE_CMS_TENANT_KEY,
       // identity
       identityClientId: () => processEnv.IDENTITY_CLIENT_ID,
       identityClientSecret: () => processEnv.IDENTITY_CLIENT_SECRET,
@@ -150,7 +156,7 @@ export class ConfigAccessor {
       // mock
       mockServerUrl: () => {
         if (!isDEV(processEnv.BUILD_ENV)) {
-          throw new Error('Mock server is available only for DEV environment.');
+          throw Error('Mock server is available only for DEV environment.');
         }
         return processEnv.MOCK_SERVER_URL || '';
       },

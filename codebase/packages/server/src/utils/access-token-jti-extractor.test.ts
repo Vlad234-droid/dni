@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { IdentityClaims } from '@dni-connectors/onelogin';
+import { TokenClaims } from '@dni-connectors/identity-api';
 
 import {
   accessTokenJtiExtractor,
@@ -13,7 +13,7 @@ describe('Access token jti extractor utils', () => {
     expires_in: 0,
     token_type: 'token_type',
     scope: 'scope',
-    claims: {} as IdentityClaims,
+    claims: {} as TokenClaims,
     access_token: jwt.sign({ jti: access_token }, 'secret'),
   };
 

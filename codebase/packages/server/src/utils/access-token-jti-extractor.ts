@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
-import { UserScopeToken } from '@dni-connectors/onelogin';
+import { UserTokenResponse } from '@dni-connectors/identity-api';
 
-type CookieData = UserScopeToken;
+type CookieData = UserTokenResponse;
 type DecodedAccessToken = { jti: string };
 
 const accessTokenJtiExtractor = (keepData = false) => (
@@ -12,7 +12,7 @@ const accessTokenJtiExtractor = (keepData = false) => (
   ) as DecodedAccessToken;
 
   if (!access_token) {
-    throw new Error('Decoded JWT does not contain jti property!');
+    throw Error('Decoded JWT does not contain jti property!');
   }
 
   if (keepData) {

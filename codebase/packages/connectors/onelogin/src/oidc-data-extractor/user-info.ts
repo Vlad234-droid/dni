@@ -53,7 +53,7 @@ export interface OpenIdUserInfoCustomFields {
     const authData = getOpenIdAuthData(res);
 
     if (!authData?.accessToken && !authData?.idToken) {
-      throw new Error('invalid authData: both accessToken and idToken are missing');
+      throw Error('invalid authData: both accessToken and idToken are missing');
     }
 
     if (authData?.idToken) {
@@ -61,6 +61,6 @@ export interface OpenIdUserInfoCustomFields {
     } else if (authData?.accessToken) {
       return await client.userinfo(authData?.accessToken);
     } else {
-      throw new Error('No OIDC user info auth data can be extracted');
+      throw Error('No OIDC user info auth data can be extracted');
     }
 };
