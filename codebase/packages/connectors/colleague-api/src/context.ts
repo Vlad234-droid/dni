@@ -1,6 +1,6 @@
 import { ApiEnv, ConnectorContext } from '@energon-connectors/core';
 
-export type ColleagueApiContext = Pick<ConnectorContext, 'identityClientToken' | 'apiEnv' | 'markApiCall'>;
+export type ColleagueApiContext = Pick<ConnectorContext, 'identityClientToken' | 'apiEnv'>;
 
 export const buildColleagueApiContext = (
   runtimeEnvironment: () => string,

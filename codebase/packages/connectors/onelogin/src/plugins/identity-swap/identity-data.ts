@@ -1,7 +1,7 @@
 import { Response } from 'express';
-import { UserScopeToken } from '../api';
+import { UserTokenResponse } from '@dni-connectors/identity-api';
 
-export const getIdentityData = <T = UserScopeToken>(res: Response): T | undefined => res.identityData as T | undefined;
+export const getIdentityData = <T = UserTokenResponse>(res: Response): T | undefined => res.identityData as T | undefined;
 
 export const setIdentityData = <T>(res: Response, identityData: T) => {
   res.identityData = identityData;

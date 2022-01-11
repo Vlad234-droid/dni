@@ -19,7 +19,7 @@ export function colleagueApiConnector(ctx: ColleagueApiContext, overrides?: Fetc
   const headers: ColleagueAPIHeaders = {
     ...Headers.identityClientScopedAuthorization(ctx),
   };
-  const apiConsumer = createApiConsumer(colleagueApiDef, fetchClient(baseUrl, headers, ctx, overrides));
+  const apiConsumer = createApiConsumer(colleagueApiDef, fetchClient(baseUrl, headers, { }, overrides));
 
   return {
     getColleague: (input: ApiInput<ColleagueRequestParams>): Promise<Colleague | undefined> =>
