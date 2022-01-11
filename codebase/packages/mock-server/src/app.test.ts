@@ -7,8 +7,8 @@ import { TESCO_API_URLS } from '@energon-connectors/core';
 import server from './app';
 import config from './config';
 
-const COLLEAGUE_API_LOCAL = TESCO_API_URLS.LOCAL;
-const DNI_CMS_API_LOCAL = COLLEAGUE_CMS_API_URLS.LOCAL;
+const TESCO_API_LOCAL = TESCO_API_URLS.LOCAL;
+const CMS_API_LOCAL = COLLEAGUE_CMS_API_URLS.LOCAL;
 
 describe('Server run', () => {
   afterAll(async () => {
@@ -30,7 +30,7 @@ describe('Server run', () => {
   describe('Api routes', () => {
     it('GET post by id', (done) => {
       request(server)
-        .get(`${DNI_CMS_API_LOCAL}/posts`)
+        .get(`${CMS_API_LOCAL}/posts`)
         .set('Accept', 'application/json')
         .expect('Content-Type', /application\/json/)
         .expect(200, done);
@@ -38,7 +38,7 @@ describe('Server run', () => {
 
     it('GET colleague', (done) => {
       request(server)
-        .post(`${COLLEAGUE_API_LOCAL}/colleague/colleagues`)
+        .post(`${TESCO_API_LOCAL}/colleague/colleagues`)
         .set('Accept', 'application/json')
         .expect('Content-Type', /application\/json/)
         .expect(200, done);

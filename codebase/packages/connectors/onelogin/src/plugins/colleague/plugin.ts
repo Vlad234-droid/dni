@@ -141,7 +141,6 @@ export const colleagueApiPlugin = <O>(config: Config<O> & Optional): Plugin => {
     const colleagueApi = colleagueApiConsumer({
       baseUrl: baseUrl,
       baseHeaders: baseHeaders,
-      //markApiCall: markApiCall(res),
     });
 
     try {

@@ -1,16 +1,16 @@
 import { Response } from 'express';
-import { ClientScopeToken } from '../api';
+import { ClientTokenResponse } from '@dni-connectors/identity-api';
 
-export const getIdentityClientScopeToken = (res: Response): ClientScopeToken | undefined => res.identityCST;
+export const getIdentityClientScopeToken = (res: Response): ClientTokenResponse | undefined => res.identityCST;
 
-export const setIdentityClientScopeToken = (res: Response, identityClientScopeToken: ClientScopeToken) => {
+export const setIdentityClientScopeToken = (res: Response, identityClientScopeToken: ClientTokenResponse) => {
   res.identityCST = identityClientScopeToken;
 };
 
 declare global {
   namespace Express {
     export interface Response {
-      identityCST?: ClientScopeToken;
+      identityCST?: ClientTokenResponse;
     }
   }
 }

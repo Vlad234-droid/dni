@@ -3,19 +3,36 @@ import { defineAPI } from '@energon/rest-api-definition';
 import { UploadFile, UploadApiParams, UploadBody } from './types';
 import { buildApiConsumer, buildParams, buildFetchClient, buildFetchParams } from '../utils';
 
-import { DniCmsApiContext, ApiInput } from '../types';
+import { ColleagueCmsApiContext, ApiInput } from '../types';
 
 export const cmsUploadApiDef = defineAPI((endpoint) => ({
-  getFile: endpoint.get('/upload/files/:id').params<Pick<UploadApiParams, 'id'>>().response<UploadFile>().build(),
+  getFile: endpoint
+    .get('/upload/files/:id')
+    .params<Pick<UploadApiParams, 'id'>>()
+    .response<UploadFile>()
+    .build(),
 
-  getFiles: endpoint.get('/upload/files').params<UploadApiParams>().response<UploadFile[]>().build(),
+  getFiles: endpoint
+    .get('/upload/files')
+    .params<UploadApiParams>()
+    .response<UploadFile[]>()
+    .build(),
 
-  postFiles: endpoint.post('/upload').params<UploadApiParams>().body<UploadBody>().response<UploadFile[]>().build(),
+  postFiles: endpoint
+    .post('/upload')
+    .params<UploadApiParams>()
+    .body<UploadBody>()
+    .response<UploadFile[]>()
+    .build(),
 
-  deleteFile: endpoint.delete('/upload/files/:id').params<Pick<UploadApiParams, 'id'>>().response<UploadFile>().build(),
+  deleteFile: endpoint
+    .delete('/upload/files/:id')
+    .params<Pick<UploadApiParams, 'id'>>()
+    .response<UploadFile>()
+    .build(),
 }));
 
-export const cmsUploadApiConnector = (ctx: DniCmsApiContext) => {
+export const cmsUploadApiConnector = (ctx: ColleagueCmsApiContext) => {
   const apiConsumer = buildApiConsumer(ctx, cmsUploadApiDef);
   const fetchClient = buildFetchClient(ctx);
 

@@ -1,8 +1,10 @@
 import { createApiRouter } from '@energon/rest-api-provider';
 import { identityApiDef } from '@dni-connectors/identity-api';
 
-import { apiOutput } from 'generators/identity';
+import { clientTokenResponse, userTokenResponse } from 'generators/identity';
 
 export const identityApiRouter = createApiRouter(identityApiDef)({
-  getToken: async () => apiOutput,
+  issueToken: async () => clientTokenResponse,
+  exchangeUserToken: async () => userTokenResponse,
+  refreshUserToken: async () => userTokenResponse,
 });

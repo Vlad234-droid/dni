@@ -2,16 +2,33 @@ import { defineAPI } from '@energon/rest-api-definition';
 
 import { Event, EventApiParams, EventBody } from './types';
 import { buildApiConsumer, buildParams, buildFetchClient, buildFetchParams } from '../utils';
-import { DniCmsApiContext, ApiInput } from '../types';
+import { ColleagueCmsApiContext, ApiInput } from '../types';
 
 export const cmsEventsApiDef = defineAPI((endpoint) => ({
-  getEventsCount: endpoint.get('/events/count').params<EventApiParams>().response<number>().build(),
+  getEventsCount: endpoint
+    .get('/events/count')
+    .params<EventApiParams>()
+    .response<number>()
+    .build(),
 
-  getEvent: endpoint.get('/events/:id').params<Pick<EventApiParams, 'id'>>().response<Event>().build(),
+  getEvent: endpoint
+    .get('/events/:id')
+    .params<Pick<EventApiParams, 'id'>>()
+    .response<Event>()
+    .build(),
 
-  getEvents: endpoint.get('/events').params<Omit<EventApiParams, 'id'>>().response<Event[]>().build(),
+  getEvents: endpoint
+    .get('/events')
+    .params<Omit<EventApiParams, 'id'>>()
+    .response<Event[]>()
+    .build(),
 
-  postEvent: endpoint.post('/events').params<EventApiParams>().body<EventBody>().response<Event>().build(),
+  postEvent: endpoint
+    .post('/events')
+    .params<EventApiParams>()
+    .body<EventBody>()
+    .response<Event>()
+    .build(),
 
   putEvent: endpoint
     .put('/events/:id')
@@ -20,10 +37,14 @@ export const cmsEventsApiDef = defineAPI((endpoint) => ({
     .response<Event>()
     .build(),
 
-  deleteEvent: endpoint.delete('/events/:id').params<Pick<EventApiParams, 'id'>>().response<Event>().build(),
+  deleteEvent: endpoint
+    .delete('/events/:id')
+    .params<Pick<EventApiParams, 'id'>>()
+    .response<Event>()
+    .build(),
 }));
 
-export const cmsEventsApiConnector = (ctx: DniCmsApiContext) => {
+export const cmsEventsApiConnector = (ctx: ColleagueCmsApiContext) => {
   const apiConsumer = buildApiConsumer(ctx, cmsEventsApiDef);
   const fetchClient = buildFetchClient(ctx);
 

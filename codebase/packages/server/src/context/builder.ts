@@ -1,7 +1,7 @@
 import { getIdentityData, getIdentityClientScopeToken as expressIdentityClientScopeToken} from '@dni-connectors/onelogin';
-import { getIdentityClientScopeToken as localIdentityClientScopeToken } from '../services';
+import { acquireIdentityClientScopeToken } from '../services';
 
-import { getAppEnv, isDEV } from '../config/env';
+import { getAppEnv, isDEV } from '@dni-common/connector-utils';
 import { ProcessConfig } from '../config/config-accessor';
 import { ExpressContextProvider } from './request-context';
 
@@ -9,6 +9,11 @@ import { ContextSessionData } from './session-data';
 import { ContextConfigData } from './config-data';
 import { Request, Response, NextFunction } from 'express';
 
+/**
+ * 
+ * @param config 
+ * @returns 
+ */
 export const expressContext: (config: ProcessConfig) => ExpressContextProvider<ContextConfigData, ContextSessionData> =
   (config: ProcessConfig) => (req: Request, res: Response, next?: NextFunction) => ({
     req: req,
@@ -18,7 +23,7 @@ export const expressContext: (config: ProcessConfig) => ExpressContextProvider<C
     identityUserToken: () => {
       const token = getIdentityData(res)?.access_token;
       if (!token) {
-        throw new Error('identity user scoped token not available!');
+        throw Error('Identity user scoped token not available!');
       }
       return token;
     },
@@ -26,43 +31,54 @@ export const expressContext: (config: ProcessConfig) => ExpressContextProvider<C
     identityClientToken: () => {
       const token = expressIdentityClientScopeToken(res)?.access_token || '';
       if (!token && !isDEV(config.buildEnvironment())) {
-        throw new Error('Identity client scoped token not available!');
+        throw Error('Identity client scoped token not available!');
       }
-
       return token;
     },
 
     apiEnv: () =>
       getAppEnv(config.runtimeEnvironment(), isDEV(config.buildEnvironment()) ? config.mockServerUrl() : undefined),
 
-    // markApiCall: markApiCall(res),
+    config: (): ContextConfigData => ({ 
+      runtimeEnvironment: config.runtimeEnvironment,
+      colleagueCmsBaseUrl: config.colleagueCmsBaseUrl,
+      colleagueCmsTenantKey: config.colleagueCmsTenantKey,
+    }),
 
-    config: (): ContextConfigData => ({ runtimeEnvironment: config.runtimeEnvironment() }),
-
-    sessionData: (): ContextSessionData => ({}),
+    sessionData: (): ContextSessionData => ({
+    }),
   });
 
+/**
+ * 
+ * @param config 
+ * @returns 
+ */
 export const clientContext = async (config: ProcessConfig) => {
-  const cstToken = await localIdentityClientScopeToken();
+  const cstToken = await acquireIdentityClientScopeToken();
   return {
-    identityUserToken: () => undefined,
+    identityUserToken: () => { 
+      throw Error('Identity user scoped token not available in clientContext!'); 
+    },
 
     identityClientToken: () => {
       const token = cstToken?.access_token || '';
       if (!token && !isDEV(config.runtimeEnvironment())) {
-        throw new Error('Identity client scoped token not available!');
+        throw Error('Identity client scoped token not available!');
       }
-
       return token;
     },
 
     apiEnv: () =>
       getAppEnv(config.runtimeEnvironment(), isDEV(config.buildEnvironment()) ? config.mockServerUrl() : undefined),
 
-    markApiCall: undefined,
+    config: (): ContextConfigData => ({ 
+      runtimeEnvironment: config.runtimeEnvironment,
+      colleagueCmsBaseUrl: config.colleagueCmsBaseUrl,
+      colleagueCmsTenantKey: config.colleagueCmsTenantKey,
+    }),
 
-    config: (): ContextConfigData => ({ runtimeEnvironment: config.runtimeEnvironment() }),
-
-    sessionData: (): ContextSessionData => ({}),
+    sessionData: (): ContextSessionData => ({
+    }),
   };
 }
