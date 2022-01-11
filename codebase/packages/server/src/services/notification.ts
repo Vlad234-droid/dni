@@ -1,5 +1,3 @@
-import { objectToCamel } from '@dni-common/object-utils';
-
 import { getManager, getSchemaPrefix, serializeEnum } from '@dni/database';
 import { DniEntityTypeEnum } from '@dni/database';
 
@@ -11,30 +9,28 @@ export const colleagueNotificationsList = async (
   const schemaPrefix = getSchemaPrefix();
   const enrichedNotificationList = await getManager().connection.query(
     `SELECT 
-        entity_type
-      , entity_id
-      , entity_instance
-      , ancestor_type
-      , ancestor_id
-      , ancestor_instance
-      , notified_at
-      , acknowledged_at
-    FROM ${schemaPrefix}fn_get_dni_user_notification_enriched_list_2(
+        entity_type AS "entityType"
+      , entity_id AS "entityId"
+      , entity_instance AS "entityInstance"
+      , ancestor_type AS "ancestorType"
+      , ancestor_id AS "ancestorId"
+      , ancestor_instance AS "ancestorInstance"
+      , notified_at AS "notifiedAt"
+      , acknowledged_at AS "acknowledgedAt"
+    FROM ${schemaPrefix}fn_get_dni_user_notification_enriched_list_3(
         p_colleague_uuid := $1::uuid
       , p_filter_entity_types := ${serializeEnum('dni_entity_type_enum', [DniEntityTypeEnum.EVENT, DniEntityTypeEnum.POST])}
       , p_filter_subscription_entity_types := ${serializeEnum('dni_entity_type_enum', [DniEntityTypeEnum.NETWORK, DniEntityTypeEnum.EVENT])}
       , p_filter_root_entity_types := ${serializeEnum('dni_entity_type_enum', [DniEntityTypeEnum.NETWORK])}
       , p_return_only_non_acknowledged := TRUE
       , p_return_only_one_ancestor_per_entity := TRUE
-      , p_affected_interval := $2::INTERVAL)`,
+      , p_affected_interval := $2::INTERVAL
+      , p_object_case_enum := 'camelcase'::${schemaPrefix}jsonb_object_case_enum
+      )`,
     [colleagueUUID, NOTIFICATION_RETENTION_INTERVAL],
   );
 
-  if (Array.isArray(enrichedNotificationList) && enrichedNotificationList.length) {
-    return enrichedNotificationList.map(enl => objectToCamel(enl));
-  } else {
-    return [];
-  }
+  return enrichedNotificationList || [];
 };
 
 export const colleagueNotificationsGroupBy = async (
@@ -45,28 +41,26 @@ export const colleagueNotificationsGroupBy = async (
   const schemaPrefix = getSchemaPrefix();
   const grouppedNotificationList = await getManager().connection.query(
     `SELECT 
-        ancestor_type
-      , ancestor_id
-      , ancestor_instance
-      , recent_notified_at
-      , nested_total
-      , nested_as_array
-    FROM ${schemaPrefix}fn_get_dni_user_notification_groupped_list_2(
+        ancestor_type AS "ancestorType"
+      , ancestor_id AS "ancestorId"
+      , ancestor_instance AS "ancestorInstance"
+      , recent_notified_at AS "recentNotifiedAt"
+      , nested_entities_total AS "nestedEntitiesTotal"
+      , nested_entities AS "nestedEntities"
+    FROM ${schemaPrefix}fn_get_dni_user_notification_groupped_list_3(
         p_colleague_uuid := $1::uuid
       , p_filter_entity_types := ${serializeEnum('dni_entity_type_enum', [DniEntityTypeEnum.EVENT, DniEntityTypeEnum.POST])}
       , p_filter_subscription_entity_types := ${serializeEnum('dni_entity_type_enum', [DniEntityTypeEnum.NETWORK, DniEntityTypeEnum.EVENT])}
       , p_filter_root_entity_types := ${serializeEnum('dni_entity_type_enum', groupBy)}
       , p_return_only_non_acknowledged := TRUE
       , p_return_only_one_ancestor_per_entity := TRUE
-      , p_affected_interval := $2::INTERVAL)`,
+      , p_affected_interval := $2::INTERVAL
+      , p_object_case_enum := 'camelcase'::${schemaPrefix}jsonb_object_case_enum
+      )`,
     [colleagueUUID, NOTIFICATION_RETENTION_INTERVAL],
   );
 
-  if (Array.isArray(grouppedNotificationList) && grouppedNotificationList.length) {
-    return grouppedNotificationList.map(gnl => objectToCamel(gnl));
-  } else {
-    return [];
-  }
+  return grouppedNotificationList || [];
 };
 
 export const createColleagueNotificationAcknowledgement = async (
@@ -96,6 +90,6 @@ export const createColleagueNotificationAcknowledgement = async (
   if (Array.isArray(notificationAcknowledge) && notificationAcknowledge.length === 1) 
     return notificationAcknowledge[0];
   else {
-    throw new Error('[createColleagueNotificationAcknowledgement]: Unexpected resposnse from DB');
+    throw Error('[createColleagueNotificationAcknowledgement]: Unexpected resposnse from DB');
   }
 };
