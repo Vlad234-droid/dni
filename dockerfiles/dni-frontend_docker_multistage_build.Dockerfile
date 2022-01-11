@@ -25,7 +25,6 @@ ENV NPM_ACCESS_TOKEN=$NPM_ACCESS_TOKEN
 RUN apt-get update \
     && apt-get install --yes --no-install-recommends \
         dos2unix \
-        tree \
     && rm -rf /var/lib/apt/lists/*
 
 COPY --chmod=0755 ./scripts/create-npmrc.sh /root/create-npmrc.sh
@@ -103,7 +102,7 @@ RUN --mount=type=cache,id=yarn_cache,target=/usr/local/share/.cache/yarn \
     --mount=type=cache,id=node_modules,target=/opt/app/node_modules \
     yarn bootstrap:dev \ 
     && yarn build:prod \
-    && find . -type d -name node_modules -prune -o -name 'build' -exec bash -c 'mkdir -p ../build/$(dirname {})' \; \
+    && find . -type d -name node_modules -prune -o -name 'package.json' -exec bash -c 'mkdir -p ../build/$(dirname {})' \; \
     && find . -type d -name node_modules -prune -o -name 'public' -exec cp -r '{}' '../build/{}' \; \
     && find . -type d -name node_modules -prune -o -name 'build' -exec cp -r '{}' '../build/{}' \;
 

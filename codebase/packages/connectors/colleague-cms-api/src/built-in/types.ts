@@ -1,4 +1,4 @@
-type File = {
+export type File = {
   alternativeText: string;
   caption: string;
   ext: string;
@@ -12,6 +12,5 @@ type File = {
   width: number;
 };
 
-type DateString = string;
+export type DateString = string;
 
-export type { DateString, File };

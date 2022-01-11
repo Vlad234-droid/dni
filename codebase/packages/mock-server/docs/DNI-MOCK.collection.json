@@ -355,50 +355,6 @@
       ]
     },
     {
-      "name": "EMOTIONS",
-      "item": [
-        {
-          "name": "/colleague-cms/emotions",
-          "request": {
-            "method": "POST",
-            "header": [],
-            "url": {
-              "raw": "{{HOST}}/colleague-cms/emotions",
-              "host": ["{{HOST}}"],
-              "path": ["colleague-cms", "emotions"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "/colleague-cms/emotions/:id",
-          "request": {
-            "method": "PUT",
-            "header": [],
-            "url": {
-              "raw": "{{HOST}}/colleague-cms/emotions/94355",
-              "host": ["{{HOST}}"],
-              "path": ["colleague-cms", "emotions", "94355"]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "/colleague-cms/emotions/:id",
-          "request": {
-            "method": "DELETE",
-            "header": [],
-            "url": {
-              "raw": "{{HOST}}/colleague-cms/emotions/94355",
-              "host": ["{{HOST}}"],
-              "path": ["colleague-cms", "emotions", "94355"]
-            }
-          },
-          "response": []
-        }
-      ]
-    },
-    {
       "name": "UPLOAD",
       "item": [
         {
