@@ -1,6 +1,7 @@
+import { isNullOrUndefined } from 'util';
 import { DniEntityTypeEnum } from './enums';
 
-class CcmsEntityParentKey {
+class CcmsEntityKey {
   entityId!: number;
   entityType!: DniEntityTypeEnum;
 
@@ -18,52 +19,70 @@ class CcmsEntityParentKey {
 }
 
 // Parse a stringified record literal
-function fromPostgresCompositeType(compositeValue: string): CcmsEntityParentKey | undefined{
+function fromPostgresCompositeType(compositeValue: string): CcmsEntityKey | undefined {
+  if (compositeValue === null || compositeValue === undefined) {
+    return undefined;
+  }
+
   if (typeof compositeValue !== 'string') { 
     throw new TypeError(`composite type didn't return as string`); 
   }
 
   return parse(
     compositeValue, 
-    parsedArrayToCcmsEntityParentKey, 
+    parsedArrayToCcmsEntityKey, 
     'singe',
-    ) as CcmsEntityParentKey | undefined;
+    ) as CcmsEntityKey | undefined;
 }
 
 // Note: `type` on the @Column must be set to 'text'
-// convert a CcmsEntityParentKey into a stringified record literal
-function toPostgresCompositeType(compositeObject: CcmsEntityParentKey): string {
+// convert a CcmsEntityKey into a stringified record literal
+function toPostgresCompositeType(compositeObject: CcmsEntityKey): string | undefined {
+  if (compositeObject === null || compositeObject === undefined
+    || compositeObject.entityId  === null || compositeObject.entityId === undefined
+    || compositeObject.entityType  === null || compositeObject.entityType === undefined) {
+    return undefined;
+  }
+
   if (!compositeObject) { 
-    throw new TypeError(`invalid CcmsEntityParentKey object`); 
+    throw new TypeError(`invalid CcmsEntityKey object`); 
   }
 
   if (typeof compositeObject.entityId !== "number" || compositeObject.entityId < 0) {
-    throw new TypeError("invalid CcmsEntityParentKey object, entityId value must be greater than zero");
+    throw new TypeError("invalid CcmsEntityKey object, entityId value must be greater than zero");
   }
 
   if (!Object.values(DniEntityTypeEnum).includes(compositeObject.entityType)) {
-    throw new TypeError(`invalid CcmsEntityParentKey object, entityType (unknown value [${compositeObject.entityType}])`);
+    throw new TypeError(`invalid CcmsEntityKey object, entityType (unknown value [${compositeObject.entityType}])`);
   }
 
   return `(${compositeObject.entityId},${compositeObject.entityType})`;
 }
 
 // Parse a stringified record literal
-function fromPostgresCompositeTypeArray(compositeValue: string): CcmsEntityParentKey[] | undefined{
+function fromPostgresCompositeTypeArray(compositeValue: string): CcmsEntityKey[] | undefined {
+  if (compositeValue === null || compositeValue === undefined) {
+    return undefined;
+  }
+
   if (typeof compositeValue !== 'string') { 
     throw new TypeError(`composite type didn't return as string`); 
   }
 
   return parse(
     compositeValue, 
-    parsedArrayToCcmsEntityParentKey, 
+    parsedArrayToCcmsEntityKey, 
     'array',
-    ) as CcmsEntityParentKey[] | undefined;
+    ) as CcmsEntityKey[] | undefined;
 }
 
 // Note: `type` on the @Column must be set to 'text'
-// convert a CcmsEntityParentKey into a stringified record literal
-function toPostgresCompositeTypeArray(compositeObjectArray: CcmsEntityParentKey[]): string | undefined {
+// convert a CcmsEntityKey into a stringified record literal
+function toPostgresCompositeTypeArray(compositeObjectArray: CcmsEntityKey[]): string | undefined {
+  if (compositeObjectArray === null || compositeObjectArray === undefined) {
+    return undefined;
+  }
+
   if (Array.isArray(compositeObjectArray)) { 
     if (compositeObjectArray.length > 0) {
       const result = compositeObjectArray.map(compositeObject => `"${toPostgresCompositeType(compositeObject)}"`);
@@ -78,7 +97,7 @@ function toPostgresCompositeTypeArray(compositeObjectArray: CcmsEntityParentKey[
   //return `(${compositeObject.entityId},${compositeObject.entityType})`;
 }
 
-function parsedArrayToCcmsEntityParentKey(arr: string[]): CcmsEntityParentKey {
+function parsedArrayToCcmsEntityKey(arr: string[]): CcmsEntityKey {
   const [ entityIdStr, entityType ] = arr;
 
   const entityId = parseInt(entityIdStr, 10);
@@ -90,7 +109,7 @@ function parsedArrayToCcmsEntityParentKey(arr: string[]): CcmsEntityParentKey {
     throw new TypeError(`invalid entityType in record literal: [${entityType}]`);
   }
 
-  return new CcmsEntityParentKey(entityId, entityType as DniEntityTypeEnum);
+  return new CcmsEntityKey(entityId, entityType as DniEntityTypeEnum);
 }
 
 /**
@@ -239,7 +258,7 @@ function parse<T>(
   }
 }
 
-export { CcmsEntityParentKey };
+export { CcmsEntityKey };
 
 export { fromPostgresCompositeType, toPostgresCompositeType };
 export { fromPostgresCompositeTypeArray, toPostgresCompositeTypeArray };

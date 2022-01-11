@@ -13,5 +13,6 @@ export {
   slugify 
 } from './utils';
 
+export * from './ccms';
 export * from './entities';
 export * from './subscribers';
