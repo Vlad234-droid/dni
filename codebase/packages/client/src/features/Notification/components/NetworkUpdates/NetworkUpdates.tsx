@@ -25,12 +25,12 @@ const NetworkUpdates: FC = () => {
 
   useEffect(() => {
     setItems(
-      networkNotifications.map(({ ancestorId, ancestorInstance, nestedTotal }, idx) => ({
+      networkNotifications.map(({ ancestorId, ancestorInstance, nestedEntitiesTotal }, idx) => ({
         key: ancestorId || `network-news-${idx}`,
         href: ancestorId ? `/${Page.NETWORKS}/${ancestorId}` : `/${Page.NETWORK_NEWS}`,
         name: ancestorInstance?.title || 'D&I News',
         avatar: ancestorInstance?.image?.url || DefaultLogo,
-        count: nestedTotal,
+        count: nestedEntitiesTotal,
       })),
     );
   }, [networkNotifications]);

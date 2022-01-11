@@ -24,8 +24,8 @@ type NotificationGrouppedItem = {
   ancestorType?: EntityType;
   ancestorId?: number;
   ancestorInstance?: Entity;
-  nestedAsArray: { entityType: EntityType; entitiesIds: number[] }[];
-  nestedTotal: number;
+  nestedEntities: { entityType: EntityType; entityId: number }[];
+  nestedEntitiesTotal: number;
 };
 
 type EntityIds = {
