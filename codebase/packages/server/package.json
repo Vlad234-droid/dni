@@ -15,18 +15,16 @@
     "build:server": "tsc -p .",
     "start:dev": "cross-env NODE_ENV=development NODE_PORT=4000 env-cmd --silent --no-override --fallback -f .env.development node -r source-map-support/register --inspect build/app.js",
     "start:debug": "cross-env NODE_ENV=production env-cmd --silent --no-override --fallback -f .env.production node -r source-map-support/register --inspect build/app.js",
-    "start:prod": "node build/app.js",
-    "start:server": "cross-env NODE_ENV=production env-cmd --silent --no-override --fallback -f .env.production node build/app.js",
-    "cli:ccms-sync:debug": "cross-env NODE_ENV=development env-cmd --silent --no-override --fallback -f .env.${NODE_ENV} node -r source-map-support/register --inspect build/cli/ccms-sync.js",
-    "cli:ccms-sync:prod": "node build/cli/ccms-sync.js",
-    "cli:ccms-sync:server": "cross-env NODE_ENV=production env-cmd --silent --no-override --fallback -f .env.${NODE_ENV} node build/cli/ccms-sync.js",
+    "start:prod": "cross-env NODE_ENV=production env-cmd --silent --no-override --fallback -f .env.production node build/app.js",
+    "start": "node build/app.js",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "test:watch": "jest --watch"
   },
   "dependencies": {
-    "@dni-common/object-utils": "^0.1.0",
+    "@dni-common/connector-utils": "^0.1.0",
     "@dni-common/logger": "^0.1.0",
+    "@dni-common/object-utils": "^0.1.0",
     "@dni-connectors/colleague-api": "^0.1.0",
     "@dni-connectors/colleague-cms-api": "^0.1.0",
     "@dni-connectors/confirmit-api": "^0.1.0",
@@ -58,6 +56,7 @@
     "yn": "^4.0.0"
   },
   "devDependencies": {
+    "@types/chalk": "^2.2.0",
     "@types/cli-progress": "^3.9.1",
     "@types/cors": "^2.8.10",
     "@types/express": "^4.17.11",

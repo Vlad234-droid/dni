@@ -18,6 +18,9 @@
     "entity:create": "yarn typeorm entity:create -n",
     "subscriber:create": "yarn typeorm subscriber:create -n",
     "cache:clear": "yarn typeorm cache:clear",
+    "cli:ccms-sync:debug": "cross-env NODE_ENV=development env-cmd --silent --no-override --fallback -f .env.${NODE_ENV} node -r source-map-support/register --inspect build/cli/ccms-sync.js",
+    "cli:ccms-sync:prod": "cross-env NODE_ENV=production env-cmd --silent --no-override --fallback -f .env.${NODE_ENV} node build/cli/ccms-sync.js",
+    "cli:ccms-sync": "node build/cli/ccms-sync.js",
     "migration:generate": "yarn typeorm migration:generate -n",
     "migration:create": "yarn typeorm migration:create -n",
     "migration:show": "yarn typeorm migration:show",
@@ -30,7 +33,9 @@
     "version": "yarn typeorm version"
   },
   "dependencies": {
+    "@dni-connectors/colleague-cms-api": "^0.1.0",
     "chalk": "^4.1.1",
+    "cli-progress": "^3.9.1",
     "csv-parser": "^3.0.0",
     "dotenv": "^8.2.0",
     "lodash": "^4.17.21",
@@ -44,6 +49,7 @@
   },
   "devDependencies": {
     "@types/chalk": "^2.2.0",
+    "@types/cli-progress": "^3.9.1",
     "@types/node": "^14.14.41",
     "@types/pg": "^7.14.11",
     "@types/pg-copy-streams": "^1.2.1",
