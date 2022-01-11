@@ -68,7 +68,7 @@ const buildFrontURI = (type: DniEntityTypeEnum | typeof UNSUBSCRIBE_KEY, entityI
       return `${baseUrl}${applicationUrlUnsubscribe()}`;
     }
     default: {
-      throw new Error('Unsupported type for building URI');
+      throw Error('Unsupported type for building URI');
     }
   }
 };

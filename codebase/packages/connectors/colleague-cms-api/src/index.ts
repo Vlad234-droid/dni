@@ -1,6 +1,6 @@
 export { 
   COLLEAGUE_CMS_API_URLS, 
-  COLLEAGUE_CMS_TENANT_KEY,
+  DEFAULT_COLLEAGUE_CMS_TENANT_KEY,
 } from './config';
 
 export type { 

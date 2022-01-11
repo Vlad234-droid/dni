@@ -68,7 +68,7 @@ export const contactApiConnector = (ctx: ContactApiContext) => {
   };
   const baseUrl = resolveBaseUrl(TESCO_API_URLS, ctx);
 
-  const apiConsumer = createApiConsumer(contactApiDef, fetchClient(baseUrl, headers, ctx));
+  const apiConsumer = createApiConsumer(contactApiDef, fetchClient(baseUrl, headers, { }));
 
   return {
     sendMessages: (input: ApiInput<ApiParams, ApiMsgBody>) => apiConsumer.sendMessages(buildParams(input)),

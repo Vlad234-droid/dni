@@ -1,6 +1,8 @@
+import { ColleagueCmsApiConfig } from "@dni-connectors/colleague-cms-api";
+
 /**
  *
  */
-export type ContextConfigData = {
-  runtimeEnvironment: string;
+export type ContextConfigData = ColleagueCmsApiConfig & {
+  runtimeEnvironment: () => string;
 };
