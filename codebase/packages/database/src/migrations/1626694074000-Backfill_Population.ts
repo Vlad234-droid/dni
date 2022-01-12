@@ -77,7 +77,7 @@ export class Migration_Backfill_population_1 implements MigrationInterface {
           jsonb_build_object('hireDate', $2::date, 'leavingDate', $3::date, 'businessType', $4::varchar, 'addressPostcode', $5::varchar), 
           jsonb_build_object('receivePostsEmailNotifications', $6::boolean, 'receiveEventsEmailNotifications', $7::boolean)
         )
-        ON CONFLICT ON CONSTRAINT "dni_user_extras__pk" DO UPDATE SET
+        ON CONFLICT (colleague_uuid) DO UPDATE SET
           colleague_properties = jsonb_build_object('hireDate', $2::date, 'leavingDate', $3::date, 'businessType', $4::varchar, 'addressPostcode', $5::varchar), 
           settings = jsonb_build_object('receivePostsEmailNotifications', $6::boolean, 'receiveEventsEmailNotifications', $7::boolean)
         WHERE dni_user_extras.colleague_uuid = $1;`,
@@ -110,7 +110,7 @@ export class Migration_Backfill_population_1 implements MigrationInterface {
             if (Array.isArray(insertedUserSubscription) && insertedUserSubscription.length === 1) {
               // ... and create user subscription log record
               await queryRunner.query(
-                `INSERT INTO dni.dni_user_subscription_log(colleague_uuid, subscription_entity_id, subscription_entity_type, user_action)
+                `INSERT INTO dni_user_subscription_log(colleague_uuid, subscription_entity_id, subscription_entity_type, user_action)
                 VALUES($1, $2, 'network', 'join')
                 ON CONFLICT DO NOTHING;`,
                 [employee.colleagueUuid, networkId],

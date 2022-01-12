@@ -715,7 +715,7 @@ export class Migration_Multiple_Parents_Functions_P2 implements MigrationInterfa
     // -- dni_migrations
     // -- ==============
     await queryRunner.query(`
-      ALTER TABLE dni.dni_migrations DROP COLUMN IF EXISTS migrated_at;
+      ALTER TABLE dni_migrations DROP COLUMN IF EXISTS migrated_at;
     `);
   }
 }
