@@ -43,7 +43,7 @@ CREATE INDEX "dni_user$created_at__idx" ON dni_user (created_at);
 -- ===============
 -- dni_user_extras
 -- ===============
--- DROP TABLE dni.dni_user_extras;
+-- DROP TABLE dni_user_extras;
 CREATE TABLE dni_user_extras (
 	colleague_uuid uuid NOT NULL,
    last_login_at timestamptz(0) NULL,
