@@ -14,7 +14,7 @@ export class Migration_Add_UQ_Constraint_To_Notification_Ack implements Migratio
     // -- Remove dublicates from : dni_user_notification_acknowledge
     // -- ==========================================================
     await queryRunner.query(`
-      DELETE FROM dni.dni_user_notification_acknowledge
+      DELETE FROM dni_user_notification_acknowledge
       WHERE acknowledge_uuid IN (
         SELECT acknowledge_uuid FROM (
         SELECT 
@@ -36,14 +36,14 @@ export class Migration_Add_UQ_Constraint_To_Notification_Ack implements Migratio
     // -- Remove and add UNIQUE constraint to dni_user_notification_acknowledge
     // -- =====================================================================
     await queryRunner.query(`
-      ALTER TABLE dni.dni_user_notification_acknowledge 
+      ALTER TABLE dni_user_notification_acknowledge 
         DROP CONSTRAINT IF EXISTS "d_u_n_acknowledge$colleague_uuid$a_entity_type$a_entity_id__uq"; 
     `);
 
     await queryRunner.query(`
-      ALTER TABLE dni.dni_user_notification_acknowledge 
+      ALTER TABLE dni_user_notification_acknowledge 
         ADD CONSTRAINT "d_u_n_acknowledge$colleague_uuid$a_entity_type$a_entity_id__uq" 
-          UNIQUE (acknowledge_entity_type,acknowledge_entity_id,colleague_uuid);
+          UNIQUE (colleague_uuid, acknowledge_entity_type, acknowledge_entity_id);
     `);
   }
 
@@ -57,7 +57,7 @@ export class Migration_Add_UQ_Constraint_To_Notification_Ack implements Migratio
     // -- Remove UNIQUE constraint from dni_user_notification_acknowledge
     // -- ===============================================================
     await queryRunner.query(`
-      ALTER TABLE dni.dni_user_notification_acknowledge 
+      ALTER TABLE dni_user_notification_acknowledge 
         DROP CONSTRAINT IF EXISTS "d_u_n_acknowledge$colleague_uuid$a_entity_type$a_entity_id__uq"; 
     `);
   }
