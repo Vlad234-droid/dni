@@ -1,1 +1,1 @@
-export * from './CommonCcmsEntity';
+export type { CommonCcmsEntity } from './CommonCcmsEntity';
