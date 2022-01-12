@@ -17,26 +17,32 @@ export class Migration_InitialTables implements MigrationInterface {
     // -- ====================
     // -- dni_entity_type_enum
     // -- ====================
-    await queryRunner.query(
-      `CREATE TYPE dni_entity_type_enum AS ENUM (
-        'network',
-        'event',
-        'post',
-        'partner',
-        'meta-category'
-      );
-      `,
+    await queryRunner.query(`
+      DO $type$ BEGIN
+        CREATE TYPE dni_entity_type_enum AS ENUM (
+          'network',
+          'event',
+          'post',
+          'partner',
+          'meta-category'
+        );
+      EXCEPTION
+        WHEN duplicate_object THEN NULL;
+      END $type$;`,
     );
 
     // -- ====================
     // -- dni_user_action_enum
     // -- ====================
-    await queryRunner.query(
-      `CREATE TYPE dni_user_action_enum AS ENUM (
-        'join',
-        'leave'
-      );
-      `,
+    await queryRunner.query(`
+      DO $type$ BEGIN
+        CREATE TYPE dni_user_action_enum AS ENUM (
+          'join',
+          'leave'
+        );
+      EXCEPTION
+        WHEN duplicate_object THEN NULL;
+      END $type$;`,
     );
 
     //-- ========
@@ -113,7 +119,8 @@ export class Migration_InitialTables implements MigrationInterface {
         CONSTRAINT "d_u_subscription_log__pk" PRIMARY KEY (log_uuid)
       );
       
-      CREATE INDEX "d_u_subscription_log$created_at__idx" ON dni_user_subscription_log (created_at);
+      CREATE INDEX "d_u_subscription_log$created_at__idx" 
+        ON dni_user_subscription_log (created_at);
       `,
     );
 
@@ -131,8 +138,13 @@ export class Migration_InitialTables implements MigrationInterface {
         CONSTRAINT "d_u_n_acknowledge__pk" PRIMARY KEY (acknowledge_uuid)
       );
       
-      CREATE INDEX "d_u_n_acknowledge$acknowledge_created_at__idx" ON dni_user_notification_acknowledge USING btree (acknowledge_created_at DESC);
-      CREATE INDEX "d_u_n_acknowledge$colleague_uuid$a_entity_type$a_entity_id__idx" ON dni_user_notification_acknowledge USING btree (colleague_uuid, acknowledge_entity_type, acknowledge_entity_id);
+      CREATE INDEX "d_u_n_acknowledge$acknowledge_created_at__idx" 
+        ON dni_user_notification_acknowledge 
+        USING btree (acknowledge_created_at DESC);
+
+      CREATE INDEX "d_u_n_acknowledge$colleague_uuid$a_entity_type$a_entity_id__idx" 
+        ON dni_user_notification_acknowledge 
+        USING btree (colleague_uuid, acknowledge_entity_type, acknowledge_entity_id);
       `,
     );
 
@@ -167,14 +179,17 @@ export class Migration_InitialTables implements MigrationInterface {
     // -- =================
     // -- ccms_trigger_enum
     // -- =================
-    await queryRunner.query(
-      `CREATE TYPE ccms_trigger_event_enum AS ENUM (
-        'created',
-        'updated',
-        'deleted',
-        'published'
-      );
-      `,
+    await queryRunner.query(`
+      DO $type$ BEGIN
+        CREATE TYPE ccms_trigger_event_enum AS ENUM (
+          'created',
+          'updated',
+          'deleted',
+          'published'
+        );
+      EXCEPTION
+        WHEN duplicate_object THEN NULL;
+      END $type$;`,
     );
 
     // -- =================
@@ -246,15 +261,18 @@ export class Migration_InitialTables implements MigrationInterface {
 
     await queryRunner.query(`DROP TABLE IF EXISTS ccms_entity;`);
     await queryRunner.query(`DROP TABLE IF EXISTS ccms_notification;`);
+
     await queryRunner.query(`DROP TYPE IF EXISTS ccms_trigger_event_enum;`);
+
     await queryRunner.query(`DROP TABLE IF EXISTS capi_department;`);
     await queryRunner.query(`DROP TABLE IF EXISTS capi_region;`);
     await queryRunner.query(`DROP TABLE IF EXISTS dni_user_notification_acknowledge;`);
     await queryRunner.query(`DROP TABLE IF EXISTS dni_user_subscription_log;`);
     await queryRunner.query(`DROP TABLE IF EXISTS dni_user_subscription;`);
-    await queryRunner.query(`DROP TYPE IF EXISTS dni_user_action_enum;`);
-    await queryRunner.query(`DROP TYPE IF EXISTS dni_entity_type_enum;`);
     await queryRunner.query(`DROP TABLE IF EXISTS dni_user_extras;`);
     await queryRunner.query(`DROP TABLE IF EXISTS dni_user;`);
+
+    await queryRunner.query(`DROP TYPE IF EXISTS dni_user_action_enum;`);
+    await queryRunner.query(`DROP TYPE IF EXISTS dni_entity_type_enum;`);
   }
 }

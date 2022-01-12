@@ -16,12 +16,16 @@ export class Migration_Improve_Notifications_Routines implements MigrationInterf
     // -- jsonb_object_case_enum
     // -- ======================
     await queryRunner.query(`
-      CREATE TYPE jsonb_object_case_enum AS ENUM (
-        'default',
-        'snakecase',
-        'camelcase'
-      );
-    `);
+      DO $type$ BEGIN
+        CREATE TYPE jsonb_object_case_enum AS ENUM (
+          'default',
+          'snakecase',
+          'camelcase'
+        );
+      EXCEPTION
+        WHEN duplicate_object THEN NULL;
+      END $type$;`,
+    );
 
     // -- =========================
     // -- jsonb_object_to_camelcase
@@ -281,7 +285,7 @@ export class Migration_Improve_Notifications_Routines implements MigrationInterf
 
     await queryRunner.query(`
       ALTER TABLE ccms_entity ADD COLUMN IF NOT EXISTS parent_event ccms_entity_descriptor NULL;
-      COMMENT ON COLUMN dni.ccms_entity.parent_event IS 'applicable only to "post" entity_type';
+      COMMENT ON COLUMN ccms_entity.parent_event IS 'applicable only to "post" entity_type';
     `);
 
     await queryRunner.query(`
@@ -289,10 +293,10 @@ export class Migration_Improve_Notifications_Routines implements MigrationInterf
       COMMENT ON COLUMN ccms_entity.parent_networks IS 'applicable only to "post" and "event" entity_type';
     `);
 
-    // -- ccms_entity__chk$post_parents
+    // -- c_entity__chk$post_parents
     await queryRunner.query(`
-      ALTER TABLE dni.ccms_entity DROP CONSTRAINT IF EXISTS "ccms_entity__chk$post_parents";
-      ALTER TABLE dni.ccms_entity ADD CONSTRAINT "ccms_entity__chk$post_parents" CHECK (
+      ALTER TABLE ccms_entity DROP CONSTRAINT IF EXISTS "c_entity__chk$post_parents";
+      ALTER TABLE ccms_entity ADD CONSTRAINT "c_entity__chk$post_parents" CHECK (
         entity_type != 'post' OR (
           entity_type = 'post' AND (
             COALESCE(ARRAY_LENGTH(parent_networks, 1), 0) = 0 OR 
@@ -302,20 +306,20 @@ export class Migration_Improve_Notifications_Routines implements MigrationInterf
       );
     `);
 
-    // -- ccms_entity__chk$event_parents
+    // -- c_entity__chk$event_parents
     await queryRunner.query(`
-      ALTER TABLE dni.ccms_entity DROP CONSTRAINT IF EXISTS "ccms_entity__chk$event_parents";
-      ALTER TABLE dni.ccms_entity ADD CONSTRAINT "ccms_entity__chk$event_parents" CHECK (
+      ALTER TABLE ccms_entity DROP CONSTRAINT IF EXISTS "c_entity__chk$event_parents";
+      ALTER TABLE ccms_entity ADD CONSTRAINT "c_entity__chk$event_parents" CHECK (
         entity_type != 'event' OR (
           entity_type = 'event' AND parent_event IS NULL
         )
       );
     `);
 
-    // -- ccms_entity__chk$network_parents
+    // -- c_entity__chk$network_parents
     await queryRunner.query(`
-      ALTER TABLE dni.ccms_entity DROP CONSTRAINT IF EXISTS "ccms_entity__chk$network_parents";
-      ALTER TABLE dni.ccms_entity ADD CONSTRAINT "ccms_entity__chk$network_parents" CHECK (
+      ALTER TABLE ccms_entity DROP CONSTRAINT IF EXISTS "c_entity__chk$network_parents";
+      ALTER TABLE ccms_entity ADD CONSTRAINT "c_entity__chk$network_parents" CHECK (
         (entity_type != 'network'::dni_entity_type_enum) OR (
           (entity_type = 'network'::dni_entity_type_enum) AND 
           (COALESCE(array_length(parent_networks, 1), 0) = 0) AND 
@@ -324,10 +328,10 @@ export class Migration_Improve_Notifications_Routines implements MigrationInterf
       );
     `);
 
-    // -- ccms_entity__chk$other_parents
+    // -- c_entity__chk$other_parents
     await queryRunner.query(`
-      ALTER TABLE dni.ccms_entity DROP CONSTRAINT IF EXISTS "ccms_entity__chk$other_parents";
-      ALTER TABLE dni.ccms_entity ADD CONSTRAINT "ccms_entity__chk$other_parents" CHECK (
+      ALTER TABLE ccms_entity DROP CONSTRAINT IF EXISTS "c_entity__chk$other_parents";
+      ALTER TABLE ccms_entity ADD CONSTRAINT "c_entity__chk$other_parents" CHECK (
         entity_type = ANY(ARRAY['network', 'event', 'post']::dni_entity_type_enum[]) OR (
           entity_type != ALL(ARRAY['network', 'event', 'post']::dni_entity_type_enum[]) AND 
             COALESCE(ARRAY_LENGTH(parent_networks, 1), 0) = 0 AND 
@@ -1015,12 +1019,12 @@ export class Migration_Improve_Notifications_Routines implements MigrationInterf
     `);
 
 
-    // -- ccms_entity__chk$...
+    // -- c_entity__chk$...
     await queryRunner.query(`
-      ALTER TABLE dni.ccms_entity DROP CONSTRAINT IF EXISTS "ccms_entity__chk$other_parents";
-      ALTER TABLE dni.ccms_entity DROP CONSTRAINT IF EXISTS "ccms_entity__chk$network_parents";
-      ALTER TABLE dni.ccms_entity DROP CONSTRAINT IF EXISTS "ccms_entity__chk$event_parents";
-      ALTER TABLE dni.ccms_entity DROP CONSTRAINT IF EXISTS "ccms_entity__chk$post_parents";
+      ALTER TABLE ccms_entity DROP CONSTRAINT IF EXISTS "c_entity__chk$other_parents";
+      ALTER TABLE ccms_entity DROP CONSTRAINT IF EXISTS "c_entity__chk$network_parents";
+      ALTER TABLE ccms_entity DROP CONSTRAINT IF EXISTS "c_entity__chk$event_parents";
+      ALTER TABLE ccms_entity DROP CONSTRAINT IF EXISTS "c_entity__chk$post_parents";
     `);
 
     // -- ccms_entity, drop parent_event and parent_networks

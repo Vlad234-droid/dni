@@ -12,6 +12,7 @@ import {
 @Entity('ccms_entity')
 @Index('c_entity__pk', ['entityId', 'entityType'], { unique: true })
 class CcmsEntity {
+  
   @PrimaryColumn('integer', { name: 'entity_id' })
   entityId!: number;
 
