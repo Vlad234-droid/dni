@@ -1,4 +1,4 @@
-import { CommonCcmsEntity } from '../ccms';
+import { CommonCcmsEntity } from './CommonCcmsEntity';
 import { DniEntityTypeEnum, CcmsEntity, CcmsEntityKey } from '../entities';
 import { slugify } from '../utils';
 
