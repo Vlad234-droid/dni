@@ -73,8 +73,8 @@ export const createColleagueNotificationAcknowledgement = async (
     INSERT INTO 
       ${schemaPrefix}dni_user_notification_acknowledge(colleague_uuid, acknowledge_entity_id, acknowledge_entity_type)
     VALUES($1, $2, $3)
-    ON CONFLICT DO UPDATE 
-    SET 
+    ON CONFLICT (colleague_uuid, acknowledge_entity_id, acknowledge_entity_type) DO UPDATE 
+    SET
       acknowledge_created_at = CURRENT_TIMESTAMP
     WHERE dni_user_notification_acknowledge.colleague_uuid = $1
       AND dni_user_notification_acknowledge.acknowledge_entity_id = $2
