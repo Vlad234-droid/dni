@@ -19,7 +19,7 @@
     "crypto-js": "4.0.0"
   },
   "devDependencies": {
-    "@types/express": "4.17.2",
+    "@types/express": "^4.17.11",
     "@types/http-proxy-middleware": "0.19.2",
     "@types/ua-parser-js": "0.7.33",
     "@types/url-join": "4.0.0",
