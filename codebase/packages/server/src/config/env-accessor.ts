@@ -1,6 +1,7 @@
 import { isDEV } from '@dni-common/connector-utils';
 
 const optionalEnvironmentParameters = [
+  'BUILD_ENV',
   'LOGGER_ROOT_NAME',
   'LOGGER_LEVEL',
   'LOGGER_PRETIFY',
