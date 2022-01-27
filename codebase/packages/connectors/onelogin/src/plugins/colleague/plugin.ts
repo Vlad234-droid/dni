@@ -1,4 +1,4 @@
-import { Response, Request, NextFunction } from 'express';
+import { Response, Request } from 'express';
 import NodeCache from 'node-cache';
 
 import { ApiEnv, Headers, resolveBaseUrl, TESCO_API_URLS } from '@energon-connectors/core';

@@ -12,8 +12,8 @@ const getAppEnv = (env: string, localBaseUrl?: string) => {
   }
 };
 
-const isPROD = (env: string) => {
-  switch (env.toLowerCase()) {
+const isPROD = (env: string | undefined) => {
+  switch (env?.toLowerCase()) {
     case 'prod':
     case 'production':
       return true;
@@ -22,8 +22,8 @@ const isPROD = (env: string) => {
   }
 };
 
-const isPPE = (env: string) => {
-  switch (env.toLowerCase()) {
+const isPPE = (env: string | undefined) => {
+  switch (env?.toLowerCase()) {
     case 'ppe':
     case 'uat':
       return true;
@@ -32,8 +32,8 @@ const isPPE = (env: string) => {
   }
 };
 
-const isDEV = (env: string) => {
-  switch (env.toLowerCase()) {
+const isDEV = (env: string | undefined) => {
+  switch (env?.toLowerCase()) {
     case 'development':
     case 'development-mock':
     case 'dev-mock':
@@ -44,8 +44,8 @@ const isDEV = (env: string) => {
   }
 };
 
-const isLocal = (env: string) => {
-  switch (env.toLowerCase()) {
+const isLocal = (env: string | undefined) => {
+  switch (env?.toLowerCase()) {
     case 'development-local':
     case 'development-local-mock':
     case 'dev-local':
@@ -54,7 +54,8 @@ const isLocal = (env: string) => {
     case 'local-mock':
       return true;
     default:
-      return false;
+      // local env. by default
+      return true;
   }
 };
 
