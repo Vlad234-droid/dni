@@ -1,4 +1,6 @@
 export const defaultConfig = {
+  buildEnvironment: 'production',
+  
   applicationName: 'Our Tesco | Diversity and Inclusion',
   applicationUploadSize: 50, // Maximum allowed upload size in MB
   defaultRole: 'Employee',
