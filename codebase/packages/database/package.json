@@ -35,6 +35,7 @@
   },
   "dependencies": {
     "@dni-connectors/colleague-cms-api": "^0.1.0",
+    "@dni-connectors/identity-api": "^0.1.0",
     "chalk": "^4.1.1",
     "cli-progress": "^3.9.1",
     "csv-parser": "^3.0.0",
