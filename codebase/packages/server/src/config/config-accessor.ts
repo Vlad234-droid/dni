@@ -82,7 +82,7 @@ export class ConfigAccessor {
 
     this.config = {
       // general
-      buildEnvironment: () => processEnv.BUILD_ENV,
+      buildEnvironment: () => processEnv.BUILD_ENV || defaultConfig.buildEnvironment,
       runtimeEnvironment: () => processEnv.RUNTIME_ENV,
       environment: () => processEnv.NODE_ENV,
       apiEnv: () =>
