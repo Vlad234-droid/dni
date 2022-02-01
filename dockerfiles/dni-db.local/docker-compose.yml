@@ -21,4 +21,3 @@ services:
             - PGADMIN_DEFAULT_PASSWORD=dn1
         ports:
             - 6565:80
-    

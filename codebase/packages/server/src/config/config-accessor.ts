@@ -154,12 +154,7 @@ export class ConfigAccessor {
       identityUserScopedTokenCookieName: () => processEnv.IDENTITY_USER_SCOPED_TOKEN_COOKIE_NAME,
       identityUserScopedTokenCookieSecret: () => processEnv.IDENTITY_USER_SCOPED_TOKEN_COOKIE_SECRET,
       // mock
-      mockServerUrl: () => {
-        if (!isDEV(processEnv.BUILD_ENV)) {
-          throw Error('Mock server is available only for DEV environment.');
-        }
-        return processEnv.MOCK_SERVER_URL || '';
-      },
+      mockServerUrl: () => processEnv.MOCK_SERVER_URL || '',
       // mailing
       mailingNewEntityTemplateId: () => processEnv.MAILING_NEW_ENTITY_TEMPLATE_ID,
       mailingConfirmationTemplateId: () => processEnv.MAILING_CONFIRMATION_TEMPLATE_ID,
