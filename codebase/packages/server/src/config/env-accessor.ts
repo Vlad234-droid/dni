@@ -223,6 +223,8 @@ export class EnvAccessor {
       IDENTITY_CLIENT_SECRET,
       IDENTITY_USER_SCOPED_TOKEN_COOKIE_NAME,
       IDENTITY_USER_SCOPED_TOKEN_COOKIE_SECRET,
+      // mock
+      MOCK_SERVER_URL: isDEV(BUILD_ENV) ? MOCK_SERVER_URL : undefined,
       // mailing
       MAILING_NEW_ENTITY_TEMPLATE_ID,
       MAILING_CONFIRMATION_TEMPLATE_ID,
@@ -230,8 +232,6 @@ export class EnvAccessor {
       MAILING_SHARE_STORY_TEMPLATE_ID,
       MAILING_STAKEHOLDER_EMAIL,
       MAILING_CHUNK_SIZE,
-      // mock
-      ...(isDEV(BUILD_ENV) ? { MOCK_SERVER_URL } : undefined),
     };
   }
 }

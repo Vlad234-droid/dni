@@ -6,6 +6,10 @@
 gradlew text eol=lf
 package.json text eol=lf
 
+# env files
+*.env text eol=lf
+*.env.example text eol=lf
+
 # Declare files that will always have CRLF line endings on checkout.
 *.sln text eol=crlf
 *.bat text eol=crlf
