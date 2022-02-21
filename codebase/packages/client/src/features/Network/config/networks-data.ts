@@ -3,6 +3,7 @@ import raceAndEthnicityImage from '../assets/race-and-ethnicity.jpg';
 import disabilityImage from '../assets/disability.jpg';
 import lgbtImage from '../assets/lgbtq.jpg';
 import womenImage from '../assets/women.jpg';
+import parentsAndCarers from '../assets/parents-and-carers.jpg';
 
 export default [
   {
@@ -31,6 +32,14 @@ export default [
   },
   {
     id: 4,
+    title: 'Parents & Carers at Tesco',
+    description: 'Supporting all Parents & Carers across Tesco to find the support and advice they need as well as make working life easier, wherever you are in the business and whatever their goals.',
+    image: {
+      src: parentsAndCarers,
+    },
+  },
+  {
+    id: 5,
     title: 'Race & Ethnicity at Tesco',
     description: 'Supporting and encouraging ethnically diverse colleagues to be the best they can be, whilst engaging with the wider community, for a more inclusive future.',
     image: {
@@ -38,7 +47,7 @@ export default [
     },
   },
   {
-    id: 5,
+    id: 6,
     title: 'Women at Tesco',
     description: 'Supporting one another to make working life easier, wherever you are in the business and whatever your goals. Helping female colleagues to network, develop, balance work and home life & ensuring we have Role Models in Tesco.',
     image: {
