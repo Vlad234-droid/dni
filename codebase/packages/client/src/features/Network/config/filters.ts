@@ -3,11 +3,11 @@ export const YOUR_NETWORKS = 'YOUR_NETWORKS';
 
 export const initialListFilters = [
   {
-    key: YOUR_NETWORKS,
-    title: 'Networks I’ve Joined',
+    key: ALL,
+    title: 'All Networks',
   },
   {
-    key: ALL,
-    title: 'All',
+    key: YOUR_NETWORKS,
+    title: 'Networks I’ve Joined',
   },
 ];
