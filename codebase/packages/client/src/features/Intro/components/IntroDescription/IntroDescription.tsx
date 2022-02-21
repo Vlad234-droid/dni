@@ -5,7 +5,7 @@ import Icon from '@beans/icon';
 import { useMedia } from 'context/InterfaceContext';
 
 import data from '../../config/data';
-import { Wrapper, Title, Content } from './styled';
+import { Wrapper, Title, Content, Description } from './styled';
 
 type Props = {
   onClick: () => void;
@@ -21,15 +21,15 @@ const IntroDescription: FC<Props> = ({ onClick, isOpen }) => {
       <Title>{data.description.title}</Title>
       <Content data-testid='intro-description-content' isOpen={adjustedIsOpen}>
         {data.description.content.map((item, index) => (
-          <p key={index}>{item}</p>
+          <Description key={index}>{item}</Description>
         ))}
       </Content>
-      {isDesktop &&
-      <Button onClick={onClick} inverse variant='primary' block={!isDesktop}>
-        {adjustedIsOpen ? 'Read less' : 'Read more'}
-        <Icon graphic={adjustedIsOpen ? 'contract' : 'expand'} size='xx' />
-      </Button>
-      }
+      {isDesktop && (
+        <Button onClick={onClick} inverse variant='primary' block={!isDesktop}>
+          {adjustedIsOpen ? 'Read less' : 'Read more'}
+          <Icon graphic={adjustedIsOpen ? 'contract' : 'expand'} size='xx' />
+        </Button>
+      )}
     </Wrapper>
   );
 };
