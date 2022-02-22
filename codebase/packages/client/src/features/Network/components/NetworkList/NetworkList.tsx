@@ -32,7 +32,7 @@ const NetworkList: FC = () => {
     user: { networks },
     networkError,
   } = useStore((state) => state.auth);
-  const [filter, setFilter] = useState<Filter>(YOUR_NETWORKS);
+  const [filter, setFilter] = useState<Filter>(ALL);
   const [filters, setFilters] = useState<FilterPayload>({
     id_in: [...(networks || []), -1],
   });

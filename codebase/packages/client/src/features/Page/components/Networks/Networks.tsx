@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 
 import { Page, PAGE_PREFIX } from 'features/Page';
-import { NetworkList, NetworkCarousel } from 'features/Network';
+import { NetworkList } from 'features/Network';
 import { menuItemsDesktop } from 'features/Menu';
 import { CMSLink } from 'features/Common';
 import { CanPerform } from 'features/Auth';
@@ -19,12 +19,7 @@ const Networks: FC = () => {
       renderMain={() => (
         <div data-testid={TEST_ID}>
           <PageWrapper
-            renderContent={() => (
-              <>
-                <NetworkCarousel />
-                <NetworkList />
-              </>
-            )}
+            renderContent={() => <NetworkList />}
             pageName={menuItemsDesktop[Page.NETWORKS]}
             renderLink={() => (
               <CanPerform perform={buildAction(Component.CMS_LINK, Action.LIST)} yes={() => <CMSLink />} />
