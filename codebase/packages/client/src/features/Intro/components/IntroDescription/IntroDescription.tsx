@@ -21,7 +21,7 @@ const IntroDescription: FC<Props> = ({ onClick, isOpen }) => {
       <Title>{data.description.title}</Title>
       <Content data-testid='intro-description-content' isOpen={adjustedIsOpen}>
         {data.description.content.map((item, index) => (
-          <Description key={index}>{item}</Description>
+          <Description key={index} dangerouslySetInnerHTML={{ __html: item }} />
         ))}
       </Content>
       {isDesktop && (
