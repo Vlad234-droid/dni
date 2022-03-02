@@ -30,7 +30,6 @@ const PostCreateContainer: FC<Props> = ({ networkId, onClose }) => {
     );
   }, []);
 
-  // TODO: name and location fields are not sent
   const handleShareStory = async ({ title, story, networkTitle, name, location }: FormData) => {
     const result = await dispatch(
       shareStory({
@@ -103,6 +102,7 @@ const PostCreateContainer: FC<Props> = ({ networkId, onClose }) => {
     if (CONTACT_API_ENABLED) {
       await handleShareStory(data);
     } else {
+      await handleShareStory(data);
       await handleCreatePost(data, network);
     }
   };
