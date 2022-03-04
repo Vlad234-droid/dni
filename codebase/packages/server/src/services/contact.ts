@@ -104,7 +104,7 @@ const sendShareStoryEmail = async (data: EmailData) => {
 const sendConfirmationEmailToNewEmail = async (colleagueUUID: string, data: EmailData) => {
   return await sendEmails(
     config.mailingConfirmationNewEmailTemplateId(),
-    [createRecipient(data.markdownNewEmailAddress, colleagueUUID)],
+    [createRecipient(data.newEmailAddress, colleagueUUID)],
     data,
   );
 };
@@ -120,7 +120,7 @@ const sendConfirmationEmailToOldEmail = async (colleagueUUID: string, data: Emai
 const sendConfirmationEmailSuccess = async (colleagueUUID: string, data: EmailData) => {
   return await sendEmails(
     config.mailingConfirmationEmailSuccessTemplateId(),
-    [createRecipient(data.markdownNewEmailAddress, colleagueUUID)],
+    [createRecipient(data.newEmailAddress, colleagueUUID)],
     data,
   );
 };
