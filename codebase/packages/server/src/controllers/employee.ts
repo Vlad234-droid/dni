@@ -200,10 +200,10 @@ const sendPersonalEmailConfirmation: Handler = async (req: Request, res: Respons
       payload: req.body,
     });
 
-    sendConfirmationEmailToOldEmail(colleagueUUID!, { markdownNewEmailAddress: emailAddress, oldEmailAddress });
+    sendConfirmationEmailToOldEmail(colleagueUUID!, { newEmailAddress: emailAddress, oldEmailAddress });
     sendConfirmationEmailToNewEmail(colleagueUUID!, {
-      markdownNewEmailAddress: emailAddress,
-      markdownConfirmLink: `${config.applicationBaseUrl()}${config.applicationUrlTemplateConfirmation()}`.replace(
+      newEmailAddress: emailAddress,
+      confirmLink: `${config.applicationBaseUrl()}${config.applicationUrlTemplateConfirmation()}`.replace(
         /%\w+%/,
         token,
       ),
@@ -225,7 +225,7 @@ const refreshPersonalEmailByToken: Handler = async (req: Request, res: Response)
 
     const { emailAddress, addressIdentifier } = tokenSettings.payload || {};
 
-    sendConfirmationEmailSuccess(colleagueUUID!, { markdownNewEmailAddress: emailAddress });
+    sendConfirmationEmailSuccess(colleagueUUID!, { newEmailAddress: emailAddress });
 
     res.json({ ...(await updatePersonalEmail(colleagueUUID!, emailAddress, addressIdentifier)), ...tokenSettings });
   });
