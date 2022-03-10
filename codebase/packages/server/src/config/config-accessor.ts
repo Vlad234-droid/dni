@@ -65,8 +65,9 @@ export type ProcessConfig = {
   mockServerUrl: () => string;
   // mailing
   mailingNewEntityTemplateId: () => string;
-  mailingConfirmationTemplateId: () => string;
+  mailingConfirmationNewEmailTemplateId: () => string;
   mailingConfirmationOldEmailTemplateId: () => string;
+  mailingConfirmationEmailSuccessTemplateId: () => string;
   mailingShareStoryTemplateId: () => string;
   mailingStakeholderEmail: () => string;
   mailingChunkSize: () => number;
@@ -157,8 +158,9 @@ export class ConfigAccessor {
       mockServerUrl: () => processEnv.MOCK_SERVER_URL || '',
       // mailing
       mailingNewEntityTemplateId: () => processEnv.MAILING_NEW_ENTITY_TEMPLATE_ID,
-      mailingConfirmationTemplateId: () => processEnv.MAILING_CONFIRMATION_TEMPLATE_ID,
+      mailingConfirmationNewEmailTemplateId: () => processEnv.MAILING_CONFIRMATION_NEW_EMAIL_TEMPLATE_ID,
       mailingConfirmationOldEmailTemplateId: () => processEnv.MAILING_CONFIRMATION_OLD_EMAIL_TEMPLATE_ID,
+      mailingConfirmationEmailSuccessTemplateId: () => processEnv.MAILING_CONFIRMATION_EMAIL_SUCCESS_TEMPLATE_ID,
       mailingShareStoryTemplateId: () => processEnv.MAILING_SHARE_STORY_TEMPLATE_ID,
       mailingStakeholderEmail: () => processEnv.MAILING_STAKEHOLDER_EMAIL,
       mailingChunkSize: () => +processEnv.MAILING_CHUNK_SIZE,

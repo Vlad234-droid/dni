@@ -5,10 +5,10 @@ export default {
     'By valuing individuality and uniqueness we create a sense of belonging',
   ],
   description: {
-    title: 'At Tesco, inclusion means that Everyone’s Welcome',
+    title: 'At Tesco, inclusion means that Everyone’s Welcome.',
     content: [
-      'Diversity and inclusion has always been at the heart of Tesco. It is embedded in our values: we treat people how they want to be treated. We always want our colleagues to feel they can be themselves at work and we are committed to helping them be at their best. ',
-      'Across the Tesco group we are building an inclusive workplace, a place to actively celebrate the cultures, personalities and preferences of our colleagues – who in turn help to build the success of our business and reflect the diversity of the communities we serve.'
+      `Everyone is treated fairly and with respect; by valuing individuality and uniqueness we create a sense of belonging. As we move into our next chapter as a business, it’s important to remind ourselves of the importance of keeping inclusion at the heart of everything we do.`,
+      `Being a more diverse and inclusive company is an <b>enabler of our core purpose</b>: serving customers, communities and the planet a little better every day, and will help us to achieve our priorities. Treating everyone fairly and with respect is a <b>demonstration of our value:</b> we treat people how they want to be treated. We cannot fully live our <b>Code of Business Conduct without role modelling inclusive behaviours.</b> Valuing difference and being inclusive are <b>woven through our Win Together Behaviours.</b>`,
     ],
   },
 };
