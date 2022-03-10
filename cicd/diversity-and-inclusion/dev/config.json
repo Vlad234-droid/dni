@@ -29,9 +29,17 @@
         "type": "plain",
         "value": "/sso/logout"
       },
+      "REACT_APP_RECITE_ME_SERVICE_KEY": {
+        "type": "secret",
+        "name": "react_app_recite_me_service_key"
+      },
       "PUBLIC_URL": {
         "type": "plain",
         "value": "/dev-thp/diversity-and-inclusion"
+      },
+      "REACT_APP_CONTACT_API_ENABLED": {
+        "type": "plain",
+        "value": "true"
       }
     }
   },
@@ -94,8 +102,24 @@
         "name": "application_web_hooks_secret"
       },
       "MAILING_NEW_ENTITY_TEMPLATE_ID": {
-        "type": "plain",
-        "value": "dfge2b6d-qfaa-47c6-bfw9-b4214y0a2e88"
+        "type": "secret",
+        "value": "mailing_new_entity_template_id"
+      },
+      "MAILING_CONFIRMATION_NEW_EMAIL_TEMPLATE_ID": {
+        "type": "secret",
+        "value": "mailing_confirmation_new_email_template_id"
+      },
+      "MAILING_CONFIRMATION_OLD_EMAIL_TEMPLATE_ID": {
+        "type": "secret",
+        "value": "mailing_confirmation_old_email_template_id"
+      },
+      "MAILING_CONFIRMATION_EMAIL_SUCCESS_TEMPLATE_ID": {
+        "type": "secret",
+        "value": "mailing_confirmation_email_success_template_id"
+      },
+      "MAILING_SHARE_STORY_TEMPLATE_ID": {
+        "type": "secret",
+        "value": "mailing_share_story_template_id"
       },
       "MAILING_CHUNK_SIZE": {
         "type": "plain",

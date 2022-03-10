@@ -17,8 +17,9 @@ import {
   createPersonalEmail,
   updatePersonalEmail,
   sendShareStoryEmail,
-  sendConfirmationEmail,
+  sendConfirmationEmailToNewEmail,
   sendConfirmationEmailToOldEmail,
+  sendConfirmationEmailSuccess,
   storeTokenSettings,
   findTokenSettingsAndInvalidate,
 } from '../services';
@@ -173,16 +174,15 @@ const shareStory: Handler = async (req: Request<{}, {}, ShareStory>, res: Respon
       location: colleagueLocation,
     } = req.body;
 
-    res.json({
-      ...(await sendShareStoryEmail({
-        markdownNetworkTitle,
-        colleagueStoryTitle,
-        colleagueFullStory,
-        colleagueName,
-        colleagueLocation,
-      })),
-      ...req.body,
+    sendShareStoryEmail({
+      markdownNetworkTitle,
+      colleagueStoryTitle,
+      colleagueFullStory,
+      colleagueName,
+      colleagueLocation,
     });
+
+    res.json(req.body);
   });
 };
 
@@ -200,18 +200,17 @@ const sendPersonalEmailConfirmation: Handler = async (req: Request, res: Respons
       payload: req.body,
     });
 
-    // await sendConfirmationEmailToOldEmail(colleagueUUID!, { markdownNewEmailAddress: oldEmailAddress });
+    sendConfirmationEmailToOldEmail(colleagueUUID!, { newEmailAddress: emailAddress, oldEmailAddress });
+    sendConfirmationEmailToNewEmail(colleagueUUID!, {
+      newEmailAddress: emailAddress,
+      confirmLink: `${config.applicationBaseUrl()}${config.applicationUrlTemplateConfirmation()}`.replace(
+        /%\w+%/,
+        token,
+      ),
+    });
 
     res.json({
       ...tokenSettings,
-      // TODO: uncomment when email templates will be available
-      // ...(await sendConfirmationEmail(colleagueUUID!, {
-      //   markdownEmailAddress: emailAddress,
-      //   markdownConfirmLink: `${config.applicationBaseUrl()}${config.applicationUrlTemplateConfirmation()}`.replace(
-      //     /%\w+%/,
-      //     token,
-      //   ),
-      // })),
       ...req.body,
     });
   });
@@ -224,10 +223,11 @@ const refreshPersonalEmailByToken: Handler = async (req: Request, res: Response)
 
     const tokenSettings = await findTokenSettingsAndInvalidate(colleagueUUID!, token);
 
-    res.json({ message: 'ok', ...tokenSettings });
-    // // TODO: uncomment when email templates will be available
-    // const { emailAddress, addressIdentifier } = tokenSettings.payload || {};
-    // res.json({ ...(await updatePersonalEmail(colleagueUUID!, emailAddress, addressIdentifier)), ...tokenSettings });
+    const { emailAddress, addressIdentifier } = tokenSettings.payload || {};
+
+    sendConfirmationEmailSuccess(colleagueUUID!, { newEmailAddress: emailAddress });
+
+    res.json({ ...(await updatePersonalEmail(colleagueUUID!, emailAddress, addressIdentifier)), ...tokenSettings });
   });
 };
 

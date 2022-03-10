@@ -19,6 +19,12 @@ export const Wrapper = styled.div`
   `}
 `;
 
+export const Description = styled.p`
+  &:not(:last-child) {
+    margin-bottom: 8px;
+  }
+`;
+
 export const Content = styled.div<{ isOpen: boolean }>`
   display: -webkit-box;
   -webkit-line-clamp: ${({ isOpen }) => (isOpen ? 'auto' : '5')};
