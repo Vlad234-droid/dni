@@ -23,7 +23,7 @@ import {
   storeTokenSettings,
   findTokenSettingsAndInvalidate,
 } from '../services';
-import { executeSafe } from '../utils';
+import { executeSafe, executeSequentially } from '../utils';
 import { getConfig } from '../config/config-accessor';
 
 const config = getConfig();
@@ -200,14 +200,18 @@ const sendPersonalEmailConfirmation: Handler = async (req: Request, res: Respons
       payload: req.body,
     });
 
-    sendConfirmationEmailToOldEmail(colleagueUUID!, { newEmailAddress: emailAddress, oldEmailAddress });
-    sendConfirmationEmailToNewEmail(colleagueUUID!, {
-      newEmailAddress: emailAddress,
-      confirmLink: `${config.applicationBaseUrl()}${config.applicationUrlTemplateConfirmation()}`.replace(
-        /%\w+%/,
-        token,
-      ),
-    });
+    const task1 = async () =>
+      await sendConfirmationEmailToOldEmail(colleagueUUID!, { newEmailAddress: emailAddress, oldEmailAddress });
+    const task2 = async () =>
+      await sendConfirmationEmailToNewEmail(colleagueUUID!, {
+        newEmailAddress: emailAddress,
+        confirmLink: `${config.applicationBaseUrl()}${config.applicationUrlTemplateConfirmation()}`.replace(
+          /%\w+%/,
+          token,
+        ),
+      });
+
+    executeSequentially([task1, task2], 2000);
 
     res.json({
       ...tokenSettings,
