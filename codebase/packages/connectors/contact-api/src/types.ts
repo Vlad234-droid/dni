@@ -59,4 +59,4 @@ export type ContactAPIHeaders = {
   Authorization: () => string;
 };
 
-export type ContactApiContext = Pick<ConnectorContext, 'identityClientToken' | 'apiEnv' | 'markApiCall'>;
+export type ContactApiContext = Pick<ConnectorContext, 'identityClientToken' | 'apiEnv'>;

@@ -8,7 +8,7 @@ import {
   cmsPostsApiConnector,
   cmsEventsApiConnector,
   cmsNetworksApiConnector,
-  DniCmsApiContext,
+  ColleagueCmsApiContext,
   ApiInput,
   PostApiParams,
   EventApiParams,
@@ -82,7 +82,7 @@ export const handleCepRequest = async (req: Request<{}, CepPayload>, res: Respon
  * @param ctx 
  * @returns 
  */
-const acquireEntityFromCms = async (cepPayload: CepPayload, ctx: DniCmsApiContext) => {
+const acquireEntityFromCms = async (cepPayload: CepPayload, ctx: ColleagueCmsApiContext) => {
 
   const { id, model } = cepPayload;
 

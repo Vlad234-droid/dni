@@ -2,7 +2,7 @@ import { defineAPI } from '@energon/rest-api-definition';
 
 import { Reaction, Reactions, ReactionApiParams, ReactionBody, ReactionsCount } from './types';
 import { buildApiConsumer, buildParams } from '../utils';
-import { DniCmsApiContext, ApiInput } from '../types';
+import { ColleagueCmsApiContext, ApiInput } from '../types';
 
 export const cmsReactionsApiDef = defineAPI((endpoint) => ({
   getReactionsCount: endpoint
@@ -26,7 +26,7 @@ export const cmsReactionsApiDef = defineAPI((endpoint) => ({
     .build(),
 }));
 
-export const cmsReactionsApiConnector = (ctx: DniCmsApiContext) => {
+export const cmsReactionsApiConnector = (ctx: ColleagueCmsApiContext) => {
   const apiConsumer = buildApiConsumer(ctx, cmsReactionsApiDef);
 
   return {

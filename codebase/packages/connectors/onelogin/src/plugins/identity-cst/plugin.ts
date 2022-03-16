@@ -1,9 +1,8 @@
 import { Response, Request, NextFunction, Handler } from 'express';
 
-import { markApiCall } from '@energon/splunk-logger';
-import { ApiEnv, Headers, resolveBaseUrl, TESCO_API_URLS } from '@energon-connectors/core';
+import { ApiEnv, resolveBaseUrl, TESCO_API_URLS } from '@energon-connectors/core';
 
-import { ClientScopeToken, ClientTokenIssueBody, getIdentityApi } from '../api';
+import { identityApiConsumer, ClientTokenResponse, ClientTokenIssueBody } from '@dni-connectors/identity-api';
 import { getIdentityClientScopeToken, setIdentityClientScopeToken } from './identity-cst-data';
 import { getMaxAge } from '../utils';
 import { Optional, Plugin } from '../plugin';
@@ -32,12 +31,6 @@ type Config = {
   apiEnv: () => ApiEnv;
 
   /**
-   * Endpoint path
-   * E.v. /identity/v4/issue-token/token
-   */
-  path?: string;
-
-  /**
    * optional, if true, token will be cashed on server and shared between sessions
    * defaults to true
    */
@@ -56,7 +49,6 @@ export const identityClientScopedTokenPlugin = (config: Config & Optional): Plug
       identityClientSecret,
       shouldRun = () => true,
       apiEnv,
-      path = '/identity/v4/issue-token/token',
       cache = true,
     } = config;
 
@@ -75,14 +67,18 @@ export const identityClientScopedTokenPlugin = (config: Config & Optional): Plug
     const baseUrl = resolveBaseUrl(TESCO_API_URLS, { apiEnv });
 
     const credentials = Buffer.from(`${identityClientId}:${identityClientSecret}`).toString('base64');
-    const body: ClientTokenIssueBody = { grant_type: 'client_credentials' };
-    const headerProvider = {
+    const baseHeaders = {
       Authorization: () => `Basic ${credentials}`,
       Accept: () => 'application/vnd.tesco.identity.tokenresponse.v4claims+json',
     };
 
-    const api = getIdentityApi(headerProvider, baseUrl, path, markApiCall(res));
-    const { data } = await api.issueToken({ body });
+    const api = identityApiConsumer({
+      baseUrl, 
+      baseHeaders, 
+    });
+
+    const body: ClientTokenIssueBody = { grant_type: 'client_credentials' };
+    const data = await api.issueToken({ body });
 
     setIdentityClientScopeToken(res, data);
 
@@ -98,10 +94,10 @@ export const identityClientScopedTokenPlugin = (config: Config & Optional): Plug
 };
 
 const [getCachedClientScopeToken, setCachedClientScopeToken] = ((): [
-  () => ClientScopeToken | null,
-  (newToken: ClientScopeToken, age: number) => void,
+  () => ClientTokenResponse | null,
+  (newToken: ClientTokenResponse, age: number) => void,
 ] => {
-  let cashedClientScopeToken: ClientScopeToken | null = null;
+  let cashedClientScopeToken: ClientTokenResponse | null = null;
 
   return [
     () => cashedClientScopeToken,

@@ -33,9 +33,7 @@ const NetworkList: FC = () => {
     networkError,
   } = useStore((state) => state.auth);
   const [filter, setFilter] = useState<Filter>(ALL);
-  const [filters, setFilters] = useState<FilterPayload>({
-    id_in: [...(networks || []), -1],
-  });
+  const [filters, setFilters] = useState<FilterPayload>({});
 
   const scrollContainer = useScrollContainer();
 
@@ -110,7 +108,7 @@ const NetworkList: FC = () => {
   // TODO: move to handleFilterChange?
   useEffect(() => {
     (async () => {
-      await dispatch(clear());
+      dispatch(clear());
       await dispatch(getCount(filters));
     })();
   }, [filters]);

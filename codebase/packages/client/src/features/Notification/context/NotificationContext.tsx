@@ -26,17 +26,22 @@ const NotificationContext = createContext(defaultValue);
 
 export const NotificationProvider: FC = ({ children }) => {
   const dispatch = useDispatch();
+
   useEffect(() => {
-    handleFetchNotifications();
+    (async () => {
+      await handleFetchNotifications();
+    })(); 
   }, []);
 
   const handleFetchNotifications = async () => {
-    await dispatch(getList());
-    await dispatch(getListGroupByNetwork());
+    await Promise.all([
+      dispatch(getList()), 
+      dispatch(getListGroupByNetwork()),
+    ]);
   };
 
-  const handleFetchNotificationsWithDelay = (dalay = 1000) => {
-    setTimeout(() => handleFetchNotifications(), dalay);
+  const handleFetchNotificationsWithDelay = async (dalay = 1000) => {
+    setTimeout(async () => await handleFetchNotifications(), dalay);
   };
 
   const handleClear = () => {
@@ -47,12 +52,12 @@ export const NotificationProvider: FC = ({ children }) => {
     dispatch(toggleSidebar());
   };
 
-  const handleAcknowledge = (payload: AcknowledgePayload) => {
+  const handleAcknowledge = async (payload: AcknowledgePayload) => {
     dispatch(acknowledge(payload));
   };
 
-  const handleAcknowledgeWithDelay = (payload: AcknowledgePayload, dalay = 1000) => {
-    setTimeout(() => handleAcknowledge(payload), dalay);
+  const handleAcknowledgeWithDelay = async (payload: AcknowledgePayload, dalay = 1000) => {
+    setTimeout(async () => await handleAcknowledge(payload), dalay);
   };
 
   return (

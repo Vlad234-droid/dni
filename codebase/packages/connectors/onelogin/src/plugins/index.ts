@@ -18,5 +18,3 @@ export { userDataPlugin, getUserData, setUserData } from './user-data';
 
 export * from './utils';
 export * from './plugin';
-export * from './api/identity-types';
-export * from './api/location-types';

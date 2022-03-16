@@ -2,7 +2,7 @@ export * from './enums';
 export * from './CapiDepartment';
 export * from './CapiRegion';
 export * from './CcmsEntity';
-export { CcmsEntityParentKey } from './CcmsEntityParentKey';
+export { CcmsEntityKey } from './CcmsEntityKey';
 export * from './CcmsNotification';
 export * from './DniUserNotificationAcknowledge';
 export * from './DniUserSubscription';

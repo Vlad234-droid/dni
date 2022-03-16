@@ -1,8 +1,7 @@
-import { Response, Request, NextFunction } from 'express';
+import { Response, Request } from 'express';
 import NodeCache from 'node-cache';
 
 import { ApiEnv, Headers, resolveBaseUrl, TESCO_API_URLS } from '@energon-connectors/core';
-import { markApiCall } from '@energon/splunk-logger';
 import { FetchError } from '@energon/fetch-client';
 import { colleagueApiConsumer, Colleague, ColleagueAPIHeaders } from '@dni-connectors/colleague-api';
 
@@ -142,7 +141,6 @@ export const colleagueApiPlugin = <O>(config: Config<O> & Optional): Plugin => {
     const colleagueApi = colleagueApiConsumer({
       baseUrl: baseUrl,
       baseHeaders: baseHeaders,
-      markApiCall: markApiCall(res),
     });
 
     try {

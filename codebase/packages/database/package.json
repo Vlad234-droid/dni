@@ -1,6 +1,6 @@
 {
   "name": "@dni/database",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "license": "MIT",
   "private": true,
   "files": [
@@ -9,30 +9,35 @@
   "main": "./build/index.js",
   "types": "./build/index.d.ts",
   "scripts": {
-    "build:prod": "tsc -p .",
-    "clean": "rimraf build coverage storybook-static .eslintcache",
-    "clean:all": "yarn clean && rimraf node_modules",
-    "start": "ts-node src/index.ts",
-    "typeorm": "ts-node --transpile-only ../../node_modules/typeorm/cli.js --config ./src/ormconfig.ts",
+    "clean": "rimraf build coverage .eslintcache",
+    "clean:npm": "rimraf node_modules",
+    "clean:all": "yarn clean && yarn clean:npm",
+    "build:prod": "cross-env tsc -p . && mkdir -p ./build/migrations/data && cp -r ./src/migrations/data/* ./build/migrations/data",
+    "typeorm": "node ../../node_modules/typeorm/cli.js --config ./build/ormconfig.js",
+    "typeorm:debug": "node -r source-map-support/register --inspect ../../node_modules/typeorm/cli.js --config ./build/ormconfig.js",
     "entity:create": "yarn typeorm entity:create -n",
     "subscriber:create": "yarn typeorm subscriber:create -n",
     "cache:clear": "yarn typeorm cache:clear",
+    "cli:ccms-sync:debug": "cross-env NODE_ENV=development env-cmd --silent --no-override --fallback -f .env.${NODE_ENV} node -r source-map-support/register --inspect build/cli/ccms-sync.js",
+    "cli:ccms-sync:prod": "cross-env NODE_ENV=production env-cmd --silent --no-override --fallback -f .env.${NODE_ENV} node build/cli/ccms-sync.js",
+    "cli:ccms-sync": "node build/cli/ccms-sync.js",
     "migration:generate": "yarn typeorm migration:generate -n",
     "migration:create": "yarn typeorm migration:create -n",
     "migration:show": "yarn typeorm migration:show",
     "migration:run": "yarn typeorm  migration:run",
+    "migration:run:debug": "yarn typeorm:debug migration:run",
     "migration:revert": "yarn typeorm migration:revert",
     "query": "yarn typeorm query",
     "schema:sync": "yarn typeorm schema:sync",
     "schema:log": "yarn typeorm schema:log",
     "schema:drop": "yarn typeorm schema:drop",
-    "version": "yarn typeorm version",
-    "docker:compose:up": "docker-compose pull && env-cmd -f .env docker-compose up -d",
-    "docker:compose:start": "docker-compose start",
-    "docker:compose:down": "docker-compose down"
+    "version": "yarn typeorm version"
   },
   "dependencies": {
+    "@dni-connectors/colleague-cms-api": "^0.1.0",
+    "@dni-connectors/identity-api": "^0.1.0",
     "chalk": "^4.1.1",
+    "cli-progress": "^3.9.1",
     "csv-parser": "^3.0.0",
     "dotenv": "^8.2.0",
     "lodash": "^4.17.21",
@@ -46,10 +51,13 @@
   },
   "devDependencies": {
     "@types/chalk": "^2.2.0",
+    "@types/cli-progress": "^3.9.1",
     "@types/node": "^14.14.41",
     "@types/pg": "^7.14.11",
     "@types/pg-copy-streams": "^1.2.1",
+    "cross-env": "^7.0.3",
     "env-cmd": "^10.1.0",
-    "ts-node": "^9.1.1"
+    "ts-node": "^9.1.1",
+    "typescript": "^4.1.3"
   }
 }

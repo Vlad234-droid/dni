@@ -3,9 +3,9 @@
     "name": "diversity-and-inclusion"
   },
   "build": {
-    "dockerFileDirectory": "./dockerfiles/dni-frontend_docker_build.Dockerfile",
+    "dockerFileDirectory": "./dockerfiles/dni-frontend_docker_multistage_build.Dockerfile",
     "args": {
-      "NEXUS_ACCESS_TOKEN": {
+      "NPM_ACCESS_TOKEN": {
         "type": "secret",
         "name": "npm_access_token"
       },
@@ -35,7 +35,7 @@
       },
       "REACT_APP_CONTACT_API_ENABLED": {
         "type": "plain",
-        "value": "false"
+        "value": "true"
       },
       "PUBLIC_URL": {
         "type": "plain",
@@ -129,13 +129,17 @@
         "type": "secret",
         "value": "mailing_new_entity_template_id"
       },
-      "MAILING_CONFIRMATION_TEMPLATE_ID": {
+      "MAILING_CONFIRMATION_NEW_EMAIL_TEMPLATE_ID": {
         "type": "secret",
-        "value": "mailing_confirmation_template_id"
+        "value": "mailing_confirmation_new_email_template_id"
       },
       "MAILING_CONFIRMATION_OLD_EMAIL_TEMPLATE_ID": {
         "type": "secret",
         "value": "mailing_confirmation_old_email_template_id"
+      },
+      "MAILING_CONFIRMATION_EMAIL_SUCCESS_TEMPLATE_ID": {
+        "type": "secret",
+        "value": "mailing_confirmation_email_success_template_id"
       },
       "MAILING_SHARE_STORY_TEMPLATE_ID": {
         "type": "secret",
@@ -235,7 +239,7 @@
       },
       "TYPEORM_RUN_MIGRATION": {
         "type": "plain",
-        "value": "true"
+        "value": "false"
       },
       "CCMS_RUN_SYNC": {
         "type": "plain",

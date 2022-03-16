@@ -13,12 +13,15 @@ export class Migration_InitialFunctions implements MigrationInterface {
     // -- ======================
     // -- ccms_entity_descriptor
     // -- ======================
-    await queryRunner.query(
-      `CREATE TYPE ccms_entity_descriptor AS (
-        id int4,
-        type dni_entity_type_enum
-      );
-      `,
+    await queryRunner.query(`
+      DO $type$ BEGIN
+        CREATE TYPE ccms_entity_descriptor AS (
+          id int4,
+          type dni_entity_type_enum
+        );
+      EXCEPTION
+        WHEN duplicate_object THEN NULL;
+      END $type$;`,
     );
 
     // -- ================================

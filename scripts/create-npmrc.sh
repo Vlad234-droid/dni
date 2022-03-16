@@ -1,3 +1,5 @@
+#!/bin/sh
+
 NPM_CREDENTIALS=$1
 
 if [ "$NPM_CREDENTIALS" = "--token" ]; then

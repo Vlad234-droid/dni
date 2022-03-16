@@ -4,13 +4,13 @@ setlocal
 
 cd ..
 
-if "%NEXUS_ACCESS_TOKEN%"=="" (
-    set NEXUS_ACCESS_TOKEN=%*
+if "%NPM_ACCESS_TOKEN%"=="" (
+    set NPM_ACCESS_TOKEN=%*
 )
 
-if "%NEXUS_ACCESS_TOKEN%"=="" (
+if "%NPM_ACCESS_TOKEN%"=="" (
     echo ERROR: Nexus accest token is not set.
-    echo Set NEXUS_ACCESS_TOKEN environment variable or pass access token as a parameter
+    echo Set NPM_ACCESS_TOKEN environment variable or pass access token as a parameter
     goto completed
 )
 
@@ -27,7 +27,7 @@ docker build ^
    --build-arg HTTP_PROXY=http://10.251.0.42:80 ^
    --build-arg HTTPS_PROXY=http://10.251.0.42:80 ^
    --build-arg NODE_ENV=ppe ^
-   --build-arg NEXUS_ACCESS_TOKEN=%NEXUS_ACCESS_TOKEN% ^
+   --build-arg NPM_ACCESS_TOKEN=%NPM_ACCESS_TOKEN% ^
    --build-arg REACT_APP_RECITE_ME_SERVICE_KEY=%REACT_APP_RECITE_ME_SERVICE_KEY% ^
    --build-arg REACT_APP_CONTACT_API_ENABLED=false ^
    --build-arg PUBLIC_URL=/diversity-and-inclusion ^

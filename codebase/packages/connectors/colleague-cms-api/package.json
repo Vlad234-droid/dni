@@ -1,6 +1,6 @@
 {
   "name": "@dni-connectors/colleague-cms-api",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "license": "MIT",
   "files": [
     "build"
@@ -8,9 +8,10 @@
   "main": "./build/index.js",
   "types": "./build/index.d.ts",
   "scripts": {
-    "build:prod": "tsc -p .",
-    "clean": "rimraf build coverage storybook-static .eslintcache",
-    "clean:all": "yarn clean && rimraf node_modules"
+    "clean": "rimraf build coverage .eslintcache",
+    "clean:npm": "rimraf node_modules",
+    "clean:all": "yarn clean && yarn clean:npm",
+    "build:prod": "tsc -p ."
   },
   "dependencies": {
     "@energon-connectors/core": "^0.8.7",
@@ -21,6 +22,7 @@
     "qs": "^6.10.1"
   },
   "devDependencies": {
-    "@types/lodash.merge": "^4.6.6"
+    "@types/lodash.merge": "^4.6.6",
+    "typescript": "^4.1.3"
   }
 }

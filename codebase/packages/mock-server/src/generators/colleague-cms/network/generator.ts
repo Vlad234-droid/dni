@@ -15,7 +15,6 @@ const generateNetwork = () => {
     image: generateFile(),
     contact: faker.internet.email(),
     partners: generateOrganizations(4),
-    questions: [],
     events: [],
   };
 

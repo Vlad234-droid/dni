@@ -43,7 +43,7 @@ export const getDataFromCookie = <T>(
       ? JSON.parse(unfoldedData as string)
       : unfoldedData;
   } catch (e: any) {
-    throw new Error(
+    throw Error(
       `Cookie value can not be extracted! cookie name - '${cookieName}', error message - '${e.message}'`
     );
   }

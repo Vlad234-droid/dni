@@ -3,7 +3,7 @@ import http from 'http';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import os from 'os';
-import { isLocal, isDEV, isPPE, isPROD } from './config/env';
+import { isLocal, isPPE, isPROD } from '@dni-common/connector-utils';
 
 import { initialize as initializeLogger, getHttpLoggerMiddleware } from '@dni-common/logger';
 

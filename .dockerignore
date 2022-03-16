@@ -20,4 +20,5 @@ codebase/**/.env
 codebase/**/.env.example
 codebase/**/coverage
 codebase/**/build
+codebase/**/dist
 codebase/**/node_modules

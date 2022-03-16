@@ -1,11 +1,18 @@
 import { Column, CreateDateColumn, Entity, Index, PrimaryColumn, UpdateDateColumn } from 'typeorm';
 
 import { CcmsTriggerEventEnum, DniEntityTypeEnum } from './enums';
-import { fromPostgresCompositeTypeArray, toPostgresCompositeTypeArray, CcmsEntityParentKey } from './CcmsEntityParentKey';
+import { 
+  CcmsEntityKey,
+  fromPostgresCompositeTypeArray, 
+  toPostgresCompositeTypeArray, 
+  fromPostgresCompositeType, 
+  toPostgresCompositeType, 
+} from './CcmsEntityKey';
 
 @Entity('ccms_entity')
 @Index('c_entity__pk', ['entityId', 'entityType'], { unique: true })
 class CcmsEntity {
+  
   @PrimaryColumn('integer', { name: 'entity_id' })
   entityId!: number;
 
@@ -34,7 +41,13 @@ class CcmsEntity {
   entityDeletedAt?: Date;
 
   @Column('text', { name: 'parents', transformer: { from: fromPostgresCompositeTypeArray, to: toPostgresCompositeTypeArray } })
-  parents?: CcmsEntityParentKey[];
+  parents?: CcmsEntityKey[];
+
+  @Column('text', { name: 'parent_event', transformer: { from: fromPostgresCompositeType, to: toPostgresCompositeType } })
+  parentEvent?: CcmsEntityKey;
+
+  @Column('text', { name: 'parent_networks', transformer: { from: fromPostgresCompositeTypeArray, to: toPostgresCompositeTypeArray } })
+  parentNetworks?: CcmsEntityKey[];
 
   @Column('integer', { name: 'parent_entity_id', nullable: true })
   parentEntityId?: number;
