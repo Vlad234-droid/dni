@@ -2,7 +2,7 @@ import { MigrationInterface, QueryRunner } from 'typeorm';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 import _ from 'lodash';
 
-import { createReadStream } from 'fs';
+import { createReadStream, existsSync } from 'fs';
 import path from 'path';
 import csv from 'csv-parser';
 import stripBom from 'strip-bom-stream';
@@ -32,7 +32,12 @@ export class Migration_Backfill_population_1 implements MigrationInterface {
       receivePostsEmailNotifications?: boolean;
     };
 
-    const stream = createReadStream(path.join(__dirname, 'data', 'DNI_backfill_population_20210719.csv'));
+    const fileName = path.join(__dirname, 'data', 'DNI_backfill_population_20210719.csv');
+    if (!existsSync(fileName)) {
+      return;
+    }
+
+    const stream = createReadStream(fileName);
 
     const population = await new Promise<EmployeeData[]>((fulfill) => {
       const population: EmployeeData[] = [];
