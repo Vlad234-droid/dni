@@ -3,11 +3,9 @@ import { ApiDefinition, defineAPI, EndpointDefinition } from '@energon/rest-api-
 import {
   cmsEmojisApiDef,
   cmsPostsApiDef,
-  cmsRoutingApiDef,
   cmsEventsApiDef,
   cmsNetworksApiDef,
   cmsOrganizationsApiDef,
-  cmsEmotionsApiDef,
   cmsReactionsApiDef,
 } from '@dni-connectors/colleague-cms-api';
 
@@ -37,10 +35,8 @@ export const mutateApi = <T extends ApiDefinition>(
 export const apiDefinition = defineAPI(() => ({
   ...prefixApi('/cms/v1', cmsEmojisApiDef),
   ...prefixApi('/cms/v1', cmsPostsApiDef),
-  ...prefixApi('/cms/v1', cmsRoutingApiDef),
   ...prefixApi('/cms/v1', cmsEventsApiDef),
   ...prefixApi('/cms/v1', cmsNetworksApiDef),
   ...prefixApi('/cms/v1', cmsOrganizationsApiDef),
-  ...prefixApi('/cms/v1', cmsEmotionsApiDef),
   ...prefixApi('/cms/v1', cmsReactionsApiDef),
 }));

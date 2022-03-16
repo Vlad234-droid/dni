@@ -1,12 +1,10 @@
 import { ApiEnv, ConnectorContext } from '@energon-connectors/core';
-import { MarkApiCall } from '@energon/splunk-logger';
 
-export type ColleagueApiContext = Pick<ConnectorContext, 'identityClientToken' | 'apiEnv' | 'markApiCall'>;
+export type ColleagueApiContext = Pick<ConnectorContext, 'identityClientToken' | 'apiEnv'>;
 
 export const buildColleagueApiContext = (
   runtimeEnvironment: () => string,
   identityClientToken: () => string,
-  markApiCall?: MarkApiCall,
 ): ColleagueApiContext => {
   const acquireApiEnv = (env: string) => () => {
     switch (env.toUpperCase()) {
@@ -23,6 +21,5 @@ export const buildColleagueApiContext = (
   return {
     apiEnv: acquireApiEnv(runtimeEnvironment()),
     identityClientToken,
-    markApiCall,
   };
 };

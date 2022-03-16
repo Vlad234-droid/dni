@@ -1,20 +1,22 @@
 import { ArgumentConfig, parse } from 'ts-command-line-args';
 
-import { getManager } from '@dni/database';
-import { DniEntityTypeEnum, CcmsEntity } from '@dni/database';
+import { getManager } from 'typeorm';
+import { DniEntityTypeEnum, CcmsEntity } from '../entities';
 
 import {
   cmsPostsApiConnector,
   cmsEventsApiConnector,
   cmsNetworksApiConnector,
-  DniCmsApiContext,
+  ColleagueCmsApiContext,
 } from '@dni-connectors/colleague-cms-api';
 
-import { getConfig } from '../config/config-accessor';
-import { initializeTypeOrm } from '../config/db';
-import { clientContext } from '../context';
+// import { getConfig } from '../config/config-accessor';
+// import { clientContext } from '../context';
 import { processEntity } from './ccms-entity-processor';
-import { disposeIdentityClientScopeToken } from '../services';
+
+// import { disposeIdentityClientScopeToken } from '../services';
+import { createTypeOrmConnection } from '../utils';
+import { colleagueCmsContext } from '../ccms/context';
 
 interface ICcmsSyncArgs {
   mode: string;
@@ -44,10 +46,10 @@ const ccmsSyncArgsDescriptor: ArgumentConfig<ICcmsSyncArgs> = {
 };
 
 const ccmsSync = async (args: ICcmsSyncArgs) => {
-  await initializeTypeOrm({ logging: false });
+  await createTypeOrmConnection({ logging: false });
 
   // init context
-  const ctx: DniCmsApiContext = await clientContext(getConfig());
+  const ctx: ColleagueCmsApiContext = await colleagueCmsContext();
   console.log(`API Context acquired.`);
 
   const repository = getManager().getRepository(CcmsEntity);
@@ -85,7 +87,7 @@ const ccmsSync = async (args: ICcmsSyncArgs) => {
       (query) => postsConnector.getPosts(query),
     );
   } finally {
-    disposeIdentityClientScopeToken();
+    //disposeIdentityClientScopeToken();
   }
 };
 

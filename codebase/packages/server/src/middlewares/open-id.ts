@@ -10,7 +10,7 @@ import {
 
 import { dniUserDataResolver } from '../config/auth-data';
 import { ProcessConfig } from '../config/config-accessor';
-import { isPROD } from '../config/env';
+import { isPROD } from '@dni-common/connector-utils';
 
 import { dniUserRefreshPlugin } from './onelogin-plugins';
 

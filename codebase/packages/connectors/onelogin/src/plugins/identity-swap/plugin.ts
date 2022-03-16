@@ -1,5 +1,4 @@
 import { Response, Request } from 'express';
-import { markApiCall } from '@energon/splunk-logger';
 import { ApiEnv, resolveBaseUrl, TESCO_API_URLS } from '@energon-connectors/core';
 
 import {
@@ -12,7 +11,7 @@ import {
   clearPluginCookiesIfSessionExpired,
 } from '../utils';
 
-import { getIdentityApi, UserScopeToken } from '../api';
+import { identityApiConsumer, UserTokenResponse } from '@dni-connectors/identity-api';
 import { setIdentityData, getIdentityData, setColleagueUuid } from './identity-data';
 import { getOpenIdSessionId } from '../../oidc-data-extractor';
 import { Optional, Plugin } from '../plugin';
@@ -62,7 +61,7 @@ export type Config<O> = {
     /**
      * optional, method that will determine the shape of the data saved in the cookie
      */
-    cookieShapeResolver?: (data: UserScopeToken) => O;
+    cookieShapeResolver?: (data: UserTokenResponse) => O;
   };
 };
 
@@ -99,7 +98,7 @@ export const identityTokenSwapPlugin = <O>(config: Config<O> & Optional): Plugin
         );
 
         const { secret, cookieName, compressed } = cookieConfig;
-        const data = getDataFromCookie<UserScopeToken>(req, {
+        const data = getDataFromCookie<UserTokenResponse>(req, {
           cookieName,
           secret,
           compressed,
@@ -121,17 +120,22 @@ export const identityTokenSwapPlugin = <O>(config: Config<O> & Optional): Plugin
         : undefined;
 
       const credentials = Buffer.from(`${identityClientId}:${identityClientSecret}`).toString('base64');
-
-      const headerProvider = {
+      const baseHeaders = {
         Authorization: () => `Basic ${credentials}`,
         Accept: () => 'application/vnd.tesco.identity.tokenresponse.v4claims+json',
       };
 
-      const api = getIdentityApi(headerProvider, baseUrl, path, markApiCall(res));
+      const api = identityApiConsumer({
+        baseUrl, 
+        baseHeaders, 
+      });
 
-      const { data } = await (refreshToken
+      const data = await (refreshToken
         ? api.refreshUserToken({
-            body: { grant_type: 'refresh_token', refresh_token: refreshToken },
+            body: { 
+              grant_type: 'refresh_token', 
+              refresh_token: refreshToken,
+            },
           })
         : api.exchangeUserToken({
             body: {

@@ -2,7 +2,6 @@ import { Event } from '../event';
 
 import { File } from '../built-in';
 import { Organization } from '../organization';
-import { Question } from '../question';
 import { BaseApiParams, BaseType } from '../types';
 
 export type Network = {
@@ -12,7 +11,6 @@ export type Network = {
   image?: File | null;
   contact: string;
   partners?: Organization[];
-  questions?: Question[];
   events: Event[];
 } & BaseType;
 

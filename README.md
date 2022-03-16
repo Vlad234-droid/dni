@@ -31,7 +31,7 @@ Check that Lerna is installed by running: `lerna --version`
 
 Login into our private npm repository with your TPX (in lower case) and password
 
-Run from project root: `./scripts/create-nmprc.sh --token '<YOUR_NEXUS_ACCESS_TOKEN>'`
+Run from project root: `./scripts/create-nmprc.sh --token '<YOUR_NPM_ACCESS_TOKEN>'`
 
 ### 3. Install dependencies
 

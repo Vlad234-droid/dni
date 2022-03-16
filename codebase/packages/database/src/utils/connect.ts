@@ -10,7 +10,7 @@ let connection: Connection | undefined;
 
 const assertConnectionValid = () => {
   if (!connection || !connection.isConnected) {
-    throw new Error('Connection is not yet inialized!');
+    throw Error('Connection is not yet inialized!');
   }
 }
 

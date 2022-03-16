@@ -10,15 +10,17 @@
     "build"
   ],
   "scripts": {
-    "build:prod": "tsc -p .",
-    "clean": "rimraf build coverage storybook-static .eslintcache",
-    "clean:all": "yarn clean && rimraf node_modules"
+    "clean": "rimraf build coverage .eslintcache",
+    "clean:npm": "rimraf node_modules",
+    "clean:all": "yarn clean && yarn clean:npm",
+    "build:prod": "tsc -p ."
   },
   "dependencies": {
     "@energon/array-utils": "0.19.4",
     "@energon/date-utils": "0.16.0"
   },
   "devDependencies": {
-    "@types/react": "^16.9.15"
+    "@types/react": "^16.9.15",
+    "typescript": "^4.1.3"
   }
 }

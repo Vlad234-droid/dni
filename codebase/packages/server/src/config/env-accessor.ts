@@ -1,6 +1,7 @@
-import { isDEV } from '../config/env';
+import { isDEV } from '@dni-common/connector-utils';
 
 const optionalEnvironmentParameters = [
+  'BUILD_ENV',
   'LOGGER_ROOT_NAME',
   'LOGGER_LEVEL',
   'LOGGER_PRETIFY',
@@ -11,6 +12,8 @@ const optionalEnvironmentParameters = [
   'APPLICATION_USER_DATA_COOKIE_NAME',
   'STICK_COOKIES_TO_APPLICATION_PATH',
   'OIDC_REDIRECT_AFTER_LOGOUT_CALLBACK_PATH',
+  'COLLEAGUE_CMS_URL',
+  'COLLEAGUE_CMS_TENANT_KEY',
   'MOCK_SERVER_URL',
   'CACHE_IDENTITY_TOKEN_KEY',
   'CACHE_IDENTITY_TOKEN_TTL',
@@ -58,6 +61,9 @@ export type ProcessEnv = {
   // AD groups tp roles assigments
   OIDC_GROUPS_ADMIN_ROLE?: string;
   OIDC_GROUPS_MANAGER_ROLE?: string;
+  // colleague CMS
+  COLLEAGUE_CMS_URL?: string;
+  COLLEAGUE_CMS_TENANT_KEY?: string;
   // identity
   IDENTITY_CLIENT_ID: string;
   IDENTITY_CLIENT_SECRET: string;
@@ -67,8 +73,9 @@ export type ProcessEnv = {
   MOCK_SERVER_URL?: string;
   // mailing
   MAILING_NEW_ENTITY_TEMPLATE_ID: string;
-  MAILING_CONFIRMATION_TEMPLATE_ID: string;
+  MAILING_CONFIRMATION_NEW_EMAIL_TEMPLATE_ID: string;
   MAILING_CONFIRMATION_OLD_EMAIL_TEMPLATE_ID: string;
+  MAILING_CONFIRMATION_EMAIL_SUCCESS_TEMPLATE_ID: string;
   MAILING_SHARE_STORY_TEMPLATE_ID: string;
   MAILING_STAKEHOLDER_EMAIL: string;
   MAILING_CHUNK_SIZE: string;
@@ -149,6 +156,9 @@ export class EnvAccessor {
       // AD groups tp roles assigments
       OIDC_GROUPS_ADMIN_ROLE,
       OIDC_GROUPS_MANAGER_ROLE,
+      // colleague CMS
+      COLLEAGUE_CMS_URL,
+      COLLEAGUE_CMS_TENANT_KEY,
       // identity
       IDENTITY_CLIENT_ID,
       IDENTITY_CLIENT_SECRET,
@@ -158,8 +168,9 @@ export class EnvAccessor {
       MOCK_SERVER_URL,
       // mailing
       MAILING_NEW_ENTITY_TEMPLATE_ID,
-      MAILING_CONFIRMATION_TEMPLATE_ID,
+      MAILING_CONFIRMATION_NEW_EMAIL_TEMPLATE_ID,
       MAILING_CONFIRMATION_OLD_EMAIL_TEMPLATE_ID,
+      MAILING_CONFIRMATION_EMAIL_SUCCESS_TEMPLATE_ID,
       MAILING_SHARE_STORY_TEMPLATE_ID,
       MAILING_STAKEHOLDER_EMAIL,
       MAILING_CHUNK_SIZE,
@@ -206,20 +217,24 @@ export class EnvAccessor {
       // AD groups tp roles assigments
       OIDC_GROUPS_ADMIN_ROLE,
       OIDC_GROUPS_MANAGER_ROLE,
+      // colleague CMS
+      COLLEAGUE_CMS_URL,
+      COLLEAGUE_CMS_TENANT_KEY,
       // identity
       IDENTITY_CLIENT_ID,
       IDENTITY_CLIENT_SECRET,
       IDENTITY_USER_SCOPED_TOKEN_COOKIE_NAME,
       IDENTITY_USER_SCOPED_TOKEN_COOKIE_SECRET,
+      // mock
+      MOCK_SERVER_URL: isDEV(BUILD_ENV) ? MOCK_SERVER_URL : undefined,
       // mailing
       MAILING_NEW_ENTITY_TEMPLATE_ID,
-      MAILING_CONFIRMATION_TEMPLATE_ID,
+      MAILING_CONFIRMATION_NEW_EMAIL_TEMPLATE_ID,
       MAILING_CONFIRMATION_OLD_EMAIL_TEMPLATE_ID,
+      MAILING_CONFIRMATION_EMAIL_SUCCESS_TEMPLATE_ID,
       MAILING_SHARE_STORY_TEMPLATE_ID,
       MAILING_STAKEHOLDER_EMAIL,
       MAILING_CHUNK_SIZE,
-      // mock
-      ...(isDEV(BUILD_ENV) ? { MOCK_SERVER_URL } : undefined),
     };
   }
 }

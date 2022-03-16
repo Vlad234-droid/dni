@@ -187,62 +187,50 @@ const slice = createSlice({
 
     const setSucceeded = (state: T.State) => {
       state.loading = Loading.SUCCEEDED;
+      state.error = undefined;
     };
 
-    const setFailed = (state: T.State, payload: any) => {
+    const setFailed = (state: T.State, { error }) => {
       state.loading = Loading.FAILED;
-      state.error = payload.error.message;
+      state.error = error?.message || '';
     };
 
     builder
+      // getReportsByTime
       .addCase(getReportsByTime.pending, setPending)
       .addCase(getReportsByTime.fulfilled, (state: T.State, { payload }) => {
-        const { data } = payload as {
-          data: T.GroupByPeriod;
-        };
-
+        const { data } = payload as { data: T.GroupByPeriod };
         state.groups[T.ReportType.PERIOD] = data;
-
         setSucceeded(state);
       })
       .addCase(getReportsByTime.rejected, setFailed)
-
+      // getReportsByRegion
       .addCase(getReportsByRegion.pending, setPending)
       .addCase(getReportsByRegion.fulfilled, (state: T.State, { payload }) => {
-        const { data } = payload as {
-          data: T.GroupByRegion;
-        };
-
+        const { data } = payload as { data: T.GroupByRegion };
         state.groups[T.ReportType.REGION] = data;
-
         setSucceeded(state);
       })
       .addCase(getReportsByRegion.rejected, setFailed)
-
+      // getReportsByFormat
       .addCase(getReportsByFormat.pending, setPending)
       .addCase(getReportsByFormat.fulfilled, (state: T.State, { payload }) => {
-        const { data } = payload as {
-          data: T.GroupByFormat;
-        };
-
+        const { data } = payload as { data: T.GroupByFormat };
         state.groups[T.ReportType.FORMAT] = data;
-
         setSucceeded(state);
       })
       .addCase(getReportsByFormat.rejected, setFailed)
-
+      // getNetworks
       .addCase(getNetworks.fulfilled, (state: T.State, { payload }) => {
         networksAdapter.upsertMany(state[T.EntityType.NETWORK], payload);
-
         setSucceeded(state);
       })
-
+      // getEvents 
       .addCase(getEvents.fulfilled, (state: T.State, { payload }) => {
         eventsAdapter.upsertMany(state[T.EntityType.EVENT], payload);
-
         setSucceeded(state);
       })
-
+      // default
       .addDefaultCase((state) => state);
   },
 });

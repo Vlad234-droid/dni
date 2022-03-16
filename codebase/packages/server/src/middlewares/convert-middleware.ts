@@ -1,6 +1,6 @@
 import express from 'express';
 import { Plugin } from '@dni-connectors/onelogin';
-import { asyncHandler } from '@energon/express-middlewares';
+import { asyncHandler } from '@dni-common/express-middlewares';
 
 export const toMiddleware = (plugin: Plugin): express.Handler => {
   return asyncHandler(async (req: express.Request, res: express.Response, next: express.NextFunction) => {

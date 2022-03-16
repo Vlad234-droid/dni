@@ -88,6 +88,35 @@ const updateNotificationSettings = createAsyncThunk<T.EmailNotificationSettings,
   },
 );
 
+const filterNotificationsEnrichedList = (
+  list: T.NotificationListItem[], 
+  acknowledge: T.Acknowledge,
+  ): T.NotificationListItem[] => {
+
+    return list.filter(n =>
+      (n.entityId !== acknowledge?.acknowledgeEntityId || n.entityType !== acknowledge?.acknowledgeEntityType)
+    );
+  }
+
+const filterNotificationsGrouppedList = (
+  list: T.NotificationGrouppedItem[], 
+  acknowledge: T.Acknowledge,
+  ): T.NotificationGrouppedItem[] => {
+
+    return list.map(({ ancestorType, ancestorId, ancestorInstance, nestedEntities }) => {
+      const filteredNestedEntities = nestedEntities.filter(({entityType, entityId}) => 
+        (entityType !== acknowledge?.acknowledgeEntityType) ||
+        (entityType === acknowledge?.acknowledgeEntityType && entityId !== acknowledge?.acknowledgeEntityId));
+      return {
+        ancestorType,
+        ancestorId,
+        ancestorInstance,
+        nestedEntities: filteredNestedEntities,
+        nestedEntitiesTotal: filteredNestedEntities.length,
+      };
+    }).filter(({ nestedEntitiesTotal }) => nestedEntitiesTotal > 0);
+  }
+
 const slice = createSlice({
   name: A.ROOT,
   initialState,
@@ -139,30 +168,16 @@ const slice = createSlice({
         }
 
         state.plainNotifications.metadata.loading = Loading.SUCCEEDED;
-        state.grouppedNotifications.metadata.loading = Loading.SUCCEEDED;
-
-        state.plainNotifications.list = state.plainNotifications.list.filter(n =>
-          (n.entityId !== acknowledge?.acknowledgeEntityId || n.entityType !== acknowledge?.acknowledgeEntityType),
+        state.plainNotifications.list = filterNotificationsEnrichedList(
+          state.plainNotifications.list,
+          acknowledge,
         );
 
-        state.grouppedNotifications.list = state.grouppedNotifications.list
-          .map(({ ancestorType, ancestorId, ancestorInstance, nestedAsArray, nestedTotal }) => ({
-            ancestorType,
-            ancestorId,
-            ancestorInstance,
-            nestedTotal:
-              nestedAsArray.some(d => d.entitiesIds.includes(acknowledge?.acknowledgeEntityId)) &&
-              nestedAsArray.some(d => d.entityType === acknowledge?.acknowledgeEntityType)
-                ? nestedTotal - 1
-                : nestedTotal,
-            nestedAsArray: nestedAsArray.map(({entityType, entitiesIds}) => ({
-              entityType,
-              entitiesIds: entitiesIds.filter(ii => entityType !== acknowledge?.acknowledgeEntityType ||
-                (entityType === acknowledge?.acknowledgeEntityType && ii === acknowledge?.acknowledgeEntityId))
-            }))
-            .filter(nnnn => nnnn.entitiesIds.length > 0)
-          }))
-          .filter(nnn => nnn.nestedTotal > 0);
+        state.grouppedNotifications.metadata.loading = Loading.SUCCEEDED;
+        state.grouppedNotifications.list = filterNotificationsGrouppedList(
+          state.grouppedNotifications.list,
+          acknowledge,
+        );
       })
       .addCase(getPersonalEmail.fulfilled, (state: T.State, action) => {
         state.personalEmail = action.payload;

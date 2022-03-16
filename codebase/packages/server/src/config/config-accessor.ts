@@ -2,7 +2,7 @@ import yn from 'yn';
 
 import { ApiEnv } from '@energon-connectors/core';
 
-import { getAppEnv, isLocal, isDEV } from './env';
+import { getAppEnv, isLocal, isDEV } from '@dni-common/connector-utils';
 import { ProcessEnv, getEnv } from './env-accessor';
 import { defaultConfig } from './default';
 
@@ -53,6 +53,9 @@ export type ProcessConfig = {
   oidcAdminGroups: () => string[];
   oidcManagerGroups: () => string[];
   defaultRoles: () => string[];
+  // colleague CMS
+  colleagueCmsBaseUrl: () => string | undefined;
+  colleagueCmsTenantKey: () => string | undefined;
   // identity
   identityClientId: () => string;
   identityClientSecret: () => string;
@@ -62,8 +65,9 @@ export type ProcessConfig = {
   mockServerUrl: () => string;
   // mailing
   mailingNewEntityTemplateId: () => string;
-  mailingConfirmationTemplateId: () => string;
+  mailingConfirmationNewEmailTemplateId: () => string;
   mailingConfirmationOldEmailTemplateId: () => string;
+  mailingConfirmationEmailSuccessTemplateId: () => string;
   mailingShareStoryTemplateId: () => string;
   mailingStakeholderEmail: () => string;
   mailingChunkSize: () => number;
@@ -79,7 +83,7 @@ export class ConfigAccessor {
 
     this.config = {
       // general
-      buildEnvironment: () => processEnv.BUILD_ENV,
+      buildEnvironment: () => processEnv.BUILD_ENV || defaultConfig.buildEnvironment,
       runtimeEnvironment: () => processEnv.RUNTIME_ENV,
       environment: () => processEnv.NODE_ENV,
       apiEnv: () =>
@@ -142,22 +146,21 @@ export class ConfigAccessor {
       oidcManagerGroups: () =>
         processEnv.OIDC_GROUPS_MANAGER_ROLE ? processEnv.OIDC_GROUPS_MANAGER_ROLE.split(/[,;]/) : [],
       defaultRoles: () => [defaultConfig.defaultRole],
+      // colleague CMS
+      colleagueCmsBaseUrl: () => processEnv.COLLEAGUE_CMS_URL,
+      colleagueCmsTenantKey: () => processEnv.COLLEAGUE_CMS_TENANT_KEY,
       // identity
       identityClientId: () => processEnv.IDENTITY_CLIENT_ID,
       identityClientSecret: () => processEnv.IDENTITY_CLIENT_SECRET,
       identityUserScopedTokenCookieName: () => processEnv.IDENTITY_USER_SCOPED_TOKEN_COOKIE_NAME,
       identityUserScopedTokenCookieSecret: () => processEnv.IDENTITY_USER_SCOPED_TOKEN_COOKIE_SECRET,
       // mock
-      mockServerUrl: () => {
-        if (!isDEV(processEnv.BUILD_ENV)) {
-          throw new Error('Mock server is available only for DEV environment.');
-        }
-        return processEnv.MOCK_SERVER_URL || '';
-      },
+      mockServerUrl: () => processEnv.MOCK_SERVER_URL || '',
       // mailing
       mailingNewEntityTemplateId: () => processEnv.MAILING_NEW_ENTITY_TEMPLATE_ID,
-      mailingConfirmationTemplateId: () => processEnv.MAILING_CONFIRMATION_TEMPLATE_ID,
+      mailingConfirmationNewEmailTemplateId: () => processEnv.MAILING_CONFIRMATION_NEW_EMAIL_TEMPLATE_ID,
       mailingConfirmationOldEmailTemplateId: () => processEnv.MAILING_CONFIRMATION_OLD_EMAIL_TEMPLATE_ID,
+      mailingConfirmationEmailSuccessTemplateId: () => processEnv.MAILING_CONFIRMATION_EMAIL_SUCCESS_TEMPLATE_ID,
       mailingShareStoryTemplateId: () => processEnv.MAILING_SHARE_STORY_TEMPLATE_ID,
       mailingStakeholderEmail: () => processEnv.MAILING_STAKEHOLDER_EMAIL,
       mailingChunkSize: () => +processEnv.MAILING_CHUNK_SIZE,

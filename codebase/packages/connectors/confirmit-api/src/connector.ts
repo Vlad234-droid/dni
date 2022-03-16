@@ -1,7 +1,6 @@
 import { fetchClient, resolveBaseUrl, ConnectorContext } from '@energon-connectors/core';
 import { createApiConsumer } from '@energon/rest-api-consumer';
 import { defineAPI } from '@energon/rest-api-definition';
-import { MarkApiCall } from '@energon/splunk-logger';
 
 import { ConfigContext } from '@dni-common/connector-utils';
 
@@ -35,21 +34,12 @@ export const confirmitApiConnector = (ctx: Context) => {
 
   const baseUrl = resolveBaseUrl(CONFIRMIT_API_URLS, ctx);
 
-  const markApiCall: MarkApiCall = ({ requestUrl, traceId, params }) =>
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    ctx.markApiCall!({
-      requestUrl,
-      traceId,
-      params,
-      requestBody: '[hidden due to sensitive information]',
-    });
-
   return {
     current: {
-      ...createApiConsumer(logonApiDef, fetchClient(baseUrl, logonHeaders, { markApiCall }), {
+      ...createApiConsumer(logonApiDef, fetchClient(baseUrl, logonHeaders, {}), {
         transport: 'XML',
       }),
-      ...createApiConsumer(reportingApiDef, fetchClient(baseUrl, reportingHeaders, { markApiCall }), {
+      ...createApiConsumer(reportingApiDef, fetchClient(baseUrl, reportingHeaders, {}), {
         transport: 'XML',
       }),
     },

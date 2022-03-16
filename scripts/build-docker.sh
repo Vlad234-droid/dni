@@ -1,3 +1,5 @@
+#!/bin/sh
+
 mkdir temp
 
 cp -v package.json yarn.lock lerna.json tsconfig.json .eslintrc.js .npmrc temp/
