@@ -1,4 +1,5 @@
 import express from 'express';
+import { cepAuth, injectToken } from '../../middlewares';
 
 import {
   // ccms-events
@@ -8,6 +9,6 @@ import {
 // controllers
 const cmsEvents = express.Router();
 
-cmsEvents.post('/cms-events', consumeCepEvent);
+cmsEvents.post('/cms-events', injectToken, cepAuth, consumeCepEvent);
 
 export { cmsEvents };
