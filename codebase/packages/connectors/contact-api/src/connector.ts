@@ -62,13 +62,16 @@ export const contactApiDef = defineAPI((endpoint) => ({
     .build(),
 }));
 
+const CLIENT_ID_PREFIX = 'trn:tesco:cid:';
+
 export const contactApiConnector = (ctx: ContactApiContext) => {
   const headers: ContactAPIHeaders = {
     ...Headers.identityClientScopedAuthorization(ctx),
+    ClientId: () => `${CLIENT_ID_PREFIX}${ctx.identityClientToken()}`,
   };
   const baseUrl = resolveBaseUrl(TESCO_API_URLS, ctx);
 
-  const apiConsumer = createApiConsumer(contactApiDef, fetchClient(baseUrl, headers, { }));
+  const apiConsumer = createApiConsumer(contactApiDef, fetchClient(baseUrl, headers, {}));
 
   return {
     sendMessages: (input: ApiInput<ApiParams, ApiMsgBody>) => apiConsumer.sendMessages(buildParams(input)),

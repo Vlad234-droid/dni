@@ -57,6 +57,7 @@ export type ApiEmailAddressOutput = ApiEmailAddresses;
 
 export type ContactAPIHeaders = {
   Authorization: () => string;
+  ClientId: () => string;
 };
 
 export type ContactApiContext = Pick<ConnectorContext, 'identityClientToken' | 'apiEnv'>;
