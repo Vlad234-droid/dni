@@ -228,6 +228,10 @@
       "OIDC_GROUPS_MANAGER_ROLE": {
         "type": "plain",
         "value": "GG-UK-TescoGlobal-DiversityAndInclusion-PPE-Manager"
+      },
+      "CEP_TOKEN_SUBJECT": {
+        "type": "secret",
+        "name": "cep_token_subject"
       }
     }
   }

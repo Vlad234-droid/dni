@@ -1,8 +1,8 @@
 import { Handler } from 'express';
 
-import jwt, { GetPublicKeyOrSecret, Secret, VerifyOptions, VerifyErrors } from 'jsonwebtoken';
+import jwt, { GetPublicKeyOrSecret, Secret, VerifyOptions, VerifyErrors, decode, JwtPayload } from 'jsonwebtoken';
 
-const { CEP_TOKEN_SUBJECT: cepTokenSubject, CEP_TOKEN_SECRET: cepTokenSecret } = process.env;
+const { CEP_TOKEN_SUBJECT: cepTokenSubject } = process.env;
 
 type VerifyResult<T> = { ok: true; value: T } | { ok: false; error: VerifyErrors };
 
@@ -10,7 +10,7 @@ type Result = {
   subject: string;
 };
 
-const verify = <T>(
+const verify = <T = Result>(
   jwtToken: string,
   secret: Secret | GetPublicKeyOrSecret,
   options?: VerifyOptions,
@@ -25,21 +25,16 @@ const verify = <T>(
     });
   });
 
-const sign = (payload: string | Buffer | object, secret: Secret): string => {
-  return jwt.sign(payload, secret, { expiresIn: 120 });
-};
-
-const injectToken: Handler = (req, _, next) => {
-  req.headers.authorization = sign({ subject: cepTokenSubject }, cepTokenSecret!);
-
-  next();
+const decodeToken = (jwtToken: string): null | JwtPayload | string => {
+  return decode(jwtToken) as JwtPayload;
 };
 
 const cepAuth: Handler = async (req, res, next) => {
-  const token = req.headers.authorization!;
-  const result = await verify<Result>(token, cepTokenSecret!);
+  const jwtToken = (req.headers?.authorization || '').replace('Bearer', '').trim();
 
-  if (!result.ok || (result.ok && result.value.subject !== cepTokenSubject)) {
+  const result = decodeToken(jwtToken);
+
+  if (!result && result?.sub != cepTokenSubject) {
     res.status(401).send('Unauthorized');
     return;
   }
@@ -47,4 +42,4 @@ const cepAuth: Handler = async (req, res, next) => {
   next();
 };
 
-export { cepAuth, injectToken };
+export { cepAuth, verify };
