@@ -157,6 +157,10 @@
         "type": "plain",
         "value": "true"
       },
+      "LOGGER_PRETIFY": {
+        "type": "plain",
+        "value": "false"
+      },
       "OIDC_CLIENT_ID": {
         "type": "secret",
         "name": "oidc_client_id"
