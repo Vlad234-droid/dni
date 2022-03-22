@@ -2,10 +2,11 @@ import { MigrationInterface, QueryRunner } from 'typeorm';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 import _ from 'lodash';
 
-import { createReadStream, existsSync } from 'fs';
+import { existsSync } from 'fs';
 import path from 'path';
 import csv from 'csv-parser';
 import stripBom from 'strip-bom-stream';
+import unzipper from 'unzipper';
 import yn from 'yn';
 
 export class Migration_Backfill_population_2 implements MigrationInterface {
@@ -36,15 +37,16 @@ export class Migration_Backfill_population_2 implements MigrationInterface {
       receivePostsEmailNotifications?: boolean;
     };
 
-    const fileName = path.join(__dirname, 'data', 'DNI_backfill_population_20211129.csv');
-    if (!existsSync(fileName)) {
+    const zipPassword = process.env.ZIP_PASSWORD || '';
+    const zipFileName = path.join(__dirname, 'data', 'DNI_backfill_population_20211129.zip');
+    if (!existsSync(zipFileName) || zipPassword === '') {
       return;
     }
 
-    const stream = createReadStream(fileName);
+    const zipDir = await unzipper.Open.file(zipFileName);
 
     const population = await new Promise<EmployeeData[]>((fulfill) => {
-      const population: EmployeeData[] = [];
+      const p: EmployeeData[] = [];
 
       const csvReaderOptions = {
         mapHeaders: (h: { header: string; index: number }) => _.camelCase(h.header),
@@ -62,11 +64,14 @@ export class Migration_Backfill_population_2 implements MigrationInterface {
         },
       };
 
-      stream
-        .pipe(stripBom())
-        .pipe(csv(csvReaderOptions))
-        .on('data', (data: any) => population.push(data))
-        .on('end', () => fulfill(population));
+      if (zipDir.files.length === 1 && zipDir.files[0].path.endsWith('.csv')) {
+        zipDir.files[0]
+          .stream(zipPassword)
+          .pipe(stripBom())
+          .pipe(csv(csvReaderOptions))
+          .on('data', (data: any) => p.push(data))
+          .on('end', () => fulfill(p));
+      }
     });
 
     for (const employee of population) {
