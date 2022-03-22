@@ -35,7 +35,7 @@ const cepAuth: Handler = async (req, res, next) => {
   const result = decodeToken(jwtToken);
 
   if (!result && result?.sub != cepTokenSubject) {
-    res.status(401).send('Unauthorized');
+    res.status(403).send('Forbidden');
     return;
   }
 
