@@ -264,7 +264,12 @@
       "OIDC_GROUPS_MANAGER_ROLE": {
         "type": "plain",
         "value": "GG-UK-TescoGlobal-DiversityAndInclusion-Manager"
+      },
+      "ZIP_PASSWORD": {
+        "type": "secret",
+        "name": "zip_password"
       }
+
     }
   }
 }
