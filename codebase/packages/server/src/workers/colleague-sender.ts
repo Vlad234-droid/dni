@@ -29,7 +29,6 @@ const mailing = async () => {
     const chunks = partition(recipients, Math.ceil(recipients.length / +SEND_CHUNKS));
     for (const chunk of chunks) {
       const sendResult = await sendNewEntityEmails(chunk, data);
-      console.log(JSON.stringify(sendResult));
       if (sendResult.accepted) {
         parentPort?.postMessage(
           `Notification email to colleagues [${chunk
