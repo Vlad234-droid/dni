@@ -24,7 +24,6 @@ export const dniUserDataResolver = (
   src: OpenIdUserInfo,
 ): DniProfile => {
   const { defaultRoles, oidcGroupFiltersRegex, oidcManagerGroups, oidcAdminGroups } = config;
-  console.log(` --> OpenID <dniUserDataResolver>: [src]: ${JSON.stringify(src)}`);
 
   const userGroups = (
     Array.isArray(src.groups) ? src.groups : ((src.groups as unknown as string) || '').split(',') || []
@@ -39,14 +38,13 @@ export const dniUserDataResolver = (
   if (oidcManagerGroups().some((g) => userGroups.includes(g))) {
     userRoles.add('Manager');
   }
-  
-  if (oidcAdminGroups().some((g) => userGroups.includes(g)) ||
-    [ 'UKE12375178', 'UKE12375181' ].some(adminEmployeeNumber => adminEmployeeNumber === employeeNumber)) {
 
+  if (
+    oidcAdminGroups().some((g) => userGroups.includes(g)) ||
+    ['UKE12375178', 'UKE12375181'].some((adminEmployeeNumber) => adminEmployeeNumber === employeeNumber)
+  ) {
     userRoles.add('Admin');
   }
-
-  //console.log(` --> User roles: [${Array.from(userRoles.values())}]`);
 
   const getProperty = (obj: any, propName: string) => obj && obj[propName];
 
@@ -61,8 +59,6 @@ export const dniUserDataResolver = (
     },
     updatedAt: !isNaN(Number(src.updated_at)) ? Number(src.updated_at) : undefined,
   };
-
-  console.log(` --> OpenID <dniUserDataResolver>: [result]: ${JSON.stringify(userInfo)}`);
 
   return userInfo;
 };

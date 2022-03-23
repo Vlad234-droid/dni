@@ -4,8 +4,6 @@ import { CepPayload } from './cep-types';
 
 export const consumeCepEvent: Handler = async (req: Request<{}, CepPayload>, res: Response) => {
   try {
-    const payload: string = JSON.stringify(req.body, null, 2);
-    console.log('handleCepHook:\n%s', payload);
     await handleCepRequest(req, res);
     return res.status(200).json('ok');
   } catch (e) {

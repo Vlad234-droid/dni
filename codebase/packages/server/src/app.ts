@@ -33,9 +33,10 @@ const config = getConfig();
 let logPretify = config.loggerPretify();
 if (logPretify === undefined) {
   logPretify = !!config.buildEnvironment() && isLocal(config.buildEnvironment());
-}  
-  
-const logLevel = config.loggerLevel() ||
+}
+
+const logLevel =
+  config.loggerLevel() ||
   (isPROD(config.runtimeEnvironment()) || isPPE(config.runtimeEnvironment()) ? 'info' : logPretify ? 'trace' : 'debug');
 
 const logger = initializeLogger(config.loggerRootName(), logLevel, logPretify);
@@ -117,7 +118,6 @@ const startServer = async () => {
     app.use(errorHandler(config));
 
     server.listen(PORT, () => {
-      //console.log(`⚡️ Server is running at http://localhost:${PORT}`);
       logger.info(`Server is running at http://${os.hostname().toLowerCase()}:${PORT}`);
     });
   } catch (error: any) {
