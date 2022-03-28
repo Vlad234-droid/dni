@@ -17,7 +17,7 @@ export const colleagueNotificationsList = async (
       , ancestor_instance AS "ancestorInstance"
       , notified_at AS "notifiedAt"
       , acknowledged_at AS "acknowledgedAt"
-    FROM ${schemaPrefix}fn_get_dni_user_notification_enriched_list_3(
+    FROM ${schemaPrefix}fn_get_dni_user_notification_enriched_list(
         p_colleague_uuid := $1::uuid
       , p_filter_entity_types := ${serializeEnum('dni_entity_type_enum', [DniEntityTypeEnum.EVENT, DniEntityTypeEnum.POST])}
       , p_filter_subscription_entity_types := ${serializeEnum('dni_entity_type_enum', [DniEntityTypeEnum.NETWORK, DniEntityTypeEnum.EVENT])}
@@ -47,7 +47,7 @@ export const colleagueNotificationsGroupBy = async (
       , recent_notified_at AS "recentNotifiedAt"
       , nested_entities_total AS "nestedEntitiesTotal"
       , nested_entities AS "nestedEntities"
-    FROM ${schemaPrefix}fn_get_dni_user_notification_groupped_list_3(
+    FROM ${schemaPrefix}fn_get_dni_user_notification_groupped_list(
         p_colleague_uuid := $1::uuid
       , p_filter_entity_types := ${serializeEnum('dni_entity_type_enum', [DniEntityTypeEnum.EVENT, DniEntityTypeEnum.POST])}
       , p_filter_subscription_entity_types := ${serializeEnum('dni_entity_type_enum', [DniEntityTypeEnum.NETWORK, DniEntityTypeEnum.EVENT])}
