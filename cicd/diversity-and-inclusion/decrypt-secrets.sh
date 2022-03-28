@@ -16,10 +16,7 @@ env_dir="`pwd`/$env_name"
 
 if [ -f "$env_dir/secrets.enc.json" ] 
 then
-sops \
-  --decrypt \
-  --output $env_dir/secrets.json \
-  $env_dir/secrets.enc.json
+  sops --decrypt --output $env_dir/secrets.json $env_dir/secrets.enc.json
 else
   echo "File $env_dir/secrets.enc.json doesn't exists" 
 fi
