@@ -101,8 +101,8 @@ const PostCreateContainer: FC<Props> = ({ networkId, onClose }) => {
   const handleSubmit = async (data: FormData, network?: Network) => {
     if (CONTACT_API_ENABLED) {
       await handleShareStory(data);
+      await handleCreatePost(data, network);
     } else {
-      await handleShareStory(data);
       await handleCreatePost(data, network);
     }
   };
