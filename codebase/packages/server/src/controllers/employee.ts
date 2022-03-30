@@ -167,7 +167,7 @@ const getSetting: Handler = async (req: Request, res: Response) => {
 const shareStory: Handler = async (req: Request<{}, {}, ShareStory>, res: Response) => {
   executeSafe(res, async () => {
     const {
-      networkTitle: markdownNetworkTitle,
+      networkTitle,
       storyTitle: colleagueStoryTitle,
       story: colleagueFullStory,
       name: colleagueName,
@@ -175,7 +175,7 @@ const shareStory: Handler = async (req: Request<{}, {}, ShareStory>, res: Respon
     } = req.body;
 
     sendShareStoryEmail({
-      markdownNetworkTitle,
+      networkTitle,
       colleagueStoryTitle,
       colleagueFullStory,
       colleagueName,
