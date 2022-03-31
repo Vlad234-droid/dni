@@ -25,41 +25,32 @@ const initialState: T.State = {
   },
 };
 
-const getList = createAsyncThunk<T.NotificationListItem[]>(
-  A.FETCH_LIST_PLAIN, 
-  async () => {
-
+const getList = createAsyncThunk<T.NotificationListItem[]>(A.FETCH_LIST_PLAIN, async () => {
   return await API.notifications.fetchAllPlain<T.NotificationListItem[]>();
 });
 
-const getListGroupByNetwork = createAsyncThunk<T.NotificationGrouppedItem[]>(
-  A.FETCH_LIST_GROUPBY, 
-  async () => {
-
+const getListGroupByNetwork = createAsyncThunk<T.NotificationGrouppedItem[]>(A.FETCH_LIST_GROUPBY, async () => {
   return await API.notifications.fetchAllGroupBy<T.NotificationGrouppedItem[]>();
 });
 
 const acknowledge = createAsyncThunk<T.Acknowledge | undefined, T.AcknowledgePayload>(
-  A.ACKNOWLEDGE_ACTION, 
+  A.ACKNOWLEDGE_ACTION,
   async (data) => {
+    const entity = plainNotificationSelector(store.getState(), data);
+    if (!entity) {
+      return;
+    }
 
-  const entity = plainNotificationSelector(store.getState(), data);
-  if (!entity) {
-    return;
-  }
+    return await API.notifications.acknowledge<T.Acknowledge>(data);
+  },
+);
 
-  return await API.notifications.acknowledge<T.Acknowledge>(data);
-});
-
-const getPersonalEmail = createAsyncThunk<T.EmailAddress>(
-  A.GET_PERSONAL_EMAIL, 
-  async () => {
-
+const getPersonalEmail = createAsyncThunk<T.EmailAddress>(A.GET_PERSONAL_EMAIL, async () => {
   return await API.contact.getPersonalEmail<T.EmailAddress>();
 });
 
 const updatePersonalEmail = createAsyncThunk<T.EmailAddress, T.EmailAddress & { oldEmailAddress?: string }>(
-  A.UPDATE_PERSONAL_EMAIL, 
+  A.UPDATE_PERSONAL_EMAIL,
   async (emailAddress: T.EmailAddress) => {
     if (CONTACT_API_ENABLED) {
       return await API.contact.sendPersonalEmailConfirmation<T.EmailAddress>(emailAddress);
@@ -69,44 +60,45 @@ const updatePersonalEmail = createAsyncThunk<T.EmailAddress, T.EmailAddress & { 
   },
 );
 
-const createPersonalEmail = createAsyncThunk<Pick<T.EmailAddress, 'emailAddress'>, Pick<T.EmailAddress, 'emailAddress'>>(
-  A.CREATE_PERSONAL_EMAIL,
-  async (emailAddress: Pick<T.EmailAddress, 'emailAddress'>) => {
-    await API.contact.createPersonalEmail<T.EmailAddress>(emailAddress);
-    return emailAddress;
-  },
-);
+const createPersonalEmail = createAsyncThunk<
+  Pick<T.EmailAddress, 'emailAddress'>,
+  Pick<T.EmailAddress, 'emailAddress'>
+>(A.CREATE_PERSONAL_EMAIL, async (emailAddress: Pick<T.EmailAddress, 'emailAddress'>) => {
+  await API.contact.createPersonalEmail<T.EmailAddress>(emailAddress);
+  return emailAddress;
+});
 
 const getNotificationSettings = createAsyncThunk<T.EmailNotificationSettings>(A.GET_NOTIFICATION_SETTINGS, async () => {
   return await API.contact.getNotificationsSettings<T.EmailNotificationSettings>();
 });
 
 const updateNotificationSettings = createAsyncThunk<T.EmailNotificationSettings, T.EmailNotificationSettings>(
-  A.UPDATE_NOTIFICATION_SETTINGS, 
+  A.UPDATE_NOTIFICATION_SETTINGS,
   async (settings: T.EmailNotificationSettings) => {
     return await API.contact.updateNotificationsSettings(settings);
   },
 );
 
 const filterNotificationsEnrichedList = (
-  list: T.NotificationListItem[], 
+  list: T.NotificationListItem[],
   acknowledge: T.Acknowledge,
-  ): T.NotificationListItem[] => {
-
-    return list.filter(n =>
-      (n.entityId !== acknowledge?.acknowledgeEntityId || n.entityType !== acknowledge?.acknowledgeEntityType)
-    );
-  }
+): T.NotificationListItem[] => {
+  return list.filter(
+    (n) => n.entityId !== acknowledge?.acknowledgeEntityId || n.entityType !== acknowledge?.acknowledgeEntityType,
+  );
+};
 
 const filterNotificationsGrouppedList = (
-  list: T.NotificationGrouppedItem[], 
+  list: T.NotificationGrouppedItem[],
   acknowledge: T.Acknowledge,
-  ): T.NotificationGrouppedItem[] => {
-
-    return list.map(({ ancestorType, ancestorId, ancestorInstance, nestedEntities }) => {
-      const filteredNestedEntities = nestedEntities.filter(({entityType, entityId}) => 
-        (entityType !== acknowledge?.acknowledgeEntityType) ||
-        (entityType === acknowledge?.acknowledgeEntityType && entityId !== acknowledge?.acknowledgeEntityId));
+): T.NotificationGrouppedItem[] => {
+  return list
+    .map(({ ancestorType, ancestorId, ancestorInstance, nestedEntities }) => {
+      const filteredNestedEntities = nestedEntities.filter(
+        ({ entityType, entityId }) =>
+          entityType !== acknowledge?.acknowledgeEntityType ||
+          (entityType === acknowledge?.acknowledgeEntityType && entityId !== acknowledge?.acknowledgeEntityId),
+      );
       return {
         ancestorType,
         ancestorId,
@@ -114,8 +106,9 @@ const filterNotificationsGrouppedList = (
         nestedEntities: filteredNestedEntities,
         nestedEntitiesTotal: filteredNestedEntities.length,
       };
-    }).filter(({ nestedEntitiesTotal }) => nestedEntitiesTotal > 0);
-  }
+    })
+    .filter(({ nestedEntitiesTotal }) => nestedEntitiesTotal > 0);
+};
 
 const slice = createSlice({
   name: A.ROOT,
@@ -163,17 +156,13 @@ const slice = createSlice({
       .addCase(acknowledge.fulfilled, (state: T.State, action) => {
         const acknowledge: T.Acknowledge | undefined = action.payload;
 
+        state.plainNotifications.metadata.loading = Loading.SUCCEEDED;
+        state.grouppedNotifications.metadata.loading = Loading.SUCCEEDED;
         if (!acknowledge) {
           return state;
         }
 
-        state.plainNotifications.metadata.loading = Loading.SUCCEEDED;
-        state.plainNotifications.list = filterNotificationsEnrichedList(
-          state.plainNotifications.list,
-          acknowledge,
-        );
-
-        state.grouppedNotifications.metadata.loading = Loading.SUCCEEDED;
+        state.plainNotifications.list = filterNotificationsEnrichedList(state.plainNotifications.list, acknowledge);
         state.grouppedNotifications.list = filterNotificationsGrouppedList(
           state.grouppedNotifications.list,
           acknowledge,
