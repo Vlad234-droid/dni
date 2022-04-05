@@ -1,5 +1,5 @@
 import { Handler } from 'express';
-
+import yn from 'yn';
 import jwt, { GetPublicKeyOrSecret, Secret, VerifyOptions, VerifyErrors, decode, JwtPayload } from 'jsonwebtoken';
 
 const { CEP_TOKEN_SUBJECT: cepTokenSubject } = process.env;
@@ -31,6 +31,10 @@ const decodeToken = (jwtToken: string): null | JwtPayload | string => {
 
 const cepAuth: Handler = async (req, res, next) => {
   const jwtToken = (req.headers?.authorization || '').replace('Bearer', '').trim();
+
+  if (yn(process.env.LOGGER_LOG_AUTHTOKEN, { default: false })) {
+    console.log('jwtToken-->', jwtToken);
+  }
 
   const result = decodeToken(jwtToken);
 

@@ -161,6 +161,10 @@
         "type": "plain",
         "value": "true"
       },
+      "LOGGER_LOG_AUTHTOKEN": {
+        "type": "plain",
+        "value": "true"
+      },
       "LOGGER_PRETIFY": {
         "type": "plain",
         "value": "false"
@@ -269,7 +273,6 @@
         "type": "secret",
         "name": "zip_password"
       }
-
     }
   }
 }
