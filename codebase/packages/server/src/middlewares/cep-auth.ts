@@ -2,7 +2,7 @@ import { Handler } from 'express';
 import yn from 'yn';
 import jwt, { GetPublicKeyOrSecret, Secret, VerifyOptions, VerifyErrors, decode, JwtPayload } from 'jsonwebtoken';
 
-const { CEP_TOKEN_SUBJECT: cepTokenSubject } = process.env;
+const cepTokenSubject = process.env.CEP_TOKEN_SUBJECT || '';
 
 type VerifyResult<T> = { ok: true; value: T } | { ok: false; error: VerifyErrors };
 
@@ -33,17 +33,17 @@ const cepAuth: Handler = async (req, res, next) => {
   const jwtToken = (req.headers?.authorization || '').replace('Bearer', '').trim();
 
   if (yn(process.env.LOGGER_LOG_AUTHTOKEN, { default: false })) {
-    console.log('jwtToken-->', jwtToken);
+    console.log('CEP TOKEN --> ', jwtToken);
   }
 
-  const result = decodeToken(jwtToken);
+  const token = decodeToken(jwtToken);
 
-  if (!result && result?.sub != cepTokenSubject) {
+  if (cepTokenSubject === '' || (token && token.sub === cepTokenSubject)) {
+    next();
+  } else {
     res.status(403).send('Forbidden');
     return;
   }
-
-  next();
 };
 
 export { cepAuth, verify };
