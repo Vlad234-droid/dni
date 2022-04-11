@@ -45,6 +45,10 @@
   },
   "deployment": {
     "envs": {
+      "BUILD_ENV": {
+        "type": "plain",
+        "value": "production"
+      },
       "NODE_ENV": {
         "type": "plain",
         "value": "production"
@@ -53,17 +57,13 @@
         "type": "plain",
         "value": "prod"
       },
-      "RUNTIME_ENV": {
-        "type": "plain",
-        "value": "prod"
-      },
-      "BUILD_ENV": {
-        "type": "plain",
-        "value": "production"
-      },
       "NODE_PORT": {
         "type": "plain",
         "value": "9000"
+      },
+      "RUNTIME_ENV": {
+        "type": "plain",
+        "value": "prod"
       },
       "APPLICATION_PUBLIC_URL": {
         "type": "plain",

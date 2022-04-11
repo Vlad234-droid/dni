@@ -45,21 +45,25 @@
   },
   "deployment": {
     "envs": {
+      "BUILD_ENV": {
+        "type": "plain",
+        "value": "ppe"
+      },
       "NODE_ENV": {
         "type": "plain",
         "value": "ppe"
       },
-      "RUNTIME_ENV": {
-        "type": "plain",
-        "value": "ppe"
-      },
-      "BUILD_ENV": {
+      "NODE_CONFIG_ENV": {
         "type": "plain",
         "value": "ppe"
       },
       "NODE_PORT": {
         "type": "plain",
         "value": "9000"
+      },
+      "RUNTIME_ENV": {
+        "type": "plain",
+        "value": "ppe"
       },
       "APPLICATION_PUBLIC_URL": {
         "type": "plain",
@@ -157,6 +161,10 @@
         "type": "plain",
         "value": "true"
       },
+      "LOGGER_LOG_AUTHTOKEN": {
+        "type": "plain",
+        "value": "true"
+      },
       "LOGGER_PRETIFY": {
         "type": "plain",
         "value": "false"
@@ -243,11 +251,11 @@
       },
       "TYPEORM_RUN_MIGRATION": {
         "type": "plain",
-        "value": "true"
+        "value": "false"
       },
       "CCMS_RUN_SYNC": {
         "type": "plain",
-        "value": "true"
+        "value": "false"
       },
       "CACHE_COLLEAGUE_TTL": {
         "type": "plain",
