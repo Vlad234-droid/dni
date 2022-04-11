@@ -7,7 +7,7 @@ export class Update_bulk_mailing_functions implements MigrationInterface {
   public async up(queryRunner: QueryRunner): Promise<void> {
     const schema = (queryRunner.connection.options as PostgresConnectionOptions).schema;
     if (schema) {
-      await queryRunner.query(`SET search_path TO "$user", ${schema}, public;`);
+      await queryRunner.query(`SET search_path TO "$user", "${schema}", public;`);
     }
 
     // -- =========================================
@@ -23,7 +23,7 @@ export class Update_bulk_mailing_functions implements MigrationInterface {
       ROWS 8
       AS $function$
       BEGIN
-        SET search_path TO "$user", ${schema}, public;
+        SET search_path TO "$user", "${schema}", public;
           
         RETURN QUERY WITH params AS (
           SELECT 
@@ -70,7 +70,6 @@ export class Update_bulk_mailing_functions implements MigrationInterface {
         ;
       END
       $function$
-      ;
     `);
 
     // -- ============================
@@ -100,7 +99,7 @@ export class Update_bulk_mailing_functions implements MigrationInterface {
           RAISE EXCEPTION '"p_entity.id" parameter is required';
         END IF;
       
-        SET search_path TO "$user", dni, public;
+        SET search_path TO "$user", "${schema}", public;
       
         RETURN QUERY WITH params AS (
           SELECT 
@@ -146,6 +145,7 @@ export class Update_bulk_mailing_functions implements MigrationInterface {
         FROM affected_colleagues ac
         ;
       END
+      $function$
     `);
 
     // -- =====================================
@@ -171,7 +171,7 @@ export class Update_bulk_mailing_functions implements MigrationInterface {
       LANGUAGE plpgsql
       AS $function$
       BEGIN
-        SET search_path TO "$user", dni, public;
+        SET search_path TO "$user", "${schema}", public;
         
         RETURN QUERY WITH params AS (
           SELECT
@@ -315,7 +315,7 @@ export class Update_bulk_mailing_functions implements MigrationInterface {
   public async down(queryRunner: QueryRunner): Promise<void> {
     const schema = (queryRunner.connection.options as PostgresConnectionOptions).schema;
     if (schema) {
-      await queryRunner.query(`SET search_path TO "$user", ${schema}, public;`);
+      await queryRunner.query(`SET search_path TO "$user", "${schema}", public;`);
     }
 
     // -- =====================================
@@ -341,7 +341,7 @@ export class Update_bulk_mailing_functions implements MigrationInterface {
       LANGUAGE plpgsql
       AS $function$
       BEGIN
-        SET search_path TO "$user", dni, public;
+        SET search_path TO "$user", "${schema}", public;
         
         RETURN QUERY WITH params AS (
           SELECT
@@ -501,7 +501,7 @@ export class Update_bulk_mailing_functions implements MigrationInterface {
           RAISE EXCEPTION '"p_entity.id" parameter is required';
         END IF;
       
-        SET search_path TO "$user", dni, public;
+        SET search_path TO "$user", "${schema}", public;
       
         RETURN QUERY WITH params AS (
           SELECT 
@@ -557,6 +557,5 @@ export class Update_bulk_mailing_functions implements MigrationInterface {
     await queryRunner.query(`
       DROP FUNCTION IF EXISTS fn_get_dni_bulk_mailing_affected_entities;
     `);
-
   }
 }
