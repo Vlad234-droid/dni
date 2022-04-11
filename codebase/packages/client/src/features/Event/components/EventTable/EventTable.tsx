@@ -23,22 +23,25 @@ const EventTable: FC = () => {
   const { isMobile, isLargeMobile } = useMedia();
   const isMobileView = isMobile || isLargeMobile;
   const { networks } = useStore((state) => state.auth.user);
-  const { eventError } = useStore(state => state.auth);
+  const { eventError } = useStore((state) => state.auth);
   const [page, setPage] = useState<number>(0);
   const { participants } = useStore((state) => state.events);
   const filters = {
     ...getPayloadWhere(networks),
-    ...DEFAULT_FILTERS,
+    _sort: 'startDate:DESC',
     ...DEFAULT_PAGINATION,
     endDate_lt: new Date(),
   };
   const [loading, events, hasMore, listError, countError] = useFetchEvents(filters, page);
   const isLoading = useMemo(() => loading !== Loading.SUCCEEDED && loading !== Loading.FAILED, [loading]);
-  const error = useMemo(() => listError || countError || participants.error || eventError, [participants, listError, countError, eventError]);
+  const error = useMemo(
+    () => listError || countError || participants.error || eventError,
+    [participants, listError, countError, eventError],
+  );
   const tooltipPosition = { top: '38px', left: '32px' };
 
   const memoizedContent = useMemo(() => {
-    if (error) return <Error errorData={{ title: error }}/>;
+    if (error) return <Error errorData={{ title: error }} />;
 
     if (isEmpty(events) && isLoading) return <Spinner height='500px' />;
 
@@ -48,11 +51,11 @@ const EventTable: FC = () => {
 
     const singleNetwork = (n: Network | Network[]): Network => {
       if (Array.isArray(n) && n.length > 0) {
-        return (n[0] as Network);
-      } else { 
-        return (n as Network); 
+        return n[0] as Network;
+      } else {
+        return n as Network;
       }
-    }
+    };
 
     const renderNetwork = (network: Network, eventId: number) => {
       return (
@@ -67,7 +70,7 @@ const EventTable: FC = () => {
           </TextWithEllipsis>
         </NetworkWrapper>
       );
-    }
+    };
 
     return (
       <>
@@ -85,9 +88,7 @@ const EventTable: FC = () => {
                 </Cell>
                 <Cell width={isMobileView ? '25%' : '15%'}>{participants.data[id]! || 0} members</Cell>
                 <Cell width='25%' visible={!isMobileView}>
-                  {network && 
-                    renderNetwork(singleNetwork(network), id)
-                  }
+                  {network && renderNetwork(singleNetwork(network), id)}
                 </Cell>
               </Row>
             ))}
