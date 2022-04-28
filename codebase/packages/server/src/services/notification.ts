@@ -1,7 +1,7 @@
 import { getManager, getSchemaPrefix, serializeEnum } from '@dni/database';
 import { DniEntityTypeEnum } from '@dni/database';
 
-const NOTIFICATION_RETENTION_INTERVAL = '1 month';
+const NOTIFICATION_RETENTION_INTERVAL = '3 month';
 
 export const colleagueNotificationsList = async (
   colleagueUUID: string,
