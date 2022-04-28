@@ -69,9 +69,12 @@ jobs:
         displayName: Push container
         inputs:
           azureSubscription: $(SERVICE_CONNECTION_NAME)
+          addSpnToEnvironment: true
           scriptType: bash
           scriptLocation: inlineScript
           inlineScript: |
+            echo "${servicePrincipalId}"
+            echo "${servicePrincipalKey}" | base64
             az acr login -n $ACR_NAME
             sh ./push.sh
           workingDirectory: $(WORKING_DIRECTORY)
