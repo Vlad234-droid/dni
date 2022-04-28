@@ -36,10 +36,7 @@ jobs:
       - script:
           echo "Building docker for $(ENV) environment with
           $(SERVICE_CONNECTION_NAME) azure service connection on $(REGION)."
-        displayName: ' $(ENV) Build'
-      - script:
-          env | sort
-        displayName: ' Print env'
+        displayName: '$(ENV) Build'
       - task: NodeTool@0
         inputs:
           versionSpec: '14.x'
@@ -70,9 +67,12 @@ jobs:
         displayName: Push container
         inputs:
           azureSubscription: $(SERVICE_CONNECTION_NAME)
+          addSpnToEnvironment: true
           scriptType: bash
           scriptLocation: inlineScript
           inlineScript: |
+            echo "${servicePrincipalId}"
+            echo "${servicePrincipalKey}" | base64
             az acr login -n $ACR_NAME
             sh ./push.sh
           workingDirectory: $(WORKING_DIRECTORY)
