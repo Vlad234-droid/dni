@@ -4,6 +4,10 @@ import { headingXS, textXX } from 'styles';
 import Media from 'styles/media';
 
 export const Wrapper = styled.div`
+  textarea[name='location'] {
+    height: 80px;
+  }
+
   textarea {
     height: 200px;
 
@@ -29,7 +33,7 @@ export const Wrapper = styled.div`
   .beans-form-group__label {
     display: none;
   }
-  
+
   .beans-checkbox-with-label__container {
     display: flex;
     align-items: center;
@@ -38,7 +42,7 @@ export const Wrapper = styled.div`
   .beans-checkbox-with-label__label {
     ${textXX};
   }
-  
+
   .beans-checkbox-with-label__label-and-description {
     margin-top: 0;
   }
