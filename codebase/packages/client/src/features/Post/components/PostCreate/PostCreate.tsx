@@ -93,7 +93,7 @@ const PostCreate: FC<Props> = ({ onClose, onSubmit, networks, loading, error }) 
             domRef={register}
             aria-label={'location'}
             name={'location'}
-            placeholder={'Input your work location and, if applicable, Store/DC Manager’s full name:'}
+            placeholder={'Input your work/store location and, if applicable, Store/DC Manager\'s full name:'}
             error={errors['location']?.message}
             id={'location'}
             hideLabel
