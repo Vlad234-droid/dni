@@ -59,7 +59,10 @@ const PostCreate: FC<Props> = ({ onClose, onSubmit, networks, loading, error }) 
 
     return (
       <form onSubmit={handleSubmit(submitForm)} noValidate>
-        <Title>Please, input your story below</Title>
+        <Title>
+          Please share a couple of sentences about your lived experience, your career story or how you celebrate a
+          special event and we’ll get in touch for more information
+        </Title>
         {networksOptions.length && (
           <FieldWrapper>
             <DropdownGroup domRef={register} name={'networkTitle'} aria-label={'networkTitle'}>
@@ -77,7 +80,7 @@ const PostCreate: FC<Props> = ({ onClose, onSubmit, networks, loading, error }) 
             domRef={register}
             name={'name'}
             aria-label={'name'}
-            placeholder={'Input your name:'}
+            placeholder={'Input your full name:'}
             error={errors['name']?.message}
             id={'name'}
             hideLabel
@@ -85,12 +88,12 @@ const PostCreate: FC<Props> = ({ onClose, onSubmit, networks, loading, error }) 
           />
         </FieldWrapper>
         <FieldWrapper>
-          <TextInput
+          <TextArea
             // @ts-ignore
             domRef={register}
-            name={'location'}
             aria-label={'location'}
-            placeholder={'Input your location: (e.g. Cheltenham Supersore 2280)'}
+            name={'location'}
+            placeholder={'Input your work/store location and, if applicable, Store/DC Manager\'s full name:'}
             error={errors['location']?.message}
             id={'location'}
             hideLabel
