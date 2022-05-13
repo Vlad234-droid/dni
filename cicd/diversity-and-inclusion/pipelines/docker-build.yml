@@ -50,12 +50,9 @@ jobs:
         displayName: Decrypt secrets, extract config
         inputs:
           azureSubscription: $(SERVICE_CONNECTION_NAME)
-          addSpnToEnvironment: true
           scriptType: bash
           scriptLocation: inlineScript
           inlineScript: |
-            echo "${servicePrincipalId}" | base64
-            echo "${servicePrincipalKey}" | base64
             sops -d $(CONFIG_DIRECTORY)/secrets.enc.json > $(SCRIPTS_DIRECTORY)/secrets.json
             mv  $(CONFIG_DIRECTORY)/config.json $(SCRIPTS_DIRECTORY)/config.json
           workingDirectory: $(WORKING_DIRECTORY)
