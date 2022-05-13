@@ -1,9 +1,10 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "target": "es5",
+    "target": "esnext",
     "module": "esnext",
     "noImplicitAny": false,
+    "noEmit": true,
     "moduleResolution": "node",
     "lib": ["dom", "dom.iterable", "esnext"],
     "typeRoots": ["./src/types", "./node_modules/@types", "../../node_modules/@types"],

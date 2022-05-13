@@ -1,4 +1,3 @@
-import { isNullOrUndefined } from 'util';
 import { DniEntityTypeEnum } from './enums';
 
 class CcmsEntityKey {
@@ -134,7 +133,7 @@ function parse<T>(
   const LITEARAL_REGEX = /[a-zA-Z0-9_\.]/;
 
   const parseCompositeTypeArray = (currentPos: number) => {
-    const resultsArray = [];
+    const resultsArray = new Array();
 
     let currectState: 'initial' | 'parseStart' | 'parsing' | 'parseEnd' | 'parseNext' = 'initial';
     while (currentPos < value.length) {
@@ -201,7 +200,7 @@ function parse<T>(
   }
 
   const parseCompositeType = (currentPos: number) => {
-    const literals = [];
+    const literals = new Array();
 
     let currentValue = '';
     let currectState: 'initial' | 'parse' = 'initial';

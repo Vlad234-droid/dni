@@ -1,17 +1,10 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    // "target": "es2016",
-    // "module": "commonjs",
     "typeRoots": ["./node_modules/@types", "../../node_modules/@types"],
     // "rootDir": "./src",
     "baseUrl": "./src",
     "outDir": "./build",
-    "noEmit": false,
-    // "inlineSourceMap": false,
-    // "inlineSources": false,
-    // "sourceMap": true,
-    // "sourceRoot": "./src",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "declaration": true,
