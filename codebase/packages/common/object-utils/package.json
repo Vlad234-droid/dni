@@ -15,7 +15,7 @@
     "build:prod": "tsc -p ."
   },
   "dependencies": {
-    "@energon/type-utils": "^0.10.0"
+    "@energon/type-utils": "^0.11.0"
   },
   "devDependencies": {
     "typescript": "^4.1.3"
