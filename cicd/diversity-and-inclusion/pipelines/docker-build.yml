@@ -53,6 +53,7 @@ jobs:
           scriptType: bash
           scriptLocation: inlineScript
           inlineScript: |
+            set -e
             sops -d $(CONFIG_DIRECTORY)/secrets.enc.json > $(SCRIPTS_DIRECTORY)/secrets.json
             mv  $(CONFIG_DIRECTORY)/config.json $(SCRIPTS_DIRECTORY)/config.json
           workingDirectory: $(WORKING_DIRECTORY)
