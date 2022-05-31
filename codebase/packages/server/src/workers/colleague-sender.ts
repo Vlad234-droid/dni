@@ -17,8 +17,10 @@ const mailing = async () => {
   for (const colleagueUUID of colleagueUUIDs) {
     const email = await fetchPersonalEmail(colleagueUUID);
     const colleague = await fetchColleagueData(colleagueUUID);
+    const today = new Date();
+    const leavingDate = colleague?.serviceDates?.leavingDate;
 
-    if (email?.emailAddress && !colleague?.serviceDates?.leavingDate) {
+    if (email?.emailAddress && (!leavingDate || today < leavingDate)) {
       parentPort?.postMessage(`Personal ${email?.emailAddress} address for colleague ${colleagueUUID} is found.`);
       addRecipient(recipients, email?.emailAddress, colleagueUUID);
     } else {
