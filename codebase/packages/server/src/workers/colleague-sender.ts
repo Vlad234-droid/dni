@@ -1,5 +1,5 @@
 import { parentPort, workerData } from 'worker_threads';
-import { fetchPersonalEmail, sendNewEntityEmails, Recipient, EmailData } from '../services/contact';
+import { fetchPersonalEmail, sendNewEntityEmails, Recipient, EmailData, fetchColleagueData } from '../services';
 import { partition } from '../utils/array';
 
 type Data = {
@@ -16,12 +16,17 @@ const mailing = async () => {
 
   for (const colleagueUUID of colleagueUUIDs) {
     const email = await fetchPersonalEmail(colleagueUUID);
+    const colleague = await fetchColleagueData(colleagueUUID);
+    const today = new Date();
+    const leavingDate = colleague?.serviceDates?.leavingDate;
 
-    if (email?.emailAddress) {
+    if (email?.emailAddress && (!leavingDate || today < leavingDate)) {
       parentPort?.postMessage(`Personal ${email?.emailAddress} address for colleague ${colleagueUUID} is found.`);
       addRecipient(recipients, email?.emailAddress, colleagueUUID);
     } else {
-      parentPort?.postMessage(`WARNING: Personal email address for colleague ${colleagueUUID} not found.`);
+      parentPort?.postMessage(
+        `WARNING: Personal email address for colleague ${colleagueUUID} not found or a colleague has quit`,
+      );
     }
   }
 

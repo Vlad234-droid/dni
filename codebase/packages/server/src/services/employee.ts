@@ -1,20 +1,17 @@
 import { Request, Response } from 'express';
 import { getColleagueUuid, getUserData } from '@dni-connectors/onelogin';
-import { Colleague } from '@dni-connectors/colleague-api';
+import { Colleague, colleagueApiConnector } from '@dni-connectors/colleague-api';
+import { FetchError } from '@energon/fetch-client';
 
-import { getRepository } from '@dni/database';
+import { clientContext } from '../context';
+import { getConfig } from '../config/config-accessor';
 
-import {
-  DniEntityTypeEnum,
-  DniUser,
-  DniUserExtras,
-  DniUserSubscription,
-  CcmsEntity,
-} from '@dni/database';
+import { getRepository , DniEntityTypeEnum, DniUser, DniUserExtras, DniUserSubscription, CcmsEntity } from '@dni/database';
+
+
 
 import { DniProfile } from '../config/auth-data';
 import { ApiError } from '../utils/api-error';
-
 
 type EmailNotificationSettings = {
   receivePostsEmailNotifications: boolean;
@@ -39,6 +36,30 @@ type ShareStory = {
   story: string;
   name: string;
   location: string;
+};
+
+const config = getConfig();
+
+const getColleagueApiConnector = async () => {
+  const ctx = await clientContext(config);
+  return colleagueApiConnector(ctx);
+};
+
+const fetchColleagueData = async (colleagueUUID: string): Promise<Colleague | undefined> => {
+  const connector = await getColleagueApiConnector();
+
+  try {
+    return await connector.getColleague({
+      params: { colleagueUUID },
+    });
+  } catch (err) {
+    if (FetchError.is(err) && err.status === 404) {
+      // ignore NOT_FOUND error and fall-back to empty result
+      return undefined;
+    } else {
+      throw err;
+    }
+  }
 };
 
 const profileInfoExtractor = async (req: Request, res: Response) => {
@@ -275,4 +296,5 @@ export {
   findSettings,
   storeTokenSettings,
   findTokenSettingsAndInvalidate,
+  fetchColleagueData,
 };
