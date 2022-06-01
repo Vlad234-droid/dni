@@ -335,7 +335,7 @@ export const initializeOpenidMiddleware = async (configuration: OpenidConfig): P
 
     logger(LoggerEvent.debug('login', `User will be redirected to ${afterLoginRedirect}`, { req, res }));
 
-    res.redirect(afterLoginRedirect);
+    return res.redirect(afterLoginRedirect);
   });
 
   router.get(registeredAuthCallbackUrlPath, 
@@ -380,7 +380,7 @@ export const initializeOpenidMiddleware = async (configuration: OpenidConfig): P
     const afterLogoutRedirect = addTrailngSlash(`${applicationServerUrlRoot}${applicationPath}`);
 
     logger(LoggerEvent.debug('post-logout', `User will be redirected to: ${afterLogoutRedirect}`, { req, res }));
-    res.redirect(afterLogoutRedirect);
+    return res.redirect(afterLogoutRedirect);
   });
 
   const allIgnoredPaths = [

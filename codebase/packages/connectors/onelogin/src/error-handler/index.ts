@@ -35,8 +35,7 @@ export const errorHandler =
 
       if (status === 401) {
         logger(LoggerEvent.info(flow, message, { req, res }));
-        res.redirect(`${redirectAuthenticationPath}?${ONELOGIN_RETURN_URI_PARAM}=${encodeURI(redirectTo)}`);
-        next();
+        return res.redirect(`${redirectAuthenticationPath}?${ONELOGIN_RETURN_URI_PARAM}=${encodeURI(redirectTo)}`);
       } else {
         logger(LoggerEvent.error(flow, Error(message), { req, res }));
         next(error);
@@ -44,7 +43,6 @@ export const errorHandler =
     } else {
       const message = `${status}, ${error.message}`;
       logger(LoggerEvent.error(flow, Error(message), { req, res }));
-      res.status(status).json(error.message);
       next(error);
     }
   };
