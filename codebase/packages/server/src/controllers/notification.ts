@@ -2,7 +2,11 @@ import { Handler, Request, Response } from 'express';
 import { getColleagueUuid } from '@dni-connectors/onelogin';
 import { DniEntityTypeEnum } from '@dni/database';
 
-import { colleagueNotificationsList, colleagueNotificationsGroupBy, createColleagueNotificationAcknowledgement } from '../services';
+import {
+  colleagueNotificationsList,
+  colleagueNotificationsGroupBy,
+  createColleagueNotificationAcknowledgement,
+} from '../services';
 
 import { executeSafe } from '../utils';
 
@@ -19,7 +23,10 @@ export const getNetworkNotificationsGroupBy: Handler = async (req: Request, res:
 
   executeSafe(res, async () => {
     const colleagueUUID = getColleagueUuid(res);
-    const networkNotifications = await colleagueNotificationsGroupBy(colleagueUUID!, entity_type as Array<DniEntityTypeEnum>);
+    const networkNotifications = await colleagueNotificationsGroupBy(
+      colleagueUUID!,
+      entity_type as Array<DniEntityTypeEnum>,
+    );
     res.status(200).json(networkNotifications);
   });
 };
