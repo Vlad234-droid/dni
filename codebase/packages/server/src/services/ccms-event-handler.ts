@@ -94,7 +94,7 @@ const acquireEntityFromCms = async (cepPayload: CepPayload, ctx: ColleagueCmsApi
     },
   };
 
-  let cmsResponse = undefined;
+  let cmsResponse: any = undefined;
 
   try {
     switch (model) {

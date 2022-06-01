@@ -15,8 +15,8 @@
     "build:prod": "tsc -p ."
   },
   "dependencies": {
-    "@energon-connectors/core": "^0.8.7",
-    "@energon/type-utils": "^0.10.0",
+    "@energon-connectors/core": "^0.11.2",
+    "@energon/type-utils": "^0.11.0",
     "cli-highlight": "^2.1.11"
   },
   "devDependencies": {

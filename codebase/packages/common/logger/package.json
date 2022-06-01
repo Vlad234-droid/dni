@@ -25,7 +25,7 @@
     "source-map": "^0.7.3",
     "sql-formatter": "^4.0.2",
     "stacktrace-parser": "^0.1.10",
-    "ua-parser-js": "0.7.21",
+    "ua-parser-js": "0.7.23",
     "url-join": "4.0.1",
     "uuid": "^8.3.2"
   },

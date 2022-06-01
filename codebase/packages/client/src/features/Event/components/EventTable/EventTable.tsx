@@ -10,7 +10,7 @@ import useStore from 'hooks/useStore';
 import { EmptyContainer, Spinner, Error, TextWithEllipsis } from 'features/Common';
 import { Page } from 'features/Page';
 import Loading from 'types/loading';
-import { DEFAULT_FILTERS, DEFAULT_PAGINATION } from 'config/constants';
+import { DEFAULT_PAGINATION } from 'config/constants';
 import { Network } from '@dni-connectors/colleague-cms-api';
 
 import useFetchEvents from '../../hooks/useFetchEvents';
