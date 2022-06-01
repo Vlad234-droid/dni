@@ -1,5 +1,4 @@
 import express from 'express';
-import http from 'http';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import os from 'os';
@@ -51,8 +50,6 @@ if (isLocal(config.buildEnvironment())) {
 getEnv().validate();
 
 const app = express();
-
-const server = http.createServer(app);
 
 const PORT = config.port();
 
@@ -117,7 +114,9 @@ const startServer = async () => {
 
     app.use(errorHandler(config));
 
-    server.listen(PORT, () => {
+    app.disable('x-powered-by');
+
+    app.listen(PORT, () => {
       logger.info(`Server is running at http://${os.hostname().toLowerCase()}:${PORT}`);
     });
   } catch (error: any) {
@@ -127,6 +126,3 @@ const startServer = async () => {
 };
 
 startServer();
-
-export { app, express };
-export default server;
