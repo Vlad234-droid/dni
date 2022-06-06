@@ -45,26 +45,33 @@ const EmailConfirmation: FC<Props> = ({ token }) => {
     );
   }, []);
 
-  const memoizedContent = useMemo(() => {
-    if (error) return <Error errorData={{ title: 'Something went wrong', message: error }} />;
-
-    if (isLoading || !personalEmail) return <Spinner height='500px' />;
-
-    if (success) return (
-      <Content>Your email address has been successfully changed to&nbsp;
-        <Email>{personalEmail!.emailAddress}</Email>
-      </Content>
-    );
-
-    return (
+  const defaultContent = useMemo(
+    () => (
       <Content>
         Email change was not completed. Please try resetting the email one more time.
         <Link to={`/${Page.NOTIFICATION_SETTINGS}`}>
           <Button>Settings</Button>
         </Link>
       </Content>
-    );
-  }, [success, error, isLoading, personalEmail]);
+    ),
+    [],
+  );
+
+  const memoizedContent = useMemo(() => {
+    if (error) return defaultContent;
+
+    if (isLoading || !personalEmail) return <Spinner height='500px' />;
+
+    if (success)
+      return (
+        <Content>
+          Your email address has been successfully changed to&nbsp;
+          <Email>{personalEmail!.emailAddress}</Email>
+        </Content>
+      );
+
+    return defaultContent;
+  }, [success, error, isLoading, personalEmail, defaultContent]);
 
   return <Wrapper>{memoizedContent}</Wrapper>;
 };
